@@ -106,9 +106,14 @@ interface ProductInterface
      */
     public function getPublishers();
 
+    /**
+     * Get the products publishing status (Onix codelist 64)
+     * @return string
+     */
+    public function getPublishingStatus();
+
     // TODO
     // SupportingResource
-    // Publisher
     // PublishingStatus
     // PublishingDates
     // Prices

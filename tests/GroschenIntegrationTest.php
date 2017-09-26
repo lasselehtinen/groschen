@@ -371,4 +371,42 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('6430061220026');
         $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
     }
+
+    /**
+     * Test getting products publishing status
+     * @return void
+     */
+    public function testGettingPublishingStatus()
+    {
+        // Published
+        $this->assertSame('04', $this->groschen->getPublishingStatus());
+
+        // Development
+        $groschen = new Groschen('9789510397374');
+        $this->assertSame('02', $groschen->getPublishingStatus());
+
+        // Exclusive sales
+        $groschen = new Groschen('6430027856108');
+        $this->assertSame('04', $groschen->getPublishingStatus());
+
+        // Sold out
+        $groschen = new Groschen('6416889067166');
+        $this->assertSame('07', $groschen->getPublishingStatus());
+
+        // Development-confidential
+        $groschen = new Groschen('6430060030169');
+        $this->assertSame('00', $groschen->getPublishingStatus());
+
+        // Cancelled
+        $groschen = new Groschen('6417892033025');
+        $this->assertSame('01', $groschen->getPublishingStatus());
+
+        // POD / shortrun
+        $groschen = new Groschen('9789513168865');
+        $this->assertSame('04', $groschen->getPublishingStatus());
+
+        // Delivery block
+        $groschen = new Groschen('9789510359686');
+        $this->assertSame('16', $groschen->getPublishingStatus());
+    }
 }

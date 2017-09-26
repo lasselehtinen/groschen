@@ -595,6 +595,49 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products publishing status (Onix codelist 64)
+     * @return string
+     */
+    public function getPublishingStatus()
+    {
+        // Determine the PublishingStatus
+        switch ($this->product->NotifyCode) {
+            // Development
+            case '1':
+                return '02'; // Forthcoming
+                break;
+            // Published
+            case '2':
+                return '04'; // Active
+                break;
+            // Exclusive sales
+            case '3':
+                return '04'; // Active
+                break;
+            // Sold out
+            case '4':
+                return '07'; // Out of print
+                break;
+            // Development-confidential
+            case '6':
+                return '00'; // Unknown
+                break;
+            // Cancelled
+            case '7':
+                return '01'; // Cancelled
+                break;
+            // POD / shortrun
+            case '8':
+                return '04'; // Active
+                break;
+            // Delivery block
+            case '9':
+                return '16'; // Temporarily withdrawn from sale
+                break;
+        }
+    }
+
+    /**
      * Get the stakeholders role priority (ie. author is higher than illustrator)
      * @param  string $roleId
      * @return int
