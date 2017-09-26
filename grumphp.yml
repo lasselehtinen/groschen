@@ -1,0 +1,18 @@
+parameters:
+  bin_dir: "./vendor/bin"
+  git_dir: "."
+  ascii:
+    failed: ~
+    succeeded: ~
+  tasks:
+      securitychecker:
+      phpcs:
+        standard: PSR2
+        show_warnings: false
+        ignore_patterns:
+          - "tests/*.php"        
+      phpunit:
+        metadata:
+          priority: 100
+      composer:
+        no_check_lock: true
