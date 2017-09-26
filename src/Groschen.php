@@ -638,6 +638,29 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * get the product publishing dates
+     * @return Collection
+     */
+    public function getPublishingDates()
+    {
+        $publishingDates = new Collection;
+
+        // Define the dates we want to collect
+        $dates = ['01' => 'OriginalPublishingDate', '12' => 'PublishingDate'];
+
+        foreach ($dates as $publishingDateRole => $date) {
+            if (!empty($this->product->{$date})) {
+                // Convert to DateTime
+                $publishingDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->{$date});
+
+                $publishingDates->push(['PublishingDateRole' => (string) $publishingDateRole, 'Date' => $publishingDate->format('Ymd')]);
+            }
+        }
+
+        return $publishingDates;
+    }
+
+    /**
      * Get the stakeholders role priority (ie. author is higher than illustrator)
      * @param  string $roleId
      * @return int

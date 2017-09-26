@@ -112,9 +112,13 @@ interface ProductInterface
      */
     public function getPublishingStatus();
 
+    /**
+     * get the product publishing dates
+     * @return Collection
+     */
+    public function getPublishingDates();
+
     // TODO
     // SupportingResource
-    // PublishingStatus
-    // PublishingDates
     // Prices
 }

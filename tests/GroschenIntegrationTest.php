@@ -409,4 +409,26 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510359686');
         $this->assertSame('16', $groschen->getPublishingStatus());
     }
+
+    /**
+     * Test getting products publishing dates
+     * @return void
+     */
+    public function testGettingPublishingDates()
+    {
+        // Publishing date
+        $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20100601'], $this->groschen->getPublishingDates());
+
+        // Latest reprint
+        $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20170928'], $this->groschen->getPublishingDates());
+
+        // Product without original publishing date
+        $groschen = new Groschen('6430061220040');
+        $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20151221'], $groschen->getPublishingDates());
+        $this->assertCount(1, $groschen->getPublishingDates());
+
+        // Product without any dates
+        $groschen = new Groschen('9789513164232');
+        $this->assertCount(0, $groschen->getPublishingDates());
+    }
 }
