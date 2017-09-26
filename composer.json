@@ -1,0 +1,34 @@
+{
+    "name": "lasselehtinen/groschen",
+    "description": "Wrapper for Schilling Web Services",
+    "type": "library",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Lasse Lehtinen",
+            "email": "lasse.lehtinen@iki.fi"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "lasselehtinen/schilling-soap-wrapper": "1.0.0",
+        "ezyang/htmlpurifier": "^4.9",
+        "guzzlehttp/guzzle": "~6.0",
+        "fale/isbn": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "lasselehtinen\\Groschen\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "lasselehtinen\\Groschen\\Test\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.0",
+        "orchestra/testbench": "^3.5"
+    }
+}
