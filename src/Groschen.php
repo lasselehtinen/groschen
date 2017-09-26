@@ -191,7 +191,7 @@ class Groschen implements ProductInterface
      * Get the products collections/series
      * @return Collection
      */
-    public function GetCollections()
+    public function getCollections()
     {
         $collections = new Collection;
 
@@ -216,7 +216,7 @@ class Groschen implements ProductInterface
      * Get the products title details
      * @return  Collection
      */
-    public function GetTitleDetails()
+    public function getTitleDetails()
     {
         $titleDetails = new Collection;
 
@@ -444,7 +444,7 @@ class Groschen implements ProductInterface
      * Get the products measures
      * @return Collection
      */
-    public function GetMeasures()
+    public function getMeasures()
     {
         // Collection for measures
         $measures = new Collection;
