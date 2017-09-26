@@ -96,9 +96,15 @@ interface ProductInterface
 
     /**
      * Get the products subjects, like library class, Thema, BIC, BISAC etc.
-     * @return array
+     * @return Collection
      */
     public function getSubjects();
+
+    /**
+     * Get the products publishers and their role
+     * @return Collection
+     */
+    public function getPublishers();
 
     // TODO
     // SupportingResource

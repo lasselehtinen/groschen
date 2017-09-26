@@ -273,23 +273,23 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingPublisher()
     {
         // Normal WSOY product
-        $this->assertSame('Werner Söderström Osakeyhtiö', $this->groschen->getPublisher());
+        $this->assertSame('Werner Söderström Osakeyhtiö', $this->groschen->getPublishers());
 
         // WSOY marketing product
         $groschen = new Groschen('6430060030275');
-        $this->assertSame('Werner Söderström Osakeyhtiö', $groschen->getPublisher());
+        $this->assertSame('Werner Söderström Osakeyhtiö', $groschen->getPublishers());
 
         // Normal Tammi product
         $groschen = new Groschen('9789513179564');
-        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublisher());
+        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublishers());
 
         // Manga product
         $groschen = new Groschen('9789521619779');
-        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublisher());
+        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublishers());
 
         // Tammi marketing product
         $groschen = new Groschen('6430061220026');
-        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublisher());
+        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublishers());
     }
 
     /**
@@ -370,5 +370,31 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['name' => 'Thema subject category', 'value' => 'YFG'], $subjects);
         $this->assertContains(['name' => 'Suomalainen kirja-alan luokitus', 'value' => 'N'], $subjects);
         $this->assertContains(['name' => 'Thema interest age', 'value' => '5AN'], $subjects);
+    }
+
+    /**
+     * Test getting the products publisher(s)
+     * @return void
+     */
+    public function testGettingPublishers()
+    {
+        // Normal WSOY product
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner Söderström Osakeyhtiö'], $this->groschen->getPublishers());
+
+        // WSOY marketing product
+        $groschen = new Groschen('6430060030275');
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner Söderström Osakeyhtiö'], $groschen->getPublishers());
+
+        // Normal Tammi product
+        $groschen = new Groschen('9789513179564');
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
+
+        // Manga product
+        $groschen = new Groschen('9789521619779');
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
+
+        // Tammi marketing product
+        $groschen = new Groschen('6430061220026');
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
     }
 }

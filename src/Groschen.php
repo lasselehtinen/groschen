@@ -566,6 +566,35 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products publishers and their role
+     * @return Collection
+     */
+    public function getPublishers()
+    {
+        $publishers = new Collection;
+
+        switch ($this->product->Owner) {
+            case '1':
+            case '3':
+                $publisherName = 'Werner Söderström Osakeyhtiö';
+                break;
+            case '2:':
+            case '4:':
+            case '5:':
+                $publisherName = 'Kustannusosakeyhtiö Tammi';
+                break;
+            default:
+                throw new Exception('No mapping for publisher exists.');
+                break;
+        }
+
+        // Add main publisher
+        $publishers->push(['PublishingRole' => '01', 'PublisherName' => $publisherName]);
+
+        return $publishers;
+    }
+
+    /**
      * Get the stakeholders role priority (ie. author is higher than illustrator)
      * @param  string $roleId
      * @return int
