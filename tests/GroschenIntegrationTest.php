@@ -267,32 +267,6 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting publisher for the book
-     * @return void
-     */
-    public function testGettingPublisher()
-    {
-        // Normal WSOY product
-        $this->assertSame('Werner Söderström Osakeyhtiö', $this->groschen->getPublishers());
-
-        // WSOY marketing product
-        $groschen = new Groschen('6430060030275');
-        $this->assertSame('Werner Söderström Osakeyhtiö', $groschen->getPublishers());
-
-        // Normal Tammi product
-        $groschen = new Groschen('9789513179564');
-        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublishers());
-
-        // Manga product
-        $groschen = new Groschen('9789521619779');
-        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublishers());
-
-        // Tammi marketing product
-        $groschen = new Groschen('6430061220026');
-        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublishers());
-    }
-
-    /**
      * Test getting the products RRP incl. VAT
      * @return void
      */
