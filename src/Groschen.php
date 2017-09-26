@@ -661,6 +661,115 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get The products prices
+     * @return Collection
+     */
+    public function getPrices()
+    {
+        $prices = new Collection;
+
+        // Price types to collect
+        $priceTypes = new Collection;
+
+        // RRP excluding VAT
+        $priceTypes->push([
+            'PriceTypeCode' => '01',
+            'TaxIncluded' => false,
+            'TaxRateCode' => 'Z',
+            'PriceGroup' => '0',
+        ]);
+
+        // RRP including VAT
+        $priceTypes->push([
+            'PriceTypeCode' => '02',
+            'TaxIncluded' => true,
+            'TaxRateCode' => 'S',
+            'PriceGroup' => '0i',
+        ]);
+
+        // Supplier’s net price excluding tax
+        $priceTypes->push([
+            'PriceTypeCode' => '05',
+            'TaxIncluded' => false,
+            'TaxRateCode' => 'Z',
+            'PriceGroup' => '0',
+        ]);
+
+        // Go through all Price Types
+        foreach ($priceTypes as $priceType) {
+            // Price amount
+            $priceAmount = $this->getPriceForPriceGroup($priceType);
+
+            if (!is_null($priceAmount)) {
+                $prices->push([
+                    'PriceType' => $priceType['PriceTypeCode'],
+                    'PriceAmount' => $priceAmount,
+                    'Tax' => $this->getTaxElement($priceType),
+                    'CurrencyCode' => 'EUR',
+                    'Territory' => [
+                        'RegionsIncluded' => 'WORLD',
+                    ],
+                ]);
+            }
+        }
+
+        return $prices;
+    }
+
+    /**
+     * Get price for the given price group
+     * @param  array $priceType
+     * @return float|null
+     */
+    public function getPriceForPriceGroup($priceType)
+    {
+        foreach ($this->product->PriceList as $price) {
+            if ($price->PriceGroup === $priceType['PriceGroup']) {
+                return floatval($price->Salesprice);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the tax element
+     * @param  array $priceType
+     * @return array
+     */
+    public function getTaxElement($priceType)
+    {
+        // Form VAT code
+        $vatCode = floatval(preg_replace('/\D/', '', $this->getLookupValue(75, $this->product->VATCode)));
+
+        // Form taxable and tax amount
+        if ($priceType['TaxIncluded'] === true) {
+            $taxableAmount = $this->getPriceForPriceGroup($priceType) / (($this->getTaxRate() + 100) / 100);
+            $taxAmount = $this->getPriceForPriceGroup($priceType) - $taxableAmount;
+        } else {
+            $taxableAmount = $this->getPriceForPriceGroup($priceType);
+            $taxAmount = 0;
+        }
+
+        return [
+            'TaxType' => '01',
+            'TaxRateCode' => $priceType['TaxRateCode'],
+            'TaxRatePercent' => $vatCode,
+            'TaxableAmount' => round($taxableAmount, 2),
+            'TaxAmount' => round($taxAmount, 2),
+        ];
+    }
+
+    /**
+     * Get the products tax rate
+     * @return float
+     */
+    public function getTaxRate()
+    {
+        return floatval(preg_replace('/[^0-9]/', '', $this->getLookupValue(75, $this->product->VATCode)));
+    }
+
+    /**
      * Get the stakeholders role priority (ie. author is higher than illustrator)
      * @param  string $roleId
      * @return int

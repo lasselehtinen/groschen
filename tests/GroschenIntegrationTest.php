@@ -431,4 +431,83 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789513164232');
         $this->assertCount(0, $groschen->getPublishingDates());
     }
+
+    /**
+     * Test getting products prices
+     * @return void
+     */
+    public function testGettingPrices()
+    {
+        // RRP excluding tax
+        $recommendedRetailPrice = [
+            'PriceType' => '01',
+            'PriceAmount' => 26.64,
+            'Tax' => [
+                'TaxType' => '01',
+                'TaxRateCode' => 'Z',
+                'TaxRatePercent' => 10,
+                'TaxableAmount' => 26.64,
+                'TaxAmount' => 0,
+            ],
+            'CurrencyCode' => 'EUR',
+            'Territory' => [
+                'RegionsIncluded' => 'WORLD',
+            ],
+        ];
+
+        // RRP including tax
+        $recommendedRetailPriceIncludingTax = [
+            'PriceType' => '02',
+            'PriceAmount' => 29.30,
+            'Tax' => [
+                'TaxType' => '01',
+                'TaxRateCode' => 'S',
+                'TaxRatePercent' => 10,
+                'TaxableAmount' => 26.64,
+                'TaxAmount' => 2.66,
+            ],
+            'CurrencyCode' => 'EUR',
+            'Territory' => [
+                'RegionsIncluded' => 'WORLD',
+            ],
+        ];
+
+        // Bokinfo workaround for Supplier’s net price excluding tax. Basically same as 01
+        $suppliersNetPrice = $recommendedRetailPrice;
+        $suppliersNetPrice['PriceType'] = '05';
+
+        $this->assertContains($recommendedRetailPrice, $this->groschen->getPrices());
+        $this->assertContains($recommendedRetailPriceIncludingTax, $this->groschen->getPrices());
+        $this->assertContains($suppliersNetPrice, $this->groschen->getPrices());
+
+        // Product with missing prices and 24% VAT
+        $groschen = new Groschen('9789510353318');
+
+        // RRP excluding tax
+        $recommendedRetailPrice = [
+            'PriceType' => '01',
+            'PriceAmount' => 33.33,
+            'Tax' => [
+                'TaxType' => '01',
+                'TaxRateCode' => 'Z',
+                'TaxRatePercent' => 24,
+                'TaxableAmount' => 33.33,
+                'TaxAmount' => 0,
+            ],
+            'CurrencyCode' => 'EUR',
+            'Territory' => [
+                'RegionsIncluded' => 'WORLD',
+            ],
+        ];
+
+        // Bokinfo workaround for Supplier’s net price excluding tax. Basically same as 01
+        $suppliersNetPrice = $recommendedRetailPrice;
+        $suppliersNetPrice['PriceType'] = '05';
+
+        $this->assertContains($recommendedRetailPrice, $groschen->getPrices());
+        $this->assertContains($suppliersNetPrice, $groschen->getPrices());
+
+        // Should not have PriceType 02
+        $this->assertFalse($groschen->getPrices()->contains('PriceType', '02'));
+    }
 }
