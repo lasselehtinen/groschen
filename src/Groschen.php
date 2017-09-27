@@ -840,11 +840,11 @@ class Groschen implements ProductInterface
 
         // Fetch marketing texts
         $schilling = new TextHandling(
-            config('schilling.hostname'),
-            config('schilling.port'),
-            config('schilling.username'),
-            config('schilling.password'),
-            config('schilling.company')
+            config('groschen.schilling.hostname'),
+            config('groschen.schilling.port'),
+            config('groschen.schilling.username'),
+            config('groschen.schilling.password'),
+            config('groschen.schilling.company')
         );
 
         $texts = $schilling->getTextHandlings(['ProjectNumber' => $latestPrintProject]);
@@ -877,11 +877,11 @@ class Groschen implements ProductInterface
         // There is a bug in Schilling Web Services have a bug when using ProjectId as query parameter
         // as it does return ProjectNo in the response. Use EditionPrintOverProject instead
         $schilling = new Project(
-            config('schilling.hostname'),
-            config('schilling.port'),
-            config('schilling.username'),
-            config('schilling.password'),
-            config('schilling.company')
+            config('groschen.schilling.hostname'),
+            config('groschen.schilling.port'),
+            config('groschen.schilling.username'),
+            config('groschen.schilling.password'),
+            config('groschen.schilling.company')
         );
 
         // Get the main project

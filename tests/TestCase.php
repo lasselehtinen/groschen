@@ -16,11 +16,11 @@ class TestCase extends OrchestraTestCase
     protected function getEnvironmentSetUp($app)
     {
         // Setup default database to use sqlite :memory:
-        $app['config']->set('schilling.hostname', 'tuotantoschilling');
-        $app['config']->set('schilling.port', '8888');
-        $app['config']->set('schilling.username', 'dig-dist');
-        $app['config']->set('schilling.password', 'btRnsmLqMsALNt61Vksl');
-        $app['config']->set('schilling.company', '1001');
+        $app['config']->set('groschen.schilling.hostname', 'tuotantoschilling');
+        $app['config']->set('groschen.schilling.port', '8888');
+        $app['config']->set('groschen.schilling.username', 'dig-dist');
+        $app['config']->set('groschen.schilling.password', 'btRnsmLqMsALNt61Vksl');
+        $app['config']->set('groschen.schilling.company', '1001');
     }
 
     /**
