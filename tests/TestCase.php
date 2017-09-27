@@ -1,6 +1,7 @@
 <?php
 namespace lasselehtinen\Groschen\Test;
 
+use Dotenv\Dotenv;
 use lasselehtinen\Groschen\GroschenFacade;
 use lasselehtinen\Groschen\GroschenServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
@@ -15,12 +16,20 @@ class TestCase extends OrchestraTestCase
      */
     protected function getEnvironmentSetUp($app)
     {
+        $dotenv = new Dotenv(__DIR__ . '/..');
+        $dotenv->load();
+        $dotenv->required('SCHILLING_WEB_SERVICES_HOSTNAME');
+        $dotenv->required('SCHILLING_WEB_SERVICES_PORT');
+        $dotenv->required('SCHILLING_WEB_SERVICES_USERNAME');
+        $dotenv->required('SCHILLING_WEB_SERVICES_PASSWORD');
+        $dotenv->required('SCHILLING_WEB_SERVICES_COMPANY');
+
         // Setup default database to use sqlite :memory:
-        $app['config']->set('groschen.schilling.hostname', 'tuotantoschilling');
-        $app['config']->set('groschen.schilling.port', '8888');
-        $app['config']->set('groschen.schilling.username', 'dig-dist');
-        $app['config']->set('groschen.schilling.password', 'btRnsmLqMsALNt61Vksl');
-        $app['config']->set('groschen.schilling.company', '1001');
+        $app['config']->set('groschen.schilling.hostname', getenv('SCHILLING_WEB_SERVICES_HOSTNAME'));
+        $app['config']->set('groschen.schilling.port', getenv('SCHILLING_WEB_SERVICES_PORT'));
+        $app['config']->set('groschen.schilling.username', getenv('SCHILLING_WEB_SERVICES_USERNAME'));
+        $app['config']->set('groschen.schilling.password', getenv('SCHILLING_WEB_SERVICES_PASSWORD'));
+        $app['config']->set('groschen.schilling.company', getenv('SCHILLING_WEB_SERVICES_COMPANY'));
     }
 
     /**
