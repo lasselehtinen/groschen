@@ -13,8 +13,8 @@ class GroschenServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . 'Config/groschen.php' => config_path('groschen.php'),
-        ]);
+            __DIR__ . '/Config/groschen.php' => config_path('groschen.php'),
+        ], 'groschen-config');
     }
 
     /**
