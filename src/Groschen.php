@@ -501,26 +501,28 @@ class Groschen implements ProductInterface
         $subjects = new Collection;
 
         // Finnish Public Libraries Classification System aka YKL
-        $subjects->push(['name' => 'YKL', 'value' => preg_replace("/[^0-9.]/", "", $this->getLookupValue(293, $this->product->LiteratureGroup))]);
+        $libraryClass = preg_replace("/[^0-9.]/", "", $this->getLookupValue(293, $this->product->LiteratureGroup));
+
+        $subjects->push(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => $libraryClass]);
 
         // Schilling main and subgroup
-        $subjects->push(['name' => 'Bonnier Books Finland - Main product group', 'value' => $this->getLookupValue(26, str_pad($this->product->MainGroup, 2, '0', STR_PAD_LEFT))]);
-        $subjects->push(['name' => 'Bonnier Books Finland - Product sub-group', 'value' => $this->getLookupValue(27, str_pad($this->product->SubGroup, 3, '0', STR_PAD_LEFT))]);
+        $subjects->push(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => $this->getLookupValue(26, str_pad($this->product->MainGroup, 2, '0', STR_PAD_LEFT))]);
+        $subjects->push(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => $this->getLookupValue(27, str_pad($this->product->SubGroup, 3, '0', STR_PAD_LEFT))]);
 
         // BISAC Subject Heading
-        $subjects->push(['name' => 'BISAC Subject Heading', 'value' => $this->getBisacCode()]);
+        $subjects->push(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => $this->getBisacCode()]);
 
         // BIC subject category
-        $subjects->push(['name' => 'BIC subject category', 'value' => $this->getBicCode()]);
+        $subjects->push(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => $this->getBicCode()]);
 
         // Thema subject category
-        $subjects->push(['name' => 'Thema subject category', 'value' => $this->getThemaSubjectCode()]);
+        $subjects->push(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => $this->getThemaSubjectCode()]);
 
         // Thema interest age
-        $subjects->push(['name' => 'Thema interest age', 'value' => $this->getThemaInterestAge()]);
+        $subjects->push(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => $this->getThemaInterestAge()]);
 
         // Fiktiivisen aineiston lisäluokitus
-        $subjects->push(['name' => 'Fiktiivisen aineiston lisäluokitus', 'value' => $this->getFiktiivisenAineistonLisaluokitus()]);
+        $subjects->push(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisäluokitus', 'SubjectCode' => $this->getFiktiivisenAineistonLisaluokitus()]);
 
         // Finnish book trade categorization
         foreach ($this->getFinnishBookTradeCategorisations() as $finnishBookTradeCategorisation) {
@@ -536,10 +538,10 @@ class Groschen implements ProductInterface
         // Add all keywords separated by semicolon
         $keywords = [];
         foreach ($finnaSubjects as $subject) {
-            $keywords[] = $subject['value'];
+            $keywords[] = $subject['SubjectCode'];
         }
 
-        $subjects->push(['name' => 'Keywords', 'value' => implode(';', $keywords)]);
+        $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectSchemeName' => 'Keywords', 'SubjectCode' => implode(';', $keywords)]);
 
         return $subjects;
     }
@@ -1220,12 +1222,15 @@ class Groschen implements ProductInterface
                     if (isset($subject->type) && isset($subject->source) && $subject->type === 'topic') {
                         switch ($subject->source) {
                             case 'kaunokki':
+                                $subjectSchemeIdentifier = '69';
                                 $subjectSchemeName = 'KAUNO - ontology for fiction';
                                 break;
                             case 'yso':
+                                $subjectSchemeIdentifier = '71';
                                 $subjectSchemeName = 'YSO - General Finnish ontology';
                                 break;
                             case 'ysa':
+                                $subjectSchemeIdentifier = '64';
                                 $subjectSchemeName = 'YSA - General Finnish thesaurus';
                                 break;
                             default:
@@ -1236,8 +1241,9 @@ class Groschen implements ProductInterface
                         // Go through all the headings/subjects
                         foreach ($subject->heading as $heading) {
                             $keywords[] = [
-                                'name' => $subjectSchemeName,
-                                'value' => $heading,
+                                'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
+                                'SubjectSchemeName' => $subjectSchemeName,
+                                'SubjectCode' => $heading,
                             ];
                         }
                     }
@@ -1266,8 +1272,9 @@ class Groschen implements ProductInterface
 
             if (ctype_alpha($char) === true) {
                 $categorisations[] = [
-                    'name' => 'Suomalainen kirja-alan luokitus',
-                    'value' => $char,
+                    'SubjectSchemeIdentifier' => '73',
+                    'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus',
+                    'SubjectCode' => $char,
                 ];
             }
         }

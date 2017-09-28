@@ -323,27 +323,29 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingSubjects()
     {
         $subjects = $this->groschen->getSubjects();
-        $this->assertContains(['name' => 'YKL', 'value' => '84.2'], $subjects);
-        $this->assertContains(['name' => 'Bonnier Books Finland - Main product group', 'value' => 'Kotimainen kauno'], $subjects);
-        $this->assertContains(['name' => 'Bonnier Books Finland - Product sub-group', 'value' => 'Nykyromaanit'], $subjects);
-        $this->assertContains(['name' => 'BISAC Subject Heading', 'value' => 'FIC000000'], $subjects);
-        $this->assertContains(['name' => 'BIC subject category', 'value' => 'FA'], $subjects);
-        $this->assertContains(['name' => 'Thema subject category', 'value' => 'FBA'], $subjects);
-        $this->assertContains(['name' => 'KAUNO - ontology for fiction', 'value' => 'novellit'], $subjects);
-        $this->assertContains(['name' => 'Keywords', 'value' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => 'Kotimainen kauno'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => 'Nykyromaanit'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC000000'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FBA'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectSchemeName' => 'Keywords', 'SubjectCode' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
         $subjects = $groschen->getSubjects();
-        $this->assertContains(['name' => 'YKL', 'value' => '84.2'], $subjects);
-        $this->assertContains(['name' => 'Bonnier Books Finland - Main product group', 'value' => 'Käännetty L&N'], $subjects);
-        $this->assertContains(['name' => 'Bonnier Books Finland - Product sub-group', 'value' => 'Scifi'], $subjects);
-        $this->assertContains(['name' => 'BISAC Subject Heading', 'value' => 'FIC028000'], $subjects);
-        $this->assertContains(['name' => 'BIC subject category', 'value' => 'FL'], $subjects);
-        $this->assertContains(['name' => 'Fiktiivisen aineiston lisäluokitus', 'value' => 'Scifi'], $subjects);
-        $this->assertContains(['name' => 'Thema subject category', 'value' => 'YFG'], $subjects);
-        $this->assertContains(['name' => 'Suomalainen kirja-alan luokitus', 'value' => 'N'], $subjects);
-        $this->assertContains(['name' => 'Thema interest age', 'value' => '5AN'], $subjects);
+
+        $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => 'Käännetty L&N'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => 'Scifi'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC028000'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FL'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisäluokitus', 'SubjectCode' => 'Scifi'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YFG'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'N'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => '5AN'], $subjects);
+
     }
 
     /**
