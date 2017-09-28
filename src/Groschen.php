@@ -503,7 +503,9 @@ class Groschen implements ProductInterface
         // Finnish Public Libraries Classification System aka YKL
         $libraryClass = preg_replace("/[^0-9.]/", "", $this->getLookupValue(293, $this->product->LiteratureGroup));
 
-        $subjects->push(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => $libraryClass]);
+        if (!empty($libraryClass)) {
+            $subjects->push(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => $libraryClass]);
+        }
 
         // Schilling main and subgroup
         $subjects->push(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => $this->getLookupValue(26, str_pad($this->product->MainGroup, 2, '0', STR_PAD_LEFT))]);

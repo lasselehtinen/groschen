@@ -346,6 +346,10 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'N'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => '5AN'], $subjects);
 
+        // Product without library class
+        $groschen = new Groschen('9789510353189');
+        $subjects = $groschen->getSubjects();
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => ''], $subjects);
     }
 
     /**
