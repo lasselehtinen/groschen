@@ -295,28 +295,6 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting products original publication date
-     * @return void
-     */
-    public function testGettingOriginalPublicationDate()
-    {
-        $publicationDate = $this->groschen->getOriginalPublicationDate();
-        $this->assertInstanceOf('DateTime', $publicationDate);
-        $this->assertSame('01.06.2010', $publicationDate->format('d.m.Y'));
-    }
-
-    /**
-     * Test getting products latest publication date
-     * @return void
-     */
-    public function testGettingLatestPublicationDate()
-    {
-        $latestPublicationDate = $this->groschen->getLatestPublicationDate();
-        $this->assertInstanceOf('DateTime', $latestPublicationDate);
-        $this->assertSame('28.09.2017', $latestPublicationDate->format('d.m.Y'));
-    }
-
-    /**
      * Test getting various subjects
      * @return void
      */
@@ -434,7 +412,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20100601'], $this->groschen->getPublishingDates());
 
         // Latest reprint
-        $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20170928'], $this->groschen->getPublishingDates());
+        $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20170929'], $this->groschen->getPublishingDates());
 
         // Product without original publishing date
         $groschen = new Groschen('6430061220040');
