@@ -350,6 +350,14 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510353189');
         $subjects = $groschen->getSubjects();
         $this->assertNotContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => ''], $subjects);
+
+        // Product with unsupported subject scheme
+        $groschen = new Groschen('9789510427019');
+        $subjects = $groschen->getSubjects();
+        $this->assertContains(['SubjectSchemeIdentifier' => null, 'SubjectSchemeName' => 'Unknown', 'SubjectCode' => '1917'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => null, 'SubjectSchemeName' => 'Unknown', 'SubjectCode' => 'historia'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => null, 'SubjectSchemeName' => 'Unknown', 'SubjectCode' => 'Suomi'], $subjects);
+
     }
 
     /**

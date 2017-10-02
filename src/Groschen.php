@@ -1236,6 +1236,7 @@ class Groschen implements ProductInterface
                                 $subjectSchemeName = 'YSA - General Finnish thesaurus';
                                 break;
                             default:
+                                $subjectSchemeIdentifier = null;
                                 $subjectSchemeName = 'Unknown';
                                 break;
                         }
