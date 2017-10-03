@@ -429,6 +429,23 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products imprints
+     * @return Collection
+     */
+    public function getImprints()
+    {
+        $imprints = new Collection;
+
+        if (!empty($this->product->OriginalPublisher)) {
+            $imprints->push([
+                'ImprintName' => $this->getLookupValue('595', $this->product->OriginalPublisher),
+            ]);
+        }
+
+        return $imprints;
+    }
+
+    /**
      * Get the products recommended retail price RRP including VAT
      * @return float|null
      */

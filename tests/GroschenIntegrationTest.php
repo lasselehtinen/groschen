@@ -369,6 +369,20 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting the products imprint
+     * @return void
+     */
+    public function testGettingImprints()
+    {
+        // Normal WSOY product
+        $this->assertCount(0, $this->groschen->getImprints());
+
+        // Johnny Kniga (imprint of WSOY)
+        $groschen = new Groschen('9789510379325');
+        $this->assertContains(['ImprintName' => 'Johnny Kniga'], $groschen->getImprints());
+    }
+
+    /**
      * Test getting products publishing status
      * @return void
      */

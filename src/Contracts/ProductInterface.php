@@ -77,6 +77,12 @@ interface ProductInterface
     public function getPublisher();
 
     /**
+     * Get the products imprints
+     * @return Collection
+     */
+    public function getImprints();
+
+    /**
      * Get the product RRP including tax
      * @return float
      */
