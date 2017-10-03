@@ -23,6 +23,9 @@ class TestCase extends OrchestraTestCase
         $dotenv->required('SCHILLING_WEB_SERVICES_USERNAME');
         $dotenv->required('SCHILLING_WEB_SERVICES_PASSWORD');
         $dotenv->required('SCHILLING_WEB_SERVICES_COMPANY');
+        $dotenv->required('ELVIS_HOSTNAME');
+        $dotenv->required('ELVIS_USERNAME');
+        $dotenv->required('ELVIS_PASSWORD');
 
         // Setup default database to use sqlite :memory:
         $app['config']->set('groschen.schilling.hostname', getenv('SCHILLING_WEB_SERVICES_HOSTNAME'));
@@ -30,6 +33,9 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('groschen.schilling.username', getenv('SCHILLING_WEB_SERVICES_USERNAME'));
         $app['config']->set('groschen.schilling.password', getenv('SCHILLING_WEB_SERVICES_PASSWORD'));
         $app['config']->set('groschen.schilling.company', getenv('SCHILLING_WEB_SERVICES_COMPANY'));
+        $app['config']->set('groschen.elvis.hostname', getenv('ELVIS_HOSTNAME'));
+        $app['config']->set('groschen.elvis.username', getenv('ELVIS_USERNAME'));
+        $app['config']->set('groschen.elvis.password', getenv('ELVIS_PASSWORD'));
     }
 
     /**

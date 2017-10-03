@@ -15,7 +15,8 @@
         "lasselehtinen/schilling-soap-wrapper": "1.0.0",
         "ezyang/htmlpurifier": "^4.9",
         "guzzlehttp/guzzle": "~6.0",
-        "fale/isbn": "^3.0"
+        "fale/isbn": "^3.0",
+        "league/uri": "^5.0"
     },
     "autoload": {
         "psr-4": {

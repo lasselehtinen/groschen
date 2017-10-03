@@ -502,4 +502,27 @@ class GroschenIntegrationTest extends TestCase
         // Should not have PriceType 02
         $this->assertFalse($groschen->getPrices()->contains('PriceType', '02'));
     }
+
+    /**
+     * Test getting supporting resources like cover image / reading sample links etc.
+     * @return void
+     */
+    public function testGettingSupportingResources()
+    {
+        $supportingResource = [
+            'ResourceContentType' => '01',
+            'ContentAudience' => '00',
+            'ResourceMode' => '03',
+            'ResourceVersion' => [
+                'ResourceForm' => '02',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=b25peDpueUVISEI=',
+            ],
+        ];
+
+        $this->assertContains($supportingResource, $this->groschen->getSupportingResources());
+
+        // Product without cover image
+        $groschen = new Groschen('6430060030237');
+        $this->assertCount(0, $groschen->getSupportingResources());
+    }
 }

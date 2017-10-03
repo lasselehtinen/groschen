@@ -124,6 +124,12 @@ interface ProductInterface
      */
     public function getPrices();
 
+    /**
+     * Get the products supporting resources
+     * @return Collection
+     */
+    public function getSupportingResources();
+
     // TODO
-    // SupportingResource
+    // ResourceVersionFeatures to SupportingResources
 }

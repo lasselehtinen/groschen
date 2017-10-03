@@ -8,4 +8,9 @@ return [
         'password' => env('SCHILLING_WEB_SERVICES_PASSWORD', 'foobar'),
         'company' => env('SCHILLING_WEB_SERVICES_COMPANY', '1001'),
     ],
+    'elvis' => [
+        'hostname' => env('ELVIS_HOSTNAME', 'elvis.domain.com'),
+        'username' => env('ELVIS_USERNAME', 'elvisuser'),
+        'password' => env('ELVIS_PASSWORD', 'foobar'),
+    ],
 ];

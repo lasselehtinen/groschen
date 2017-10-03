@@ -13,6 +13,9 @@ use LasseLehtinen\SchillingSoapWrapper\Services\Lookup;
 use LasseLehtinen\SchillingSoapWrapper\Services\Product;
 use LasseLehtinen\SchillingSoapWrapper\Services\Project;
 use LasseLehtinen\SchillingSoapWrapper\Services\TextHandling;
+use League\Uri\Modifiers\MergeQuery;
+use League\Uri\Modifiers\RemoveQueryKeys;
+use League\Uri\Schemes\Http as HttpUri;
 
 class Groschen implements ProductInterface
 {
@@ -762,6 +765,79 @@ class Groschen implements ProductInterface
             'TaxableAmount' => round($taxableAmount, 2),
             'TaxAmount' => round($taxAmount, 2),
         ];
+    }
+
+    /**
+     * Get products supporting resources
+     * @return Collection
+     */
+    public function getSupportingResources()
+    {
+        $supportingResources = new Collection;
+
+        // Form new Guzzle client
+        $client = new Client([
+            'base_uri' => config('groschen.elvis.hostname'),
+            'cookies' => true,
+        ]);
+
+        // Login to Elvis
+        $response = $client->request('GET', 'login', ['query' => ['username' => config('groschen.elvis.username'), 'password' => config('groschen.elvis.password')]]);
+        $json = json_decode($response->getBody());
+
+        // Check that we are logged in
+        if ($json->loginSuccess === false) {
+            throw new Exception($json->loginFaultMessage);
+        }
+
+        // Search for cover image in Elvis
+        $response = $client->request('GET', 'search', [
+            'query' => [
+                'q' => 'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND (ancestorPaths:/WSOY/Kansikuvat OR ancestorPaths:/Tammi/Kansikuvat)',
+                'metadataToReturn' => 'filename',
+                'num' => 1,
+            ],
+        ]);
+
+        $searchResults = json_decode($response->getBody());
+
+        // Add cover image to collection
+        foreach ($searchResults->hits as $hit) {
+            $supportingResources->push([
+                'ResourceContentType' => '01',
+                'ContentAudience' => '00',
+                'ResourceMode' => '03',
+                'ResourceVersion' => [
+                    'ResourceForm' => '02',
+                    'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl),
+                ],
+            ]);
+        }
+
+        // Logout from Elvis
+        $response = $client->request('GET', 'logout');
+
+        return $supportingResources;
+    }
+
+    /**
+     * Get the authCred URL for the Elvis links
+     * @param  string $url
+     * @return string
+     */
+    public function getAuthCredUrl($url)
+    {
+        $uri = HttpUri::createFromString($url);
+
+        // Add authCred to query parameters
+        $modifier = new MergeQuery('authcred=' . base64_encode(config('groschen.elvis.username') . ':' . config('groschen.elvis.password')));
+        $newUri = $modifier->__invoke($uri);
+
+        // Remove the underscore version parameter
+        $modifier = new RemoveQueryKeys(['_']);
+        $newUri = $modifier->__invoke($newUri);
+
+        return (string) $newUri;
     }
 
     /**
