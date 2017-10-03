@@ -83,6 +83,15 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Return the raw product information
+     * @return stdClass
+     */
+    public function getProductInformation()
+    {
+        return $this->product;
+    }
+
+    /**
      * Get the products identifiers
      * @return Collection
      */
