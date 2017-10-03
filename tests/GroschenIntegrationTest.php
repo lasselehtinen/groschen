@@ -264,6 +264,10 @@ class GroschenIntegrationTest extends TestCase
 
         // Check that text contains string
         $this->assertContains('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
+
+        // Product without text
+        $groschen = new Groschen('9789510343135');
+        $this->assertFalse($groschen->getTextContents()->contains('TextType', '03'));
     }
 
     /**

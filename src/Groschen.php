@@ -563,11 +563,15 @@ class Groschen implements ProductInterface
             return $textContents;
         }
 
-        $textContents->push([
-            'TextType' => '03',
-            'ContentAudience' => '00',
-            'Text' => $this->getLatestMarketingText($this->product->ProjectId),
-        ]);
+        $text = $this->getLatestMarketingText($this->product->ProjectId);
+
+        if (!empty($text)) {
+            $textContents->push([
+                'TextType' => '03',
+                'ContentAudience' => '00',
+                'Text' => $this->getLatestMarketingText($this->product->ProjectId),
+            ]);
+        }
 
         return $textContents;
     }
