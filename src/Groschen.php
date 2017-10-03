@@ -815,7 +815,7 @@ class Groschen implements ProductInterface
         $response = $client->request('GET', 'search', [
             'query' => [
                 'q' => 'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND (ancestorPaths:/WSOY/Kansikuvat OR ancestorPaths:/Tammi/Kansikuvat)',
-                'metadataToReturn' => 'filename',
+                'metadataToReturn' => 'height, width',
                 'num' => 1,
             ],
         ]);
@@ -830,6 +830,16 @@ class Groschen implements ProductInterface
                 'ResourceMode' => '03',
                 'ResourceVersion' => [
                     'ResourceForm' => '02',
+                    'ResourceVersionFeatures' => [
+                        [
+                            'ResourceVersionFeatureType' => '02',
+                            'FeatureValue' => $hit->metadata->height,
+                        ],
+                        [
+                            'ResourceVersionFeatureType' => '03',
+                            'FeatureValue' => $hit->metadata->width,
+                        ],
+                    ],
                     'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl),
                 ],
             ]);

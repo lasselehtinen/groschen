@@ -533,6 +533,16 @@ class GroschenIntegrationTest extends TestCase
             'ResourceMode' => '03',
             'ResourceVersion' => [
                 'ResourceForm' => '02',
+                'ResourceVersionFeatures' => [
+                    [
+                        'ResourceVersionFeatureType' => '02',
+                        'FeatureValue' => '2398',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '03',
+                        'FeatureValue' => '1594',
+                    ],
+                ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=b25peDpueUVISEI=',
             ],
         ];
