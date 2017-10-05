@@ -76,6 +76,7 @@ class Groschen implements ProductInterface
             'ProductNumber' => $this->productNumber,
             'WithPartnerInfoData' => true,
             'WithPriceData' => true,
+            'WithInternetInformation' => true,
         ]);
 
         // Return first result
@@ -858,6 +859,31 @@ class Groschen implements ProductInterface
         $response = $client->request('GET', 'logout');
 
         return $supportingResources;
+    }
+
+    /**
+     * Get the related products
+     * @return Collection
+     */
+    public function getRelatedProducts()
+    {
+        $relatedProducts = new Collection;
+
+        if (isset($this->product->InternetInformation->RelatedProducts)) {
+            foreach ($this->product->InternetInformation->RelatedProducts as $relatedProduct) {
+                $relatedProducts->push([
+                    'ProductRelationCode' => '06',
+                    'ProductIdentifiers' => [
+                        [
+                            'ProductIDType' => '03',
+                            'IDValue' => intval($relatedProduct),
+                        ],
+                    ],
+                ]);
+            }
+        }
+
+        return $relatedProducts;
     }
 
     /**

@@ -553,4 +553,33 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('6430060030237');
         $this->assertCount(0, $groschen->getSupportingResources());
     }
+
+    public function testGettingRelatedProducts()
+    {
+        // List of related products that should be returned
+        $relatedProducts = [
+            9789510369654, // ePub
+            9789510366431, // MP3
+            9789510366424, // CD
+            9789510407554, // Pocket book
+        ];
+
+        foreach ($relatedProducts as $relatedProduct) {
+            $relation = [
+                'ProductRelationCode' => '06',
+                'ProductIdentifiers' => [
+                    [
+                        'ProductIDType' => '03',
+                        'IDValue' => $relatedProduct,
+                    ],
+                ],
+            ];
+
+            $this->assertContains($relation, $this->groschen->getRelatedProducts());
+        }
+
+        // Product without any relations
+        $groschen = new Groschen('6430060030237');
+        $this->assertCount(0, $groschen->getRelatedProducts());
+    }
 }

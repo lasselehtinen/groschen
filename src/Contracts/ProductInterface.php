@@ -136,6 +136,12 @@ interface ProductInterface
      */
     public function getSupportingResources();
 
+    /**
+     * Get the related products
+     * @return Collection
+     */
+    public function getRelatedProducts();
+
     // TODO
     // ResourceVersionFeatures to SupportingResources
 }
