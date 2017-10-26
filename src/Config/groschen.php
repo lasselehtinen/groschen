@@ -13,4 +13,8 @@ return [
         'username' => env('ELVIS_USERNAME', 'elvisuser'),
         'password' => env('ELVIS_PASSWORD', 'foobar'),
     ],
+    'soundcloud' => [
+        'clientId' => env('SOUNDCLOUD_CLIENTID'),
+        'clientSecret' => env('SOUNDCLOUD_CLIENTSECRET'),
+    ],
 ];

@@ -26,6 +26,8 @@ class TestCase extends OrchestraTestCase
         $dotenv->required('ELVIS_HOSTNAME');
         $dotenv->required('ELVIS_USERNAME');
         $dotenv->required('ELVIS_PASSWORD');
+        $dotenv->required('SOUNDCLOUD_CLIENTID');
+        $dotenv->required('SOUNDCLOUD_CLIENTSECRET');
 
         // Setup default database to use sqlite :memory:
         $app['config']->set('groschen.schilling.hostname', getenv('SCHILLING_WEB_SERVICES_HOSTNAME'));
@@ -36,6 +38,8 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('groschen.elvis.hostname', getenv('ELVIS_HOSTNAME'));
         $app['config']->set('groschen.elvis.username', getenv('ELVIS_USERNAME'));
         $app['config']->set('groschen.elvis.password', getenv('ELVIS_PASSWORD'));
+        $app['config']->set('groschen.soundcloud.clientId', getenv('SOUNDCLOUD_CLIENTID'));
+        $app['config']->set('groschen.soundcloud.clientSecret', getenv('SOUNDCLOUD_CLIENTSECRET'));
     }
 
     /**

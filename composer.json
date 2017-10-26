@@ -16,7 +16,8 @@
         "ezyang/htmlpurifier": "^4.9",
         "guzzlehttp/guzzle": "~6.0",
         "fale/isbn": "^3.0",
-        "league/uri": "^5.0"
+        "league/uri": "^5.0",
+        "njasm/soundcloud": "^2.2"
     },
     "autoload": {
         "psr-4": {

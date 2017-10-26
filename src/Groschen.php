@@ -16,6 +16,7 @@ use LasseLehtinen\SchillingSoapWrapper\Services\TextHandling;
 use League\Uri\Modifiers\MergeQuery;
 use League\Uri\Modifiers\RemoveQueryKeys;
 use League\Uri\Schemes\Http as HttpUri;
+use Njasm\Soundcloud\Soundcloud;
 
 class Groschen implements ProductInterface
 {
@@ -857,6 +858,50 @@ class Groschen implements ProductInterface
 
         // Logout from Elvis
         $response = $client->request('GET', 'logout');
+
+        // Add audio/reading samples and YouTube trailers
+        if (isset($this->product->InternetInformation->InternetTexts[0]->InternetLinks)) {
+            foreach ($this->product->InternetInformation->InternetTexts[0]->InternetLinks as $internetLink) {
+                switch ($internetLink->LinkType) {
+                    case 'ääninäyte':
+                        $resourceContentType = '15';
+                        $resourceMode = '02';
+
+                        // Get permalink URL from Soundcloud
+                        $soundcloud = new Soundcloud(config('groschen.soundcloud.clientId'), config('groschen.soundcloud.clientSecret'));
+                        $soundcloud->get('/tracks/' . $internetLink->Link);
+                        $response = $soundcloud->request();
+                        $url = $response->bodyObject()->permalink_url;
+                        break;
+                    case 'issuu':
+                        $resourceContentType = '15';
+                        $resourceMode = '04';
+                        $url = $internetLink->Link;
+                        break;
+                    case 'youtube':
+                        $resourceContentType = '26';
+                        $resourceMode = '05';
+                        $url = $internetLink->Link;
+                        break;
+                    default:
+                        $url = null;
+                        break;
+                }
+
+                // Add to Collection if URL exists
+                if (!empty($url)) {
+                    $supportingResources->push([
+                        'ResourceContentType' => $resourceContentType,
+                        'ContentAudience' => '00',
+                        'ResourceMode' => $resourceMode,
+                        'ResourceVersion' => [
+                            'ResourceForm' => '03',
+                            'ResourceLink' => $url,
+                        ],
+                    ]);
+                }
+            }
+        }
 
         return $supportingResources;
     }

@@ -525,7 +525,7 @@ class GroschenIntegrationTest extends TestCase
      * Test getting supporting resources like cover image / reading sample links etc.
      * @return void
      */
-    public function testGettingSupportingResources()
+    public function testGettingCoverImageInSupportingResources()
     {
         $supportingResource = [
             'ResourceContentType' => '01',
@@ -552,6 +552,53 @@ class GroschenIntegrationTest extends TestCase
         // Product without cover image
         $groschen = new Groschen('6430060030237');
         $this->assertCount(0, $groschen->getSupportingResources());
+    }
+
+    /**
+     * Test getting audio sample links to Soundcloud
+     * @return void
+     */
+    public function testGettingExternalLinksInSupportingResources()
+    {
+        // Product with links to multiple external sources
+        $groschen = new Groschen('9789510409749');
+
+        // Audio sample in Soundcloud
+        $audioSample = [
+            'ResourceContentType' => '15',
+            'ContentAudience' => '00',
+            'ResourceMode' => '02',
+            'ResourceVersion' => [
+                'ResourceForm' => '03',
+                'ResourceLink' => 'https://soundcloud.com/wsoy/9789510409749-kaikki-se-valo-jota-emme-naee',
+            ],
+        ];
+
+        // Youtube
+        $youTube = [
+            'ResourceContentType' => '26',
+            'ContentAudience' => '00',
+            'ResourceMode' => '05',
+            'ResourceVersion' => [
+                'ResourceForm' => '03',
+                'ResourceLink' => 'https://www.youtube.com/watch?v=4Ewj4uYx3Zc',
+            ],
+        ];
+
+        // Reading sample in Issuu
+        $readingSample = [
+            'ResourceContentType' => '15',
+            'ContentAudience' => '00',
+            'ResourceMode' => '04',
+            'ResourceVersion' => [
+                'ResourceForm' => '03',
+                'ResourceLink' => 'http://issuu.com/kirja/docs/9789510409749-kaikki-se-valo-jota-emme-nae',
+            ],
+        ];
+
+        $this->assertContains($audioSample, $groschen->getSupportingResources());
+        $this->assertContains($youTube, $groschen->getSupportingResources());
+        $this->assertContains($readingSample, $groschen->getSupportingResources());
     }
 
     public function testGettingRelatedProducts()
