@@ -332,14 +332,6 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510353189');
         $subjects = $groschen->getSubjects();
         $this->assertNotContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => ''], $subjects);
-
-        // Product with unsupported subject scheme
-        $groschen = new Groschen('9789510427019');
-        $subjects = $groschen->getSubjects();
-        $this->assertContains(['SubjectSchemeIdentifier' => null, 'SubjectSchemeName' => 'Unknown', 'SubjectCode' => '1917'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => null, 'SubjectSchemeName' => 'Unknown', 'SubjectCode' => 'historia'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => null, 'SubjectSchemeName' => 'Unknown', 'SubjectCode' => 'Suomi'], $subjects);
-
     }
 
     /**
@@ -396,7 +388,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('02', $groschen->getPublishingStatus());
 
         // Exclusive sales
-        $groschen = new Groschen('6430027856108');
+        $groschen = new Groschen('6430027856139');
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Sold out
