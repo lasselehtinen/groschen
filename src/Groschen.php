@@ -1556,6 +1556,7 @@ class Groschen implements ProductInterface
             'ARR' => 'B25',
             'MAP' => 'A39',
             'AST' => 'Z01',
+            'EDT' => 'B21',
         ];
 
         if (array_key_exists($role, $roleMappings)) {
