@@ -221,6 +221,21 @@ class Groschen implements ProductInterface
                     ],
                 ],
             ]);
+
+            // Add Collection sequence if product has NumberInSeries
+            if ($this->product->NumberInSeries > 0) {
+                $collections = $collections->map(function ($collection) {
+                    // Add CollectionSequence to Collection
+                    $collectionSequence = [
+                        'CollectionSequenceType' => '03',
+                        'CollectionSequenceNumber' => '3',
+                    ];
+
+                    $collection[0]['CollectionSequence'] = $collectionSequence;
+
+                    return $collection;
+                });
+            }
         }
 
         return $collections;

@@ -142,6 +142,34 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting number in series
+     * @return void
+     */
+    public function testGettingNumberInSeriesInCollection()
+    {
+        // Product with number in series
+        $groschen = new Groschen('9789521610158');
+
+        $collection = [
+            'CollectionType' => '10', [
+                'CollectionSequence' => [
+                    'CollectionSequenceType' => '03',
+                    'CollectionSequenceNumber' => '3',
+                ],
+                'TitleDetail' => [
+                    'TitleType' => '01',
+                    'TitleElement' => [
+                        'TitleElementLevel' => '01',
+                        'TitleText' => '.Hack',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertContains($collection, $groschen->getCollections());
+    }
+
+    /**
      * Test getting title details
      * @return void
      */
@@ -149,6 +177,7 @@ class GroschenIntegrationTest extends TestCase
     {
         $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
         $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
+
         // Should not have original title
         $this->assertFalse($this->groschen->getTitleDetails()->contains('TitleType', '03'));
 
