@@ -622,6 +622,10 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains($readingSample, $groschen->getSupportingResources());
     }
 
+    /**
+     * Test getting related products
+     * @return void
+     */
     public function testGettingRelatedProducts()
     {
         // List of related products that should be returned
