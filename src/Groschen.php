@@ -1646,8 +1646,8 @@ class Groschen implements ProductInterface
      */
     public function getProductsInSeries()
     {
-        if (!empty($this->product->BookSeries) && !empty($this->product->NumberInSeries) && $this->product->NumberInSeries > 0) {
-            return intval($this->product->NumberInSeries);
+        if (!empty($this->product->BookSeries) && $this->product->PartsInSeries > 0) {
+            return intval($this->product->PartsInSeries);
         }
 
         return null;

@@ -749,7 +749,7 @@ class GroschenIntegrationTest extends TestCase
     {
         $this->assertNull($this->groschen->getProductsInSeries());
 
-        // Product with a different status code
+        // Product with four products in the serie
         $groschen = new Groschen('9789521610165');
         $this->assertSame(4, $groschen->getProductsInSeries());
     }
