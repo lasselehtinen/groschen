@@ -654,4 +654,158 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('6430060030237');
         $this->assertCount(0, $groschen->getRelatedProducts());
     }
+
+    /**
+     * Test checking if product is confidential
+     * @return void
+     */
+    public function testCheckingIfProductIsConfidential()
+    {
+        $this->assertFalse($this->groschen->isConfidential());
+
+        // Development-confidential
+        $groschen = new Groschen('6430060030169');
+        $this->assertTrue($groschen->isConfidential());
+    }
+
+    /**
+     * Test getting products cost center
+     * @return void
+     */
+    public function testGettingCostCenter()
+    {
+        $this->assertSame(301, $this->groschen->getCostCenter());
+
+        // Some other cost center
+        $groschen = new Groschen('6430060030169');
+        $this->assertSame(914, $groschen->getCostCenter());
+
+        // Cancelled product which does not have cost center
+        $groschen = new Groschen('9789510418666');
+        $this->assertNull($groschen->getCostCenter());
+    }
+
+    /**
+     * Test getting products media type
+     * @return void
+     */
+    public function testGettingMediaType()
+    {
+        $this->assertSame('BB', $this->groschen->getMediaType());
+
+        // Some other cost center
+        $groschen = new Groschen('9789510343203');
+        $this->assertSame('AJ', $groschen->getMediaType());
+
+        // Cancelled product which does not have media type
+        $groschen = new Groschen('9789510418666');
+        $this->assertNull($groschen->getMediaType());
+    }
+
+    /**
+     * Test getting the products binding code
+     * @return void
+     */
+    public function testGettingBindingCode()
+    {
+        $this->assertNull($this->groschen->getBindingCode());
+
+        // Product with a binding code
+        $groschen = new Groschen('9789510343203');
+        $this->assertSame('A103', $groschen->getBindingCode());
+    }
+
+    /**
+     * Test getting the products discount group
+     * @return void
+     */
+    public function testGettingDiscountGroup()
+    {
+        $this->assertSame(1, $this->groschen->getDiscountGroup());
+
+        // Product with a different discount code
+        $groschen = new Groschen('9789510343203');
+        $this->assertSame(4, $groschen->getDiscountGroup());
+    }
+
+    /**
+     * Test getting the product status code
+     * @return void
+     */
+    public function testGettingStatusCode()
+    {
+        $this->assertSame(2, $this->groschen->getStatusCode());
+
+        // Product with a different status code
+        $groschen = new Groschen('6430060030169');
+        $this->assertSame(6, $groschen->getStatusCode());
+    }
+
+    /**
+     * Test getting the number of products in the series
+     * @return void
+     */
+    public function testGettingProductsInSeries()
+    {
+        $this->assertNull($this->groschen->getProductsInSeries());
+
+        // Product with a different status code
+        $groschen = new Groschen('9789521610165');
+        $this->assertSame(4, $groschen->getProductsInSeries());
+    }
+
+    /**
+     * Test checking for if the product is immaterial
+     * @return void
+     */
+    public function testCheckingIfProductIsImmaterial()
+    {
+        $this->assertFalse($this->groschen->isImmaterial());
+
+        // Immaterial product
+        $groschen = new Groschen('9789510410622');
+        $this->assertTrue($groschen->isImmaterial());
+    }
+
+    /**
+     * Test checking if the product a Print On Demand product
+     * @return boolean
+     */
+    public function testCheckingIfProductIsPrintOnDemand()
+    {
+        $this->assertFalse($this->groschen->isPrintOnDemand());
+
+        // POD product
+        $groschen = new Groschen('9789513170585');
+        $this->assertTrue($groschen->isPrintOnDemand());
+    }
+
+    /**
+     * Test getting the internal product number
+     * @return string|null
+     */
+    public function testGettingInternalProdNo()
+    {
+        // Should be same as GTIN
+        $this->assertSame('9789510366264', $this->groschen->getInternalProdNo());
+
+        // Old marketing product
+        $groschen = new Groschen('80000003');
+        $this->assertSame('533632', $groschen->getInternalProdNo());
+    }
+
+    /**
+     * Test getting customs number
+     * @return int|null
+     */
+    public function testGettingCustomsNumber()
+    {
+        $this->assertSame(49019900, $this->groschen->getCustomsNumber());
+
+        // Product with different customs number
+        $groschen = new Groschen('9789510344972');
+        $this->assertSame(85234920, $groschen->getCustomsNumber());
+
+    }
+
 }

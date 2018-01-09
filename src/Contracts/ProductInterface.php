@@ -142,6 +142,72 @@ interface ProductInterface
      */
     public function getRelatedProducts();
 
+    /**
+     * Is the product confidential?
+     * @return boolean
+     */
+    public function isConfidential();
+
+    /**
+     * Get the products cost center
+     * @return int|null
+     */
+    public function getCostCenter();
+
+    /**
+     * Get the products media type
+     * @return string
+     */
+    public function getMediaType();
+
+    /**
+     * Get the products binding code
+     * @return string
+     */
+    public function getBindingCode();
+    
+    /**
+     * Get the products discount group
+     * @return int|null
+     */
+    public function getDiscountGroup();
+
+    /**
+     * Get the products status code
+     * @return int
+     */
+    public function getStatusCode();
+
+    /**
+     * Get the number of products in the series
+     * @return void
+     */
+    public function getProductsInSeries();
+
+    /**
+     * Is the product immaterial?
+     * @return boolean
+     */
+    public function isImmaterial();
+
+    /**
+     * Is the product a Print On Demand product?
+     * @return boolean
+     */
+    public function isPrintOnDemand();
+
+    /**
+     * Get internal product number
+     * @return string|null
+     */
+    public function getInternalProdNo();
+
+    /**
+     * Get customs number
+     * @return int
+     */
+    public function getCustomsNumber();
+         
     // TODO
     // ResourceVersionFeatures to SupportingResources
 }

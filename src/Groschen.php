@@ -1580,4 +1580,112 @@ class Groschen implements ProductInterface
             return null;
         }
     }
+
+    /**
+     * Is the product confidential?
+     * @return boolean
+     */
+    public function isConfidential()
+    {
+        return ($this->product->NotifyCode === 6) ? true : false;
+    }
+
+    /**
+     * Get the products cost center
+     * @return int|null
+     */
+    public function getCostCenter()
+    {
+        // Product with 2 dimensions (cost center and EAN)
+        if (isset($this->product->Dimensions) && count($this->product->Dimensions) === 2) {
+            return intval($this->product->Dimensions[0]);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the products media type
+     * @return string
+     */
+    public function getMediaType()
+    {
+        return (empty($this->product->MediaType)) ? null : $this->product->MediaType;
+    }
+
+    /**
+     * Get the products binding code
+     * @return string
+     */
+    public function getBindingCode()
+    {
+        return (empty($this->product->BindingCode)) ? null : $this->product->BindingCode;
+    }
+
+    /**
+     * Get the products discount group
+     * @return int|null
+     */
+    public function getDiscountGroup()
+    {
+        return (empty($this->product->DiscountGroup)) ? null : $this->product->DiscountGroup;
+    }
+
+    /**
+     * Get the products status code
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return intval($this->product->NotifyCode);
+    }
+
+    /**
+     * Get the number of products in the series
+     * @return void
+     */
+    public function getProductsInSeries()
+    {
+        if (!empty($this->product->BookSeries) && !empty($this->product->NumberInSeries) && $this->product->NumberInSeries > 0) {
+            return intval($this->product->NumberInSeries);
+        }
+
+        return null;
+    }
+
+    /**
+     * Is the product immaterial?
+     * @return boolean
+     */
+    public function isImmaterial()
+    {
+        return ($this->product->PlanningCode === 'y') ? true : false;
+    }
+
+    /**
+     * Is the product a Print On Demand product?
+     * @return boolean
+     */
+    public function isPrintOnDemand()
+    {
+        return ($this->product->NotifyCode === 8) ? true : false;
+    }
+
+    /**
+     * Get internal product number
+     * @return string|null
+     */
+    public function getInternalProdNo()
+    {
+        return (!empty($this->product->InternalProdNo)) ? $this->product->InternalProdNo : null;
+    }
+
+    /**
+     * Get customs number
+     * @return int|null
+     */
+    public function getCustomsNumber()
+    {
+        return (!empty($this->product->CustomsNumber)) ? intval($this->product->CustomsNumber) : null;
+    }
 }
