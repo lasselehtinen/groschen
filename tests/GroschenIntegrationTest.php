@@ -469,9 +469,9 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPrices()
     {
-        // RRP excluding tax
-        $recommendedRetailPrice = [
-            'PriceType' => '01',
+        // Supplier’s net price excluding tax
+        $suppliersNetPriceExcludingTax = [
+            'PriceType' => '05',
             'PriceAmount' => 26.64,
             'Tax' => [
                 'TaxType' => '01',
@@ -486,9 +486,9 @@ class GroschenIntegrationTest extends TestCase
             ],
         ];
 
-        // RRP including tax
-        $recommendedRetailPriceIncludingTax = [
-            'PriceType' => '02',
+        // Supplier’s net price including tax
+        $suppliersNetPriceIncludingTax = [
+            'PriceType' => '07',
             'PriceAmount' => 29.30,
             'Tax' => [
                 'TaxType' => '01',
@@ -503,13 +503,8 @@ class GroschenIntegrationTest extends TestCase
             ],
         ];
 
-        // Bokinfo workaround for Supplier’s net price excluding tax. Basically same as 01
-        $suppliersNetPrice = $recommendedRetailPrice;
-        $suppliersNetPrice['PriceType'] = '05';
-
-        $this->assertContains($recommendedRetailPrice, $this->groschen->getPrices());
-        $this->assertContains($recommendedRetailPriceIncludingTax, $this->groschen->getPrices());
-        $this->assertContains($suppliersNetPrice, $this->groschen->getPrices());
+        $this->assertContains($suppliersNetPriceExcludingTax, $this->groschen->getPrices());
+        $this->assertContains($suppliersNetPriceIncludingTax, $this->groschen->getPrices());
     }
 
     /**
@@ -521,8 +516,8 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510353318');
 
         // RRP excluding tax
-        $recommendedRetailPrice = [
-            'PriceType' => '01',
+        $suppliersNetPriceExcludingTax = [
+            'PriceType' => '05',
             'PriceAmount' => 33.33,
             'Tax' => [
                 'TaxType' => '01',
@@ -537,12 +532,7 @@ class GroschenIntegrationTest extends TestCase
             ],
         ];
 
-        // Bokinfo workaround for Supplier’s net price excluding tax. Basically same as 01
-        $suppliersNetPrice = $recommendedRetailPrice;
-        $suppliersNetPrice['PriceType'] = '05';
-
-        $this->assertContains($recommendedRetailPrice, $groschen->getPrices());
-        $this->assertContains($suppliersNetPrice, $groschen->getPrices());
+        $this->assertContains($suppliersNetPriceExcludingTax, $groschen->getPrices());
 
         // Should not have PriceType 02
         $this->assertFalse($groschen->getPrices()->contains('PriceType', '02'));

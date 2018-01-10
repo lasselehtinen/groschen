@@ -725,22 +725,6 @@ class Groschen implements ProductInterface
         // Price types to collect
         $priceTypes = new Collection;
 
-        // RRP excluding VAT
-        $priceTypes->push([
-            'PriceTypeCode' => '01',
-            'TaxIncluded' => false,
-            'TaxRateCode' => 'Z',
-            'PriceGroup' => '0',
-        ]);
-
-        // RRP including VAT
-        $priceTypes->push([
-            'PriceTypeCode' => '02',
-            'TaxIncluded' => true,
-            'TaxRateCode' => 'S',
-            'PriceGroup' => '0i',
-        ]);
-
         // Supplier’s net price excluding tax
         $priceTypes->push([
             'PriceTypeCode' => '05',
@@ -749,7 +733,15 @@ class Groschen implements ProductInterface
             'PriceGroup' => '0',
         ]);
 
-        // Publishers retail price including tax    
+        // Supplier’s net price including tax
+        $priceTypes->push([
+            'PriceTypeCode' => '07',
+            'TaxIncluded' => true,
+            'TaxRateCode' => 'S',
+            'PriceGroup' => '0i',
+        ]);
+
+        // Publishers retail price including tax
         $priceTypes->push([
             'PriceTypeCode' => '42',
             'TaxIncluded' => true,
