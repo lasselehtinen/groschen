@@ -749,6 +749,14 @@ class Groschen implements ProductInterface
             'PriceGroup' => '0',
         ]);
 
+        // Publishers retail price including tax    
+        $priceTypes->push([
+            'PriceTypeCode' => '42',
+            'TaxIncluded' => true,
+            'TaxRateCode' => 'S',
+            'PriceGroup' => '4i',
+        ]);
+
         // Go through all Price Types
         foreach ($priceTypes as $priceType) {
             // Price amount

@@ -517,7 +517,7 @@ class GroschenIntegrationTest extends TestCase
      * @return void
      */
     public function testGettingPricesForProductWithMissingPrice()
-    {    
+    {
         $groschen = new Groschen('9789510353318');
 
         // RRP excluding tax
@@ -546,6 +546,34 @@ class GroschenIntegrationTest extends TestCase
 
         // Should not have PriceType 02
         $this->assertFalse($groschen->getPrices()->contains('PriceType', '02'));
+    }
+
+    /**
+     * Test getting publishers retail prices
+     * @return void
+     */
+    public function testGettingPublishersRetailPrices()
+    {
+        $groschen = new Groschen('9789510348956');
+
+        // Publishers recommended retail price including tax
+        $publishersRecommendedRetailPriceIncludingTax = [
+            'PriceType' => '42',
+            'PriceAmount' => 25,
+            'Tax' => [
+                'TaxType' => '01',
+                'TaxRateCode' => 'S',
+                'TaxRatePercent' => 10,
+                'TaxableAmount' => 22.73,
+                'TaxAmount' => 2.27,
+            ],
+            'CurrencyCode' => 'EUR',
+            'Territory' => [
+                'RegionsIncluded' => 'WORLD',
+            ],
+        ];
+
+        $this->assertContains($publishersRecommendedRetailPriceIncludingTax, $groschen->getPrices());
     }
 
     /**
