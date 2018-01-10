@@ -180,7 +180,7 @@ interface ProductInterface
 
     /**
      * Get the number of products in the series
-     * @return void
+     * @return int|null
      */
     public function getProductsInSeries();
 
