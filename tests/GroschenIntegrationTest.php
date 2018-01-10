@@ -510,8 +510,14 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains($recommendedRetailPrice, $this->groschen->getPrices());
         $this->assertContains($recommendedRetailPriceIncludingTax, $this->groschen->getPrices());
         $this->assertContains($suppliersNetPrice, $this->groschen->getPrices());
+    }
 
-        // Product with missing prices and 24% VAT
+    /**
+     * Test getting products prices for product with missing prices and 24% VAT
+     * @return void
+     */
+    public function testGettingPricesForProductWithMissingPrice()
+    {    
         $groschen = new Groschen('9789510353318');
 
         // RRP excluding tax
