@@ -305,7 +305,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPrice()
     {
-        $this->assertSame(29.30, $this->groschen->getPrice());
+        $this->assertSame(17.87, $this->groschen->getPrice());
     }
 
     /**
@@ -472,12 +472,12 @@ class GroschenIntegrationTest extends TestCase
         // Supplier’s net price excluding tax
         $suppliersNetPriceExcludingTax = [
             'PriceType' => '05',
-            'PriceAmount' => 26.64,
+            'PriceAmount' => 16.25,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'Z',
                 'TaxRatePercent' => 10,
-                'TaxableAmount' => 26.64,
+                'TaxableAmount' => 16.25,
                 'TaxAmount' => 0,
             ],
             'CurrencyCode' => 'EUR',
@@ -489,13 +489,13 @@ class GroschenIntegrationTest extends TestCase
         // Supplier’s net price including tax
         $suppliersNetPriceIncludingTax = [
             'PriceType' => '07',
-            'PriceAmount' => 29.30,
+            'PriceAmount' => 17.87,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 10,
-                'TaxableAmount' => 26.64,
-                'TaxAmount' => 2.66,
+                'TaxableAmount' => 16.25,
+                'TaxAmount' => 1.62,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -518,12 +518,12 @@ class GroschenIntegrationTest extends TestCase
         // RRP excluding tax
         $suppliersNetPriceExcludingTax = [
             'PriceType' => '05',
-            'PriceAmount' => 33.33,
+            'PriceAmount' => 20.32,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'Z',
                 'TaxRatePercent' => 24,
-                'TaxableAmount' => 33.33,
+                'TaxableAmount' => 20.32,
                 'TaxAmount' => 0,
             ],
             'CurrencyCode' => 'EUR',
