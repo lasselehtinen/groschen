@@ -207,7 +207,13 @@ interface ProductInterface
      * @return int
      */
     public function getCustomsNumber();
-         
+
+    /**
+     * Get the products library class
+     * @return string|null
+     */
+    public function getLibraryClass();
+
     // TODO
     // ResourceVersionFeatures to SupportingResources
 }

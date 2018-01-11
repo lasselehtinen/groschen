@@ -1688,4 +1688,13 @@ class Groschen implements ProductInterface
     {
         return (!empty($this->product->CustomsNumber)) ? intval($this->product->CustomsNumber) : null;
     }
+
+    /**
+     * Get the products library class
+     * @return string|null
+     */
+    public function getLibraryClass()
+    {
+        return $this->getLookupValue(293, $this->product->LiteratureGroup);
+    }
 }

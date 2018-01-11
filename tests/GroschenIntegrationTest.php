@@ -829,7 +829,22 @@ class GroschenIntegrationTest extends TestCase
         // Product with different customs number
         $groschen = new Groschen('9789510344972');
         $this->assertSame(85234920, $groschen->getCustomsNumber());
+    }
 
+    /**
+     * Test getting the products library class
+     * @return string|null
+     */
+    public function testGettingLibraryClass() {
+        $this->assertSame('84.2', $this->groschen->getLibraryClass());
+
+                // Product with library class with a prefix
+        $groschen = new Groschen('9789513158699');
+        $this->assertSame('L84.2', $groschen->getLibraryClass());
+
+        // Product where product does not have library class
+        $groschen = new Groschen('9789510809556');
+        $this->assertNull($groschen->getLibraryClass());
     }
 
 }
