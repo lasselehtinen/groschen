@@ -148,19 +148,19 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingNumberInSeriesInCollection()
     {
         // Product with number in series
-        $groschen = new Groschen('9789521610158');
+        $groschen = new Groschen('9789521618772');
 
         $collection = [
             'CollectionType' => '10', [
                 'CollectionSequence' => [
                     'CollectionSequenceType' => '03',
-                    'CollectionSequenceNumber' => '3',
+                    'CollectionSequenceNumber' => '12',
                 ],
                 'TitleDetail' => [
                     'TitleType' => '01',
                     'TitleElement' => [
                         'TitleElementLevel' => '01',
-                        'TitleText' => '.Hack',
+                        'TitleText' => 'Tokyo Ghoul',
                     ],
                 ],
             ],

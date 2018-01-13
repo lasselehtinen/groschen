@@ -228,7 +228,7 @@ class Groschen implements ProductInterface
                     // Add CollectionSequence to Collection
                     $collectionSequence = [
                         'CollectionSequenceType' => '03',
-                        'CollectionSequenceNumber' => '3',
+                        'CollectionSequenceNumber' => $this->product->NumberInSeries,
                     ];
 
                     $collection[0]['CollectionSequence'] = $collectionSequence;
