@@ -4,6 +4,7 @@ parameters:
   ascii:
     failed: ~
     succeeded: ~
+  process_timeout: 180
   tasks:
       securitychecker:
       phpcs:
