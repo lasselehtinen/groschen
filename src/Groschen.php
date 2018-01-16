@@ -352,7 +352,7 @@ class Groschen implements ProductInterface
 
         // Sort the array by priority, then by role priority
         $contributors = $contributors->sortByDesc(function ($contributors) {
-            return $contributors['Sorting']['priority'] . '-' . $contributors['Sorting']['role_priority'];
+            return $contributors['Sorting']['role_priority'] . '-' . $contributors['Sorting']['priority'] . '-' . (100 - ord($contributors['KeyNames']));
         });
 
         // Add SequenceNumber and drop sorting fields
@@ -983,26 +983,26 @@ class Groschen implements ProductInterface
     public function getRolePriority($roleId)
     {
         $rolePriorities = [
-            'AUT' => 1,
-            'EIC' => 2,
-            'EDA' => 3,
-            'IND' => 4,
-            'PRE' => 5,
-            'FOR' => 6,
-            'INT' => 7,
-            'PRO' => 8,
-            'AFT' => 9,
-            'EPI' => 10,
-            'ILL' => 11,
-            'PHO' => 12,
-            'REA' => 14,
-            'TRA' => 15,
-            'GDE' => 16,
-            'CDE' => 16,
-            'COM' => 17,
-            'ARR' => 18,
-            'MAP' => 19,
-            'AST' => 30,
+            'AUT' => 99,
+            'EIC' => 98,
+            'EDA' => 97,
+            'IND' => 96,
+            'PRE' => 95,
+            'FOR' => 94,
+            'INT' => 93,
+            'PRO' => 92,
+            'AFT' => 91,
+            'EPI' => 90,
+            'ILL' => 89,
+            'PHO' => 88,
+            'REA' => 87,
+            'TRA' => 86,
+            'GDE' => 85,
+            'CDE' => 84,
+            'COM' => 83,
+            'ARR' => 82,
+            'MAP' => 81,
+            'AST' => 80,
         ];
 
         if (array_key_exists($roleId, $rolePriorities)) {

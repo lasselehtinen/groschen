@@ -196,6 +196,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products contributors
+     * @group contributors
      * @return void
      */
     public function testGettingContributors()
@@ -235,6 +236,89 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $this->assertContains($graphicDesigner, $this->groschen->getContributors());
+    }
+
+    /**
+     * Test that stakeholders with same priority are sorted by last name
+     * @group contributors
+     * @return void
+     */
+    public function testContributorAreSortedByLastname()
+    {
+        $groschen = new Groschen('9789510262702');        
+        
+        // First author
+        $firstAuthor = [
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'A01',
+            'NameIdentifier' => [
+                'NameIDType' => '01',
+                'IDTypeName' => 'Creditor number',
+                'IDValue' => '20001029',
+            ],
+            'PersonNameInverted' => 'Karjalainen, Elina',
+            'NamesBeforeKey' => 'Elina',
+            'KeyNames' => 'Karjalainen',
+        ];
+
+        $this->assertContains($firstAuthor, $groschen->getContributors());
+
+        // Second author
+        $secondAuthor = [
+            'SequenceNumber' => 2,
+            'ContributorRole' => 'A01',
+            'NameIdentifier' => [
+                'NameIDType' => '01',
+                'IDTypeName' => 'Creditor number',
+                'IDValue' => '20002470',
+            ],
+            'PersonNameInverted' => 'Taina, Hannu',
+            'NamesBeforeKey' => 'Hannu',
+            'KeyNames' => 'Taina',
+        ];
+
+        $this->assertContains($secondAuthor, $groschen->getContributors());
+    }
+
+    /**
+     * Test that priority contributor with same role
+     * @group contributors
+     * @return void
+     */
+    public function testContributorPriorityIsHandledCorrectly() {
+        $groschen = new Groschen('9789510421987');        
+
+        // First author
+        $firstAuthor = [
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'A01',
+            'NameIdentifier' => [
+                'NameIDType' => '01',
+                'IDTypeName' => 'Creditor number',
+                'IDValue' => '20006825',
+            ],
+            'PersonNameInverted' => 'Aarnio, Jari',
+            'NamesBeforeKey' => 'Jari',
+            'KeyNames' => 'Aarnio',
+        ];
+
+        $this->assertContains($firstAuthor, $groschen->getContributors());
+
+        // Second author
+        $secondAuthor = [
+            'SequenceNumber' => 2,
+            'ContributorRole' => 'A01',
+            'NameIdentifier' => [
+                'NameIDType' => '01',
+                'IDTypeName' => 'Creditor number',
+                'IDValue' => '20000867',
+            ],
+            'PersonNameInverted' => 'Hänninen, Vepe',
+            'NamesBeforeKey' => 'Vepe',
+            'KeyNames' => 'Hänninen',
+        ];
+
+        $this->assertContains($secondAuthor, $groschen->getContributors());
     }
 
     /**
