@@ -1597,7 +1597,7 @@ class Groschen implements ProductInterface
     public function getCostCenter()
     {
         // Product with 2 dimensions (cost center and EAN)
-        if (isset($this->product->Dimensions) && count($this->product->Dimensions) === 2) {
+        if (isset($this->product->Dimensions) && count($this->product->Dimensions) > 0) {
             return intval($this->product->Dimensions[0]);
         }
 

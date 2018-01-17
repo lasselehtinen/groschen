@@ -791,6 +791,10 @@ class GroschenIntegrationTest extends TestCase
         // Cancelled product which does not have cost center
         $groschen = new Groschen('9789510418666');
         $this->assertNull($groschen->getCostCenter());
+
+        // Product with only one dimension
+        $groschen = new Groschen('6417892033018');
+        $this->assertSame(350, $groschen->getCostCenter());
     }
 
     /**
