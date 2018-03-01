@@ -214,6 +214,12 @@ interface ProductInterface
      */
     public function getLibraryClass();
 
+    /**
+     * Get the products marketing category
+     * @return string|null
+     */
+    public function getMarketingCategory();
+
     // TODO
     // ResourceVersionFeatures to SupportingResources
 }

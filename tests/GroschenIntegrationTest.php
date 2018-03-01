@@ -926,13 +926,34 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingLibraryClass() {
         $this->assertSame('84.2', $this->groschen->getLibraryClass());
 
-                // Product with library class with a prefix
+        // Product with library class with a prefix
         $groschen = new Groschen('9789513158699');
         $this->assertSame('L84.2', $groschen->getLibraryClass());
 
         // Product where product does not have library class
         $groschen = new Groschen('9789510809556');
         $this->assertNull($groschen->getLibraryClass());
+    }
+
+    /**
+     * Test getting the products marketing category
+     * @return void
+     */
+    public function testGettingMarketingCategory() {
+        // Default test product does not have marketing category
+        $this->assertNull($this->groschen->getMarketingCategory());
+
+        // Product with "don't use"
+        $groschen = new Groschen('9789513192693');
+        $this->assertNull($groschen->getMarketingCategory());
+
+        // Product with "Basic"
+        $groschen = new Groschen('9789513157371');
+        $this->assertSame('Basic', $groschen->getMarketingCategory());
+
+        // Product with "Star"
+        $groschen = new Groschen('9789510433645');
+        $this->assertSame('Star', $groschen->getMarketingCategory());   
     }
 
 }

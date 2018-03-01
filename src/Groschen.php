@@ -1697,4 +1697,40 @@ class Groschen implements ProductInterface
     {
         return $this->getLookupValue(293, $this->product->LiteratureGroup);
     }
+
+    /**
+     * Get the products marketing category
+     * @return string|null
+     */
+    public function getMarketingCategory()
+    {
+        // Get the latest print project attached to the product
+        $projectNumber = $this->getLatestPrintProject($this->product->ProjectId);
+
+        // Fetch project
+        $schilling = new Project(
+            config('groschen.schilling.hostname'),
+            config('groschen.schilling.port'),
+            config('groschen.schilling.username'),
+            config('groschen.schilling.password'),
+            config('groschen.schilling.company')
+        );
+
+        $project = $schilling->getProjects(['ProjectNo' => $projectNumber])[0];
+
+        if (empty($project->BookDataGroup)) {
+            return null;
+        }
+
+        // Don't return those with "Do not use" group
+        switch ($project->BookDataGroup) {
+            case '1':
+            case '5':
+                return $this->getLookupValue(563, $project->BookDataGroup);
+                break;
+            default:
+                return null;
+                break;
+        }
+    }
 }
