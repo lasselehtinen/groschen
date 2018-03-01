@@ -17,4 +17,8 @@ return [
         'clientId' => env('SOUNDCLOUD_CLIENTID'),
         'clientSecret' => env('SOUNDCLOUD_CLIENTSECRET'),
     ],
+    'opus' => [
+        'hostname' => env('OPUS_HOSTNAME'),
+        'token' => env('OPUS_OAUTH2_TOKEN'),        
+    ],
 ];

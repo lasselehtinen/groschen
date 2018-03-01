@@ -40,6 +40,8 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('groschen.elvis.password', getenv('ELVIS_PASSWORD'));
         $app['config']->set('groschen.soundcloud.clientId', getenv('SOUNDCLOUD_CLIENTID'));
         $app['config']->set('groschen.soundcloud.clientSecret', getenv('SOUNDCLOUD_CLIENTSECRET'));
+        $app['config']->set('groschen.opus.hostname', getenv('OPUS_HOSTNAME'));
+        $app['config']->set('groschen.opus.token', getenv('OPUS_OAUTH2_TOKEN'));
     }
 
     /**
