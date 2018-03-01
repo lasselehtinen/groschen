@@ -389,7 +389,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPrice()
     {
-        $this->assertSame(17.87, $this->groschen->getPrice());
+        $this->assertSame(17.88, $this->groschen->getPrice());
     }
 
     /**
@@ -538,8 +538,8 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());
 
         // Product without original publishing date
-        $groschen = new Groschen('6430061220040');
-        $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20151221'], $groschen->getPublishingDates());
+        $groschen = new Groschen('9789513199173');        
+        $this->assertContains(['PublishingDateRole' => '12', 'Date' => '23191231'], $groschen->getPublishingDates());
         $this->assertCount(1, $groschen->getPublishingDates());
 
         // Product without any dates
@@ -573,13 +573,13 @@ class GroschenIntegrationTest extends TestCase
         // Supplier’s net price including tax
         $suppliersNetPriceIncludingTax = [
             'PriceType' => '07',
-            'PriceAmount' => 17.87,
+            'PriceAmount' => 17.88,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 10,
                 'TaxableAmount' => 16.25,
-                'TaxAmount' => 1.62,
+                'TaxAmount' => 1.63,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -672,7 +672,7 @@ class GroschenIntegrationTest extends TestCase
                         'FeatureValue' => '1594',
                     ],
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=b25peDpueUVISEI=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
         ];
 
@@ -786,7 +786,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Some other cost center
         $groschen = new Groschen('6430060030169');
-        $this->assertSame(914, $groschen->getCostCenter());
+        $this->assertSame(902, $groschen->getCostCenter());
 
         // Cancelled product which does not have cost center
         $groschen = new Groschen('9789510418666');
