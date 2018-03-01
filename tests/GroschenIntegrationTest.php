@@ -881,7 +881,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test checking if the product a Print On Demand product
-     * @return boolean
+     * @return void
      */
     public function testCheckingIfProductIsPrintOnDemand()
     {
@@ -894,7 +894,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the internal product number
-     * @return string|null
+     * @return void
      */
     public function testGettingInternalProdNo()
     {
@@ -908,7 +908,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting customs number
-     * @return int|null
+     * @return void
      */
     public function testGettingCustomsNumber()
     {
@@ -921,7 +921,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products library class
-     * @return string|null
+     * @return void
      */
     public function testGettingLibraryClass() {
         $this->assertSame('84.2', $this->groschen->getLibraryClass());
