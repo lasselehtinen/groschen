@@ -1733,4 +1733,17 @@ class Groschen implements ProductInterface
                 break;
         }
     }
+
+    /**
+     * Get the products sales season
+     * @return string|null
+     */
+    public function getSalesSeason()
+    {
+        if (empty($this->product->ReviewCycle)) {
+            return null;
+        }
+
+        return $this->getLookupValue(580, $this->product->ReviewCycle);
+    }
 }

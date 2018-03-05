@@ -220,6 +220,9 @@ interface ProductInterface
      */
     public function getMarketingCategory();
 
-    // TODO
-    // ResourceVersionFeatures to SupportingResources
+    /**
+     * Get the products sales season
+     * @return string|null
+     */
+    public function getSalesSeason();
 }
