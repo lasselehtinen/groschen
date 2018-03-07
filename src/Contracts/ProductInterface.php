@@ -214,6 +214,15 @@ interface ProductInterface
      */
     public function getLibraryClass();
 
-    // TODO
-    // ResourceVersionFeatures to SupportingResources
+    /**
+     * Get the products marketing category
+     * @return string|null
+     */
+    public function getMarketingCategory();
+
+    /**
+     * Get the products sales season
+     * @return string|null
+     */
+    public function getSalesSeason();
 }

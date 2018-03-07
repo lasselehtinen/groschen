@@ -389,7 +389,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPrice()
     {
-        $this->assertSame(17.87, $this->groschen->getPrice());
+        $this->assertSame(17.88, $this->groschen->getPrice());
     }
 
     /**
@@ -538,8 +538,8 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());
 
         // Product without original publishing date
-        $groschen = new Groschen('6430061220040');
-        $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20151221'], $groschen->getPublishingDates());
+        $groschen = new Groschen('9789513199173');        
+        $this->assertContains(['PublishingDateRole' => '12', 'Date' => '23191231'], $groschen->getPublishingDates());
         $this->assertCount(1, $groschen->getPublishingDates());
 
         // Product without any dates
@@ -573,13 +573,13 @@ class GroschenIntegrationTest extends TestCase
         // Supplier’s net price including tax
         $suppliersNetPriceIncludingTax = [
             'PriceType' => '07',
-            'PriceAmount' => 17.87,
+            'PriceAmount' => 17.88,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 10,
                 'TaxableAmount' => 16.25,
-                'TaxAmount' => 1.62,
+                'TaxAmount' => 1.63,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -672,7 +672,7 @@ class GroschenIntegrationTest extends TestCase
                         'FeatureValue' => '1594',
                     ],
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=b25peDpueUVISEI=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
         ];
 
@@ -786,7 +786,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Some other cost center
         $groschen = new Groschen('6430060030169');
-        $this->assertSame(914, $groschen->getCostCenter());
+        $this->assertSame(902, $groschen->getCostCenter());
 
         // Cancelled product which does not have cost center
         $groschen = new Groschen('9789510418666');
@@ -881,7 +881,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test checking if the product a Print On Demand product
-     * @return boolean
+     * @return void
      */
     public function testCheckingIfProductIsPrintOnDemand()
     {
@@ -894,7 +894,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the internal product number
-     * @return string|null
+     * @return void
      */
     public function testGettingInternalProdNo()
     {
@@ -908,7 +908,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting customs number
-     * @return int|null
+     * @return void
      */
     public function testGettingCustomsNumber()
     {
@@ -921,18 +921,51 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products library class
-     * @return string|null
+     * @return void
      */
     public function testGettingLibraryClass() {
         $this->assertSame('84.2', $this->groschen->getLibraryClass());
 
-                // Product with library class with a prefix
+        // Product with library class with a prefix
         $groschen = new Groschen('9789513158699');
         $this->assertSame('L84.2', $groschen->getLibraryClass());
 
         // Product where product does not have library class
         $groschen = new Groschen('9789510809556');
         $this->assertNull($groschen->getLibraryClass());
+    }
+
+    /**
+     * Test getting the products marketing category
+     * @return void
+     */
+    public function testGettingMarketingCategory() {
+        // Default test product does not have marketing category
+        $this->assertNull($this->groschen->getMarketingCategory());
+
+        // Product with "don't use"
+        $groschen = new Groschen('9789513192693');
+        $this->assertNull($groschen->getMarketingCategory());
+
+        // Product with "Basic"
+        $groschen = new Groschen('9789513157371');
+        $this->assertSame('Basic', $groschen->getMarketingCategory());
+
+        // Product with "Star"
+        $groschen = new Groschen('9789510433645');
+        $this->assertSame('Star', $groschen->getMarketingCategory());   
+    }
+
+    /**
+     * Test getting products sales season
+     * @return void
+     */
+    public function testGettingSalesSeason() {                
+        $this->assertSame('2010/1', $this->groschen->getSalesSeason());
+
+        // Product without sales season
+        $groschen = new Groschen('9789510102893');
+        $this->assertNull($groschen->getSalesSeason());        
     }
 
 }
