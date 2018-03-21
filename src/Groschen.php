@@ -250,13 +250,15 @@ class Groschen implements ProductInterface
         $titleDetails = new Collection;
 
         // Main title
-        $titleDetails->push([
-            'TitleType' => '01',
-            'TitleElement' => [
-                'TitleElementLevel' => '01',
-                'TitleText' => $this->product->Title,
-            ],
-        ]);
+        if (!empty($this->product->Title)) {
+            $titleDetails->push([
+                'TitleType' => '01',
+                'TitleElement' => [
+                    'TitleElementLevel' => '01',
+                    'TitleText' => $this->product->Title,
+                ],
+            ]);
+        }
 
         // Add subtitle
         if (!empty($this->product->SubTitle)) {
