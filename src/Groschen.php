@@ -99,6 +99,15 @@ class Groschen implements ProductInterface
         ]);
 
         $this->prints = json_decode($response->getBody()->getContents());
+
+        // Get work level
+        $response = $client->get('work/v1/works/' . $this->workId, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . config('groschen.opus.token'),
+            ],
+        ]);
+
+        $this->work = json_decode($response->getBody()->getContents());
     }
 
     /**
@@ -440,7 +449,7 @@ class Groschen implements ProductInterface
      */
     public function getPriceExcludingVat()
     {
-        return round($this->getPrice() / (($this->getTaxRate() + 100) / 100), 2);        
+        return round($this->getPrice() / (($this->getTaxRate() + 100) / 100), 2);
     }
 
     /**
@@ -503,50 +512,14 @@ class Groschen implements ProductInterface
         // Init array for subjects
         $subjects = new Collection;
 
-        // Finnish Public Libraries Classification System aka YKL
-        $libraryClass = preg_replace("/[^0-9.]/", "", $this->getLookupValue(293, $this->product->LiteratureGroup));
-
-        if (!empty($libraryClass)) {
-            $subjects->push(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => $libraryClass]);
-        }
-
-        // Schilling main and subgroup
-        $subjects->push(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => $this->getLookupValue(26, str_pad($this->product->MainGroup, 2, '0', STR_PAD_LEFT))]);
-        $subjects->push(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => $this->getLookupValue(27, str_pad($this->product->SubGroup, 3, '0', STR_PAD_LEFT))]);
-
-        // BISAC Subject Heading
-        $subjects->push(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => $this->getBisacCode()]);
-
-        // BIC subject category
-        $subjects->push(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => $this->getBicCode()]);
-
         // Thema subject category
-        $subjects->push(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => $this->getThemaSubjectCode()]);
-
-        // Thema interest age
-        $subjects->push(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => $this->getThemaInterestAge()]);
-
-        // Fiktiivisen aineiston lisäluokitus
-        $subjects->push(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisäluokitus', 'SubjectCode' => $this->getFiktiivisenAineistonLisaluokitus()]);
-
-        // Finnish book trade categorization
-        foreach ($this->getFinnishBookTradeCategorisations() as $finnishBookTradeCategorisation) {
-            $subjects->push($finnishBookTradeCategorisation);
+        if (isset($this->product->externalInformation->themaCode)) {
+            $subjects->push([
+                'SubjectSchemeIdentifier' => '93',
+                'SubjectSchemeName' => 'Thema subject category',
+                'SubjectCode' => $this->product->externalInformation->themaCode->id,
+            ]);
         }
-
-        // Add subjects/keywords from Finna
-        $finnaSubjects = $this->getSubjectWords();
-        foreach ($finnaSubjects as $finnaSubject) {
-            $subjects->push($finnaSubject);
-        }
-
-        // Add all keywords separated by semicolon
-        $keywords = [];
-        foreach ($finnaSubjects as $subject) {
-            $keywords[] = $subject['SubjectCode'];
-        }
-
-        $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectSchemeName' => 'Keywords', 'SubjectCode' => implode(';', $keywords)]);
 
         return $subjects;
     }
@@ -595,41 +568,7 @@ class Groschen implements ProductInterface
      */
     public function getPublishingStatus()
     {
-        // Determine the PublishingStatus
-        switch ($this->product->NotifyCode) {
-            // Development
-            case '1':
-                return '02'; // Forthcoming
-                break;
-            // Published
-            case '2':
-                return '04'; // Active
-                break;
-            // Exclusive sales
-            case '3':
-                return '04'; // Active
-                break;
-            // Sold out
-            case '4':
-                return '07'; // Out of print
-                break;
-            // Development-confidential
-            case '6':
-                return '00'; // Unknown
-                break;
-            // Cancelled
-            case '7':
-                return '01'; // Cancelled
-                break;
-            // POD / shortrun
-            case '8':
-                return '04'; // Active
-                break;
-            // Delivery block
-            case '9':
-                return '16'; // Temporarily withdrawn from sale
-                break;
-        }
+        
     }
 
     /**
@@ -732,7 +671,7 @@ class Groschen implements ProductInterface
     public function getTaxElement($priceType)
     {
         // Form taxable and tax amount
-        if ($priceType['TaxIncluded'] === true) {            
+        if ($priceType['TaxIncluded'] === true) {
             $taxAmount = $this->getPrice() - $this->getPriceExcludingVat();
         } else {
             $taxAmount = 0;
@@ -862,14 +801,15 @@ class Groschen implements ProductInterface
     {
         $relatedProducts = new Collection;
 
-        if (isset($this->product->InternetInformation->RelatedProducts)) {
-            foreach ($this->product->InternetInformation->RelatedProducts as $relatedProduct) {
+        foreach ($this->work->productions as $production) {
+            // Do not add current product
+            if ($production->isbn !== $this->productNumber) {
                 $relatedProducts->push([
                     'ProductRelationCode' => '06',
                     'ProductIdentifiers' => [
                         [
                             'ProductIDType' => '03',
-                            'IDValue' => intval($relatedProduct),
+                            'IDValue' => $production->isbn,
                         ],
                     ],
                 ]);
@@ -943,28 +883,6 @@ class Groschen implements ProductInterface
         }
 
         return 0;
-    }
-
-    /**
-     * Get the Schilling lookup value based on the domain and value
-     * @param  int $domain
-     * @param  string $value
-     * @return string
-     */
-    public function getLookupValue($domain, $value)
-    {
-        // Create Schilling lookup instance
-        $lookup = new Lookup(
-            config('groschen.schilling.hostname'),
-            config('groschen.schilling.port'),
-            config('groschen.schilling.username'),
-            config('groschen.schilling.password'),
-            config('groschen.schilling.company')
-        );
-
-        $lookupValue = $lookup->lookup(['DomainNumber' => $domain, 'KeyValue' => $value]);
-
-        return (is_null($lookupValue)) ? null : $lookupValue[0]->DataValue;
     }
 
     /**
@@ -1113,133 +1031,6 @@ class Groschen implements ProductInterface
         }
 
         return $subGroupToBicMapping[$this->product->SubGroup];
-    }
-
-    /**
-     * Return the Thema subject class
-     * @return string|null
-     */
-    public function getThemaSubjectCode()
-    {
-        // Mapping from Schilling subgroup to Thema for adults
-        $themaMappingTableAdults = [
-            '1' => 'DNL',
-            '2' => 'FM',
-            '3' => 'DN',
-            '4' => 'NH',
-            '5' => 'FU',
-            '6' => 'VF',
-            '8' => 'FH',
-            '9' => 'WF',
-            '10' => 'JMC',
-            '11' => 'FBC',
-            '12' => 'WK',
-            '13' => 'WZS',
-            '14' => 'YBC',
-            '15' => 'YFB',
-            '16' => 'YN',
-            '17' => 'WN',
-            '18' => 'WZS',
-            '19' => 'WT',
-            '20' => 'AV',
-            '21' => 'DD',
-            '22' => 'FBA',
-            '23' => 'YFB',
-            '24' => 'FBA',
-            '25' => 'WZS',
-            '26' => 'WM',
-            '27' => 'DC',
-            '28' => 'WB',
-            '29' => 'YF',
-            '30' => 'X',
-            '31' => 'FL',
-            '32' => 'AK',
-            '33' => 'K',
-            '34' => 'QR',
-            '35' => 'FB',
-            '36' => 'J',
-            '37' => 'W',
-            '38' => 'P',
-            '39' => 'WK',
-            '40' => 'YBG',
-            '41' => 'YB',
-            '42' => 'WJ',
-            '43' => 'S',
-            '44' => 'YD',
-            '45' => 'YNC',
-            '46' => 'VS',
-            '47' => 'FK',
-            '48' => 'S',
-            '49' => 'JW',
-            '50' => 'QD',
-            '51' => 'XAM',
-        ];
-
-        // Mapping from Schilling subgroup to Thema for children and young adults
-        $themaMappingTableChildren = [
-            '1' => 'YNL',
-            '2' => 'YFH',
-            '3' => 'YNB',
-            '4' => 'YNH',
-            '5' => 'YFQ',
-            //'6' => '', Family & health
-            '8' => 'YFCB',
-            // '9' => '', Handicrafts, decorative arts & crafts
-            //'10' => '', Child, developmental & lifespan psychology
-            '11' => 'YFA',
-            //'12' => '', Home & house maintenance
-            '13' => 'YZG',
-            '14' => 'YBC',
-            '15' => 'YFB',
-            '16' => 'YN',
-            '17' => 'YNN',
-            '18' => 'YZ',
-            //'19' => '', Travel & holiday
-            '20' => 'YNC',
-            '21' => 'YNDS',
-            //'22' => '', Modern & contemporary fiction
-            '23' => 'YFB',
-            //'24' => '', Modern & contemporary fiction
-            '25' => 'YZ',
-            '26' => 'YNPG',
-            '27' => 'YDP',
-            '28' => 'YNPC',
-            '29' => 'YF',
-            '30' => 'X',
-            '31' => 'YFG',
-            //'32' => '', Industrial / commercial art & design
-            //'33' => '', Economics, Finance, Business & Management
-            '34' => 'YNR',
-            '35' => 'YFB',
-            '36' => 'YNK',
-            '37' => 'YNV',
-            //'38' => '', Mathematics & Science
-            //'39' => '', Home & house maintenance
-            '40' => 'YBG',
-            '41' => 'YB',
-            //'42' => '', Lifestyle & personal style guides
-            '43' => 'YNW',
-            '44' => 'YD',
-            '45' => 'YNC',
-            //'46' => '', Self-help & personal development
-            '47' => 'YFD',
-            '48' => 'YNW',
-            '49' => 'YNJ',
-            //'50' => '', Philosophy
-            '51' => 'XAM',
-        ];
-
-        // Use different mapping for children and young adults
-        if (($this->product->MainGroup === 3 || $this->product->MainGroup === 4) && array_key_exists($this->product->SubGroup, $themaMappingTableChildren)) {
-            return $themaMappingTableChildren[$this->product->SubGroup];
-        }
-
-        // Adults Thema mapping
-        if (array_key_exists($this->product->SubGroup, $themaMappingTableAdults)) {
-            return $themaMappingTableAdults[$this->product->SubGroup];
-        }
-
-        return null;
     }
 
     /**
@@ -1432,7 +1223,7 @@ class Groschen implements ProductInterface
      */
     public function isConfidential()
     {
-        return ($this->product->NotifyCode === 6) ? true : false;
+        return null;
     }
 
     /**
@@ -1482,7 +1273,7 @@ class Groschen implements ProductInterface
      */
     public function getStatusCode()
     {
-        return intval($this->product->NotifyCode);
+        return null;
     }
 
     /**
@@ -1585,10 +1376,20 @@ class Groschen implements ProductInterface
      */
     public function getSalesSeason()
     {
-        if (empty($this->product->ReviewCycle)) {
+        if (!isset($this->product->seasonYear)) {
             return null;
         }
 
-        return $this->getLookupValue(580, $this->product->ReviewCycle);
+        // Form sales period
+        switch ($this->product->seasonPeriod->name) {
+            case 'Höst':
+                $period = 2;
+                break;
+            case 'Spring':
+                $period = 1;
+                break;
+        }
+
+        return $this->product->seasonYear->name . '/' . $period;
     }
 }
