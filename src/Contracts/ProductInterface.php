@@ -29,6 +29,12 @@ interface ProductInterface
     public function getProductFormDetail();
 
     /**
+     * Get the products form features
+     * @return Collection
+     */
+    public function getProductFormFeatures();
+
+    /**
      * Get the products measures
      * @return Collection
      */

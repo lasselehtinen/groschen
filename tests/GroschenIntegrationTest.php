@@ -120,6 +120,23 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting ProductFormFeatures
+     * @return void
+     */
+    public function testGettingProductFormFeatures() {
+        // Hardback should not have any product form features
+        $this->assertCount(0, $this->groschen->getProductFormFeatures());
+
+        // ePub 2
+        $groschen = new Groschen('9789510383575');
+        $this->assertContains(['ProductFormFeatureType' => '15', 'ProductFormFeatureValue' => '101A'], $groschen->getProductFormFeatures());
+
+        // ePub 3
+        $groschen = new Groschen('9789510414255');
+        $this->assertContains(['ProductFormFeatureType' => '15', 'ProductFormFeatureValue' => '101B'], $groschen->getProductFormFeatures());        
+    }
+
+    /**
      * Test getting products collections/series
      * @return void
      */

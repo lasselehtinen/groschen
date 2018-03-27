@@ -195,6 +195,34 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products form features
+     * @return Collection
+     */
+    public function getProductFormFeatures()
+    {
+        $productFormFeatures = new Collection;
+
+        // Add ePub version
+        switch ($this->product->BindingCode) {
+            case 'E101':
+                $featureValue = '101A';
+                break;
+            case 'W993':
+                $featureValue = '101B';
+                break;
+        }
+
+        if (isset($featureValue)) {
+            $productFormFeatures->push([
+                'ProductFormFeatureType' => '15',
+                'ProductFormFeatureValue' => $featureValue,
+            ]);
+        }
+
+        return $productFormFeatures;
+    }
+
+    /**
      * Check if the given product number is valid GTIN
      * @param  string  $gtin
      * @return boolean
