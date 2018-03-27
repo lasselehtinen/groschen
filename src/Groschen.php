@@ -137,6 +137,11 @@ class Groschen implements ProductInterface
      */
     public function getProductForm()
     {
+        // If missing, return null
+        if (empty($this->product->MediaType)) {
+            return null;
+        }
+
         // E-book mapping for Bokinfo
         if ($this->product->MediaType === 'ED') {
             return 'EA';

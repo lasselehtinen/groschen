@@ -79,6 +79,10 @@ class GroschenIntegrationTest extends TestCase
         // MP3-CD mapping for Bokinfo
         $groschen = new Groschen('9789510417591');
         $this->assertSame('AC', $groschen->getProductForm());
+
+        // Product without media type should return null
+        $groschen = new Groschen('9789513154097');
+        $this->assertNull($groschen->getProductForm());
     }
 
     /**
