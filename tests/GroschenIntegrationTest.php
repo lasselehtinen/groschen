@@ -506,7 +506,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('02', $groschen->getPublishingStatus());
 
         // Exclusive sales
-        $groschen = new Groschen('6430027856139');
+        $groschen = new Groschen('6430027858348');
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Sold out
