@@ -9,6 +9,7 @@ use HTMLPurifier_Config;
 use Illuminate\Support\Collection;
 use Isbn;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
+use League\OAuth2\Client\Provider\GenericProvider;
 use League\Uri\Modifiers\MergeQuery;
 use League\Uri\Modifiers\RemoveQueryKeys;
 use League\Uri\Schemes\Http as HttpUri;
@@ -46,6 +47,30 @@ class Groschen implements ProductInterface
     public function __construct($productNumber)
     {
         $this->productNumber = $productNumber;
+
+        // Generate access token for Opus
+        $provider = new GenericProvider([
+            'clientId' => config('groschen.opus.clientId'),
+            'clientSecret' => config('groschen.opus.clientSecret'),
+            //'redirectUri' => 'https://www.getpostman.com/oauth2/callback',
+            'urlAuthorize' => config('groschen.opus.urlAuthorize'),
+            'urlAccessToken' => config('groschen.opus.urlAccessToken'),
+            'urlResourceOwnerDetails' => config('groschen.opus.urlResourceOwnerDetails'),
+        ]);
+
+        $accessToken = $provider->getAccessToken('password', [
+            'username' => 'lasse.lehtinen@bonnierbooks.fi',
+            'password' => 'Fueltankfilled',
+        ]);
+
+        dd($accessToken);
+
+        $this->accessToken = Cache::remember('accessToken', 60, function () use ($provider) {
+            return $provider->getAccessToken('refresh_token', [
+                'refresh_token' => config('services.zoho.refreshToken'),
+            ]);
+        });
+
         $this->setProductionAndWorkId();
         $this->product = $this->getProduct();
     }
@@ -568,7 +593,7 @@ class Groschen implements ProductInterface
      */
     public function getPublishingStatus()
     {
-        
+
     }
 
     /**
