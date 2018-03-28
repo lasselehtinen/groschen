@@ -474,6 +474,26 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting audiences
+     * @return void
+     */
+    public function testGettingAudiences() {
+        // General/trade
+        $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '01'], $this->groschen->getAudiences());
+        $this->assertCount(1, $this->groschen->getAudiences());
+
+        // Children/juvenile book
+        $groschen = new Groschen('9789510429877');
+        $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '02'], $groschen->getAudiences());
+        $this->assertCount(1, $groschen->getAudiences());
+
+        // Young adult
+        $groschen = new Groschen('9789510434444');
+        $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '03'], $groschen->getAudiences());
+        $this->assertCount(1, $groschen->getAudiences());
+    }
+
+    /**
      * Test getting the products publisher(s)
      * @return void
      */

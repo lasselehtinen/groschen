@@ -630,6 +630,39 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products audience groups
+     * @return Collection
+     */
+    public function getAudiences()
+    {
+        // Collection for audiences
+        $audiences = new Collection;
+
+        // Map the Schilling age group to Audience
+        switch ($this->product->AgeGroup) {
+            case '0+':
+            case '3+':
+            case '5+':
+            case '7+':
+            case '9+':
+            case '10+':
+            case '12+':
+                $audienceCodeValue = '02'; // Children/juvenile
+                break;
+            case '15+':
+                $audienceCodeValue = '03'; // Young adult
+                break;
+            default:
+                $audienceCodeValue = '01'; // General/trade
+                break;
+        }
+
+        $audiences->push(['AudienceCodeType' => '01', 'AudienceCodeValue' => $audienceCodeValue]);
+        
+        return $audiences;
+    }
+
+    /**
      * Get the products text contents
      * @return Collection
      */
