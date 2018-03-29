@@ -624,7 +624,7 @@ class Groschen implements ProductInterface
             $keywords[] = $subject['SubjectCode'];
         }
 
-        $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectSchemeName' => 'Keywords', 'SubjectCode' => implode(';', $keywords)]);
+        $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => implode(';', $keywords)]);
 
         return $subjects;
     }
