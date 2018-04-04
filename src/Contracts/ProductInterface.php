@@ -119,6 +119,12 @@ interface ProductInterface
     public function getAudiences();
 
     /**
+     * Get the products AudienceRanges
+     * @return Collection
+     */
+    public function getAudienceRanges();
+
+    /**
      * Get the products publishers and their role
      * @return Collection
      */

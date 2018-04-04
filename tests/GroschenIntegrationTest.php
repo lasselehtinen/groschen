@@ -123,7 +123,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting ProductFormFeatures
      * @return void
      */
-    public function testGettingProductFormFeatures() {
+    public function testGettingProductFormFeatures()
+    {
         // Hardback should not have any product form features
         $this->assertCount(0, $this->groschen->getProductFormFeatures());
 
@@ -133,7 +134,7 @@ class GroschenIntegrationTest extends TestCase
 
         // ePub 3
         $groschen = new Groschen('9789510414255');
-        $this->assertContains(['ProductFormFeatureType' => '15', 'ProductFormFeatureValue' => '101B'], $groschen->getProductFormFeatures());        
+        $this->assertContains(['ProductFormFeatureType' => '15', 'ProductFormFeatureValue' => '101B'], $groschen->getProductFormFeatures());
     }
 
     /**
@@ -217,7 +218,7 @@ class GroschenIntegrationTest extends TestCase
         // Product without title should not return empty element
         $groschen = new Groschen('9789510353219');
         $this->assertFalse($groschen->getTitleDetails()->contains('TitleType', '01'));
-        
+
     }
 
     /**
@@ -271,8 +272,8 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testContributorAreSortedByLastname()
     {
-        $groschen = new Groschen('9789510262702');        
-        
+        $groschen = new Groschen('9789510262702');
+
         // First author
         $firstAuthor = [
             'SequenceNumber' => 1,
@@ -311,8 +312,9 @@ class GroschenIntegrationTest extends TestCase
      * @group contributors
      * @return void
      */
-    public function testContributorPriorityIsHandledCorrectly() {
-        $groschen = new Groschen('9789510421987');        
+    public function testContributorPriorityIsHandledCorrectly()
+    {
+        $groschen = new Groschen('9789510421987');
 
         // First author
         $firstAuthor = [
@@ -477,7 +479,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting audiences
      * @return void
      */
-    public function testGettingAudiences() {
+    public function testGettingAudiences()
+    {
         // General/trade
         $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '01'], $this->groschen->getAudiences());
         $this->assertCount(1, $this->groschen->getAudiences());
@@ -491,6 +494,73 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510434444');
         $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '03'], $groschen->getAudiences());
         $this->assertCount(1, $groschen->getAudiences());
+    }
+
+    /**
+     * Test getting AudienceRanges
+     * @return void
+     */
+    public function testGettingAudienceRanges()
+    {
+        // General/trade should not contain any audience ranges        
+        $this->assertCount(0, $this->groschen->getAudienceRanges());
+
+        // Product with age group of 0 should be from 0 to 3
+        $groschen = new Groschen('9789513181512');
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
+                [
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 0,
+                ],
+                [
+                    'AudienceRangePrecision' => '04', // To
+                    'AudienceRangeValue' => 3,
+                ],
+            ],
+        ];
+        
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+        
+        // Product with age group of 12 should be from 12 to 15
+        $groschen = new Groschen('9789521619571');
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
+                [
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 12,
+                ],
+                [
+                    'AudienceRangePrecision' => '04', // To
+                    'AudienceRangeValue' => 15,
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+
+        // Product with age group of 15 should be from 15 to 18
+        $groschen = new Groschen('9789510401521');
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
+                [
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 15,
+                ],
+                [
+                    'AudienceRangePrecision' => '04', // To
+                    'AudienceRangeValue' => 18,
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());            
     }
 
     /**
@@ -584,7 +654,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());
 
         // Product without original publishing date
-        $groschen = new Groschen('9789513199173');        
+        $groschen = new Groschen('9789513199173');
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '23191231'], $groschen->getPublishingDates());
         $this->assertCount(1, $groschen->getPublishingDates());
 
@@ -969,7 +1039,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting the products library class
      * @return void
      */
-    public function testGettingLibraryClass() {
+    public function testGettingLibraryClass()
+    {
         $this->assertSame('84.2', $this->groschen->getLibraryClass());
 
         // Product with library class with a prefix
@@ -985,7 +1056,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting the products marketing category
      * @return void
      */
-    public function testGettingMarketingCategory() {
+    public function testGettingMarketingCategory()
+    {
         // Default test product does not have marketing category
         $this->assertNull($this->groschen->getMarketingCategory());
 
@@ -999,19 +1071,20 @@ class GroschenIntegrationTest extends TestCase
 
         // Product with "Star"
         $groschen = new Groschen('9789510433645');
-        $this->assertSame('Star', $groschen->getMarketingCategory());   
+        $this->assertSame('Star', $groschen->getMarketingCategory());
     }
 
     /**
      * Test getting products sales season
      * @return void
      */
-    public function testGettingSalesSeason() {                
+    public function testGettingSalesSeason()
+    {
         $this->assertSame('2010/1', $this->groschen->getSalesSeason());
 
         // Product without sales season
         $groschen = new Groschen('9789510102893');
-        $this->assertNull($groschen->getSalesSeason());        
+        $this->assertNull($groschen->getSalesSeason());
     }
 
 }

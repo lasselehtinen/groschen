@@ -658,8 +658,52 @@ class Groschen implements ProductInterface
         }
 
         $audiences->push(['AudienceCodeType' => '01', 'AudienceCodeValue' => $audienceCodeValue]);
-        
+
         return $audiences;
+    }
+
+    /**
+     * Get the products AudienceRanges
+     * @return Collection
+     */
+    public function getAudienceRanges()
+    {
+        // Collection for audience ranges
+        $audienceRanges = new Collection;
+
+        if (!empty($this->product->AgeGroup)) {
+            // Get age groups and strip the +
+            $ageGroups = array_map(function ($ageGroup) {
+                return intval(preg_replace('[\D]', '', $ageGroup->KeyValue));
+            }, $this->getLookupValues(591));
+
+            // Sort by age and reindex keys
+            natsort($ageGroups);
+            $ageGroups = array_values($ageGroups);
+
+            // Add AgeGroup 18+
+            $ageGroups[] = 18;
+
+            // Determine the from and to values. Since array is sorted, To is the next index in the array.
+            $fromKey = array_search($this->product->AgeGroup, $ageGroups);
+            $toKey = $fromKey + 1;
+
+            $audienceRanges->push([
+                'AudienceRangeQualifier' => 17,
+                'AudienceRangeScopes' => [
+                    [
+                        'AudienceRangePrecision' => '03', // From
+                        'AudienceRangeValue' => $ageGroups[$fromKey],
+                    ],
+                    [
+                        'AudienceRangePrecision' => '04', // To
+                        'AudienceRangeValue' => $ageGroups[$toKey],
+                    ],
+                ],
+            ]);
+        }
+
+        return $audienceRanges;
     }
 
     /**
@@ -1102,6 +1146,27 @@ class Groschen implements ProductInterface
         return (is_null($lookupValue)) ? null : $lookupValue[0]->DataValue;
     }
 
+    /**
+     * Get the Schilling lookup value based on the domain and value
+     * @param  int $domain
+     * @param  string $value
+     * @return array
+     */
+    public function getLookupValues($domain)
+    {
+        // Create Schilling lookup instance
+        $lookup = new Lookup(
+            config('groschen.schilling.hostname'),
+            config('groschen.schilling.port'),
+            config('groschen.schilling.username'),
+            config('groschen.schilling.password'),
+            config('groschen.schilling.company')
+        );
+
+        $lookupValue = $lookup->lookup(['DomainNumber' => $domain]);
+
+        return (is_null($lookupValue)) ? null : $lookupValue->ReturnValue;
+    }
     /**
      * Get the marketing text from the latest print project
      * @param  string $projectId
