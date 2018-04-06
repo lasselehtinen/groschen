@@ -953,7 +953,7 @@ class Groschen implements ProductInterface
         $response = $client->request('GET', 'search', [
             'query' => [
                 'q' => 'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND (ancestorPaths:/WSOY/Kansikuvat OR ancestorPaths:/Tammi/Kansikuvat)',
-                'metadataToReturn' => 'height, width',
+                'metadataToReturn' => 'height, width, mimeType, fileSize',
                 'num' => 1,
             ],
         ]);
@@ -968,16 +968,7 @@ class Groschen implements ProductInterface
                 'ResourceMode' => '03',
                 'ResourceVersion' => [
                     'ResourceForm' => '02',
-                    'ResourceVersionFeatures' => [
-                        [
-                            'ResourceVersionFeatureType' => '02',
-                            'FeatureValue' => $hit->metadata->height,
-                        ],
-                        [
-                            'ResourceVersionFeatureType' => '03',
-                            'FeatureValue' => $hit->metadata->width,
-                        ],
-                    ],
+                    'ResourceVersionFeatures' => $this->getResourceVersionFeatures($hit),
                     'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl),
                 ],
             ]);
@@ -1031,6 +1022,65 @@ class Groschen implements ProductInterface
         }
 
         return $supportingResources;
+    }
+
+    /**
+     * Returns the ResourceVersionFeatures for the given Elvis metadata hit
+     * @param  stdClass $hit
+     * @return array
+     */
+    public function getResourceVersionFeatures($hit)
+    {
+        // Elvis uses mime types, so we need mapping table for ResourceVersionFeatureValue codelist
+        $mimeTypeToCodelistMapping = [
+            'application/pdf' => 'D401',
+            'image/gif' => 'D501',
+            'image/jpeg' => 'D502',
+            'image/png' => 'D503',
+            'image/tiff' => 'D504',
+        ];
+
+        // Download the file for MD5/SHA checksums
+        $contents = file_get_contents($this->getAuthCredUrl($hit->originalUrl));
+
+        // Pixel height/width, filename, download file size in megabytes, checksums and
+        $resourceVersionFeatures = [
+            [
+                'ResourceVersionFeatureType' => '01',
+                'FeatureValue' => $mimeTypeToCodelistMapping[$hit->metadata->mimeType],
+            ],
+            [
+                'ResourceVersionFeatureType' => '02',
+                'FeatureValue' => $hit->metadata->height,
+            ],
+            [
+                'ResourceVersionFeatureType' => '03',
+                'FeatureValue' => $hit->metadata->width,
+            ],
+            [
+                'ResourceVersionFeatureType' => '04',
+                'FeatureValue' => $hit->metadata->filename,
+            ],
+            [
+                'ResourceVersionFeatureType' => '05',
+                'FeatureValue' => number_format($hit->metadata->fileSize->value / 1048576, 1),
+            ],
+            [
+                'ResourceVersionFeatureType' => '06',
+                'FeatureValue' => hash('md5', $contents),
+            ],
+            [
+                'ResourceVersionFeatureType' => '07',
+                'FeatureValue' => $hit->metadata->fileSize->value,
+            ],
+            [
+                'ResourceVersionFeatureType' => '08',
+                'FeatureValue' => hash('sha256', $contents),
+            ],
+
+        ];
+
+        return $resourceVersionFeatures;
     }
 
     /**

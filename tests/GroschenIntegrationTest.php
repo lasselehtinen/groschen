@@ -502,7 +502,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingAudienceRanges()
     {
-        // General/trade should not contain any audience ranges        
+        // General/trade should not contain any audience ranges
         $this->assertCount(0, $this->groschen->getAudienceRanges());
 
         // Product with age group of 0 should be from 0 to 3
@@ -521,9 +521,9 @@ class GroschenIntegrationTest extends TestCase
                 ],
             ],
         ];
-        
+
         $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
-        
+
         // Product with age group of 12 should be from 12 to 15
         $groschen = new Groschen('9789521619571');
 
@@ -560,7 +560,7 @@ class GroschenIntegrationTest extends TestCase
             ],
         ];
 
-        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());            
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
     }
 
     /**
@@ -780,13 +780,38 @@ class GroschenIntegrationTest extends TestCase
                 'ResourceForm' => '02',
                 'ResourceVersionFeatures' => [
                     [
+                        'ResourceVersionFeatureType' => '01',
+                        'FeatureValue' => 'D502',
+                    ],
+                    [
                         'ResourceVersionFeatureType' => '02',
-                        'FeatureValue' => '2398',
+                        'FeatureValue' => 2398,
                     ],
                     [
                         'ResourceVersionFeatureType' => '03',
-                        'FeatureValue' => '1594',
+                        'FeatureValue' => 1594,
                     ],
+                    [
+                        'ResourceVersionFeatureType' => '04',
+                        'FeatureValue' => '9789510366264_frontcover_final.jpg',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '05',
+                        'FeatureValue' => '1.7',
+                    ],                    
+                    [
+                        'ResourceVersionFeatureType' => '06',
+                        'FeatureValue' => 'c4204770c25afca3d98f629f1916d3f2',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '07',
+                        'FeatureValue' => 1738006,
+                    ],                    
+                    [
+                        'ResourceVersionFeatureType' => '08',
+                        'FeatureValue' => '019fd7ee76362bf683e36aa89351cd54cb55ec89b3d035da645170cbba91307f',
+                    ],
+                    
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
