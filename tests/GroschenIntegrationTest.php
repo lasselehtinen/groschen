@@ -79,6 +79,10 @@ class GroschenIntegrationTest extends TestCase
         // MP3-CD mapping for Bokinfo
         $groschen = new Groschen('9789510417591');
         $this->assertSame('AC', $groschen->getProductForm());
+
+        // Product without media type should return null
+        $groschen = new Groschen('9789513154097');
+        $this->assertNull($groschen->getProductForm());
     }
 
     /**
@@ -113,6 +117,24 @@ class GroschenIntegrationTest extends TestCase
         // Picture-audio book
         $groschen = new Groschen('9789510429358');
         $this->assertSame('A302', $groschen->getProductFormDetail());
+    }
+
+    /**
+     * Test getting ProductFormFeatures
+     * @return void
+     */
+    public function testGettingProductFormFeatures()
+    {
+        // Hardback should not have any product form features
+        $this->assertCount(0, $this->groschen->getProductFormFeatures());
+
+        // ePub 2
+        $groschen = new Groschen('9789510383575');
+        $this->assertContains(['ProductFormFeatureType' => '15', 'ProductFormFeatureValue' => '101A'], $groschen->getProductFormFeatures());
+
+        // ePub 3
+        $groschen = new Groschen('9789510414255');
+        $this->assertContains(['ProductFormFeatureType' => '15', 'ProductFormFeatureValue' => '101B'], $groschen->getProductFormFeatures());
     }
 
     /**
@@ -175,8 +197,8 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingTitleDetails()
     {
-        $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
-        $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
+        $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'MielensÃ¤pahoittaja']], $this->groschen->getTitleDetails());
+        $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'MielensÃ¤pahoittaja']], $this->groschen->getTitleDetails());
 
         // Should not have original title
         $this->assertFalse($this->groschen->getTitleDetails()->contains('TitleType', '03'));
@@ -192,6 +214,11 @@ class GroschenIntegrationTest extends TestCase
 
         // Distributors title
         $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Joululaulu (pokkari)']], $groschen->getTitleDetails());
+
+        // Product without title should not return empty element
+        $groschen = new Groschen('9789510353219');
+        $this->assertFalse($groschen->getTitleDetails()->contains('TitleType', '01'));
+
     }
 
     /**
@@ -214,9 +241,9 @@ class GroschenIntegrationTest extends TestCase
                 'IDTypeName' => 'Creditor number',
                 'IDValue' => '20001267',
             ],
-            'PersonNameInverted' => 'Kyrö, Tuomas',
+            'PersonNameInverted' => 'KyrÃ¶, Tuomas',
             'NamesBeforeKey' => 'Tuomas',
-            'KeyNames' => 'Kyrö',
+            'KeyNames' => 'KyrÃ¶',
         ];
 
         $this->assertContains($author, $this->groschen->getContributors());
@@ -245,8 +272,8 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testContributorAreSortedByLastname()
     {
-        $groschen = new Groschen('9789510262702');        
-        
+        $groschen = new Groschen('9789510262702');
+
         // First author
         $firstAuthor = [
             'SequenceNumber' => 1,
@@ -285,8 +312,9 @@ class GroschenIntegrationTest extends TestCase
      * @group contributors
      * @return void
      */
-    public function testContributorPriorityIsHandledCorrectly() {
-        $groschen = new Groschen('9789510421987');        
+    public function testContributorPriorityIsHandledCorrectly()
+    {
+        $groschen = new Groschen('9789510421987');
 
         // First author
         $firstAuthor = [
@@ -313,9 +341,9 @@ class GroschenIntegrationTest extends TestCase
                 'IDTypeName' => 'Creditor number',
                 'IDValue' => '20000867',
             ],
-            'PersonNameInverted' => 'Hänninen, Vepe',
+            'PersonNameInverted' => 'HÃ¤nninen, Vepe',
             'NamesBeforeKey' => 'Vepe',
-            'KeyNames' => 'Hänninen',
+            'KeyNames' => 'HÃ¤nninen',
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -376,7 +404,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(1, $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00'));
 
         // Check that text contains string
-        $this->assertContains('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
+        $this->assertContains('KyllÃ¤ minÃ¤ niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
 
         // Product without text
         $groschen = new Groschen('9789510343135');
@@ -417,7 +445,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingSubjects()
     {
-        $subjects = $this->groschen->getSubjects();
+        $subjects = $this->groschen->getSubjects();        
         $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => 'Kotimainen kauno'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => 'Nykyromaanit'], $subjects);
@@ -425,18 +453,24 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FBA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectSchemeName' => 'Keywords', 'SubjectCode' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielÃ¤mÃ¤;elÃ¤kelÃ¤iset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielÃ¤mÃ¤;elÃ¤kelÃ¤iset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;pakinat;monologit;elÃ¤kelÃ¤iset;mielipiteet;pessimismi;miehet'], $subjects);
+
+        // Book with subjects in AllmÃ¤n tesaurus pÃ¥ svenska
+        $groschen = new Groschen('9789510374665');
+        $subjects = $groschen->getSubjects();        
+        $this->assertContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'AllmÃ¤n tesaurus pÃ¥ svenska', 'SubjectCode' => 'krigfÃ¶ring'], $subjects);
+
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
         $subjects = $groschen->getSubjects();
 
         $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => 'Käännetty L&N'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => 'KÃ¤Ã¤nnetty L&N'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => 'Scifi'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC028000'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FL'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisäluokitus', 'SubjectCode' => 'Scifi'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisÃ¤luokitus', 'SubjectCode' => 'Scifi'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YFG'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'N'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => '5AN'], $subjects);
@@ -448,29 +482,117 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting audiences
+     * @return void
+     */
+    public function testGettingAudiences()
+    {
+        // General/trade
+        $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '01'], $this->groschen->getAudiences());
+        $this->assertCount(1, $this->groschen->getAudiences());
+
+        // Children/juvenile book
+        $groschen = new Groschen('9789510429877');
+        $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '02'], $groschen->getAudiences());
+        $this->assertCount(1, $groschen->getAudiences());
+
+        // Young adult
+        $groschen = new Groschen('9789510434444');
+        $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '03'], $groschen->getAudiences());
+        $this->assertCount(1, $groschen->getAudiences());
+    }
+
+    /**
+     * Test getting AudienceRanges
+     * @return void
+     */
+    public function testGettingAudienceRanges()
+    {
+        // General/trade should not contain any audience ranges
+        $this->assertCount(0, $this->groschen->getAudienceRanges());
+
+        // Product with age group of 0 should be from 0 to 3
+        $groschen = new Groschen('9789513181512');
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
+                [
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 0,
+                ],
+                [
+                    'AudienceRangePrecision' => '04', // To
+                    'AudienceRangeValue' => 3,
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+
+        // Product with age group of 12 should be from 12 to 15
+        $groschen = new Groschen('9789521619571');
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
+                [
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 12,
+                ],
+                [
+                    'AudienceRangePrecision' => '04', // To
+                    'AudienceRangeValue' => 15,
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+
+        // Product with age group of 15 should be from 15 to 18
+        $groschen = new Groschen('9789510401521');
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
+                [
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 15,
+                ],
+                [
+                    'AudienceRangePrecision' => '04', // To
+                    'AudienceRangeValue' => 18,
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+    }
+
+    /**
      * Test getting the products publisher(s)
      * @return void
      */
     public function testGettingPublishers()
     {
         // Normal WSOY product
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner Söderström Osakeyhtiö'], $this->groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner SÃ¶derstrÃ¶m OsakeyhtiÃ¶'], $this->groschen->getPublishers());
 
         // WSOY marketing product
         $groschen = new Groschen('6430060030275');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner Söderström Osakeyhtiö'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner SÃ¶derstrÃ¶m OsakeyhtiÃ¶'], $groschen->getPublishers());
 
         // Normal Tammi product
         $groschen = new Groschen('9789513179564');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'KustannusosakeyhtiÃ¶ Tammi'], $groschen->getPublishers());
 
         // Manga product
         $groschen = new Groschen('9789521619779');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'KustannusosakeyhtiÃ¶ Tammi'], $groschen->getPublishers());
 
         // Tammi marketing product
         $groschen = new Groschen('6430061220026');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'KustannusosakeyhtiÃ¶ Tammi'], $groschen->getPublishers());
     }
 
     /**
@@ -501,7 +623,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('02', $groschen->getPublishingStatus());
 
         // Exclusive sales
-        $groschen = new Groschen('6430027856139');
+        $groschen = new Groschen('6430027858348');
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Sold out
@@ -538,7 +660,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());
 
         // Product without original publishing date
-        $groschen = new Groschen('9789513199173');        
+        $groschen = new Groschen('9789513199173');
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '23191231'], $groschen->getPublishingDates());
         $this->assertCount(1, $groschen->getPublishingDates());
 
@@ -553,7 +675,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPrices()
     {
-        // Supplier’s net price excluding tax
+        // Supplierâ€™s net price excluding tax
         $suppliersNetPriceExcludingTax = [
             'PriceType' => '05',
             'PriceAmount' => 16.25,
@@ -570,7 +692,7 @@ class GroschenIntegrationTest extends TestCase
             ],
         ];
 
-        // Supplier’s net price including tax
+        // Supplierâ€™s net price including tax
         $suppliersNetPriceIncludingTax = [
             'PriceType' => '07',
             'PriceAmount' => 17.88,
@@ -664,13 +786,38 @@ class GroschenIntegrationTest extends TestCase
                 'ResourceForm' => '02',
                 'ResourceVersionFeatures' => [
                     [
+                        'ResourceVersionFeatureType' => '01',
+                        'FeatureValue' => 'D502',
+                    ],
+                    [
                         'ResourceVersionFeatureType' => '02',
-                        'FeatureValue' => '2398',
+                        'FeatureValue' => 2398,
                     ],
                     [
                         'ResourceVersionFeatureType' => '03',
-                        'FeatureValue' => '1594',
+                        'FeatureValue' => 1594,
                     ],
+                    [
+                        'ResourceVersionFeatureType' => '04',
+                        'FeatureValue' => '9789510366264_frontcover_final.jpg',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '05',
+                        'FeatureValue' => '1.7',
+                    ],                    
+                    [
+                        'ResourceVersionFeatureType' => '06',
+                        'FeatureValue' => 'c4204770c25afca3d98f629f1916d3f2',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '07',
+                        'FeatureValue' => 1738006,
+                    ],                    
+                    [
+                        'ResourceVersionFeatureType' => '08',
+                        'FeatureValue' => '019fd7ee76362bf683e36aa89351cd54cb55ec89b3d035da645170cbba91307f',
+                    ],
+                    
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
@@ -923,7 +1070,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting the products library class
      * @return void
      */
-    public function testGettingLibraryClass() {
+    public function testGettingLibraryClass()
+    {
         $this->assertSame('84.2', $this->groschen->getLibraryClass());
 
         // Product with library class with a prefix
@@ -939,7 +1087,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting the products marketing category
      * @return void
      */
-    public function testGettingMarketingCategory() {
+    public function testGettingMarketingCategory()
+    {
         // Default test product does not have marketing category
         $this->assertNull($this->groschen->getMarketingCategory());
 
@@ -953,19 +1102,20 @@ class GroschenIntegrationTest extends TestCase
 
         // Product with "Star"
         $groschen = new Groschen('9789510433645');
-        $this->assertSame('Star', $groschen->getMarketingCategory());   
+        $this->assertSame('Star', $groschen->getMarketingCategory());
     }
 
     /**
      * Test getting products sales season
      * @return void
      */
-    public function testGettingSalesSeason() {                
+    public function testGettingSalesSeason()
+    {
         $this->assertSame('2010/1', $this->groschen->getSalesSeason());
 
         // Product without sales season
         $groschen = new Groschen('9789510102893');
-        $this->assertNull($groschen->getSalesSeason());        
+        $this->assertNull($groschen->getSalesSeason());
     }
 
 }
