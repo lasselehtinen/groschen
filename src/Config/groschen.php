@@ -18,10 +18,7 @@ return [
         'clientSecret' => env('SOUNDCLOUD_CLIENTSECRET'),
     ],
     'opus' => [        
-        'clientId' => env('OPUS_CLIENTID'),
-        'clientSecret' => env('OPUS_CLIENTSECRET'),
-        'urlAuthorize' => env('OPUS_AUTHORIZE_URL'),
-        'urlAccessToken' => env('OPUS_ACCESS_TOKEN_URL'),
-        'urlResourceOwnerDetails' => env('OPUS_RESOURCE_OWNER_DETAILS_URL'),
+        'hostname' => env('OPUS_HOSTNAME'),
+        'token' => env('OPUS_OAUTH2_TOKEN'),
     ],
 ];

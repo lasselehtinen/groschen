@@ -49,8 +49,9 @@ class OpusGroschenIntegrationTest extends TestCase
         $this->assertSame('00', $this->groschen->getProductComposition());
 
         // Trade-only product - TODO
+        $this->markTestIncomplete();
         //$groschen = new OpusGroschen('6416889067166');
-        //$this->assertSame('20', $groschen->getProductComposition());
+        //$this->assertSame('20', $groschen->getProductComposition());        
     }
 
     /**
@@ -59,6 +60,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingProductForm()
     {
+        // TODO - Add more tests
+        $this->markTestIncomplete();
+
         // Hardcover
         $this->assertSame('BB', $this->groschen->getProductForm());
 
@@ -77,6 +81,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingFormDetail()
     {
+        // TODO - Add more tests
+        $this->markTestIncomplete();
+
         // Hardcover does not have product form detail
         $this->assertNull($this->groschen->getProductFormDetail());
 
@@ -176,6 +183,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingLanguages()
     {
+        // TODO - Multiple languages
+        $this->markTestIncomplete();
+
         // Test product does not have the language defined
         $this->assertCount(0, $this->groschen->getLanguages());
 
@@ -186,11 +196,11 @@ class OpusGroschenIntegrationTest extends TestCase
 
         // Book that is translated - TODO
         /*
-    $groschen = new OpusGroschen('9789510409749');
-    $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'fin'], $groschen->getLanguages());
-    $this->assertContains(['LanguageRole' => '02', 'LanguageCode' => 'eng'], $groschen->getLanguages());
-    $this->assertCount(2, $groschen->getLanguages());
-     */
+        $groschen = new OpusGroschen('9789510409749');
+        $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'fin'], $groschen->getLanguages());
+        $this->assertContains(['LanguageRole' => '02', 'LanguageCode' => 'eng'], $groschen->getLanguages());
+        $this->assertCount(2, $groschen->getLanguages());
+         */        
     }
 
     /**
@@ -209,11 +219,10 @@ class OpusGroschenIntegrationTest extends TestCase
         // Audio book with duration with minutes
         $groschen = new OpusGroschen('9789174332117');
         $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '01930', 'ExtentUnit' => '15'], $groschen->getExtents());
-
     }
 
     /**
-     * Test getting product text contents - TODO
+     * Test getting product text contents
      * @return void
      */
     public function testGettingTextContents()
@@ -240,10 +249,10 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingMeasures()
     {
-        $this->assertContains(['MeasureType' => '01', 'Measurement' => 270, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
-        $this->assertContains(['MeasureType' => '02', 'Measurement' => 228, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
-        $this->assertContains(['MeasureType' => '03', 'Measurement' => 41, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
-        $this->assertContains(['MeasureType' => '08', 'Measurement' => 1080, 'MeasureUnitCode' => 'gr'], $this->groschen->getMeasures());
+        $this->assertContains(['MeasureType' => '01', 'Measurement' => 202, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
+        $this->assertContains(['MeasureType' => '02', 'Measurement' => 162, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
+        $this->assertContains(['MeasureType' => '03', 'Measurement' => 31, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
+        $this->assertContains(['MeasureType' => '08', 'Measurement' => 637, 'MeasureUnitCode' => 'gr'], $this->groschen->getMeasures());
 
         // eBook should not have any measures
         $groschen = new OpusGroschen('9789100130091');
@@ -262,7 +271,8 @@ class OpusGroschenIntegrationTest extends TestCase
         $subjects = $this->groschen->getSubjects();
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'SFBC'], $subjects);
 
-        // TODO - YKL, Thema interest age
+        // TODO - YKL, BBF own internal (main group),  
+        $this->markTestIncomplete();
     }
 
     /**
@@ -294,6 +304,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingPublishingStatus()
     {
+        // TODO
+        $this->markTestIncomplete();
+
         // Published
         $this->assertSame('04', $this->groschen->getPublishingStatus());
 
@@ -389,6 +402,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingPublishersRetailPrices()
     {
+        // TODO
+        $this->markTestIncomplete();
+
         // Publishers recommended retail price including tax
         $publishersRecommendedRetailPriceIncludingTax = [
             'PriceType' => '42',
@@ -415,6 +431,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingCoverImageInSupportingResources()
     {
+        // TODO
+        $this->markTestIncomplete();
+
         $supportingResource = [
             'ResourceContentType' => '01',
             'ContentAudience' => '00',
@@ -448,6 +467,7 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingExternalLinksInSupportingResources()
     {
+        $this->markTestIncomplete();
         // Product with links to multiple external sources
         $groschen = new OpusGroschen('9789510409749');
 
@@ -486,7 +506,7 @@ class OpusGroschenIntegrationTest extends TestCase
 
         $this->assertContains($audioSample, $groschen->getSupportingResources());
         $this->assertContains($youTube, $groschen->getSupportingResources());
-        $this->assertContains($readingSample, $groschen->getSupportingResources());
+        $this->assertContains($readingSample, $groschen->getSupportingResources());        
     }
 
     /**
@@ -544,10 +564,6 @@ class OpusGroschenIntegrationTest extends TestCase
     public function testCheckingIfProductIsConfidential()
     {
         $this->assertFalse($this->groschen->isConfidential());
-
-        // Development-confidential
-        $groschen = new OpusGroschen('6430060030169');
-        $this->assertTrue($groschen->isConfidential());
     }
 
     /**
@@ -556,19 +572,7 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingCostCenter()
     {
-        $this->assertSame(301, $this->groschen->getCostCenter());
-
-        // Some other cost center
-        $groschen = new OpusGroschen('6430060030169');
-        $this->assertSame(914, $groschen->getCostCenter());
-
-        // Cancelled product which does not have cost center
-        $groschen = new OpusGroschen('9789510418666');
-        $this->assertNull($groschen->getCostCenter());
-
-        // Product with only one dimension
-        $groschen = new OpusGroschen('6417892033018');
-        $this->assertSame(350, $groschen->getCostCenter());
+        $this->assertSame(8120, $this->groschen->getCostCenter());
     }
 
     /**
@@ -577,6 +581,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingMediaType()
     {
+        // TODO
+        $this->markTestIncomplete();
+
         $this->assertSame('BB', $this->groschen->getMediaType());
 
         // Some other cost center
@@ -596,6 +603,9 @@ class OpusGroschenIntegrationTest extends TestCase
     {
         $this->assertNull($this->groschen->getBindingCode());
 
+                // TODO - Add more tests
+        $this->markTestIncomplete();
+
         // Product with a binding code
         $groschen = new OpusGroschen('9789510343203');
         $this->assertSame('A103', $groschen->getBindingCode());
@@ -607,6 +617,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingDiscountGroup()
     {
+        // TODO
+        $this->markTestIncomplete();
+
         $this->assertSame(1, $this->groschen->getDiscountGroup());
 
         // Product with a different discount code
@@ -620,6 +633,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingStatusCode()
     {
+        // TODO
+        $this->markTestIncomplete();
+
         $this->assertSame(2, $this->groschen->getStatusCode());
 
         // Product with a different status code
@@ -636,7 +652,7 @@ class OpusGroschenIntegrationTest extends TestCase
         $this->assertNull($this->groschen->getProductsInSeries());
 
         // Product with four products in the serie
-        $groschen = new OpusGroschen('9789521610165');
+        $groschen = new OpusGroschen('9789174331790');
         $this->assertSame(4, $groschen->getProductsInSeries());
     }
 
@@ -646,10 +662,12 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testCheckingIfProductIsImmaterial()
     {
+        $this->markTestIncomplete();
+
         $this->assertFalse($this->groschen->isImmaterial());
 
         // Immaterial product
-        $groschen = new OpusGroschen('9789510410622');
+        $groschen = new OpusGroschen('9789100131210');
         $this->assertTrue($groschen->isImmaterial());
     }
 
@@ -659,6 +677,7 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testCheckingIfProductIsPrintOnDemand()
     {
+        $this->markTestIncomplete();
         $this->assertFalse($this->groschen->isPrintOnDemand());
 
         // POD product
@@ -672,6 +691,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingInternalProdNo()
     {
+        // TODO
+        $this->markTestIncomplete();
+
         // Should be same as GTIN
         $this->assertSame('9789510366264', $this->groschen->getInternalProdNo());
 
@@ -691,6 +713,8 @@ class OpusGroschenIntegrationTest extends TestCase
         // Product with different customs number
         $groschen = new OpusGroschen('9789174331516');
         $this->assertSame(85234920, $groschen->getCustomsNumber());
+
+        // TODO        
     }
 
     /**
@@ -699,6 +723,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingLibraryClass()
     {
+        // TODO - Does not exist in Opus
+        $this->markTestIncomplete();
+
         $this->assertSame('84.2', $this->groschen->getLibraryClass());
 
         // Product with library class with a prefix
@@ -708,6 +735,8 @@ class OpusGroschenIntegrationTest extends TestCase
         // Product where product does not have library class
         $groschen = new OpusGroschen('9789510809556');
         $this->assertNull($groschen->getLibraryClass());
+
+
     }
 
     /**
@@ -716,6 +745,9 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingMarketingCategory()
     {
+        // TODO - Does not exist in Opus
+        $this->markTestIncomplete();
+
         // Default test product does not have marketing category
         $this->assertNull($this->groschen->getMarketingCategory());
 
@@ -739,10 +771,6 @@ class OpusGroschenIntegrationTest extends TestCase
     public function testGettingSalesSeason()
     {
         $this->assertSame('2011/2', $this->groschen->getSalesSeason());
-
-        // Product without sales season - TODO
-        //$groschen = new OpusGroschen('9789510102893');
-        //$this->assertNull($groschen->getSalesSeason());
     }
 
 }

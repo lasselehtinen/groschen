@@ -476,12 +476,12 @@ class Groschen implements ProductInterface
         switch ($this->product->Owner) {
             case '1':
             case '3':
-                return 'Werner SÃ¶derstrÃ¶m OsakeyhtiÃ¶';
+                return 'Werner Söderström Osakeyhtiö';
                 break;
             case '2:':
             case '4:':
             case '5:':
-                return 'KustannusosakeyhtiÃ¶ Tammi';
+                return 'Kustannusosakeyhtiö Tammi';
                 break;
             default:
                 throw new Exception('No mapping for publisher exists.');
@@ -604,8 +604,8 @@ class Groschen implements ProductInterface
         // Thema interest age
         $subjects->push(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => $this->getThemaInterestAge()]);
 
-        // Fiktiivisen aineiston lisÃ¤luokitus
-        $subjects->push(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisÃ¤luokitus', 'SubjectCode' => $this->getFiktiivisenAineistonLisaluokitus()]);
+        // Fiktiivisen aineiston lisäluokitus
+        $subjects->push(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisäluokitus', 'SubjectCode' => $this->getFiktiivisenAineistonLisaluokitus()]);
 
         // Finnish book trade categorization
         foreach ($this->getFinnishBookTradeCategorisations() as $finnishBookTradeCategorisation) {
@@ -742,12 +742,12 @@ class Groschen implements ProductInterface
         switch ($this->product->Owner) {
             case '1':
             case '3':
-                $publisherName = 'Werner SÃ¶derstrÃ¶m OsakeyhtiÃ¶';
+                $publisherName = 'Werner Söderström Osakeyhtiö';
                 break;
             case '2:':
             case '4:':
             case '5:':
-                $publisherName = 'KustannusosakeyhtiÃ¶ Tammi';
+                $publisherName = 'Kustannusosakeyhtiö Tammi';
                 break;
             default:
                 throw new Exception('No mapping for publisher exists.');
@@ -981,7 +981,7 @@ class Groschen implements ProductInterface
         if (isset($this->product->InternetInformation->InternetTexts[0]->InternetLinks)) {
             foreach ($this->product->InternetInformation->InternetTexts[0]->InternetLinks as $internetLink) {
                 switch ($internetLink->LinkType) {
-                    case 'Ã¤Ã¤ninÃ¤yte':
+                    case 'ääninäyte':
                         $resourceContentType = '15';
                         $resourceMode = '02';
 
@@ -1622,7 +1622,7 @@ class Groschen implements ProductInterface
                                 break;
                             case 'allars':
                                 $subjectSchemeIdentifier = '65';
-                                $subjectSchemeName = 'AllmÃ¤n tesaurus pÃ¥ svenska';
+                                $subjectSchemeName = 'Allmän tesaurus på svenska';
                                 break;
                             default:
                                 $subjectSchemeIdentifier = null;
@@ -1675,29 +1675,29 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Return the Fiktiivisen aineiston lisÃ¤luokitus if applicable
+     * Return the Fiktiivisen aineiston lisäluokitus if applicable
      * @return string|null
      */
     public function getFiktiivisenAineistonLisaluokitus()
     {
-        // Mapping table from Schilling sub group to Fiktiivisen aineiston lisÃ¤luokitus
+        // Mapping table from Schilling sub group to Fiktiivisen aineiston lisäluokitus
         $mappingTable = [
             '2' => 'Fantasia',
             '4' => 'Historia',
             '5' => 'Huumori',
-            '8' => 'JÃ¤nnitys',
-            '17' => 'ElÃ¤imet',
+            '8' => 'Jännitys',
+            '17' => 'Eläimet',
             '22' => 'Novellit',
             '31' => 'Scifi',
             '34' => 'Uskonto',
             '35' => 'Romantiikka',
             '43' => 'Urheilu',
             '47' => 'Kauhu',
-            '48' => 'ErÃ¤',
+            '48' => 'Erä',
             '49' => 'Sota',
         ];
 
-        // Return "Fiktiivisen aineiston lisÃ¤luokitus" if mapping exist and main group is not "Tietokirjallisuus" aka Non-fiction
+        // Return "Fiktiivisen aineiston lisäluokitus" if mapping exist and main group is not "Tietokirjallisuus" aka Non-fiction
         if ($this->product->MainGroup !== '7' && array_key_exists($this->product->SubGroup, $mappingTable)) {
             return $mappingTable[$this->product->SubGroup];
         } else {
@@ -1774,6 +1774,7 @@ class Groschen implements ProductInterface
      */
     public function isConfidential()
     {
+        dd($this->product);
         return ($this->product->NotifyCode === 6) ? true : false;
     }
 
@@ -1926,7 +1927,7 @@ class Groschen implements ProductInterface
      * @return string|null
      */
     public function getSalesSeason()
-    {
+    {        
         if (empty($this->product->ReviewCycle)) {
             return null;
         }

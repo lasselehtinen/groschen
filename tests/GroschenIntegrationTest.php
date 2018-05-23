@@ -197,8 +197,8 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingTitleDetails()
     {
-        $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'MielensÃ¤pahoittaja']], $this->groschen->getTitleDetails());
-        $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'MielensÃ¤pahoittaja']], $this->groschen->getTitleDetails());
+        $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
+        $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
 
         // Should not have original title
         $this->assertFalse($this->groschen->getTitleDetails()->contains('TitleType', '03'));
@@ -241,9 +241,9 @@ class GroschenIntegrationTest extends TestCase
                 'IDTypeName' => 'Creditor number',
                 'IDValue' => '20001267',
             ],
-            'PersonNameInverted' => 'KyrÃ¶, Tuomas',
+            'PersonNameInverted' => 'Kyrö, Tuomas',
             'NamesBeforeKey' => 'Tuomas',
-            'KeyNames' => 'KyrÃ¶',
+            'KeyNames' => 'Kyrö',
         ];
 
         $this->assertContains($author, $this->groschen->getContributors());
@@ -341,9 +341,9 @@ class GroschenIntegrationTest extends TestCase
                 'IDTypeName' => 'Creditor number',
                 'IDValue' => '20000867',
             ],
-            'PersonNameInverted' => 'HÃ¤nninen, Vepe',
+            'PersonNameInverted' => 'Hänninen, Vepe',
             'NamesBeforeKey' => 'Vepe',
-            'KeyNames' => 'HÃ¤nninen',
+            'KeyNames' => 'Hänninen',
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -404,7 +404,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(1, $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00'));
 
         // Check that text contains string
-        $this->assertContains('KyllÃ¤ minÃ¤ niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
+        $this->assertContains('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
 
         // Product without text
         $groschen = new Groschen('9789510343135');
@@ -453,24 +453,23 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FBA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielÃ¤mÃ¤;elÃ¤kelÃ¤iset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielÃ¤mÃ¤;elÃ¤kelÃ¤iset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;pakinat;monologit;elÃ¤kelÃ¤iset;mielipiteet;pessimismi;miehet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;pakinat;monologit;eläkeläiset;mielipiteet;pessimismi;miehet'], $subjects);
 
-        // Book with subjects in AllmÃ¤n tesaurus pÃ¥ svenska
+        // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
         $subjects = $groschen->getSubjects();        
-        $this->assertContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'AllmÃ¤n tesaurus pÃ¥ svenska', 'SubjectCode' => 'krigfÃ¶ring'], $subjects);
-
+        $this->assertContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
         $subjects = $groschen->getSubjects();
 
         $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => 'KÃ¤Ã¤nnetty L&N'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => 'Käännetty L&N'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => 'Scifi'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC028000'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FL'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisÃ¤luokitus', 'SubjectCode' => 'Scifi'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisäluokitus', 'SubjectCode' => 'Scifi'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YFG'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'N'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => '5AN'], $subjects);
@@ -576,23 +575,23 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingPublishers()
     {
         // Normal WSOY product
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner SÃ¶derstrÃ¶m OsakeyhtiÃ¶'], $this->groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner Söderström Osakeyhtiö'], $this->groschen->getPublishers());
 
         // WSOY marketing product
         $groschen = new Groschen('6430060030275');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner SÃ¶derstrÃ¶m OsakeyhtiÃ¶'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner Söderström Osakeyhtiö'], $groschen->getPublishers());
 
         // Normal Tammi product
         $groschen = new Groschen('9789513179564');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'KustannusosakeyhtiÃ¶ Tammi'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
 
         // Manga product
         $groschen = new Groschen('9789521619779');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'KustannusosakeyhtiÃ¶ Tammi'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
 
         // Tammi marketing product
         $groschen = new Groschen('6430061220026');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'KustannusosakeyhtiÃ¶ Tammi'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
     }
 
     /**

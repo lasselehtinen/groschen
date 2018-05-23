@@ -460,7 +460,7 @@ class OpusGroschen implements ProductInterface
     {
         // Collection for measures
         $measures = new Collection;
-
+        
         // Add width, height and length
         $measures->push(['MeasureType' => '01', 'Measurement' => intval($this->product->height * 1000), 'MeasureUnitCode' => 'mm']);
         $measures->push(['MeasureType' => '02', 'Measurement' => intval($this->product->width * 1000), 'MeasureUnitCode' => 'mm']);
@@ -1222,8 +1222,8 @@ class OpusGroschen implements ProductInterface
      * @return boolean
      */
     public function isConfidential()
-    {
-        return null;
+    {        
+        return $this->product->isPublished === false;
     }
 
     /**
@@ -1232,9 +1232,8 @@ class OpusGroschen implements ProductInterface
      */
     public function getCostCenter()
     {
-        // Product with 2 dimensions (cost center and EAN)
-        if (isset($this->product->Dimensions) && count($this->product->Dimensions) > 0) {
-            return intval($this->product->Dimensions[0]);
+        if (isset($this->product->costCenter)) {
+            return intval($this->product->costCenter->id);
         }
 
         return null;
@@ -1282,8 +1281,9 @@ class OpusGroschen implements ProductInterface
      */
     public function getProductsInSeries()
     {
-        if (!empty($this->product->BookSeries) && $this->product->PartsInSeries > 0) {
-            return intval($this->product->PartsInSeries);
+        //dd($this->product);
+        if (isset($this->product->externalInformation->numberInSeries)) {
+            return intval($this->product->externalInformation->numberInSeries);
         }
 
         return null;
@@ -1295,6 +1295,7 @@ class OpusGroschen implements ProductInterface
      */
     public function isImmaterial()
     {
+        dd($this->product);
         return ($this->product->PlanningCode === 'y') ? true : false;
     }
 
