@@ -618,14 +618,21 @@ class Groschen implements ProductInterface
             $subjects->push($finnaSubject);
         }
 
+        // Remove those where SubjectCode is empty
+        $subjects = $subjects->filter(function ($subject) {
+            return !empty($subject['SubjectCode']);
+        });
+
         // Add all keywords separated by semicolon
         $keywords = [];
         foreach ($finnaSubjects as $subject) {
             $keywords[] = $subject['SubjectCode'];
         }
 
-        $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => implode(';', $keywords)]);
-
+        if (!empty($keywords)) {
+            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => implode(';', $keywords)]);
+        }
+        
         return $subjects;
     }
 

@@ -479,6 +479,12 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510353189');
         $subjects = $groschen->getSubjects();
         $this->assertNotContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => ''], $subjects);
+
+        // Empty values should be filtered
+        $groschen = new Groschen('9789520403294');
+        $subjects = $groschen->getSubjects();
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => ''], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => ''], $subjects);
     }
 
     /**
