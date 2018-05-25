@@ -409,6 +409,10 @@ class GroschenIntegrationTest extends TestCase
         // Product without text
         $groschen = new Groschen('9789510343135');
         $this->assertFalse($groschen->getTextContents()->contains('TextType', '03'));
+
+        // Product without texts return value in the SOAP response
+        $groschen = new Groschen('9789510403969');
+        $this->assertFalse($groschen->getTextContents()->contains('TextType', '03'));
     }
 
     /**

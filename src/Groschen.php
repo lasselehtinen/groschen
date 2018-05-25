@@ -625,7 +625,7 @@ class Groschen implements ProductInterface
 
         // Add all keywords separated by semicolon from finnish ontologies
         $keywords = [];
-        
+
         foreach ($finnaSubjects as $subject) {
             switch ($subject['SubjectSchemeIdentifier']) {
                 case '69': // KAUNO - ontology for fiction
@@ -639,7 +639,7 @@ class Groschen implements ProductInterface
         if (!empty($keywords)) {
             $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => implode(';', $keywords)]);
         }
-        
+
         return $subjects;
     }
 
@@ -1251,17 +1251,19 @@ class Groschen implements ProductInterface
         );
 
         $texts = $schilling->getTextHandlings(['ProjectNumber' => $latestPrintProject]);
-
-        foreach ($texts->ReturnValue as $text) {
-            // Marketing text has TextType ID 44
-            if ($text->TextType->Id === '44') {
-                $marketingText = $text->Text;
-                break;
+        
+        if (isset($texts->ReturnValue)) {
+            foreach ($texts->ReturnValue as $text) {
+                // Marketing text has TextType ID 44
+                if ($text->TextType->Id === '44') {
+                    $marketingText = $text->Text;
+                    break;
+                }
             }
-        }
 
-        // Clean HTML formattting
-        $marketingText = $this->purifyHtml($marketingText);
+            // Clean HTML formattting
+            $marketingText = $this->purifyHtml($marketingText);
+        }
 
         if (empty($marketingText)) {
             return null;
