@@ -623,10 +623,17 @@ class Groschen implements ProductInterface
             return !empty($subject['SubjectCode']);
         });
 
-        // Add all keywords separated by semicolon
+        // Add all keywords separated by semicolon from finnish ontologies
         $keywords = [];
+        
         foreach ($finnaSubjects as $subject) {
-            $keywords[] = $subject['SubjectCode'];
+            switch ($subject['SubjectSchemeIdentifier']) {
+                case '69': // KAUNO - ontology for fiction
+                case '71': // YSO - General Finnish ontology
+                case '64': // YSA - General Finnish thesaurus
+                    $keywords[] = $subject['SubjectCode'];
+                    break;
+            }
         }
 
         if (!empty($keywords)) {
