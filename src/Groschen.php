@@ -1774,7 +1774,6 @@ class Groschen implements ProductInterface
      */
     public function isConfidential()
     {
-        dd($this->product);
         return ($this->product->NotifyCode === 6) ? true : false;
     }
 

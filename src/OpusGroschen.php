@@ -90,53 +90,52 @@ class OpusGroschen implements ProductInterface
             'base_uri' => config('groschen.opus.hostname'),
             'handler' => $stack,
             'auth' => 'oauth',
-        ]);        
+        ]);
 
         $this->productNumber = $productNumber;
-        $this->setProductionAndWorkId();
+        $this->workId = $this->searchProductions('workId');
+        $this->productionId = $this->searchProductions('id');
         $this->product = $this->getProduct();
     }
 
     /**
-     * Set the product number
-     * @param this $productNumber
+     * Searches for productions
+     * @param  string $searchField
+     * @param  string $return
+     * @return string
      */
-    public function setProductionAndWorkId()
+    public function searchProductions($return)
     {
-        // Search for the ISBN in Opus        
+        // Search for the ISBN in Opus
         $response = $this->client->get('work/v2/search/productions', [
             'query' => [
                 'q' => $this->productNumber,
                 'limit' => 1,
                 'searchFields' => 'isbn',
-                '$select' => 'id,workId',
+                '$select' => $return,
             ],
-        ]);        
+        ]);
 
         $json = json_decode($response->getBody()->getContents());
 
         if (count($json->results) == 0) {
-            throw new Exception('Product does not exist in Opus.');
+            throw new Exception('Could not find product in Opus.');
         }
 
-        $this->workId = $json->results[0]->document->workId;
-        $this->productionId = $json->results[0]->document->id;
+        if (count($json->results) > 1) {
+            throw new Exception('Too many results found in Opus.');
+        }
 
-        // Get texts
-        $response = $this->client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/texts');
-        $this->texts = json_decode($response->getBody()->getContents());
-        
-        // Get prints
-        $response = $this->client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
-        $this->prints = json_decode($response->getBody()->getContents());
+        // Check that attribute exists
+        if (empty($json->results[0]->document->{$return})) {
+            throw new Exception('The return field in Opus does not exist in response.');
+        }
 
-        // Get work level
-        $response = $this->client->get('work/v1/works/' . $this->workId);
-        $this->work = json_decode($response->getBody()->getContents());
+        return $json->results[0]->document->{$return};
     }
 
     /**
-     * Set the product information
+     * Get the product information
      * @return void
      */
     public function getProduct()
@@ -549,8 +548,12 @@ class OpusGroschen implements ProductInterface
     {
         $textContents = new Collection;
 
-        if (!empty($this->texts->texts)) {
-            foreach ($this->texts->texts as $text) {
+        // Get texts
+        $response = $this->client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/texts');
+        $texts = json_decode($response->getBody()->getContents());
+
+        if (!empty($texts->texts)) {
+            foreach ($texts->texts as $text) {
                 // Pr. titelinformation
                 if ($text->textType->id === '15') {
                     $textContents->push([
@@ -585,7 +588,6 @@ class OpusGroschen implements ProductInterface
      */
     public function getPublishingStatus()
     {
-
     }
 
     /**
@@ -600,8 +602,12 @@ class OpusGroschen implements ProductInterface
         $publishingDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->publishingDate);
         $publishingDates->push(['PublishingDateRole' => '01', 'Date' => $publishingDate->format('Ymd')]);
 
+        // Get prints
+        $response = $this->client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
+        $prints = json_decode($response->getBody()->getContents());
+
         // Latest reprint date
-        $latestPrint = end($this->prints->prints);
+        $latestPrint = end($prints->prints);
 
         foreach ($latestPrint->timePlanEntries as $timePlanEntry) {
             // Delivery in stock
@@ -818,7 +824,11 @@ class OpusGroschen implements ProductInterface
     {
         $relatedProducts = new Collection;
 
-        foreach ($this->work->productions as $production) {
+        // Get work level
+        $response = $this->client->get('work/v1/works/' . $this->workId);
+        $work = json_decode($response->getBody()->getContents());
+
+        foreach ($work->productions as $production) {
             // Do not add current product
             if ($production->isbn !== $this->productNumber) {
                 $relatedProducts->push([
@@ -1298,7 +1308,6 @@ class OpusGroschen implements ProductInterface
      */
     public function getProductsInSeries()
     {
-        //dd($this->product);
         if (isset($this->product->externalInformation->numberInSeries)) {
             return intval($this->product->externalInformation->numberInSeries);
         }
@@ -1312,7 +1321,6 @@ class OpusGroschen implements ProductInterface
      */
     public function isImmaterial()
     {
-        dd($this->product);
         return ($this->product->PlanningCode === 'y') ? true : false;
     }
 
