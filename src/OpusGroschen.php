@@ -1,14 +1,19 @@
 <?php
 namespace lasselehtinen\Groschen;
 
+use Cache;
 use DateTime;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use Illuminate\Support\Collection;
 use Isbn;
+use kamermans\OAuth2\GrantType\NullGrantType;
+use kamermans\OAuth2\OAuth2Middleware;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
+use League\OAuth2\Client\Provider\GenericProvider;
 use League\Uri\Modifiers\MergeQuery;
 use League\Uri\Modifiers\RemoveQueryKeys;
 use League\Uri\Schemes\Http as HttpUri;
@@ -41,10 +46,52 @@ class OpusGroschen implements ProductInterface
     private $product;
 
     /**
+     * Guzzle HTTP client
+     * @var GuzzleHttp\Client
+     */
+    private $client;
+
+    /**
      * @param string $productNumber
      */
     public function __construct($productNumber)
     {
+        // Get access token for Opus
+        $accessToken = Cache::remember('accessToken', 1440, function () {
+            $provider = new GenericProvider([
+                'clientId' => config('groschen.opus.clientId'),
+                'clientSecret' => config('groschen.opus.clientSecret'),
+                'redirectUri' => url('oauth2/callback'),
+                'urlAuthorize' => config('groschen.opus.urlAuthorize'),
+                'urlAccessToken' => config('groschen.opus.urlAccessToken'),
+                'urlResourceOwnerDetails' => config('groschen.opus.urlResourceOwnerDetails'),
+            ]);
+
+            // Try to get an access token using the resource owner password credentials grant
+            return $provider->getAccessToken('password', [
+                'username' => config('groschen.opus.username'),
+                'password' => config('groschen.opus.password'),
+                'scope' => 'opus',
+            ]);
+        });
+
+        // Generate new OAuth middleware for Guzzle
+        $oauth = new OAuth2Middleware(new NullGrantType);
+        $oauth->setAccessToken([
+            'access_token' => $accessToken->getToken(),
+        ]);
+
+        // Create new HandlerStack for Guzzle and push OAuth middleware
+        $stack = HandlerStack::create();
+        $stack->push($oauth);
+
+        // Create Guzzle and push the OAuth middleware to the handler stack
+        $this->client = new Client([
+            'base_uri' => config('groschen.opus.hostname'),
+            'handler' => $stack,
+            'auth' => 'oauth',
+        ]);        
+
         $this->productNumber = $productNumber;
         $this->setProductionAndWorkId();
         $this->product = $this->getProduct();
@@ -56,22 +103,15 @@ class OpusGroschen implements ProductInterface
      */
     public function setProductionAndWorkId()
     {
-        // Search for the ISBN in Opus
-        $client = new Client([
-            'base_uri' => config('groschen.opus.hostname'),
-        ]);
-
-        $response = $client->get('work/v2/search/productions', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . config('groschen.opus.token'),
-            ],
+        // Search for the ISBN in Opus        
+        $response = $this->client->get('work/v2/search/productions', [
             'query' => [
                 'q' => $this->productNumber,
                 'limit' => 1,
                 'searchFields' => 'isbn',
                 '$select' => 'id,workId',
             ],
-        ]);
+        ]);        
 
         $json = json_decode($response->getBody()->getContents());
 
@@ -83,30 +123,15 @@ class OpusGroschen implements ProductInterface
         $this->productionId = $json->results[0]->document->id;
 
         // Get texts
-        $response = $client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/texts', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . config('groschen.opus.token'),
-            ],
-        ]);
-
+        $response = $this->client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/texts');
         $this->texts = json_decode($response->getBody()->getContents());
-
+        
         // Get prints
-        $response = $client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . config('groschen.opus.token'),
-            ],
-        ]);
-
+        $response = $this->client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
         $this->prints = json_decode($response->getBody()->getContents());
 
         // Get work level
-        $response = $client->get('work/v1/works/' . $this->workId, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . config('groschen.opus.token'),
-            ],
-        ]);
-
+        $response = $this->client->get('work/v1/works/' . $this->workId);
         $this->work = json_decode($response->getBody()->getContents());
     }
 
@@ -117,15 +142,7 @@ class OpusGroschen implements ProductInterface
     public function getProduct()
     {
         // Get the production from Opus
-        $client = new Client([
-            'base_uri' => config('groschen.opus.hostname'),
-        ]);
-
-        $response = $client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . config('groschen.opus.token'),
-            ],
-        ]);
+        $response = $this->client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId);
 
         return json_decode($response->getBody()->getContents());
     }
@@ -460,7 +477,7 @@ class OpusGroschen implements ProductInterface
     {
         // Collection for measures
         $measures = new Collection;
-        
+
         // Add width, height and length
         $measures->push(['MeasureType' => '01', 'Measurement' => intval($this->product->height * 1000), 'MeasureUnitCode' => 'mm']);
         $measures->push(['MeasureType' => '02', 'Measurement' => intval($this->product->width * 1000), 'MeasureUnitCode' => 'mm']);
@@ -568,7 +585,7 @@ class OpusGroschen implements ProductInterface
      */
     public function getPublishingStatus()
     {
-        
+
     }
 
     /**
@@ -1222,7 +1239,7 @@ class OpusGroschen implements ProductInterface
      * @return boolean
      */
     public function isConfidential()
-    {        
+    {
         return $this->product->isPublished === false;
     }
 
