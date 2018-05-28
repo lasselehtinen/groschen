@@ -51,7 +51,7 @@ class OpusGroschenIntegrationTest extends TestCase
         // Trade-only product - TODO
         $this->markTestIncomplete();
         //$groschen = new OpusGroschen('6416889067166');
-        //$this->assertSame('20', $groschen->getProductComposition());        
+        //$this->assertSame('20', $groschen->getProductComposition());
     }
 
     /**
@@ -135,7 +135,6 @@ class OpusGroschenIntegrationTest extends TestCase
 
         // Product with original title
         $groschen = new OpusGroschen('9789100102975');
-
         $this->assertContains(['TitleType' => '03', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'The Da Vinci code']], $groschen->getTitleDetails());
     }
 
@@ -196,11 +195,11 @@ class OpusGroschenIntegrationTest extends TestCase
 
         // Book that is translated - TODO
         /*
-        $groschen = new OpusGroschen('9789510409749');
-        $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'fin'], $groschen->getLanguages());
-        $this->assertContains(['LanguageRole' => '02', 'LanguageCode' => 'eng'], $groschen->getLanguages());
-        $this->assertCount(2, $groschen->getLanguages());
-         */        
+    $groschen = new OpusGroschen('9789510409749');
+    $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'fin'], $groschen->getLanguages());
+    $this->assertContains(['LanguageRole' => '02', 'LanguageCode' => 'eng'], $groschen->getLanguages());
+    $this->assertCount(2, $groschen->getLanguages());
+     */
     }
 
     /**
@@ -271,7 +270,7 @@ class OpusGroschenIntegrationTest extends TestCase
         $subjects = $this->groschen->getSubjects();
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'SFBC'], $subjects);
 
-        // TODO - YKL, BBF own internal (main group),  
+        // TODO - YKL, BBF own internal (main group),
         $this->markTestIncomplete();
     }
 
@@ -293,7 +292,7 @@ class OpusGroschenIntegrationTest extends TestCase
         // Product without imprint
         $this->assertCount(0, $this->groschen->getImprints());
 
-        // Johnny Kniga (imprint of WSOY)
+        // Product with imprint
         $groschen = new OpusGroschen('9789185419746');
         $this->assertContains(['ImprintName' => 'Minotaur'], $groschen->getImprints());
     }
@@ -506,7 +505,7 @@ class OpusGroschenIntegrationTest extends TestCase
 
         $this->assertContains($audioSample, $groschen->getSupportingResources());
         $this->assertContains($youTube, $groschen->getSupportingResources());
-        $this->assertContains($readingSample, $groschen->getSupportingResources());        
+        $this->assertContains($readingSample, $groschen->getSupportingResources());
     }
 
     /**
@@ -603,7 +602,7 @@ class OpusGroschenIntegrationTest extends TestCase
     {
         $this->assertNull($this->groschen->getBindingCode());
 
-                // TODO - Add more tests
+        // TODO - Add more tests
         $this->markTestIncomplete();
 
         // Product with a binding code
@@ -714,7 +713,7 @@ class OpusGroschenIntegrationTest extends TestCase
         $groschen = new OpusGroschen('9789174331516');
         $this->assertSame(85234920, $groschen->getCustomsNumber());
 
-        // TODO        
+        // TODO
     }
 
     /**
@@ -735,7 +734,6 @@ class OpusGroschenIntegrationTest extends TestCase
         // Product where product does not have library class
         $groschen = new OpusGroschen('9789510809556');
         $this->assertNull($groschen->getLibraryClass());
-
 
     }
 
