@@ -263,6 +263,10 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $this->assertContains($graphicDesigner, $this->groschen->getContributors());
+
+        // Product with confidential resource
+        $groschen = new Groschen('9789513176457');
+        $this->assertCount(0, $groschen->getContributors()->where('ContributorRole', 'B21'));
     }
 
     /**
@@ -449,7 +453,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingSubjects()
     {
-        $subjects = $this->groschen->getSubjects();        
+        $subjects = $this->groschen->getSubjects();
         $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => 'Kotimainen kauno'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => 'Nykyromaanit'], $subjects);
@@ -461,7 +465,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
-        $subjects = $groschen->getSubjects();        
+        $subjects = $groschen->getSubjects();
         $this->assertContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
@@ -816,7 +820,7 @@ class GroschenIntegrationTest extends TestCase
                     [
                         'ResourceVersionFeatureType' => '05',
                         'FeatureValue' => '1.7',
-                    ],                    
+                    ],
                     [
                         'ResourceVersionFeatureType' => '06',
                         'FeatureValue' => 'c4204770c25afca3d98f629f1916d3f2',
@@ -824,12 +828,12 @@ class GroschenIntegrationTest extends TestCase
                     [
                         'ResourceVersionFeatureType' => '07',
                         'FeatureValue' => 1738006,
-                    ],                    
+                    ],
                     [
                         'ResourceVersionFeatureType' => '08',
                         'FeatureValue' => '019fd7ee76362bf683e36aa89351cd54cb55ec89b3d035da645170cbba91307f',
                     ],
-                    
+
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],

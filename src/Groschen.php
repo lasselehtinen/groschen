@@ -358,30 +358,32 @@ class Groschen implements ProductInterface
                         break;
                 }
 
-                // Check if name is in typical "Lastname, Firstname" format or pseudonym
-                if (strpos($name, ', ') !== false) {
-                    list($lastname, $firstname) = explode(', ', $name);
-                } else {
-                    $lastname = $name;
-                    $firstname = null;
-                }
+                if (!empty($name)) {
+                    // Check if name is in typical "Lastname, Firstname" format or pseudonym
+                    if (strpos($name, ', ') !== false) {
+                        list($lastname, $firstname) = explode(', ', $name);
+                    } else {
+                        $lastname = $name;
+                        $firstname = null;
+                    }
 
-                // Add to collection
-                $contributors->push([
-                    'ContributorRole' => $this->getContributorRole($contributor->RoleId),
-                    'NameIdentifier' => [
-                        'NameIDType' => '01',
-                        'IDTypeName' => $idTypeName,
-                        'IDValue' => $contributor->KeyNo,
-                    ],
-                    'PersonNameInverted' => $name,
-                    'NamesBeforeKey' => $firstname,
-                    'KeyNames' => $lastname,
-                    'Sorting' => [
-                        'priority' => $contributor->Priority,
-                        'role_priority' => $this->getRolePriority($contributor->RoleId),
-                    ],
-                ]);
+                    // Add to collection
+                    $contributors->push([
+                        'ContributorRole' => $this->getContributorRole($contributor->RoleId),
+                        'NameIdentifier' => [
+                            'NameIDType' => '01',
+                            'IDTypeName' => $idTypeName,
+                            'IDValue' => $contributor->KeyNo,
+                        ],
+                        'PersonNameInverted' => $name,
+                        'NamesBeforeKey' => $firstname,
+                        'KeyNames' => $lastname,
+                        'Sorting' => [
+                            'priority' => $contributor->Priority,
+                            'role_priority' => $this->getRolePriority($contributor->RoleId),
+                        ],
+                    ]);
+                }
             }
         }
 
@@ -1251,7 +1253,7 @@ class Groschen implements ProductInterface
         );
 
         $texts = $schilling->getTextHandlings(['ProjectNumber' => $latestPrintProject]);
-        
+
         if (isset($texts->ReturnValue)) {
             foreach ($texts->ReturnValue as $text) {
                 // Marketing text has TextType ID 44
