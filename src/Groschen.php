@@ -29,7 +29,7 @@ class Groschen implements ProductInterface
 
     /**
      * Raw product information
-     * @var stdClass
+     * @var \stdClass
      */
     private $product;
 
@@ -87,7 +87,7 @@ class Groschen implements ProductInterface
 
     /**
      * Return the raw product information
-     * @return stdClass
+     * @return \stdClass
      */
     public function getProductInformation()
     {
@@ -1045,7 +1045,7 @@ class Groschen implements ProductInterface
 
     /**
      * Returns the ResourceVersionFeatures for the given Elvis metadata hit
-     * @param  stdClass $hit
+     * @param  \stdClass $hit
      * @return array
      */
     public function getResourceVersionFeatures($hit)
