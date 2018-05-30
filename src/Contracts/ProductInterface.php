@@ -2,6 +2,9 @@
 
 namespace lasselehtinen\Groschen\Contracts;
 
+use Illuminate\Support\Collection;
+use DateTime;
+
 interface ProductInterface
 {
     /**
