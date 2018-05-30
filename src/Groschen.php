@@ -17,6 +17,7 @@ use League\Uri\Modifiers\MergeQuery;
 use League\Uri\Modifiers\RemoveQueryKeys;
 use League\Uri\Schemes\Http as HttpUri;
 use Njasm\Soundcloud\Soundcloud;
+use stdClass;
 
 class Groschen implements ProductInterface
 {
@@ -43,14 +44,14 @@ class Groschen implements ProductInterface
 
     /**
      * Set the product number
-     * @param this $productNumber
+     * @param string $productNumber
      */
     public function setProductNumber($productNumber)
     {
         // Check that product exists in Schilling
         $lookupValue = $this->getLookupValue(7, $productNumber);
 
-        if (is_null($lookupValue)) {
+        if (empty($lookupValue)) {
             throw new Exception('Product does not exist in Schilling.');
         }
 
@@ -501,7 +502,7 @@ class Groschen implements ProductInterface
 
         if (!empty($this->product->OriginalPublisher)) {
             $imprints->push([
-                'ImprintName' => $this->getLookupValue('595', $this->product->OriginalPublisher),
+                'ImprintName' => $this->getLookupValue(595, $this->product->OriginalPublisher),
             ]);
         }
 
@@ -1018,6 +1019,8 @@ class Groschen implements ProductInterface
                         $url = $internetLink->Link;
                         break;
                     default:
+                        $resourceContentType = null;
+                        $resourceMode = null;
                         $url = null;
                         break;
                 }
@@ -1194,7 +1197,7 @@ class Groschen implements ProductInterface
      * Get the Schilling lookup value based on the domain and value
      * @param  int $domain
      * @param  string $value
-     * @return string
+     * @return string|null
      */
     public function getLookupValue($domain, $value)
     {
@@ -1209,13 +1212,16 @@ class Groschen implements ProductInterface
 
         $lookupValue = $lookup->lookup(['DomainNumber' => $domain, 'KeyValue' => $value]);
 
-        return (is_null($lookupValue)) ? null : $lookupValue[0]->DataValue;
+        if (empty($lookupValue)) {
+            return null;
+        }
+
+        return $lookupValue[0]->DataValue;
     }
 
     /**
      * Get the Schilling lookup value based on the domain and value
      * @param  int $domain
-     * @param  string $value
      * @return array
      */
     public function getLookupValues($domain)
@@ -1231,12 +1237,12 @@ class Groschen implements ProductInterface
 
         $lookupValue = $lookup->lookup(['DomainNumber' => $domain]);
 
-        return (is_null($lookupValue)) ? null : $lookupValue->ReturnValue;
+        return (empty($lookupValue)) ? null : $lookupValue->ReturnValue;
     }
     /**
      * Get the marketing text from the latest print project
      * @param  string $projectId
-     * @return string
+     * @return string|null
      */
     public function getLatestMarketingText($projectId)
     {
@@ -1262,22 +1268,20 @@ class Groschen implements ProductInterface
                     break;
                 }
             }
-
-            // Clean HTML formattting
-            $marketingText = $this->purifyHtml($marketingText);
         }
 
         if (empty($marketingText)) {
             return null;
         }
 
-        return $marketingText;
+        // Clean HTML formattting
+        return $this->purifyHtml($marketingText);
     }
 
     /**
      * Get the latest print project for the given main project
      * @param  string $projectId
-     * @return string
+     * @return string|null
      */
     public function getLatestPrintProject($projectId)
     {
@@ -1305,7 +1309,7 @@ class Groschen implements ProductInterface
             'ProjectNoTo' => $projectNumberWithoutSuffix . '99',
         ]);
 
-        if (is_null($printProjects)) {
+        if (empty($printProjects)) {
             return null;
         }
 
@@ -1750,7 +1754,7 @@ class Groschen implements ProductInterface
     /**
      * Convert Schilling role to an Onix codelist 17: Contributor role code
      * @param  string $role
-     * @return string
+     * @return string|null
      */
     public function getContributorRole($role)
     {
@@ -1779,11 +1783,11 @@ class Groschen implements ProductInterface
             'EDT' => 'B21',
         ];
 
-        if (array_key_exists($role, $roleMappings)) {
-            return $roleMappings[$role];
-        } else {
+        if (!array_key_exists($role, $roleMappings)) {
             return null;
         }
+
+        return $roleMappings[$role];
     }
 
     /**
@@ -1847,7 +1851,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the number of products in the series
-     * @return void
+     * @return int|null
      */
     public function getProductsInSeries()
     {
