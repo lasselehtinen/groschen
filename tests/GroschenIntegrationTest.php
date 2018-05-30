@@ -214,11 +214,6 @@ class GroschenIntegrationTest extends TestCase
 
         // Distributors title
         $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Joululaulu (pokkari)']], $groschen->getTitleDetails());
-
-        // Product without title should not return empty element
-        $groschen = new Groschen('9789510353219');
-        $this->assertFalse($groschen->getTitleDetails()->contains('TitleType', '01'));
-
     }
 
     /**
@@ -266,7 +261,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Product with confidential resource
         $groschen = new Groschen('9789513176457');
-        $this->assertCount(0, $groschen->getContributors()->where('ContributorRole', 'B21'));
+        $this->assertFalse($groschen->getContributors()->contains('ContributorRole', 'B21'));
     }
 
     /**
