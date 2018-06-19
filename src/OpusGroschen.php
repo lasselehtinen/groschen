@@ -1321,7 +1321,7 @@ class OpusGroschen implements ProductInterface
      */
     public function isImmaterial()
     {
-        return ($this->product->PlanningCode === 'y') ? true : false;
+        return ($this->product->dispositionCode->id === 'y') ? true : false;
     }
 
     /**

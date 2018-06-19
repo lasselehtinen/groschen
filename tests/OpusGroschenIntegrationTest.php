@@ -661,8 +661,6 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testCheckingIfProductIsImmaterial()
     {
-        $this->markTestIncomplete();
-
         $this->assertFalse($this->groschen->isImmaterial());
 
         // Immaterial product
