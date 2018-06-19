@@ -130,8 +130,8 @@ class OpusGroschenIntegrationTest extends TestCase
     {
         // Zlatan
         $groschen = new OpusGroschen('9789100128470');
-        $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Jag är Zlatan (specialutgåva)', 'Subtitle' => 'Zlatans egen berättelse']], $groschen->getTitleDetails());
-        $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Lagercrantz/Jag är Zlatan']], $groschen->getTitleDetails());
+        $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Jag är Zlatan', 'Subtitle' => 'Min historia']], $groschen->getTitleDetails());
+        $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Ibrahimovic/Jag är Zlatan']], $groschen->getTitleDetails());
 
         // Product with original title
         $groschen = new OpusGroschen('9789100102975');
