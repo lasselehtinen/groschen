@@ -528,12 +528,41 @@ class OpusGroschen implements ProductInterface
         // Init array for subjects
         $subjects = new Collection;
 
+        //dd($this->product);
+
         // Thema subject category
-        if (isset($this->product->externalInformation->themaCode)) {
+        if (isset($this->product->thema->id)) {
             $subjects->push([
                 'SubjectSchemeIdentifier' => '93',
                 'SubjectSchemeName' => 'Thema subject category',
-                'SubjectCode' => $this->product->externalInformation->themaCode->id,
+                'SubjectCode' => $this->product->thema->id,
+            ]);
+        }
+
+        // BIC subject category
+        if (isset($this->product->thema->customProperties->bic2)) {
+            $subjects->push([
+                'SubjectSchemeIdentifier' => '12',
+                'SubjectSchemeName' => 'BIC subject category',
+                'SubjectCode' => $this->product->thema->customProperties->bic2,
+            ]);
+        }
+
+        // Main product group
+        if (isset($this->product->bonnierRightsCategory->name)) {
+            $subjects->push([
+                'SubjectSchemeIdentifier' => '23',
+                'SubjectSchemeName' => 'Bonnier Books Finland - Main product group',
+                'SubjectCode' => $this->product->bonnierRightsCategory->name,
+            ]);
+        }
+
+        // Sub product group
+        if (isset($this->product->bonnierRightsSubCategory->name)) {
+            $subjects->push([
+                'SubjectSchemeIdentifier' => '23',
+                'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group',
+                'SubjectCode' => trim($this->product->bonnierRightsSubCategory->name),
             ]);
         }
 
