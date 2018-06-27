@@ -46,6 +46,12 @@ class OpusGroschen implements ProductInterface
     private $product;
 
     /**
+     * Raw product information
+     * @var stdClass
+     */
+    private $workLevel;
+
+    /**
      * Guzzle HTTP client
      * @var GuzzleHttp\Client
      */
@@ -96,6 +102,7 @@ class OpusGroschen implements ProductInterface
         $this->workId = $this->searchProductions('workId');
         $this->productionId = $this->searchProductions('id');
         $this->product = $this->getProduct();
+        $this->workLevel = $this->getWorkLevel();
     }
 
     /**
@@ -136,12 +143,24 @@ class OpusGroschen implements ProductInterface
 
     /**
      * Get the product information
-     * @return void
+     * @return stdClass
      */
     public function getProduct()
     {
         // Get the production from Opus
         $response = $this->client->get('work/v1/works/' . $this->workId . '/productions/' . $this->productionId);
+
+        return json_decode($response->getBody()->getContents());
+    }
+
+    /**
+     * Get the work level information
+     * @return stdClass
+     */
+    public function getWorkLevel()
+    {
+        // Get the production from Opus
+        $response = $this->client->get('work/v1/works/' . $this->workId);
 
         return json_decode($response->getBody()->getContents());
     }
@@ -370,6 +389,14 @@ class OpusGroschen implements ProductInterface
                     'LanguageCode' => $language->id,
                 ]);
             }
+        }
+
+        // Add original languages
+        foreach ($this->workLevel->originalLanguages as $originalLanguage) {
+            $languages->push([
+                'LanguageRole' => '02',
+                'LanguageCode' => $originalLanguage->id,
+            ]);
         }
 
         return $languages;
@@ -853,11 +880,7 @@ class OpusGroschen implements ProductInterface
     {
         $relatedProducts = new Collection;
 
-        // Get work level
-        $response = $this->client->get('work/v1/works/' . $this->workId);
-        $work = json_decode($response->getBody()->getContents());
-
-        foreach ($work->productions as $production) {
+        foreach ($this->workLevel->productions as $production) {
             // Do not add current product
             if ($production->isbn !== $this->productNumber) {
                 $relatedProducts->push([

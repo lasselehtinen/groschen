@@ -182,24 +182,18 @@ class OpusGroschenIntegrationTest extends TestCase
      */
     public function testGettingLanguages()
     {
-        // TODO - Multiple languages
-        $this->markTestIncomplete();
-
-        // Test product does not have the language defined
-        $this->assertCount(0, $this->groschen->getLanguages());
-
-        // Book that has language
         $groschen = new OpusGroschen('9789100171872');
-        $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'swe'], $groschen->getLanguages());
-        $this->assertCount(1, $groschen->getLanguages());
+        $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'swe'], $this->groschen->getLanguages());
+        $this->assertCount(1, $this->groschen->getLanguages());
 
-        // Book that is translated - TODO
-        /*
-    $groschen = new OpusGroschen('9789510409749');
-    $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'fin'], $groschen->getLanguages());
-    $this->assertContains(['LanguageRole' => '02', 'LanguageCode' => 'eng'], $groschen->getLanguages());
-    $this->assertCount(2, $groschen->getLanguages());
-     */
+        // Book that is translated
+        $groschen = new OpusGroschen('9789100174484');
+        $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'swe'], $groschen->getLanguages());
+        $this->assertContains(['LanguageRole' => '02', 'LanguageCode' => 'eng'], $groschen->getLanguages());
+        $this->assertCount(2, $groschen->getLanguages());
+
+        // TODO - Multiple languages
+        //$this->markTestIncomplete();
     }
 
     /**
