@@ -490,6 +490,11 @@ class GroschenIntegrationTest extends TestCase
         $subjects = $groschen->getSubjects();
         $this->assertNotContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => ''], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => ''], $subjects);
+
+        // Product where Finna API does not return heading
+        $groschen = new Groschen('9789510401378');
+        $subjects = $groschen->getSubjects();
+        $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'äänikirjat'], $subjects);
     }
 
     /**
