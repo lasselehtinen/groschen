@@ -456,7 +456,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FBA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;pakinat;monologit;eläkeläiset;mielipiteet;pessimismi;miehet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;pakinat;monologit;eläkeläiset;mielipiteet;pessimismi;miehet;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
@@ -464,7 +464,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sota;kokemukset;sotilaat;sotilaat;mielenterveys;mielenterveyshäiriöt;sota;traumat;sota;traumaperäinen stressireaktio;sotilaat;psykiatrinen hoito;sotilaat;sotilaspsykiatria;psykiatria;sota;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;Suomi;1939-1945;sota;kokemukset;sotilaat;sotilaat;mielenterveys;mielenterveyshäiriöt;sota;traumat;sota;traumaperäinen stressireaktio;sotilaat;psykiatrinen hoito;sotilaat;sotilaspsykiatria;psykiatria;sota;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;Suomi;1939-1945'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sota;kokemukset;sotilaat;sotilaat;mielenterveys;mielenterveyshäiriöt;sota;traumat;sota;traumaperäinen stressireaktio;sotilaat;psykiatrinen hoito;sotilaat;sotilaspsykiatria;psykiatria;sota;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;1939-1945;Suomi;sota;kokemukset;sotilaat;sotilaat;mielenterveys;mielenterveyshäiriöt;sota;traumat;sota;traumaperäinen stressireaktio;sotilaat;psykiatrinen hoito;sotilaat;sotilaspsykiatria;psykiatria;sota;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;1939-1945;Suomi;sotarintama;sota;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
