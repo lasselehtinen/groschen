@@ -6,14 +6,26 @@ parameters:
     succeeded: ~
   process_timeout: 180
   tasks:
+      composer:
+        no_check_lock: true
+        metadata:
+          priority: 500
       securitychecker:
+        metadata:
+          priority: 400
       phpcs:
+        metadata:
+          priority: 300
         standard: PSR2
         show_warnings: false
         ignore_patterns:
           - "tests/*.php"        
+      phpstan:
+        level: 6
+        triggered_by: [php]
+        metadata:
+          priority: 200
       phpunit:
         metadata:
           priority: 100
-      composer:
-        no_check_lock: true
+
