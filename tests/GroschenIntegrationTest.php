@@ -272,7 +272,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testContributorAreSortedByLastname()
     {
-        $groschen = new Groschen('9789510262702');
+        $groschen = new Groschen('9789510370469');
 
         // First author
         $firstAuthor = [
@@ -281,11 +281,11 @@ class GroschenIntegrationTest extends TestCase
             'NameIdentifier' => [
                 'NameIDType' => '01',
                 'IDTypeName' => 'Creditor number',
-                'IDValue' => '20001029',
+                'IDValue' => '20000034',
             ],
-            'PersonNameInverted' => 'Karjalainen, Elina',
-            'NamesBeforeKey' => 'Elina',
-            'KeyNames' => 'Karjalainen',
+            'PersonNameInverted' => 'Aho, Tuulia',
+            'NamesBeforeKey' => 'Tuulia',
+            'KeyNames' => 'Aho',
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -297,11 +297,11 @@ class GroschenIntegrationTest extends TestCase
             'NameIdentifier' => [
                 'NameIDType' => '01',
                 'IDTypeName' => 'Creditor number',
-                'IDValue' => '20002470',
+                'IDValue' => '20001253',
             ],
-            'PersonNameInverted' => 'Taina, Hannu',
-            'NamesBeforeKey' => 'Hannu',
-            'KeyNames' => 'Taina',
+            'PersonNameInverted' => 'Kurjenluoma, Minna',
+            'NamesBeforeKey' => 'Minna',
+            'KeyNames' => 'Kurjenluoma',
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
