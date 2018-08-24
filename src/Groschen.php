@@ -1006,8 +1006,7 @@ class Groschen implements ProductInterface
                         $soundcloud = new Soundcloud(config('groschen.soundcloud.clientId'), config('groschen.soundcloud.clientSecret'));
                         $soundcloud->get('/tracks/' . $internetLink->Link);
                         $response = $soundcloud->request();
-                        $body = $response->bodyObject();
-                        $url = $body->permalink_url;
+                        $url = $response->bodyObject()->permalink_url;
                         break;
                     case 'issuu':
                         $resourceContentType = '15';
