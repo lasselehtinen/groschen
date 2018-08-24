@@ -3,6 +3,7 @@ namespace lasselehtinen\Groschen\Test;
 
 use Exception;
 use lasselehtinen\Groschen\Groschen;
+use DateTime;
 
 class GroschenIntegrationTest extends TestCase
 {
@@ -683,6 +684,22 @@ class GroschenIntegrationTest extends TestCase
         // Product without any dates
         $groschen = new Groschen('9789513164232');
         $this->assertCount(0, $groschen->getPublishingDates());
+    }
+
+    /**
+     * Test getting latest reprint date
+     * @return void
+     */
+    public function testGettingLatestStockArrivalDate() {
+        // Product with only one print
+        $groschen = new Groschen('9789510401514');
+        $expectedArrivalDate = new DateTime('2013-05-13');
+        $this->assertEquals($expectedArrivalDate, $groschen->getLatestStockArrivalDate());
+
+        // Product with several prints
+        $groschen = new Groschen('9789510374665');
+        $expectedArrivalDate = new DateTime('2013-12-18');
+        $this->assertEquals($expectedArrivalDate, $groschen->getLatestStockArrivalDate());
     }
 
     /**

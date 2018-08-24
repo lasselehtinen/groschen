@@ -1006,7 +1006,8 @@ class Groschen implements ProductInterface
                         $soundcloud = new Soundcloud(config('groschen.soundcloud.clientId'), config('groschen.soundcloud.clientSecret'));
                         $soundcloud->get('/tracks/' . $internetLink->Link);
                         $response = $soundcloud->request();
-                        $url = $response->bodyObject()->permalink_url;
+                        $body = $response->bodyObject();
+                        $url = $body->permalink_url;
                         break;
                     case 'issuu':
                         $resourceContentType = '15';
@@ -1276,6 +1277,40 @@ class Groschen implements ProductInterface
 
         // Clean HTML formattting
         return $this->purifyHtml($marketingText);
+    }
+
+    /**
+     * Gets the given activity
+     * @param  string $projectNumber
+     * @param  string $activityNumber
+     * @return stdClass|null
+     */
+    public function getActivity($projectNumber, $activityNumber)
+    {
+         $schilling = new Project(
+             config('groschen.schilling.hostname'),
+             config('groschen.schilling.port'),
+             config('groschen.schilling.username'),
+             config('groschen.schilling.password'),
+             config('groschen.schilling.company')
+         );
+
+        $printProjects = $schilling->getProjects([
+            'ProjectNo' => $projectNumber,
+            'WithProductionPlan' => true,
+        ]);
+
+        if (count($printProjects) !== 1) {
+            return null;
+        }
+
+        foreach ($printProjects[0]->ProductionPlanList as $activity) {
+            if ($activity->ActivityNumber === $activityNumber) {
+                return $activity;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -1956,5 +1991,21 @@ class Groschen implements ProductInterface
         }
 
         return $this->getLookupValue(580, $this->product->ReviewCycle);
+    }
+
+    /**
+     * Get the latest stock arrival date
+     * @return DateTime|null
+     */
+    public function getLatestStockArrivalDate()
+    {
+        $latestPrintProject = $this->getLatestPrintProject($this->product->ProjectId);
+        $activity = $this->getActivity($latestPrintProject, '02.07');
+
+        if (!is_null($activity)) {
+            return DateTime::createFromFormat('Y-m-d*H:i:s', $activity->ExpectedEnd);
+        }
+
+        return null;
     }
 }

@@ -246,4 +246,10 @@ interface ProductInterface
      * @return string|null
      */
     public function getSalesSeason();
+
+    /**
+     * Get the latest stock arrival date
+     * @return DateTime|null
+     */
+    public function getLatestStockArrivalDate();
 }
