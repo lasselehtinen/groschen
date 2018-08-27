@@ -350,6 +350,30 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that private contributors are hidden
+     * @return void
+     */
+    public function testPrivateContributorsAreHidden() {
+        $groschen = new Groschen('9789510412893');
+
+        $editor = [
+            'SequenceNumber' => 3,
+            'ContributorRole' => 'B21',
+            'NameIdentifier' => [
+                'NameIDType' => '01',
+                'IDTypeName' => 'Resource ID',
+                'IDValue' => 'SAMKNU',
+            ],
+            'PersonNameInverted' => 'Knuuti, Samuli',
+            'NamesBeforeKey' => 'Samuli',
+            'KeyNames' => 'Knuuti',
+        ];
+
+        $this->assertNotContains($editor, $groschen->getContributors(false));
+        $this->assertContains($editor, $groschen->getContributors(true));
+    }
+
+    /**
      * Test getting products languages
      * @return void
      */

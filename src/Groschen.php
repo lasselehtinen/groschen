@@ -327,9 +327,10 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products contributors
+     * @param  boolean $returnInternalResources
      * @return Collection
      */
-    public function getContributors()
+    public function getContributors($returnInternalResources = true)
     {
         $contributors = new Collection;
 
@@ -369,21 +370,23 @@ class Groschen implements ProductInterface
                     }
 
                     // Add to collection
-                    $contributors->push([
-                        'ContributorRole' => $this->getContributorRole($contributor->RoleId),
-                        'NameIdentifier' => [
-                            'NameIDType' => '01',
-                            'IDTypeName' => $idTypeName,
-                            'IDValue' => $contributor->KeyNo,
-                        ],
-                        'PersonNameInverted' => $name,
-                        'NamesBeforeKey' => $firstname,
-                        'KeyNames' => $lastname,
-                        'Sorting' => [
-                            'priority' => $contributor->Priority,
-                            'role_priority' => $this->getRolePriority($contributor->RoleId),
-                        ],
-                    ]);
+                    if ($this->isContributorPublic($returnInternalResources, $contributor->Type, $contributor->RoleId)) {
+                        $contributors->push([
+                            'ContributorRole' => $this->getContributorRole($contributor->RoleId),
+                            'NameIdentifier' => [
+                                'NameIDType' => '01',
+                                'IDTypeName' => $idTypeName,
+                                'IDValue' => $contributor->KeyNo,
+                            ],
+                            'PersonNameInverted' => $name,
+                            'NamesBeforeKey' => $firstname,
+                            'KeyNames' => $lastname,
+                            'Sorting' => [
+                                'priority' => $contributor->Priority,
+                                'role_priority' => $this->getRolePriority($contributor->RoleId),
+                            ],
+                        ]);
+                    }
                 }
             }
         }
@@ -405,6 +408,37 @@ class Groschen implements ProductInterface
         });
 
         return $contributors;
+    }
+
+    /**
+     * Checks whether the contributor is public or not
+     * @param  bool  $returnInternalResources
+     * @param  string  $contributorType
+     * @param  string  $contributorRole
+     * @return boolean
+     */
+    public function isContributorPublic($returnInternalResources, $contributorType, $contributorRole)
+    {
+        if ($returnInternalResources === true) {
+            return true;
+        }
+
+        // List of public roles
+        $publicRoles = [
+            'AUT',
+            'CDE',
+            'EDA',
+            'EIC',
+            'GDE',
+            'ILL',
+            'PHO',
+            'REA',
+            'TRA',
+        ];
+
+        if (in_array($contributorType, [3, 5]) && in_array($contributorRole, $publicRoles)) {
+            return true;
+        }
     }
 
     /**
@@ -1286,13 +1320,13 @@ class Groschen implements ProductInterface
      */
     public function getActivity($projectNumber, $activityNumber)
     {
-         $schilling = new Project(
-             config('groschen.schilling.hostname'),
-             config('groschen.schilling.port'),
-             config('groschen.schilling.username'),
-             config('groschen.schilling.password'),
-             config('groschen.schilling.company')
-         );
+        $schilling = new Project(
+            config('groschen.schilling.hostname'),
+            config('groschen.schilling.port'),
+            config('groschen.schilling.username'),
+            config('groschen.schilling.password'),
+            config('groschen.schilling.company')
+        );
 
         $printProjects = $schilling->getProjects([
             'ProjectNo' => $projectNumber,
