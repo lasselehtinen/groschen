@@ -5,13 +5,14 @@ use Dotenv\Dotenv;
 use lasselehtinen\Groschen\GroschenFacade;
 use lasselehtinen\Groschen\GroschenServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Illuminate\Foundation\Application;
 
 class TestCase extends OrchestraTestCase
 {
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application $app
      * @return void
      */
     protected function getEnvironmentSetUp($app)
@@ -52,16 +53,17 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Load package service provider
-     * @param  \Illuminate\Foundation\Application $app
-     * @return lasselehtinen\Groschen\GroschenServiceProvider
+     * @param  Application $app
+     * @return array
      */
     protected function getPackageProviders($app)
     {
         return [GroschenServiceProvider::class];
     }
+
     /**
      * Load package alias
-     * @param  \Illuminate\Foundation\Application $app
+     * @param  Application $app
      * @return array
      */
     protected function getPackageAliases($app)

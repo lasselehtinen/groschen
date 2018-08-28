@@ -17,6 +17,7 @@ use League\Uri\Modifiers\MergeQuery;
 use League\Uri\Modifiers\RemoveQueryKeys;
 use League\Uri\Schemes\Http as HttpUri;
 use Njasm\Soundcloud\Soundcloud;
+use stdClass;
 
 class Groschen implements ProductInterface
 {
@@ -28,7 +29,7 @@ class Groschen implements ProductInterface
 
     /**
      * Raw product information
-     * @var stdClass
+     * @var \stdClass
      */
     private $product;
 
@@ -43,14 +44,14 @@ class Groschen implements ProductInterface
 
     /**
      * Set the product number
-     * @param this $productNumber
+     * @param string $productNumber
      */
     public function setProductNumber($productNumber)
     {
         // Check that product exists in Schilling
         $lookupValue = $this->getLookupValue(7, $productNumber);
 
-        if (is_null($lookupValue)) {
+        if (empty($lookupValue)) {
             throw new Exception('Product does not exist in Schilling.');
         }
 
@@ -86,7 +87,7 @@ class Groschen implements ProductInterface
 
     /**
      * Return the raw product information
-     * @return stdClass
+     * @return \stdClass
      */
     public function getProductInformation()
     {
@@ -326,9 +327,10 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products contributors
+     * @param  boolean $returnInternalResources
      * @return Collection
      */
-    public function getContributors()
+    public function getContributors($returnInternalResources = true)
     {
         $contributors = new Collection;
 
@@ -358,30 +360,34 @@ class Groschen implements ProductInterface
                         break;
                 }
 
-                // Check if name is in typical "Lastname, Firstname" format or pseudonym
-                if (strpos($name, ', ') !== false) {
-                    list($lastname, $firstname) = explode(', ', $name);
-                } else {
-                    $lastname = $name;
-                    $firstname = null;
-                }
+                if (!empty($name)) {
+                    // Check if name is in typical "Lastname, Firstname" format or pseudonym
+                    if (strpos($name, ', ') !== false) {
+                        list($lastname, $firstname) = explode(', ', $name);
+                    } else {
+                        $lastname = $name;
+                        $firstname = null;
+                    }
 
-                // Add to collection
-                $contributors->push([
-                    'ContributorRole' => $this->getContributorRole($contributor->RoleId),
-                    'NameIdentifier' => [
-                        'NameIDType' => '01',
-                        'IDTypeName' => $idTypeName,
-                        'IDValue' => $contributor->KeyNo,
-                    ],
-                    'PersonNameInverted' => $name,
-                    'NamesBeforeKey' => $firstname,
-                    'KeyNames' => $lastname,
-                    'Sorting' => [
-                        'priority' => $contributor->Priority,
-                        'role_priority' => $this->getRolePriority($contributor->RoleId),
-                    ],
-                ]);
+                    // Add to collection
+                    if ($this->isContributorPublic($returnInternalResources, $contributor->Type, $contributor->RoleId)) {
+                        $contributors->push([
+                            'ContributorRole' => $this->getContributorRole($contributor->RoleId),
+                            'NameIdentifier' => [
+                                'NameIDType' => '01',
+                                'IDTypeName' => $idTypeName,
+                                'IDValue' => $contributor->KeyNo,
+                            ],
+                            'PersonNameInverted' => $name,
+                            'NamesBeforeKey' => $firstname,
+                            'KeyNames' => $lastname,
+                            'Sorting' => [
+                                'priority' => $contributor->Priority,
+                                'role_priority' => $this->getRolePriority($contributor->RoleId),
+                            ],
+                        ]);
+                    }
+                }
             }
         }
 
@@ -402,6 +408,37 @@ class Groschen implements ProductInterface
         });
 
         return $contributors;
+    }
+
+    /**
+     * Checks whether the contributor is public or not
+     * @param  bool  $returnInternalResources
+     * @param  string  $contributorType
+     * @param  string  $contributorRole
+     * @return boolean
+     */
+    public function isContributorPublic($returnInternalResources, $contributorType, $contributorRole)
+    {
+        if ($returnInternalResources === true) {
+            return true;
+        }
+
+        // List of public roles
+        $publicRoles = [
+            'AUT',
+            'CDE',
+            'EDA',
+            'EIC',
+            'GDE',
+            'ILL',
+            'PHO',
+            'REA',
+            'TRA',
+        ];
+
+        if (in_array($contributorType, [3, 5]) && in_array($contributorRole, $publicRoles)) {
+            return true;
+        }
     }
 
     /**
@@ -499,7 +536,7 @@ class Groschen implements ProductInterface
 
         if (!empty($this->product->OriginalPublisher)) {
             $imprints->push([
-                'ImprintName' => $this->getLookupValue('595', $this->product->OriginalPublisher),
+                'ImprintName' => $this->getLookupValue(595, $this->product->OriginalPublisher),
             ]);
         }
 
@@ -618,13 +655,27 @@ class Groschen implements ProductInterface
             $subjects->push($finnaSubject);
         }
 
-        // Add all keywords separated by semicolon
+        // Remove those where SubjectCode is empty
+        $subjects = $subjects->filter(function ($subject) {
+            return !empty($subject['SubjectCode']);
+        });
+
+        // Add all keywords separated by semicolon from finnish ontologies
         $keywords = [];
+
         foreach ($finnaSubjects as $subject) {
-            $keywords[] = $subject['SubjectCode'];
+            switch ($subject['SubjectSchemeIdentifier']) {
+                case '69': // KAUNO - ontology for fiction
+                case '71': // YSO - General Finnish ontology
+                case '64': // YSA - General Finnish thesaurus
+                    $keywords[] = $subject['SubjectCode'];
+                    break;
+            }
         }
 
-        $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => implode(';', $keywords)]);
+        if (!empty($keywords)) {
+            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => implode(';', $keywords)]);
+        }
 
         return $subjects;
     }
@@ -1002,6 +1053,8 @@ class Groschen implements ProductInterface
                         $url = $internetLink->Link;
                         break;
                     default:
+                        $resourceContentType = null;
+                        $resourceMode = null;
                         $url = null;
                         break;
                 }
@@ -1026,7 +1079,7 @@ class Groschen implements ProductInterface
 
     /**
      * Returns the ResourceVersionFeatures for the given Elvis metadata hit
-     * @param  stdClass $hit
+     * @param  \stdClass $hit
      * @return array
      */
     public function getResourceVersionFeatures($hit)
@@ -1178,7 +1231,7 @@ class Groschen implements ProductInterface
      * Get the Schilling lookup value based on the domain and value
      * @param  int $domain
      * @param  string $value
-     * @return string
+     * @return string|null
      */
     public function getLookupValue($domain, $value)
     {
@@ -1193,13 +1246,16 @@ class Groschen implements ProductInterface
 
         $lookupValue = $lookup->lookup(['DomainNumber' => $domain, 'KeyValue' => $value]);
 
-        return (is_null($lookupValue)) ? null : $lookupValue[0]->DataValue;
+        if (empty($lookupValue)) {
+            return null;
+        }
+
+        return $lookupValue[0]->DataValue;
     }
 
     /**
      * Get the Schilling lookup value based on the domain and value
      * @param  int $domain
-     * @param  string $value
      * @return array
      */
     public function getLookupValues($domain)
@@ -1215,12 +1271,12 @@ class Groschen implements ProductInterface
 
         $lookupValue = $lookup->lookup(['DomainNumber' => $domain]);
 
-        return (is_null($lookupValue)) ? null : $lookupValue->ReturnValue;
+        return (empty($lookupValue)) ? null : $lookupValue->ReturnValue;
     }
     /**
      * Get the marketing text from the latest print project
      * @param  string $projectId
-     * @return string
+     * @return string|null
      */
     public function getLatestMarketingText($projectId)
     {
@@ -1238,28 +1294,62 @@ class Groschen implements ProductInterface
 
         $texts = $schilling->getTextHandlings(['ProjectNumber' => $latestPrintProject]);
 
-        foreach ($texts->ReturnValue as $text) {
-            // Marketing text has TextType ID 44
-            if ($text->TextType->Id === '44') {
-                $marketingText = $text->Text;
-                break;
+        if (isset($texts->ReturnValue)) {
+            foreach ($texts->ReturnValue as $text) {
+                // Marketing text has TextType ID 44
+                if ($text->TextType->Id === '44') {
+                    $marketingText = $text->Text;
+                    break;
+                }
             }
         }
-
-        // Clean HTML formattting
-        $marketingText = $this->purifyHtml($marketingText);
 
         if (empty($marketingText)) {
             return null;
         }
 
-        return $marketingText;
+        // Clean HTML formattting
+        return $this->purifyHtml($marketingText);
+    }
+
+    /**
+     * Gets the given activity
+     * @param  string $projectNumber
+     * @param  string $activityNumber
+     * @return stdClass|null
+     */
+    public function getActivity($projectNumber, $activityNumber)
+    {
+        $schilling = new Project(
+            config('groschen.schilling.hostname'),
+            config('groschen.schilling.port'),
+            config('groschen.schilling.username'),
+            config('groschen.schilling.password'),
+            config('groschen.schilling.company')
+        );
+
+        $printProjects = $schilling->getProjects([
+            'ProjectNo' => $projectNumber,
+            'WithProductionPlan' => true,
+        ]);
+
+        if (count($printProjects) !== 1) {
+            return null;
+        }
+
+        foreach ($printProjects[0]->ProductionPlanList as $activity) {
+            if ($activity->ActivityNumber === $activityNumber) {
+                return $activity;
+            }
+        }
+
+        return null;
     }
 
     /**
      * Get the latest print project for the given main project
      * @param  string $projectId
-     * @return string
+     * @return string|null
      */
     public function getLatestPrintProject($projectId)
     {
@@ -1287,7 +1377,7 @@ class Groschen implements ProductInterface
             'ProjectNoTo' => $projectNumberWithoutSuffix . '99',
         ]);
 
-        if (is_null($printProjects)) {
+        if (empty($printProjects)) {
             return null;
         }
 
@@ -1631,12 +1721,14 @@ class Groschen implements ProductInterface
                         }
 
                         // Go through all the headings/subjects
-                        foreach ($subject->heading as $heading) {
-                            $keywords[] = [
-                                'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
-                                'SubjectSchemeName' => $subjectSchemeName,
-                                'SubjectCode' => $heading,
-                            ];
+                        if (isset($subject->heading)) {
+                            foreach ($subject->heading as $heading) {
+                                $keywords[] = [
+                                    'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
+                                    'SubjectSchemeName' => $subjectSchemeName,
+                                    'SubjectCode' => $heading,
+                                ];
+                            }
                         }
                     }
                 }
@@ -1732,7 +1824,7 @@ class Groschen implements ProductInterface
     /**
      * Convert Schilling role to an Onix codelist 17: Contributor role code
      * @param  string $role
-     * @return string
+     * @return string|null
      */
     public function getContributorRole($role)
     {
@@ -1761,11 +1853,11 @@ class Groschen implements ProductInterface
             'EDT' => 'B21',
         ];
 
-        if (array_key_exists($role, $roleMappings)) {
-            return $roleMappings[$role];
-        } else {
+        if (!array_key_exists($role, $roleMappings)) {
             return null;
         }
+
+        return $roleMappings[$role];
     }
 
     /**
@@ -1829,7 +1921,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the number of products in the series
-     * @return void
+     * @return int|null
      */
     public function getProductsInSeries()
     {
@@ -1932,5 +2024,21 @@ class Groschen implements ProductInterface
         }
 
         return $this->getLookupValue(580, $this->product->ReviewCycle);
+    }
+
+    /**
+     * Get the latest stock arrival date
+     * @return DateTime|null
+     */
+    public function getLatestStockArrivalDate()
+    {
+        $latestPrintProject = $this->getLatestPrintProject($this->product->ProjectId);
+        $activity = $this->getActivity($latestPrintProject, '02.07');
+
+        if (!is_null($activity)) {
+            return DateTime::createFromFormat('Y-m-d*H:i:s', $activity->ExpectedEnd);
+        }
+
+        return null;
     }
 }

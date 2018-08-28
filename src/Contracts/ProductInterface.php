@@ -2,6 +2,9 @@
 
 namespace lasselehtinen\Groschen\Contracts;
 
+use Illuminate\Support\Collection;
+use DateTime;
+
 interface ProductInterface
 {
     /**
@@ -27,6 +30,12 @@ interface ProductInterface
      * @return string|null
      */
     public function getProductFormDetail();
+
+    /**
+     * Get the products form features
+     * @return Collection
+     */
+    public function getProductFormFeatures();
 
     /**
      * Get the products measures
@@ -105,6 +114,18 @@ interface ProductInterface
      * @return Collection
      */
     public function getSubjects();
+
+    /**
+     * Get the products audience groups
+     * @return Collection
+     */
+    public function getAudiences();
+
+    /**
+     * Get the products AudienceRanges
+     * @return Collection
+     */
+    public function getAudienceRanges();
 
     /**
      * Get the products publishers and their role
@@ -225,4 +246,10 @@ interface ProductInterface
      * @return string|null
      */
     public function getSalesSeason();
+
+    /**
+     * Get the latest stock arrival date
+     * @return DateTime|null
+     */
+    public function getLatestStockArrivalDate();
 }
