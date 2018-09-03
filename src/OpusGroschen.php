@@ -231,6 +231,34 @@ class OpusGroschen implements ProductInterface
     }
 
     /**
+     * Get the products form features
+     * @return Collection
+     */
+    public function getProductFormFeatures()
+    {
+        $productFormFeatures = new Collection;
+
+        // Add ePub version
+        switch ($this->product->technicalProductionType->name) {
+            case 'EPUB2':
+                $featureValue = '101A';
+                break;
+            case 'EPUB3':
+                $featureValue = '101B';
+                break;
+        }
+
+        if (isset($featureValue)) {
+            $productFormFeatures->push([
+                'ProductFormFeatureType' => '15',
+                'ProductFormFeatureValue' => $featureValue,
+            ]);
+        }
+
+        return $productFormFeatures;
+    }
+
+    /**
      * Check if the given product number is valid GTIN
      * @param  string  $gtin
      * @return boolean
@@ -1469,5 +1497,83 @@ class OpusGroschen implements ProductInterface
         }
 
         return $this->product->seasonYear->name . '/' . $period;
+    }
+
+    /**
+     * Get the products audience groups
+     * @return Collection
+     */
+    public function getAudiences()
+    {
+        // Collection for audiences
+        $audiences = new Collection;
+
+        // If no age group defined, General/trade
+        if (!isset($this->product->interestAge)) {
+            $audienceCodeValue = '01'; // General/trade
+        } else {
+            // Map the age group to Audience
+            switch ($this->product->interestAge->name) {
+                case '0-3':
+                case '3-6':
+                case '6-9':
+                case '9-12':
+                case '12-15':
+                    $audienceCodeValue = '02'; // Children/juvenile
+                    break;
+                case 'Unga vuxna':
+                    $audienceCodeValue = '03'; // Young adult
+                    break;
+            }
+        }
+
+        $audiences->push(['AudienceCodeType' => '01', 'AudienceCodeValue' => $audienceCodeValue]);
+
+        return $audiences;
+    }
+
+    /**
+     * Get the products AudienceRanges
+     * @return Collection
+     */
+    public function getAudienceRanges()
+    {
+        // Collection for audience ranges
+        $audienceRanges = new Collection;
+
+        if (!empty($this->product->interestAge) && $this->product->interestAge->name !== 'Unga vuxna') {
+            list($fromAge, $toAge) = explode('-', $this->product->interestAge->name);
+
+            $audienceRanges->push([
+                'AudienceRangeQualifier' => 17,
+                'AudienceRangeScopes' => [
+                    [
+                        'AudienceRangePrecision' => '03', // From
+                        'AudienceRangeValue' => intval($fromAge),
+                    ],
+                    [
+                        'AudienceRangePrecision' => '04', // To
+                        'AudienceRangeValue' => intval($toAge),
+                    ],
+                ],
+            ]);
+        }
+
+        return $audienceRanges;
+    }
+
+    /**
+     * Get the latest stock arrival date
+     * @return DateTime|null
+     */
+    public function getLatestStockArrivalDate()
+    {
+        foreach($this->product->activePrint->timePlan->entries as $timeplan) {
+            if($timeplan->type->name === 'Delivery to warehouse') {
+                return DateTime::createFromFormat('Y-m-d*H:i:s', $timeplan->planned);
+            }
+        }
+
+        return null;
     }
 }

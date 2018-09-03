@@ -1,6 +1,7 @@
 <?php
 namespace lasselehtinen\Groschen\Test;
 
+use DateTime;
 use Exception;
 use lasselehtinen\Groschen\OpusGroschen;
 
@@ -93,6 +94,24 @@ class OpusGroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting ProductFormFeatures
+     * @return void
+     */
+    public function testGettingProductFormFeatures()
+    {
+        // Hardback should not have any product form features
+        //$this->assertCount(0, $this->groschen->getProductFormFeatures());
+
+        // ePub 2
+        $groschen = new OpusGroschen('9789100170981');
+        $this->assertContains(['ProductFormFeatureType' => '15', 'ProductFormFeatureValue' => '101A'], $groschen->getProductFormFeatures());
+
+        // ePub 3
+        $groschen = new OpusGroschen('9789100142162');
+        $this->assertContains(['ProductFormFeatureType' => '15', 'ProductFormFeatureValue' => '101B'], $groschen->getProductFormFeatures());
+    }
+
+    /**
      * Test getting products collections/series
      * @return void
      */
@@ -101,7 +120,7 @@ class OpusGroschenIntegrationTest extends TestCase
         $this->assertFalse($this->groschen->getCollections()->contains('CollectionType', '10'));
 
         // Product with series and number in series
-        $groschen = new OpusGroschen('9789176513521');
+        $groschen = new OpusGroschen('9789100170103');
 
         $collection = [
             'CollectionType' => '10', [
@@ -248,7 +267,7 @@ class OpusGroschenIntegrationTest extends TestCase
         $this->assertContains(['MeasureType' => '08', 'Measurement' => 637, 'MeasureUnitCode' => 'gr'], $this->groschen->getMeasures());
 
         // eBook should not have any measures
-        $groschen = new OpusGroschen('9789100130091');
+        $groschen = new OpusGroschen('9789100176310');
         $this->assertFalse($groschen->getMeasures()->contains('MeasureType', '01'));
         $this->assertFalse($groschen->getMeasures()->contains('MeasureType', '02'));
         $this->assertFalse($groschen->getMeasures()->contains('MeasureType', '03'));
@@ -766,4 +785,86 @@ class OpusGroschenIntegrationTest extends TestCase
         $this->assertSame('2011/2', $this->groschen->getSalesSeason());
     }
 
+    /**
+     * Test getting audiences
+     * @return void
+     */
+    public function testGettingAudiences()
+    {
+        // General/trade
+        $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '01'], $this->groschen->getAudiences());
+        $this->assertCount(1, $this->groschen->getAudiences());
+
+        // Children/juvenile book
+        $groschen = new OpusGroschen('9789163895739');
+        $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '02'], $groschen->getAudiences());
+        $this->assertCount(1, $groschen->getAudiences());
+
+        // Young adult
+        $groschen = new OpusGroschen('9789178031023');
+        $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '03'], $groschen->getAudiences());
+        $this->assertCount(1, $groschen->getAudiences());
+    }
+
+    /**
+     * Test getting AudienceRanges
+     * @return void
+     */
+    public function testGettingAudienceRanges()
+    {
+        // General/trade should not contain any audience ranges
+        $this->assertCount(0, $this->groschen->getAudienceRanges());
+
+        // Young adult
+        $groschen = new OpusGroschen('9789163842665');
+        $this->assertCount(0, $groschen->getAudienceRanges());
+
+        // Product with age group of 3-6
+        $groschen = new OpusGroschen('9789178031078');
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
+                [
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 3,
+                ],
+                [
+                    'AudienceRangePrecision' => '04', // To
+                    'AudienceRangeValue' => 6,
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+
+        // Product with age group of 12 should be from 12 to 15
+        $groschen = new OpusGroschen('9789163846632');
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
+                [
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 12,
+                ],
+                [
+                    'AudienceRangePrecision' => '04', // To
+                    'AudienceRangeValue' => 15,
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+    }
+
+    /**
+     * Test getting latest reprint date
+     * @return void
+     */
+    public function testGettingLatestStockArrivalDate()
+    {
+        $expectedArrivalDate = new DateTime('2011-12-16');
+        $this->assertEquals($expectedArrivalDate, $this->groschen->getLatestStockArrivalDate());
+    }
 }
