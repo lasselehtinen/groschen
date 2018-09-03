@@ -1,9 +1,9 @@
 <?php
 namespace lasselehtinen\Groschen\Test;
 
+use DateTime;
 use Exception;
 use lasselehtinen\Groschen\Groschen;
-use DateTime;
 
 class GroschenIntegrationTest extends TestCase
 {
@@ -353,7 +353,8 @@ class GroschenIntegrationTest extends TestCase
      * Test that private contributors are hidden
      * @return void
      */
-    public function testPrivateContributorsAreHidden() {
+    public function testPrivateContributorsAreHidden()
+    {
         $groschen = new Groschen('9789510412893');
 
         $editor = [
@@ -715,7 +716,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting latest reprint date
      * @return void
      */
-    public function testGettingLatestStockArrivalDate() {
+    public function testGettingLatestStockArrivalDate()
+    {
         // Product with only one print
         $groschen = new Groschen('9789510401514');
         $expectedArrivalDate = new DateTime('2013-05-13');
@@ -1176,4 +1178,36 @@ class GroschenIntegrationTest extends TestCase
         $this->assertNull($groschen->getSalesSeason());
     }
 
+    /**
+     * Test checking if the product is allowed for subscription services
+     * @return void
+     */
+    public function testCheckingIfProductIsAllowedForSubscriptionServices()
+    {
+        $this->assertFalse($this->groschen->isSubscriptionProduct());
+
+        // Subscription product
+        $groschen = new Groschen('9789510435199');
+        $this->assertTrue($groschen->isSubscriptionProduct());
+    }
+
+    /**
+     * Test getting sales restrictions
+     * @return void
+     */
+    public function testGettingSalesRestrictions()
+    {
+        // Product does not have subscription rights
+        $this->assertCount(1, $this->groschen->getSalesRestrictions());
+
+        $expectedSalesRestriction = [
+            'SalesRestrictionType' => 12, // Not for sale to subscription services
+        ];
+
+        $this->assertSame($expectedSalesRestriction, $this->groschen->getSalesRestrictions()->first());
+
+        // Product that has subscription rights
+        $groschen = new Groschen('9789510435199');
+        $this->assertCount(0, $groschen->getSalesRestrictions());
+    }
 }

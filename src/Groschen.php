@@ -2041,4 +2041,30 @@ class Groschen implements ProductInterface
 
         return null;
     }
+
+    /**
+     * Get the sales restrictions
+     * @return Collection
+     */
+    public function getSalesRestrictions()
+    {
+        $salesRestrictions = new Collection;
+
+        if ($this->isSubscriptionProduct() === false) {
+            $salesRestrictions->push([
+                'SalesRestrictionType' => 12, // Not for sale to subscription services
+            ]);
+        }
+
+        return $salesRestrictions;
+    }
+
+    /**
+     * Is the product allowed for subscription?
+     * @return boolean
+     */
+    public function isSubscriptionProduct()
+    {
+        return (bool) $this->product->AllowSubscriptionInvoicing;
+    }
 }

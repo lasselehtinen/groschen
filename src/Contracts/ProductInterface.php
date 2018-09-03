@@ -252,4 +252,16 @@ interface ProductInterface
      * @return DateTime|null
      */
     public function getLatestStockArrivalDate();
+
+    /**
+     * Is the product allowed for subscription?
+     * @return boolean
+     */
+    public function isSubscriptionProduct();
+
+    /**
+     * Get the sales restrictions
+     * @return Collection
+     */
+    public function getSalesRestrictions();
 }
