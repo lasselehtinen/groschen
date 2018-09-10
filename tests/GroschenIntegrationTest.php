@@ -412,11 +412,10 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510303108');
         $this->assertCount(0, $groschen->getExtents());
 
-        // Audio book with duration and pages?
-        $groschen = new Groschen('9789513133115');
-        $this->assertContains(['ExtentType' => '00', 'ExtentValue' => '2', 'ExtentUnit' => '03'], $groschen->getExtents());
-        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '00108', 'ExtentUnit' => '15'], $groschen->getExtents());
-        $this->assertCount(2, $groschen->getExtents());
+        // Audio book with duration
+        $groschen = new Groschen('9789513194642');
+        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '0092933', 'ExtentUnit' => '16'], $groschen->getExtents());
+        $this->assertCount(1, $groschen->getExtents());
     }
 
     /**

@@ -489,15 +489,15 @@ class Groschen implements ProductInterface
             ]);
         }
 
-        // Audio duration, convert from HH:MM to HHHMM
+        // Audio duration, convert from HH:MM:SS to HHHMM
         if (!empty($this->product->Unit)) {
-            list($hours, $minutes) = explode(':', $this->product->Unit);
-            $extentValue = str_pad($hours, 3, '0', STR_PAD_LEFT) . str_pad($minutes, 2, '0', STR_PAD_LEFT);
+            list($hours, $minutes, $seconds) = explode(':', $this->product->Unit);
+            $extentValue = str_pad($hours, 3, '0', STR_PAD_LEFT) . str_pad($minutes, 2, '0', STR_PAD_LEFT) . str_pad($seconds, 2, '0', STR_PAD_LEFT);
 
             $extents->push([
                 'ExtentType' => '09',
                 'ExtentValue' => $extentValue,
-                'ExtentUnit' => '15',
+                'ExtentUnit' => '16',
             ]);
         }
 
