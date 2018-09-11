@@ -729,6 +729,23 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting the latest print number
+     * @return void
+     */
+    public function testGettingLatestPrintNumber()
+    {
+        $groschen = new Groschen('9789510374665');
+        $this->assertSame(5, $groschen->getLatestPrintNumber());
+
+        $groschen = new Groschen('9789510355763');
+        $this->assertSame(1, $groschen->getLatestPrintNumber());
+
+        // Product without project should return
+        $groschen = new Groschen('6430027858379');
+        $this->assertNull($groschen->getLatestPrintNumber());
+    }
+
+    /**
      * Test getting products prices
      * @return void
      */

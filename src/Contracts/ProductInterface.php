@@ -254,6 +254,12 @@ interface ProductInterface
     public function getLatestStockArrivalDate();
 
     /**
+     * Get the latest print number
+     * @return int|null
+     */
+    public function getLatestPrintNumber();
+
+    /**
      * Is the product allowed for subscription?
      * @return boolean
      */

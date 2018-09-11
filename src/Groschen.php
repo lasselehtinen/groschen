@@ -2067,4 +2067,20 @@ class Groschen implements ProductInterface
     {
         return (bool) $this->product->AllowSubscriptionInvoicing;
     }
+
+    /**
+     * Get the latest print number
+     * @return int|null
+     */
+    public function getLatestPrintNumber()
+    {
+        $projectId = $this->getProductInformation()->ProjectId;
+        $projectNumber = $this->getLatestPrintProject($projectId);
+
+        if (empty($projectNumber)) {
+            return null;
+        }
+
+        return intval(substr($projectNumber, -2));
+    }
 }
