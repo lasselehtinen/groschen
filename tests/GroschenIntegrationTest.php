@@ -1,9 +1,9 @@
 <?php
 namespace lasselehtinen\Groschen\Test;
 
+use DateTime;
 use Exception;
 use lasselehtinen\Groschen\Groschen;
-use DateTime;
 
 class GroschenIntegrationTest extends TestCase
 {
@@ -353,7 +353,8 @@ class GroschenIntegrationTest extends TestCase
      * Test that private contributors are hidden
      * @return void
      */
-    public function testPrivateContributorsAreHidden() {
+    public function testPrivateContributorsAreHidden()
+    {
         $groschen = new Groschen('9789510412893');
 
         $editor = [
@@ -411,11 +412,10 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510303108');
         $this->assertCount(0, $groschen->getExtents());
 
-        // Audio book with duration and pages?
-        $groschen = new Groschen('9789513133115');
-        $this->assertContains(['ExtentType' => '00', 'ExtentValue' => '2', 'ExtentUnit' => '03'], $groschen->getExtents());
-        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '00108', 'ExtentUnit' => '15'], $groschen->getExtents());
-        $this->assertCount(2, $groschen->getExtents());
+        // Audio book with duration
+        $groschen = new Groschen('9789513194642');
+        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '0092933', 'ExtentUnit' => '16'], $groschen->getExtents());
+        $this->assertCount(1, $groschen->getExtents());
     }
 
     /**
@@ -715,7 +715,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting latest reprint date
      * @return void
      */
-    public function testGettingLatestStockArrivalDate() {
+    public function testGettingLatestStockArrivalDate()
+    {
         // Product with only one print
         $groschen = new Groschen('9789510401514');
         $expectedArrivalDate = new DateTime('2013-05-13');
@@ -725,6 +726,23 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510374665');
         $expectedArrivalDate = new DateTime('2013-12-18');
         $this->assertEquals($expectedArrivalDate, $groschen->getLatestStockArrivalDate());
+    }
+
+    /**
+     * Test getting the latest print number
+     * @return void
+     */
+    public function testGettingLatestPrintNumber()
+    {
+        $groschen = new Groschen('9789510374665');
+        $this->assertSame(5, $groschen->getLatestPrintNumber());
+
+        $groschen = new Groschen('9789510355763');
+        $this->assertSame(1, $groschen->getLatestPrintNumber());
+
+        // Product without project should return
+        $groschen = new Groschen('6430027858379');
+        $this->assertNull($groschen->getLatestPrintNumber());
     }
 
     /**
@@ -1176,4 +1194,36 @@ class GroschenIntegrationTest extends TestCase
         $this->assertNull($groschen->getSalesSeason());
     }
 
+    /**
+     * Test checking if the product is allowed for subscription services
+     * @return void
+     */
+    public function testCheckingIfProductIsAllowedForSubscriptionServices()
+    {
+        $this->assertFalse($this->groschen->isSubscriptionProduct());
+
+        // Subscription product
+        $groschen = new Groschen('9789510435199');
+        $this->assertTrue($groschen->isSubscriptionProduct());
+    }
+
+    /**
+     * Test getting sales restrictions
+     * @return void
+     */
+    public function testGettingSalesRestrictions()
+    {
+        // Product does not have subscription rights
+        $this->assertCount(1, $this->groschen->getSalesRestrictions());
+
+        $expectedSalesRestriction = [
+            'SalesRestrictionType' => 12, // Not for sale to subscription services
+        ];
+
+        $this->assertSame($expectedSalesRestriction, $this->groschen->getSalesRestrictions()->first());
+
+        // Product that has subscription rights
+        $groschen = new Groschen('9789510435199');
+        $this->assertCount(0, $groschen->getSalesRestrictions());
+    }
 }
