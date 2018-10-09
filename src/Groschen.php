@@ -992,7 +992,7 @@ class Groschen implements ProductInterface
         ]);
 
         // Login to Elvis
-        $response = $client->request('GET', 'login', ['query' => ['username' => config('groschen.elvis.username'), 'password' => config('groschen.elvis.password')]]);
+        $response = $client->request('POST', 'login', ['query' => ['username' => config('groschen.elvis.username'), 'password' => config('groschen.elvis.password')]]);
         $json = json_decode($response->getBody());
 
         // Check that we are logged in
