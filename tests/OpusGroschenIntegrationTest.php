@@ -867,4 +867,55 @@ class OpusGroschenIntegrationTest extends TestCase
         $expectedArrivalDate = new DateTime('2011-12-16');
         $this->assertEquals($expectedArrivalDate, $this->groschen->getLatestStockArrivalDate());
     }
+
+    /**
+     * Test getting the latest print number
+     * @return void
+     */
+    public function testGettingLatestPrintNumber()
+    {
+        $this->assertSame(6, $this->groschen->getLatestPrintNumber());
+
+        // Digital product
+        $groschen = new OpusGroschen('9789100130091');
+        $this->assertSame(1, $groschen->getLatestPrintNumber());
+    }
+
+    /**
+     * Test checking if the product is allowed for subscription services
+     * @return void
+     */
+    public function testCheckingIfProductIsAllowedForSubscriptionServices()
+    {
+        $this->fail('Not implemented yet.');
+
+        $this->assertFalse($this->groschen->isSubscriptionProduct());
+
+        // Digital product
+        $groschen = new OpusGroschen('9789510435199');
+        $this->assertTrue($groschen->isSubscriptionProduct());
+    }
+
+    /**
+     * Test getting sales restrictions
+     * @return void
+     */
+    public function testGettingSalesRestrictions()
+    {
+        $this->fail('Not implemented yet.');
+
+        // Product does not have subscription rights
+        $this->assertCount(1, $this->groschen->getSalesRestrictions());
+
+        $expectedSalesRestriction = [
+            'SalesRestrictionType' => 12, // Not for sale to subscription services
+        ];
+
+        $this->assertSame($expectedSalesRestriction, $this->groschen->getSalesRestrictions()->first());
+
+        // Product that has subscription rights
+        $groschen = new Groschen('9789510435199');
+        $this->assertCount(0, $groschen->getSalesRestrictions());
+    }
+
 }

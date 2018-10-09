@@ -1568,12 +1568,44 @@ class OpusGroschen implements ProductInterface
      */
     public function getLatestStockArrivalDate()
     {
-        foreach($this->product->activePrint->timePlan->entries as $timeplan) {
-            if($timeplan->type->name === 'Delivery to warehouse') {
+        foreach ($this->product->activePrint->timePlan->entries as $timeplan) {
+            if ($timeplan->type->name === 'Delivery to warehouse') {
                 return DateTime::createFromFormat('Y-m-d*H:i:s', $timeplan->planned);
             }
         }
 
         return null;
     }
+
+    /**
+     * Get the latest print number
+     * @return int|null
+     */
+    public function getLatestPrintNumber()
+    {
+        if(!isset($this->product->activePrint->printNumber)) {
+            return null;
+        }
+
+        return $this->product->activePrint->printNumber;
+    }
+
+    /**
+     * Is the product allowed for subscription?
+     * @return boolean
+     */
+    public function isSubscriptionProduct()
+    {
+        return (bool) false;
+    }
+
+    /**
+     * Get the sales restrictions
+     * @return Collection
+     */
+    public function getSalesRestrictions()
+    {
+        return new Collection;
+    }
+
 }
