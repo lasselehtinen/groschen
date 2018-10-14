@@ -883,22 +883,23 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '06',
-                        'FeatureValue' => 'c4204770c25afca3d98f629f1916d3f2',
+                        'FeatureValue' => '66826bce97a858a9a89da1d2cc382ed0',
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 1738006,
+                        'FeatureValue' => 1738182,
                     ],
                     [
                         'ResourceVersionFeatureType' => '08',
-                        'FeatureValue' => '019fd7ee76362bf683e36aa89351cd54cb55ec89b3d035da645170cbba91307f',
+                        'FeatureValue' => 'ff03144829f6aea5f90fe55f1d78cc1b7dbf736c968d0d02a1155f634963ae01',
                     ],
 
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/DeRg8ysYqby9YnfNrvl-R-/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
         ];
 
+        //dd($this->groschen->getSupportingResources());
         $this->assertContains($supportingResource, $this->groschen->getSupportingResources());
 
         // Product without cover image
