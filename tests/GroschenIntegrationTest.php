@@ -1220,4 +1220,17 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510435199');
         $this->assertCount(0, $groschen->getSalesRestrictions());
     }
+
+    /**
+     * Test getting the products tax rate
+     * @return void
+     */
+    public function testGettingTaxRate() {
+        // Hardback
+        $this->assertSame(10.00, $this->groschen->getTaxRate());
+
+        // Digital product
+        $groschen = new Groschen('9789510435199');
+        $this->assertSame(24.00, $groschen->getTaxRate());
+    }
 }
