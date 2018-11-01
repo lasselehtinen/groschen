@@ -727,21 +727,45 @@ class Groschen implements ProductInterface
 
         // Get texts
         $response = $this->client->get('v1/works/' . $this->workId . '/productions/' . $this->productionId . '/texts');
-        $texts = json_decode($response->getBody()->getContents());
+        $json = json_decode($response->getBody()->getContents());
+        $texts = collect($json->texts);
 
-        // Combine text from the
+        // Headline
+        $headline = $texts->filter(function ($text) {
+            return $text->textType->name === 'Headline';
+        });
 
-        if (!empty($texts->texts)) {
-            foreach ($texts->texts as $text) {
-                // Pr. titelinformation
-                if ($text->textType->id === '15') {
-                    $textContents->push([
-                        'TextType' => '03',
-                        'ContentAudience' => '00',
-                        'Text' => $this->purifyHtml($text->text),
-                    ]);
-                }
+        // Description (core)
+        $descriptionCore = $texts->filter(function ($text) {
+            return $text->textType->name === 'Description (core) - for booksellers and consumers';
+        });
+
+        // Description (extra)
+        $descriptionExtra = $texts->filter(function ($text) {
+            return $text->textType->name === 'Description (extra) - additional and optional';
+        });
+
+        // Author description
+        $authorDescription = $texts->filter(function ($text) {
+            return $text->textType->name === 'Author presentation';
+        });
+
+        // Merge the texts and add missing paragraph tags
+        $mergedTexts = $headline->merge($descriptionCore)->merge($descriptionExtra)->merge($authorDescription)->transform(function ($text) {
+            if(substr($text->text, 0, 3) !== '<p>') {
+                $text->text = '<p>' . $text->text . '</p>';
             }
+            return $text;
+        });
+
+        // Add if texts exist
+        if($mergedTexts->count() > 0) {
+            // Add to collection
+            $textContents->push([
+                'TextType' => '03',
+                'ContentAudience' => '00',
+                'Text' => $this->purifyHtml($mergedTexts->implode('text')),
+            ]);
         }
 
         return $textContents;
