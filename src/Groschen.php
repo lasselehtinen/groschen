@@ -1,23 +1,23 @@
 <?php
 namespace lasselehtinen\Groschen;
 
+use Cache;
 use DateTime;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use Illuminate\Support\Collection;
 use Isbn;
+use kamermans\OAuth2\GrantType\NullGrantType;
+use kamermans\OAuth2\OAuth2Middleware;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
-use LasseLehtinen\SchillingSoapWrapper\Services\Lookup;
-use LasseLehtinen\SchillingSoapWrapper\Services\Product;
-use LasseLehtinen\SchillingSoapWrapper\Services\Project;
-use LasseLehtinen\SchillingSoapWrapper\Services\TextHandling;
+use League\OAuth2\Client\Provider\GenericProvider;
 use League\Uri\Modifiers\MergeQuery;
 use League\Uri\Modifiers\RemoveQueryKeys;
 use League\Uri\Schemes\Http as HttpUri;
 use Njasm\Soundcloud\Soundcloud;
-use stdClass;
 
 class Groschen implements ProductInterface
 {
@@ -28,66 +28,146 @@ class Groschen implements ProductInterface
     private $productNumber;
 
     /**
+     * Opus work ID
+     * @var string
+     */
+    private $workId;
+
+    /**
+     * Opus production ID
+     * @var string
+     */
+    private $productionId;
+
+    /**
      * Raw product information
-     * @var \stdClass
+     * @var stdClass
      */
     private $product;
+
+    /**
+     * Raw product information
+     * @var stdClass
+     */
+    private $workLevel;
+
+    /**
+     * Guzzle HTTP client
+     * @var GuzzleHttp\Client
+     */
+    private $client;
 
     /**
      * @param string $productNumber
      */
     public function __construct($productNumber)
     {
-        $this->setProductNumber($productNumber);
-        $this->setProductInformation();
-    }
+        // Get access token for Opus
+        $accessToken = Cache::remember('accessToken', 1440, function () {
+            $provider = new GenericProvider([
+                'clientId' => config('groschen.opus.clientId'),
+                'clientSecret' => config('groschen.opus.clientSecret'),
+                'redirectUri' => url('oauth2/callback'),
+                'urlAuthorize' => config('groschen.opus.urlAuthorize'),
+                'urlAccessToken' => config('groschen.opus.urlAccessToken'),
+                'urlResourceOwnerDetails' => config('groschen.opus.urlResourceOwnerDetails'),
+            ]);
 
-    /**
-     * Set the product number
-     * @param string $productNumber
-     */
-    public function setProductNumber($productNumber)
-    {
-        // Check that product exists in Schilling
-        $lookupValue = $this->getLookupValue(7, $productNumber);
+            // Try to get an access token using the resource owner password credentials grant
+            return $provider->getAccessToken('password', [
+                'username' => config('groschen.opus.username'),
+                'password' => config('groschen.opus.password'),
+                'scope' => 'opus',
+            ]);
+        });
 
-        if (empty($lookupValue)) {
-            throw new Exception('Product does not exist in Schilling.');
-        }
-
-        $this->productNumber = $productNumber;
-    }
-
-    /**
-     * Set the product information
-     * @return void
-     */
-    public function setProductInformation()
-    {
-        // Create instances for Schilling Web Service API
-        $product = new Product(
-            config('groschen.schilling.hostname'),
-            config('groschen.schilling.port'),
-            config('groschen.schilling.username'),
-            config('groschen.schilling.password'),
-            config('groschen.schilling.company')
-        );
-
-        // Get product with additional info
-        $products = $product->getProducts([
-            'ProductNumber' => $this->productNumber,
-            'WithPartnerInfoData' => true,
-            'WithPriceData' => true,
-            'WithInternetInformation' => true,
+        // Generate new OAuth middleware for Guzzle
+        $oauth = new OAuth2Middleware(new NullGrantType);
+        $oauth->setAccessToken([
+            'access_token' => $accessToken->getToken(),
         ]);
 
-        // Return first result
-        $this->product = $products[0];
+        // Create new HandlerStack for Guzzle and push OAuth middleware
+        $stack = HandlerStack::create();
+        $stack->push($oauth);
+
+        // Create Guzzle and push the OAuth middleware to the handler stack
+        $this->client = new Client([
+            'base_uri' => config('groschen.opus.hostname'),
+            'handler' => $stack,
+            'auth' => 'oauth',
+        ]);
+
+        $this->productNumber = $productNumber;
+        $this->workId = $this->searchProductions('workId');
+        $this->productionId = $this->searchProductions('id');
+        $this->product = $this->getProduct();
+        $this->workLevel = $this->getWorkLevel();
+    }
+
+    /**
+     * Searches for productions
+     * @param  string $searchField
+     * @param  string $return
+     * @return string
+     */
+    public function searchProductions($return)
+    {
+        // Search for the ISBN in Opus
+        $response = $this->client->get('v2/search/productions', [
+            'query' => [
+                'q' => $this->productNumber,
+                'limit' => 1,
+                'searchFields' => 'isbn',
+                '$select' => $return,
+            ],
+        ]);
+
+        $json = json_decode($response->getBody()->getContents());
+
+        if (count($json->results) == 0) {
+            throw new Exception('Could not find product in Opus.');
+        }
+
+        if (count($json->results) > 1) {
+            throw new Exception('Too many results found in Opus.');
+        }
+
+        // Check that attribute exists
+        if (empty($json->results[0]->document->{$return})) {
+            throw new Exception('The return field in Opus does not exist in response.');
+        }
+
+        return $json->results[0]->document->{$return};
+    }
+
+    /**
+     * Get the product information
+     * @return stdClass
+     */
+    public function getProduct()
+    {
+        // Get the production from Opus
+        $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId);
+
+        return json_decode($response->getBody()->getContents());
+    }
+
+    /**
+     * Get the work level information
+     * @return stdClass
+     */
+    public function getWorkLevel()
+    {
+        // Get the production from Opus
+        $response = $this->client->get('/v1/works/' . $this->workId);
+
+        return json_decode($response->getBody()->getContents());
     }
 
     /**
      * Return the raw product information
-     * @return \stdClass
+     * @return stdClass
      */
     public function getProductInformation()
     {
@@ -106,15 +186,15 @@ class Groschen implements ProductInterface
         $productIdentifiers->push([
             'ProductIDType' => '01',
             'id_type_name' => 'Bonnier Books Finland - Internal product number',
-            'id_value' => $this->product->ProductNumber,
+            'id_value' => $this->product->isbn,
         ]);
 
         // GTIN-13 and ISBN-13
-        if (!empty($this->product->EAN) && $this->isValidGtin($this->product->EAN)) {
+        if (!empty($this->product->isbn) && $this->isValidGtin($this->product->isbn)) {
             foreach (['03', '15'] as $id_value) {
                 $productIdentifiers->push([
                     'ProductIDType' => $id_value,
-                    'id_value' => $this->product->EAN,
+                    'id_value' => $this->product->isbn,
                 ]);
             }
         }
@@ -128,69 +208,50 @@ class Groschen implements ProductInterface
      */
     public function getProductComposition()
     {
-        // Determine whether it is a normal Single-item retail or Trade-only product
-        return ($this->product->SubGroup == 18) ? '20' : '00';
+        // Determine whether it is a normal Single-item retail or Trade-only product - TODO, 20 for trade items
+        return '00';
     }
 
     /**
-     * Get the products from (Onix codelist 150)
+     * Get the products from (Onix codelist 150) - TODO
      * @return string|null
      */
     public function getProductForm()
     {
-        // If missing, return null
-        if (empty($this->product->MediaType)) {
-            return null;
+        switch ($this->product->bindingCode->id) {
+            // ePub2
+            case 'EPUB2':
+                return 'ED';
+                break;
+            // ePub3
+            case 'EPUB3':
+                return 'ED';
+                break;
+            // For all others we can just pick the two first letters
+            default:
+                return substr($this->product->bindingCode->id, 0, 2);
+                break;
         }
-
-        // E-book mapping for Bokinfo
-        if ($this->product->MediaType === 'ED') {
-            return 'EA';
-        }
-
-        // Kit mapping for Bokinfo
-        if ($this->product->MediaType === 'PH') {
-            return 'BF';
-        }
-
-        // MP3-CD mapping for Bokinfo
-        if ($this->product->MediaType === 'AE' && $this->product->BindingCode === 'A103') {
-            return 'AC';
-        }
-
-        return $this->product->MediaType;
     }
 
     /**
-     * Get the products form detail (Onix codelist 175)
+     * Get the products form detail (Onix codelist 175) - TODO
      * @return string|null
      */
     public function getProductFormDetail()
     {
-        if (empty($this->product->BindingCode)) {
-            return null;
-        }
-
-        switch ($this->product->BindingCode) {
-            // Custom binding code Nokia Ovi ebook is mapped to Book ‘app’ for other operating system
-            case 'W990':
-                return 'E136';
-                break;
-            // Custom binding code iPhone / iPad is mapped to Book ‘app’ for iOS
-            case 'W991':
-            case 'W992':
-                return 'E134';
-                break;
-            // Custom binding code ePub 3 is mapped to EPUB
-            case 'W993':
+        switch ($this->product->bindingCode->id) {
+            // ePub2
+            case 'EPUB2':
                 return 'E101';
                 break;
-            // Custom binding code Picture-audio book is mapped to Readalong audio
-            case 'W994':
-                return 'A302';
+            // ePub3
+            case 'EPUB3':
+                return 'W993';
                 break;
+            // Return last three characters if they are 2+4 combo
             default:
-                return $this->product->BindingCode;
+                return (strlen($this->product->bindingCode->id) === 6) ? substr($this->product->bindingCode->id, 2, 4) : null;
                 break;
         }
     }
@@ -204,11 +265,11 @@ class Groschen implements ProductInterface
         $productFormFeatures = new Collection;
 
         // Add ePub version
-        switch ($this->product->BindingCode) {
-            case 'E101':
+        switch ($this->product->bindingCode->id) {
+            case 'EPUB2':
                 $featureValue = '101A';
                 break;
-            case 'W993':
+            case 'EPUB3':
                 $featureValue = '101B';
                 break;
         }
@@ -243,26 +304,27 @@ class Groschen implements ProductInterface
     {
         $collections = new Collection;
 
-        if (!empty($this->product->BookSeries)) {
+        // Add book series
+        if (isset($this->product->series)) {
             $collections->push([
                 'CollectionType' => '10', [
                     'TitleDetail' => [
                         'TitleType' => '01',
                         'TitleElement' => [
                             'TitleElementLevel' => '01',
-                            'TitleText' => $this->product->BookSeries,
+                            'TitleText' => $this->product->series->name,
                         ],
                     ],
                 ],
             ]);
 
             // Add Collection sequence if product has NumberInSeries
-            if ($this->product->NumberInSeries > 0) {
+            if (isset($this->product->numberInSeries)) {
                 $collections = $collections->map(function ($collection) {
                     // Add CollectionSequence to Collection
                     $collectionSequence = [
                         'CollectionSequenceType' => '03',
-                        'CollectionSequenceNumber' => $this->product->NumberInSeries,
+                        'CollectionSequenceNumber' => $this->product->numberInSeries,
                     ];
 
                     $collection[0]['CollectionSequence'] = $collectionSequence;
@@ -270,6 +332,20 @@ class Groschen implements ProductInterface
                     return $collection;
                 });
             }
+        }
+
+        if (isset($this->product->series)) {
+            $collections->push([
+                'CollectionType' => '10', [
+                    'TitleDetail' => [
+                        'TitleType' => '01',
+                        'TitleElement' => [
+                            'TitleElementLevel' => '01',
+                            'TitleText' => $this->product->series->name,
+                        ],
+                    ],
+                ],
+            ]);
         }
 
         return $collections;
@@ -284,31 +360,29 @@ class Groschen implements ProductInterface
         $titleDetails = new Collection;
 
         // Main title
-        if (!empty($this->product->Title)) {
-            $titleDetails->push([
-                'TitleType' => '01',
-                'TitleElement' => [
-                    'TitleElementLevel' => '01',
-                    'TitleText' => $this->product->Title,
-                ],
-            ]);
-        }
+        $titleDetails->push([
+            'TitleType' => '01',
+            'TitleElement' => [
+                'TitleElementLevel' => '01',
+                'TitleText' => $this->product->title,
+            ],
+        ]);
 
         // Add subtitle
-        if (!empty($this->product->SubTitle)) {
+        if (!empty($this->product->subtitle)) {
             $titleDetails = $titleDetails->map(function ($titleDetail) {
-                $titleDetail['TitleElement']['Subtitle'] = $this->product->SubTitle;
+                $titleDetail['TitleElement']['Subtitle'] = $this->product->subtitle;
                 return $titleDetail;
             });
         }
 
         // Original title
-        if (!empty($this->product->LongSubtitle)) {
+        if (!empty($this->product->originalTitle)) {
             $titleDetails->push([
                 'TitleType' => '03',
                 'TitleElement' => [
                     'TitleElementLevel' => '01',
-                    'TitleText' => $this->product->LongSubtitle,
+                    'TitleText' => $this->product->originalTitle,
                 ],
             ]);
         }
@@ -318,7 +392,7 @@ class Groschen implements ProductInterface
             'TitleType' => '10',
             'TitleElement' => [
                 'TitleElementLevel' => '01',
-                'TitleText' => $this->product->ProductText,
+                'TitleText' => $this->product->deliveryNoteTitle,
             ],
         ]);
 
@@ -335,110 +409,49 @@ class Groschen implements ProductInterface
         $contributors = new Collection;
 
         // If no stakeholders present
-        if (!isset($this->product->PartnerInfo)) {
+        if (!isset($this->product->members)) {
             return $contributors;
         }
 
-        foreach ($this->product->PartnerInfo as $contributor) {
-            if (!empty($contributor->KeyNo) && !is_null($this->getContributorRole($contributor->RoleId))) {
-                // Get stakeholders name
-                switch ($contributor->Type) {
-                    // Resource
-                    case '1':
-                        $name = $this->getLookupValue(506, $contributor->KeyNo);
-                        $idTypeName = 'Resource ID';
-                        break;
-                    // Creditor and author
-                    case '3':
-                    case '5':
-                        $name = $this->getLookupValue(6, $contributor->KeyNo);
-                        $idTypeName = 'Creditor number';
-                        break;
-                    default:
-                        $name = null;
-                        $idTypeName = null;
-                        break;
-                }
+        // Filter those team members that we don't have the Onix role mapping
+        $teamMembers = collect($this->product->members)->filter(function ($teamMember) {
+            return !is_null($this->getContributorRole($teamMember->role->id));
+        })->sortBy(function ($teamMember) {
+            return intval($teamMember->prioLevel->id)*100 + (100-$teamMember->sortOrder);
+        });
 
-                if (!empty($name)) {
-                    // Check if name is in typical "Lastname, Firstname" format or pseudonym
-                    if (strpos($name, ', ') !== false) {
-                        list($lastname, $firstname) = explode(', ', $name);
-                    } else {
-                        $lastname = $name;
-                        $firstname = null;
-                    }
-
-                    // Add to collection
-                    if ($this->isContributorPublic($returnInternalResources, $contributor->Type, $contributor->RoleId)) {
-                        $contributors->push([
-                            'ContributorRole' => $this->getContributorRole($contributor->RoleId),
-                            'NameIdentifier' => [
-                                'NameIDType' => '01',
-                                'IDTypeName' => $idTypeName,
-                                'IDValue' => $contributor->KeyNo,
-                            ],
-                            'PersonNameInverted' => $name,
-                            'NamesBeforeKey' => $firstname,
-                            'KeyNames' => $lastname,
-                            'Sorting' => [
-                                'priority' => $contributor->Priority,
-                                'role_priority' => $this->getRolePriority($contributor->RoleId),
-                            ],
-                        ]);
-                    }
-                }
-            }
+        // Remove internal resource if required
+        if($returnInternalResources === false) {
+            $teamMembers = $teamMembers->filter(function ($teamMember) {
+                return $teamMember->prioLevel->name !== 'Internal';
+            });
         }
 
-        // Sort the array by priority, then by role priority
-        $contributors = $contributors->sortByDesc(function ($contributors) {
-            return $contributors['Sorting']['role_priority'] . '-' . $contributors['Sorting']['priority'] . '-' . (100 - ord($contributors['KeyNames']));
-        });
-
-        // Add SequenceNumber and drop sorting fields
+        // Init SequenceNumber
         $sequenceNumber = 1;
-        $contributors = $contributors->map(function ($contributor) use (&$sequenceNumber) {
-            // Insert SequenceNumber as first key
-            $contributor = ['SequenceNumber' => $sequenceNumber] + $contributor;
-            unset($contributor['Sorting']);
-            $sequenceNumber++;
 
-            return $contributor;
-        });
+        foreach ($teamMembers as $contributor) {
+            if(!isset($contributor->contact->lastName)) {
+                $personName = $contributor->contact->firstName;
+                $keyNames = $contributor->contact->firstName;
+            } else {
+                $personName = $contributor->contact->lastName . ', ' . $contributor->contact->firstName;
+                $keyNames = $contributor->contact->lastName;
+            }
+
+            // Add to collection
+            $contributors->push([
+                'SequenceNumber' => $sequenceNumber,
+                'ContributorRole' => $this->getContributorRole($contributor->role->id),
+                'PersonNameInverted' => $personName,
+                'NamesBeforeKey' => $contributor->contact->firstName,
+                'KeyNames' => $keyNames,
+            ]);
+
+            $sequenceNumber++;
+        }
 
         return $contributors;
-    }
-
-    /**
-     * Checks whether the contributor is public or not
-     * @param  bool  $returnInternalResources
-     * @param  string  $contributorType
-     * @param  string  $contributorRole
-     * @return boolean
-     */
-    public function isContributorPublic($returnInternalResources, $contributorType, $contributorRole)
-    {
-        if ($returnInternalResources === true) {
-            return true;
-        }
-
-        // List of public roles
-        $publicRoles = [
-            'AUT',
-            'CDE',
-            'EDA',
-            'EIC',
-            'GDE',
-            'ILL',
-            'PHO',
-            'REA',
-            'TRA',
-        ];
-
-        if (in_array($contributorType, [3, 5]) && in_array($contributorRole, $publicRoles)) {
-            return true;
-        }
     }
 
     /**
@@ -450,23 +463,21 @@ class Groschen implements ProductInterface
         $languages = new Collection;
 
         // Add text language
-        if (!empty($this->product->TextLanguage)) {
-            foreach (explode('_', $this->product->TextLanguage) as $language) {
+        if (!empty($this->product->languages)) {
+            foreach ($this->product->languages as $language) {
                 $languages->push([
                     'LanguageRole' => '01',
-                    'LanguageCode' => $language,
+                    'LanguageCode' => $language->id,
                 ]);
             }
         }
 
         // Add original languages
-        if (!empty($this->product->TranslatedFrom)) {
-            foreach (explode('_', $this->product->TranslatedFrom) as $language) {
-                $languages->push([
-                    'LanguageRole' => '02',
-                    'LanguageCode' => $language,
-                ]);
-            }
+        foreach ($this->workLevel->originalLanguages as $originalLanguage) {
+            $languages->push([
+                'LanguageRole' => '02',
+                'LanguageCode' => $originalLanguage->id,
+            ]);
         }
 
         return $languages;
@@ -481,23 +492,20 @@ class Groschen implements ProductInterface
         $extents = new Collection;
 
         // Number of pages
-        if ($this->product->PageCount > 0) {
+        if (isset($this->product->pages) && $this->product->pages > 0) {
             $extents->push([
                 'ExtentType' => '00',
-                'ExtentValue' => $this->product->PageCount,
+                'ExtentValue' => $this->product->pages,
                 'ExtentUnit' => '03',
             ]);
         }
 
-        // Audio duration, convert from HH:MM:SS to HHHMM
-        if (!empty($this->product->Unit)) {
-            list($hours, $minutes, $seconds) = explode(':', $this->product->Unit);
-            $extentValue = str_pad($hours, 3, '0', STR_PAD_LEFT) . str_pad($minutes, 2, '0', STR_PAD_LEFT) . str_pad($seconds, 2, '0', STR_PAD_LEFT);
-
+        // Audio duration, convert from HH:MM to HHHMM - TODO - audioPlaytimeHours what is the accuracy? No minutes?
+        if (isset($this->product->audioPlaytimeHours)) {
             $extents->push([
                 'ExtentType' => '09',
-                'ExtentValue' => $extentValue,
-                'ExtentUnit' => '16',
+                'ExtentValue' => str_pad($this->product->audioPlaytimeHours, 3, '0', STR_PAD_LEFT) . str_pad($this->product->audioPlaytimeMinutes, 2, '0', STR_PAD_LEFT),
+                'ExtentUnit' => '15',
             ]);
         }
 
@@ -534,9 +542,9 @@ class Groschen implements ProductInterface
     {
         $imprints = new Collection;
 
-        if (!empty($this->product->OriginalPublisher)) {
+        if ($this->product->publishingHouse->name !== $this->product->brand->name) {
             $imprints->push([
-                'ImprintName' => $this->getLookupValue(595, $this->product->OriginalPublisher),
+                'ImprintName' => $this->product->brand->name,
             ]);
         }
 
@@ -549,13 +557,16 @@ class Groschen implements ProductInterface
      */
     public function getPrice()
     {
-        foreach ($this->product->PriceList as $price) {
-            if ($price->PriceGroup === '0i') {
-                return floatval($price->Salesprice);
-            }
-        }
+        return floatval($this->product->resellerPriceIncludingVat);
+    }
 
-        return null;
+    /**
+     * Get the products recommended retail price RRP excluding VAT
+     * @return float|null
+     */
+    public function getPriceExcludingVat()
+    {
+        return floatval($this->product->resellerPrice);
     }
 
     /**
@@ -568,12 +579,22 @@ class Groschen implements ProductInterface
         $measures = new Collection;
 
         // Add width, height and length
-        $measures->push(['MeasureType' => '01', 'Measurement' => intval($this->product->Height), 'MeasureUnitCode' => 'mm']);
-        $measures->push(['MeasureType' => '02', 'Measurement' => intval($this->product->Width), 'MeasureUnitCode' => 'mm']);
-        $measures->push(['MeasureType' => '03', 'Measurement' => intval($this->product->Length), 'MeasureUnitCode' => 'mm']);
+        if (!empty($this->product->height)) {
+            $measures->push(['MeasureType' => '01', 'Measurement' => intval($this->product->height * 1000), 'MeasureUnitCode' => 'mm']);
+        }
+
+        if (!empty($this->product->width)) {
+            $measures->push(['MeasureType' => '02', 'Measurement' => intval($this->product->width * 1000), 'MeasureUnitCode' => 'mm']);
+        }
+
+        if (!empty($this->product->depth)) {
+            $measures->push(['MeasureType' => '03', 'Measurement' => intval($this->product->depth * 1000), 'MeasureUnitCode' => 'mm']);
+        }
 
         // Add weight
-        $measures->push(['MeasureType' => '08', 'Measurement' => intval($this->product->NetWeight * 1000), 'MeasureUnitCode' => 'gr']);
+        if (!empty($this->product->weight)) {
+            $measures->push(['MeasureType' => '08', 'Measurement' => intval($this->product->weight * 1000), 'MeasureUnitCode' => 'gr']);
+        }
 
         // Filter out zero values
         $measures = $measures->filter(function ($measure) {
@@ -618,16 +639,34 @@ class Groschen implements ProductInterface
         // Init array for subjects
         $subjects = new Collection;
 
-        // Finnish Public Libraries Classification System aka YKL
-        $libraryClass = preg_replace("/[^0-9.]/", "", $this->getLookupValue(293, $this->product->LiteratureGroup));
+        // Library class
+        $libraryClass = $this->getLibraryClass();
 
         if (!empty($libraryClass)) {
-            $subjects->push(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => $libraryClass]);
+            $subjects->push([
+                'SubjectSchemeIdentifier' => '66',
+                'SubjectSchemeName' => 'YKL',
+                'SubjectCode' => $libraryClass,
+            ]);
         }
 
-        // Schilling main and subgroup
-        $subjects->push(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => $this->getLookupValue(26, str_pad($this->product->MainGroup, 2, '0', STR_PAD_LEFT))]);
-        $subjects->push(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => $this->getLookupValue(27, str_pad($this->product->SubGroup, 3, '0', STR_PAD_LEFT))]);
+        // Main product group
+        if (isset($this->product->mainGroup)) {
+            $subjects->push([
+                'SubjectSchemeIdentifier' => '23',
+                'SubjectSchemeName' => 'Bonnier Books Finland - Main product group',
+                'SubjectCode' => $this->product->mainGroup->name,
+            ]);
+        }
+
+        // Sub product group
+        if (isset($this->product->subGroup)) {
+            $subjects->push([
+                'SubjectSchemeIdentifier' => '23',
+                'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group',
+                'SubjectCode' => trim($this->product->subGroup->name),
+            ]);
+        }
 
         // BISAC Subject Heading
         $subjects->push(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => $this->getBisacCode()]);
@@ -644,10 +683,8 @@ class Groschen implements ProductInterface
         // Fiktiivisen aineiston lisäluokitus
         $subjects->push(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisäluokitus', 'SubjectCode' => $this->getFiktiivisenAineistonLisaluokitus()]);
 
-        // Finnish book trade categorization
-        foreach ($this->getFinnishBookTradeCategorisations() as $finnishBookTradeCategorisation) {
-            $subjects->push($finnishBookTradeCategorisation);
-        }
+        // Suomalainen kirja-alan luokitus
+        $subjects->push(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => $this->getFinnishBookTradeCategorisation()]);
 
         // Add subjects/keywords from Finna
         $finnaSubjects = $this->getSubjectWords();
@@ -674,87 +711,10 @@ class Groschen implements ProductInterface
         }
 
         if (!empty($keywords)) {
-            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => implode(';', $keywords)]);
+            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => implode(';', array_unique($keywords))]);
         }
 
         return $subjects;
-    }
-
-    /**
-     * Get the products audience groups
-     * @return Collection
-     */
-    public function getAudiences()
-    {
-        // Collection for audiences
-        $audiences = new Collection;
-
-        // Map the Schilling age group to Audience
-        switch ($this->product->AgeGroup) {
-            case '0+':
-            case '3+':
-            case '5+':
-            case '7+':
-            case '9+':
-            case '10+':
-            case '12+':
-                $audienceCodeValue = '02'; // Children/juvenile
-                break;
-            case '15+':
-                $audienceCodeValue = '03'; // Young adult
-                break;
-            default:
-                $audienceCodeValue = '01'; // General/trade
-                break;
-        }
-
-        $audiences->push(['AudienceCodeType' => '01', 'AudienceCodeValue' => $audienceCodeValue]);
-
-        return $audiences;
-    }
-
-    /**
-     * Get the products AudienceRanges
-     * @return Collection
-     */
-    public function getAudienceRanges()
-    {
-        // Collection for audience ranges
-        $audienceRanges = new Collection;
-
-        if (!empty($this->product->AgeGroup)) {
-            // Get age groups and strip the +
-            $ageGroups = array_map(function ($ageGroup) {
-                return intval(preg_replace('[\D]', '', $ageGroup->KeyValue));
-            }, $this->getLookupValues(591));
-
-            // Sort by age and reindex keys
-            natsort($ageGroups);
-            $ageGroups = array_values($ageGroups);
-
-            // Add AgeGroup 18+
-            $ageGroups[] = 18;
-
-            // Determine the from and to values. Since array is sorted, To is the next index in the array.
-            $fromKey = array_search($this->product->AgeGroup, $ageGroups);
-            $toKey = $fromKey + 1;
-
-            $audienceRanges->push([
-                'AudienceRangeQualifier' => 17,
-                'AudienceRangeScopes' => [
-                    [
-                        'AudienceRangePrecision' => '03', // From
-                        'AudienceRangeValue' => $ageGroups[$fromKey],
-                    ],
-                    [
-                        'AudienceRangePrecision' => '04', // To
-                        'AudienceRangeValue' => $ageGroups[$toKey],
-                    ],
-                ],
-            ]);
-        }
-
-        return $audienceRanges;
     }
 
     /**
@@ -765,17 +725,46 @@ class Groschen implements ProductInterface
     {
         $textContents = new Collection;
 
-        if (empty($this->product->ProjectId)) {
-            return $textContents;
-        }
+        // Get texts
+        $response = $this->client->get('v1/works/' . $this->workId . '/productions/' . $this->productionId . '/texts');
+        $json = json_decode($response->getBody()->getContents());
+        $texts = collect($json->texts);
 
-        $text = $this->getLatestMarketingText($this->product->ProjectId);
+        // Headline
+        $headline = $texts->filter(function ($text) {
+            return $text->textType->name === 'Headline';
+        });
 
-        if (!empty($text)) {
+        // Description (core)
+        $descriptionCore = $texts->filter(function ($text) {
+            return $text->textType->name === 'Description (core) - for booksellers and consumers';
+        });
+
+        // Description (extra)
+        $descriptionExtra = $texts->filter(function ($text) {
+            return $text->textType->name === 'Description (extra) - additional and optional';
+        });
+
+        // Author description
+        $authorDescription = $texts->filter(function ($text) {
+            return $text->textType->name === 'Author presentation';
+        });
+
+        // Merge the texts and add missing paragraph tags
+        $mergedTexts = $headline->merge($descriptionCore)->merge($descriptionExtra)->merge($authorDescription)->transform(function ($text) {
+            if(substr($text->text, 0, 3) !== '<p>') {
+                $text->text = '<p>' . $text->text . '</p>';
+            }
+            return $text;
+        });
+
+        // Add if texts exist
+        if($mergedTexts->count() > 0) {
+            // Add to collection
             $textContents->push([
                 'TextType' => '03',
                 'ContentAudience' => '00',
-                'Text' => $this->getLatestMarketingText($this->product->ProjectId),
+                'Text' => $this->purifyHtml($mergedTexts->implode('text')),
             ]);
         }
 
@@ -790,18 +779,15 @@ class Groschen implements ProductInterface
     {
         $publishers = new Collection;
 
-        switch ($this->product->Owner) {
-            case '1':
-            case '3':
+        switch ($this->product->publishingHouse->name) {
+            case 'WSOY':
                 $publisherName = 'Werner Söderström Osakeyhtiö';
                 break;
-            case '2:':
-            case '4:':
-            case '5:':
+            case 'Tammi':
                 $publisherName = 'Kustannusosakeyhtiö Tammi';
                 break;
             default:
-                throw new Exception('No mapping for publisher exists.');
+                $publisherName = $this->product->publishingHouse->name;
                 break;
         }
 
@@ -817,60 +803,57 @@ class Groschen implements ProductInterface
      */
     public function getPublishingStatus()
     {
-        // Determine the PublishingStatus
-        switch ($this->product->NotifyCode) {
-            // Development
-            case '1':
-                return '02'; // Forthcoming
+        switch ($this->product->listingCode->name) {
+            case 'Published':
+            case 'Exclusive Sales':
+            case 'Short run':
+                return '04';
                 break;
-            // Published
-            case '2':
-                return '04'; // Active
+            case 'Development':
+                return '02';
                 break;
-            // Exclusive sales
-            case '3':
-                return '04'; // Active
+            case 'Sold out':
+                return '07';
                 break;
-            // Sold out
-            case '4':
-                return '07'; // Out of print
+            case 'Development-Confidential':
+                return '00';
                 break;
-            // Development-confidential
-            case '6':
-                return '00'; // Unknown
+            case 'Cancelled':
+                return '01';
                 break;
-            // Cancelled
-            case '7':
-                return '01'; // Cancelled
+            case 'Delivery block':
+                return '16';
                 break;
-            // POD / shortrun
-            case '8':
-                return '04'; // Active
-                break;
-            // Delivery block
-            case '9':
-                return '16'; // Temporarily withdrawn from sale
+            default:
+                throw new Exception('Could not map product governing code to publishing status');
                 break;
         }
     }
 
     /**
-     * get the product publishing dates
+     * Get the product publishing dates
      * @return Collection
      */
     public function getPublishingDates()
     {
         $publishingDates = new Collection;
 
-        // Define the dates we want to collect
-        $dates = ['01' => 'OriginalPublishingDate', '12' => 'PublishingDate'];
+        // Add original publishing date
+        $publishingDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->publishingDate);
+        $publishingDates->push(['PublishingDateRole' => '01', 'Date' => $publishingDate->format('Ymd')]);
 
-        foreach ($dates as $publishingDateRole => $date) {
-            if (!empty($this->product->{$date})) {
-                // Convert to DateTime
-                $publishingDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->{$date});
+        // Get prints
+        $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
+        $prints = json_decode($response->getBody()->getContents());
 
-                $publishingDates->push(['PublishingDateRole' => (string) $publishingDateRole, 'Date' => $publishingDate->format('Ymd')]);
+        // Latest reprint date
+        $latestPrint = end($prints->prints);
+
+        foreach ($latestPrint->timePlanEntries as $timePlanEntry) {
+            // Delivery in stock
+            if ($timePlanEntry->type->id === '11') {
+                $lastReprintDate = DateTime::createFromFormat('Y-m-d*H:i:s', $timePlanEntry->actual);
+                $publishingDates->push(['PublishingDateRole' => '12', 'Date' => $lastReprintDate->format('Ymd')]);
             }
         }
 
@@ -893,7 +876,7 @@ class Groschen implements ProductInterface
             'PriceTypeCode' => '05',
             'TaxIncluded' => false,
             'TaxRateCode' => 'Z',
-            'PriceGroup' => '0',
+            'PriceAmount' => $this->getPriceExcludingVat(),
         ]);
 
         // Supplier’s net price including tax
@@ -901,52 +884,31 @@ class Groschen implements ProductInterface
             'PriceTypeCode' => '07',
             'TaxIncluded' => true,
             'TaxRateCode' => 'S',
-            'PriceGroup' => '0i',
+            'PriceAmount' => $this->getPrice(),
         ]);
 
-        // Publishers retail price including tax
+        // Publishers recommended retail price including tax
         $priceTypes->push([
             'PriceTypeCode' => '42',
             'TaxIncluded' => true,
             'TaxRateCode' => 'S',
-            'PriceGroup' => '4i',
+            'PriceAmount' => floatval($this->product->publisherRetailPriceIncludingVat),
         ]);
 
         // Go through all Price Types
         foreach ($priceTypes as $priceType) {
-            // Price amount
-            $priceAmount = $this->getPriceForPriceGroup($priceType);
-
-            if (!is_null($priceAmount)) {
-                $prices->push([
-                    'PriceType' => $priceType['PriceTypeCode'],
-                    'PriceAmount' => $priceAmount,
-                    'Tax' => $this->getTaxElement($priceType),
-                    'CurrencyCode' => 'EUR',
-                    'Territory' => [
-                        'RegionsIncluded' => 'WORLD',
-                    ],
-                ]);
-            }
+            $prices->push([
+                'PriceType' => $priceType['PriceTypeCode'],
+                'PriceAmount' => $priceType['PriceAmount'],
+                'Tax' => $this->getTaxElement($priceType),
+                'CurrencyCode' => 'EUR',
+                'Territory' => [
+                    'RegionsIncluded' => 'WORLD',
+                ],
+            ]);
         }
 
         return $prices;
-    }
-
-    /**
-     * Get price for the given price group
-     * @param  array $priceType
-     * @return float|null
-     */
-    public function getPriceForPriceGroup($priceType)
-    {
-        foreach ($this->product->PriceList as $price) {
-            if ($price->PriceGroup === $priceType['PriceGroup']) {
-                return floatval($price->Salesprice);
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -956,23 +918,31 @@ class Groschen implements ProductInterface
      */
     public function getTaxElement($priceType)
     {
-        // Form VAT code
-        $vatCode = floatval(preg_replace('/\D/', '', $this->getLookupValue(75, $this->product->VATCode)));
-
         // Form taxable and tax amount
-        if ($priceType['TaxIncluded'] === true) {
-            $taxableAmount = $this->getPriceForPriceGroup($priceType) / (($this->getTaxRate() + 100) / 100);
-            $taxAmount = $this->getPriceForPriceGroup($priceType) - $taxableAmount;
-        } else {
-            $taxableAmount = $this->getPriceForPriceGroup($priceType);
-            $taxAmount = 0;
+        switch ($priceType['PriceTypeCode']) {
+            case '05':
+                $taxAmount = 0;
+                $taxableAmount = $this->getPriceExcludingVat();
+                break;
+            case '07':
+                $taxAmount = $this->getPrice() - $this->getPriceExcludingVat();
+                $taxableAmount = $this->getPriceExcludingVat();
+                break;
+            case '42':
+                $taxAmount = $this->product->publisherRetailPriceIncludingVat - $this->product->publisherRetailPrice;
+                $taxableAmount = $this->product->publisherRetailPrice;
+                break;
+            default:
+                $taxAmount = 0;
+                $taxableAmount = 0;
+                break;
         }
 
         return [
             'TaxType' => '01',
             'TaxRateCode' => $priceType['TaxRateCode'],
-            'TaxRatePercent' => $vatCode,
-            'TaxableAmount' => round($taxableAmount, 2),
+            'TaxRatePercent' => $this->getTaxRate(),
+            'TaxableAmount' => $taxableAmount,
             'TaxAmount' => round($taxAmount, 2),
         ];
     }
@@ -1011,15 +981,60 @@ class Groschen implements ProductInterface
 
         $searchResults = json_decode($response->getBody());
 
+        // Elvis uses mime types, so we need mapping table for ResourceVersionFeatureValue codelist
+        $mimeTypeToCodelistMapping = [
+            'application/pdf' => 'D401',
+            'image/gif' => 'D501',
+            'image/jpeg' => 'D502',
+            'image/png' => 'D503',
+            'image/tiff' => 'D504',
+        ];
+
         // Add cover image to collection
         foreach ($searchResults->hits as $hit) {
+            // Download the file for MD5/SHA checksums
+            $contents = file_get_contents($this->getAuthCredUrl($hit->originalUrl));
+
             $supportingResources->push([
                 'ResourceContentType' => '01',
                 'ContentAudience' => '00',
                 'ResourceMode' => '03',
                 'ResourceVersion' => [
                     'ResourceForm' => '02',
-                    'ResourceVersionFeatures' => $this->getResourceVersionFeatures($hit),
+                    'ResourceVersionFeatures' => [
+                        [
+                            'ResourceVersionFeatureType' => '01',
+                            'FeatureValue' => $mimeTypeToCodelistMapping[$hit->metadata->mimeType],
+                        ],
+                        [
+                            'ResourceVersionFeatureType' => '02',
+                            'FeatureValue' => $hit->metadata->height,
+                        ],
+                        [
+                            'ResourceVersionFeatureType' => '03',
+                            'FeatureValue' => $hit->metadata->width,
+                        ],
+                        [
+                            'ResourceVersionFeatureType' => '04',
+                            'FeatureValue' => $hit->metadata->filename,
+                        ],
+                        [
+                            'ResourceVersionFeatureType' => '05',
+                            'FeatureValue' => number_format($hit->metadata->fileSize->value / 1048576, 1),
+                        ],
+                        [
+                            'ResourceVersionFeatureType' => '06',
+                            'FeatureValue' => hash('md5', $contents),
+                        ],
+                        [
+                            'ResourceVersionFeatureType' => '07',
+                            'FeatureValue' => $hit->metadata->fileSize->value,
+                        ],
+                        [
+                            'ResourceVersionFeatureType' => '08',
+                            'FeatureValue' => hash('sha256', $contents),
+                        ],
+                    ],
                     'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl),
                 ],
             ]);
@@ -1053,11 +1068,8 @@ class Groschen implements ProductInterface
                         $url = $internetLink->Link;
                         break;
                     default:
-                        $resourceContentType = null;
-                        $resourceMode = null;
                         $url = null;
-                        break;
-                }
+                        break;}
 
                 // Add to Collection if URL exists
                 if (!empty($url)) {
@@ -1075,90 +1087,6 @@ class Groschen implements ProductInterface
         }
 
         return $supportingResources;
-    }
-
-    /**
-     * Returns the ResourceVersionFeatures for the given Elvis metadata hit
-     * @param  \stdClass $hit
-     * @return array
-     */
-    public function getResourceVersionFeatures($hit)
-    {
-        // Elvis uses mime types, so we need mapping table for ResourceVersionFeatureValue codelist
-        $mimeTypeToCodelistMapping = [
-            'application/pdf' => 'D401',
-            'image/gif' => 'D501',
-            'image/jpeg' => 'D502',
-            'image/png' => 'D503',
-            'image/tiff' => 'D504',
-        ];
-
-        // Download the file for MD5/SHA checksums
-        $contents = file_get_contents($this->getAuthCredUrl($hit->originalUrl));
-
-        // Pixel height/width, filename, download file size in megabytes, checksums and
-        $resourceVersionFeatures = [
-            [
-                'ResourceVersionFeatureType' => '01',
-                'FeatureValue' => $mimeTypeToCodelistMapping[$hit->metadata->mimeType],
-            ],
-            [
-                'ResourceVersionFeatureType' => '02',
-                'FeatureValue' => $hit->metadata->height,
-            ],
-            [
-                'ResourceVersionFeatureType' => '03',
-                'FeatureValue' => $hit->metadata->width,
-            ],
-            [
-                'ResourceVersionFeatureType' => '04',
-                'FeatureValue' => $hit->metadata->filename,
-            ],
-            [
-                'ResourceVersionFeatureType' => '05',
-                'FeatureValue' => number_format($hit->metadata->fileSize->value / 1048576, 1),
-            ],
-            [
-                'ResourceVersionFeatureType' => '06',
-                'FeatureValue' => hash('md5', $contents),
-            ],
-            [
-                'ResourceVersionFeatureType' => '07',
-                'FeatureValue' => $hit->metadata->fileSize->value,
-            ],
-            [
-                'ResourceVersionFeatureType' => '08',
-                'FeatureValue' => hash('sha256', $contents),
-            ],
-
-        ];
-
-        return $resourceVersionFeatures;
-    }
-
-    /**
-     * Get the related products
-     * @return Collection
-     */
-    public function getRelatedProducts()
-    {
-        $relatedProducts = new Collection;
-
-        if (isset($this->product->InternetInformation->RelatedProducts)) {
-            foreach ($this->product->InternetInformation->RelatedProducts as $relatedProduct) {
-                $relatedProducts->push([
-                    'ProductRelationCode' => '06',
-                    'ProductIdentifiers' => [
-                        [
-                            'ProductIDType' => '03',
-                            'IDValue' => intval($relatedProduct),
-                        ],
-                    ],
-                ]);
-            }
-        }
-
-        return $relatedProducts;
     }
 
     /**
@@ -1182,12 +1110,38 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the related products
+     * @return Collection
+     */
+    public function getRelatedProducts()
+    {
+        $relatedProducts = new Collection;
+
+        foreach ($this->workLevel->productions as $production) {
+            // Do not add current product
+            if ($production->isbn !== $this->productNumber) {
+                $relatedProducts->push([
+                    'ProductRelationCode' => '06',
+                    'ProductIdentifiers' => [
+                        [
+                            'ProductIDType' => '03',
+                            'IDValue' => $production->isbn,
+                        ],
+                    ],
+                ]);
+            }
+        }
+
+        return $relatedProducts;
+    }
+
+    /**
      * Get the products tax rate
      * @return float
      */
     public function getTaxRate()
     {
-        return floatval(preg_replace('/[^0-9]/', '', $this->getLookupValue(75, $this->product->VATCode)));
+        return floatval(preg_replace('/[^0-9]/', '', $this->product->taxCode->name));
     }
 
     /**
@@ -1225,174 +1179,6 @@ class Groschen implements ProductInterface
         }
 
         return 0;
-    }
-
-    /**
-     * Get the Schilling lookup value based on the domain and value
-     * @param  int $domain
-     * @param  string $value
-     * @return string|null
-     */
-    public function getLookupValue($domain, $value)
-    {
-        // Create Schilling lookup instance
-        $lookup = new Lookup(
-            config('groschen.schilling.hostname'),
-            config('groschen.schilling.port'),
-            config('groschen.schilling.username'),
-            config('groschen.schilling.password'),
-            config('groschen.schilling.company')
-        );
-
-        $lookupValue = $lookup->lookup(['DomainNumber' => $domain, 'KeyValue' => $value]);
-
-        if (empty($lookupValue)) {
-            return null;
-        }
-
-        return $lookupValue[0]->DataValue;
-    }
-
-    /**
-     * Get the Schilling lookup value based on the domain and value
-     * @param  int $domain
-     * @return array
-     */
-    public function getLookupValues($domain)
-    {
-        // Create Schilling lookup instance
-        $lookup = new Lookup(
-            config('groschen.schilling.hostname'),
-            config('groschen.schilling.port'),
-            config('groschen.schilling.username'),
-            config('groschen.schilling.password'),
-            config('groschen.schilling.company')
-        );
-
-        $lookupValue = $lookup->lookup(['DomainNumber' => $domain]);
-
-        return (empty($lookupValue)) ? null : $lookupValue->ReturnValue;
-    }
-    /**
-     * Get the marketing text from the latest print project
-     * @param  string $projectId
-     * @return string|null
-     */
-    public function getLatestMarketingText($projectId)
-    {
-        // Determine the latest project number
-        $latestPrintProject = $this->getLatestPrintProject($projectId);
-
-        // Fetch marketing texts
-        $schilling = new TextHandling(
-            config('groschen.schilling.hostname'),
-            config('groschen.schilling.port'),
-            config('groschen.schilling.username'),
-            config('groschen.schilling.password'),
-            config('groschen.schilling.company')
-        );
-
-        $texts = $schilling->getTextHandlings(['ProjectNumber' => $latestPrintProject]);
-
-        if (isset($texts->ReturnValue)) {
-            foreach ($texts->ReturnValue as $text) {
-                // Marketing text has TextType ID 44
-                if ($text->TextType->Id === '44') {
-                    $marketingText = $text->Text;
-                    break;
-                }
-            }
-        }
-
-        if (empty($marketingText)) {
-            return null;
-        }
-
-        // Clean HTML formattting
-        return $this->purifyHtml($marketingText);
-    }
-
-    /**
-     * Gets the given activity
-     * @param  string $projectNumber
-     * @param  string $activityNumber
-     * @return stdClass|null
-     */
-    public function getActivity($projectNumber, $activityNumber)
-    {
-        $schilling = new Project(
-            config('groschen.schilling.hostname'),
-            config('groschen.schilling.port'),
-            config('groschen.schilling.username'),
-            config('groschen.schilling.password'),
-            config('groschen.schilling.company')
-        );
-
-        $printProjects = $schilling->getProjects([
-            'ProjectNo' => $projectNumber,
-            'WithProductionPlan' => true,
-        ]);
-
-        if (count($printProjects) !== 1) {
-            return null;
-        }
-
-        foreach ($printProjects[0]->ProductionPlanList as $activity) {
-            if ($activity->ActivityNumber === $activityNumber) {
-                return $activity;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the latest print project for the given main project
-     * @param  string $projectId
-     * @return string|null
-     */
-    public function getLatestPrintProject($projectId)
-    {
-        // There is a bug in Schilling Web Services have a bug when using ProjectId as query parameter
-        // as it does return ProjectNo in the response. Use EditionPrintOverProject instead
-        $schilling = new Project(
-            config('groschen.schilling.hostname'),
-            config('groschen.schilling.port'),
-            config('groschen.schilling.username'),
-            config('groschen.schilling.password'),
-            config('groschen.schilling.company')
-        );
-
-        // Get the main project
-        $mainProject = $schilling->getProjects(['ProjectId' => $projectId])[0];
-
-        if (is_null($mainProject->EditionPrintOverProject)) {
-            return null;
-        }
-
-        $projectNumberWithoutSuffix = substr($mainProject->EditionPrintOverProject, 0, -2);
-
-        $printProjects = $schilling->getProjects([
-            'ProjectNoFrom' => $projectNumberWithoutSuffix . '01',
-            'ProjectNoTo' => $projectNumberWithoutSuffix . '99',
-        ]);
-
-        if (empty($printProjects)) {
-            return null;
-        }
-
-        // Create new array for ProjectNumbers
-        $projectNumbers = [];
-
-        if (is_array($printProjects)) {
-            $projectNumbers[] = $printProjects[0]->ProjectNo;
-        } else {
-            foreach ($printProjects->ReturnValue as $printProject) {
-                $projectNumbers[] = $printProject->ProjectNo;
-            }
-        }
-
-        return max($projectNumbers);
     }
 
     /**
@@ -1468,11 +1254,11 @@ class Groschen implements ProductInterface
             '51' => 'CGN004050',
         ];
 
-        if (!array_key_exists($this->product->SubGroup, $subGroupToBisacMapping)) {
+        if (!array_key_exists($this->product->subGroup->id, $subGroupToBisacMapping)) {
             return null;
         }
 
-        return $subGroupToBisacMapping[$this->product->SubGroup];
+        return $subGroupToBisacMapping[$this->product->subGroup->id];
     }
 
     /**
@@ -1536,11 +1322,11 @@ class Groschen implements ProductInterface
             '51' => 'FXA',
         ];
 
-        if (!array_key_exists($this->product->SubGroup, $subGroupToBicMapping)) {
+        if (!array_key_exists($this->product->subGroup->id, $subGroupToBicMapping)) {
             return null;
         }
 
-        return $subGroupToBicMapping[$this->product->SubGroup];
+        return $subGroupToBicMapping[$this->product->subGroup->id];
     }
 
     /**
@@ -1658,13 +1444,13 @@ class Groschen implements ProductInterface
         ];
 
         // Use different mapping for children and young adults
-        if (($this->product->MainGroup === 3 || $this->product->MainGroup === 4) && array_key_exists($this->product->SubGroup, $themaMappingTableChildren)) {
-            return $themaMappingTableChildren[$this->product->SubGroup];
+        if (($this->product->mainGroup->id === '3' || $this->product->mainGroup->id === '4') && array_key_exists($this->product->subGroup->id, $themaMappingTableChildren)) {
+            return $themaMappingTableChildren[$this->product->subGroup->id];
         }
 
         // Adults Thema mapping
-        if (array_key_exists($this->product->SubGroup, $themaMappingTableAdults)) {
-            return $themaMappingTableAdults[$this->product->SubGroup];
+        if (array_key_exists($this->product->subGroup->id, $themaMappingTableAdults)) {
+            return $themaMappingTableAdults[$this->product->subGroup->id];
         }
 
         return null;
@@ -1681,7 +1467,7 @@ class Groschen implements ProductInterface
 
         $response = $client->get('https://api.finna.fi/v1/search', [
             'query' => [
-                'lookfor' => $this->product->EAN,
+                'lookfor' => $this->product->isbn,
                 'filter[0]' => 'format:0/Book/',
                 'field[]' => 'subjectsExtended',
             ]]);
@@ -1721,14 +1507,12 @@ class Groschen implements ProductInterface
                         }
 
                         // Go through all the headings/subjects
-                        if (isset($subject->heading)) {
-                            foreach ($subject->heading as $heading) {
-                                $keywords[] = [
-                                    'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
-                                    'SubjectSchemeName' => $subjectSchemeName,
-                                    'SubjectCode' => $heading,
-                                ];
-                            }
+                        foreach ($subject->heading as $heading) {
+                            $keywords[] = [
+                                'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
+                                'SubjectSchemeName' => $subjectSchemeName,
+                                'SubjectCode' => $heading,
+                            ];
                         }
                     }
                 }
@@ -1740,30 +1524,15 @@ class Groschen implements ProductInterface
 
     /**
      * Get Finnish book trade categorisations - See http://www.onixkeskus.fi/onix/misc/popup.jsp?page=onix_help_subjectcategorisation
-     * @return array
+     * @return string|null
      */
-    public function getFinnishBookTradeCategorisations()
+    public function getFinnishBookTradeCategorisation()
     {
-        // Array holding the list of categorisation values
-        $categorisations = [];
-
-        // Get subject code
-        $subjectCode = $this->getLookupValue(293, $this->product->LiteratureGroup);
-
-        // Go through all the characters
-        for ($i = 0; $i <= strlen($subjectCode); $i++) {
-            $char = substr($subjectCode, $i, 1);
-
-            if (ctype_alpha($char) === true) {
-                $categorisations[] = [
-                    'SubjectSchemeIdentifier' => '73',
-                    'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus',
-                    'SubjectCode' => $char,
-                ];
-            }
+        if (isset($this->product->libraryCodePrefix)) {
+            return $this->product->libraryCodePrefix->id;
         }
 
-        return $categorisations;
+        return null;
     }
 
     /**
@@ -1790,8 +1559,8 @@ class Groschen implements ProductInterface
         ];
 
         // Return "Fiktiivisen aineiston lisäluokitus" if mapping exist and main group is not "Tietokirjallisuus" aka Non-fiction
-        if ($this->product->MainGroup !== '7' && array_key_exists($this->product->SubGroup, $mappingTable)) {
-            return $mappingTable[$this->product->SubGroup];
+        if ($this->product->mainGroup->name !== 'Tietokirjallisuus' && array_key_exists($this->product->subGroup->id, $mappingTable)) {
+            return $mappingTable[$this->product->subGroup->id];
         } else {
             return null;
         }
@@ -1814,8 +1583,8 @@ class Groschen implements ProductInterface
             '15+' => '5AQ', // Interest age: from c 14 years - Please note that the Thema qualifiers end on 14+, so we have to use that
         ];
 
-        if (array_key_exists($this->product->AgeGroup, $mappingTable)) {
-            return $mappingTable[$this->product->AgeGroup];
+        if (isset($this->product->interestAge) && array_key_exists($this->product->interestAge->id, $mappingTable)) {
+            return $mappingTable[$this->product->interestAge->id];
         } else {
             return null;
         }
@@ -1824,40 +1593,55 @@ class Groschen implements ProductInterface
     /**
      * Convert Schilling role to an Onix codelist 17: Contributor role code
      * @param  string $role
-     * @return string|null
+     * @return string
      */
     public function getContributorRole($role)
     {
-        // Mapping and role priorities
+        // Mapping Opus roles to Onix roles
         $roleMappings = [
-            'AUT' => 'A01',
-            'EIC' => 'B11',
-            'EDA' => 'B01',
-            'IND' => 'A34',
-            'PRE' => 'A15',
-            'FOR' => 'A23',
-            'INT' => 'A24',
-            'PRO' => 'A16',
-            'AFT' => 'A19',
-            'EPI' => 'A22',
-            'ILL' => 'A12',
-            'PHO' => 'A13',
-            'REA' => 'E07',
-            'TRA' => 'B06',
-            'GDE' => 'A36',
-            'CDE' => 'A36',
-            'COM' => 'A06',
-            'ARR' => 'B25',
-            'MAP' => 'A39',
-            'AST' => 'Z01',
-            'EDT' => 'B21',
+            '301' => 'A19', // Afterword
+            '302' => 'B25', // Arranged by
+            '303' => 'Z01', // Assistant
+            '304' => 'A01', // Author
+            '305' => 'A06', // Composer
+            //'306' => '', // Coordinator
+            //'307' => '', // Copy Writer
+            '308' => 'A36', // Cover design or artwork by
+            //'309' => '', // Editing author
+            '310' => 'B01', // Editor
+            '311' => 'B11', // Editor in Chief
+            '312' => 'A22', // Epilogue
+            '313' => 'A23', // Foreword
+            //'314' => '', // Freelancer
+            '315' => 'A11', // Graphic Designer
+            '316' => 'A12', // Illustrator
+            '317' => 'A34', // Index
+            '318' => 'A24', // Introduction
+            //'319' => '', // Layout
+            '320' => 'A39', // Maps
+            '321' => 'E08', // Performed by
+            //'322' => '', // Photo editor
+            '323' => 'A13', // Photographer
+            '324' => 'A15', // Preface
+            //'325' => '', // Production Planner
+            //'326' => '', // Project Manager
+            '327' => 'A16', // Prologue
+            //'328' => '', // Proof reader
+            '329' => 'E07', // Reader
+            //'330' => '', // Responsible person
+            //'331' => '', // Senior Editor
+            '332' => 'E05', // Singer
+            //'333' => '', // Specialist
+            '334' => 'B06', // Translator
+            //'335' => '', // Studio
+            //'336' => '', // Printer
         ];
 
-        if (!array_key_exists($role, $roleMappings)) {
+        if (array_key_exists($role, $roleMappings)) {
+            return $roleMappings[$role];
+        } else {
             return null;
         }
-
-        return $roleMappings[$role];
     }
 
     /**
@@ -1866,7 +1650,7 @@ class Groschen implements ProductInterface
      */
     public function isConfidential()
     {
-        return ($this->product->NotifyCode === 6) ? true : false;
+        return $this->product->listingCode->name === 'Development-Confidential';
     }
 
     /**
@@ -1875,9 +1659,8 @@ class Groschen implements ProductInterface
      */
     public function getCostCenter()
     {
-        // Product with 2 dimensions (cost center and EAN)
-        if (isset($this->product->Dimensions) && count($this->product->Dimensions) > 0) {
-            return intval($this->product->Dimensions[0]);
+        if (isset($this->product->costCenter)) {
+            return intval($this->product->costCenter->id);
         }
 
         return null;
@@ -1889,7 +1672,7 @@ class Groschen implements ProductInterface
      */
     public function getMediaType()
     {
-        return (empty($this->product->MediaType)) ? null : $this->product->MediaType;
+        return $this->getProductForm();
     }
 
     /**
@@ -1898,7 +1681,7 @@ class Groschen implements ProductInterface
      */
     public function getBindingCode()
     {
-        return (empty($this->product->BindingCode)) ? null : $this->product->BindingCode;
+        return $this->getProductFormDetail();
     }
 
     /**
@@ -1907,7 +1690,7 @@ class Groschen implements ProductInterface
      */
     public function getDiscountGroup()
     {
-        return (empty($this->product->DiscountGroup)) ? null : $this->product->DiscountGroup;
+        return (empty($this->product->discountNumber)) ? null : $this->product->discountNumber;
     }
 
     /**
@@ -1916,20 +1699,16 @@ class Groschen implements ProductInterface
      */
     public function getStatusCode()
     {
-        return intval($this->product->NotifyCode);
+        return intval($this->product->listingCode->customProperties->schillingId_1001);
     }
 
     /**
      * Get the number of products in the series
-     * @return int|null
+     * @return void
      */
     public function getProductsInSeries()
     {
-        if (!empty($this->product->BookSeries) && $this->product->PartsInSeries > 0) {
-            return intval($this->product->PartsInSeries);
-        }
-
-        return null;
+        return (empty($this->product->numberInSeries)) ? null : intval($this->product->numberInSeries);
     }
 
     /**
@@ -1938,7 +1717,7 @@ class Groschen implements ProductInterface
      */
     public function isImmaterial()
     {
-        return ($this->product->PlanningCode === 'y') ? true : false;
+        return ($this->product->dispositionCode->id === 'y') ? true : false;
     }
 
     /**
@@ -1947,7 +1726,7 @@ class Groschen implements ProductInterface
      */
     public function isPrintOnDemand()
     {
-        return ($this->product->NotifyCode === 8) ? true : false;
+        return $this->product->listingCode->name === 'Short run';
     }
 
     /**
@@ -1956,7 +1735,7 @@ class Groschen implements ProductInterface
      */
     public function getInternalProdNo()
     {
-        return (!empty($this->product->InternalProdNo)) ? $this->product->InternalProdNo : null;
+        return $this->product->isbn;
     }
 
     /**
@@ -1965,7 +1744,7 @@ class Groschen implements ProductInterface
      */
     public function getCustomsNumber()
     {
-        return (!empty($this->product->CustomsNumber)) ? intval($this->product->CustomsNumber) : null;
+        return intval($this->product->customsNumber);
     }
 
     /**
@@ -1974,7 +1753,16 @@ class Groschen implements ProductInterface
      */
     public function getLibraryClass()
     {
-        return $this->getLookupValue(293, $this->product->LiteratureGroup);
+        // If both prefix and library code are set
+        if (isset($this->product->libraryCodePrefix) && isset($this->product->libraryCode)) {
+            return $this->product->libraryCodePrefix->id . $this->product->libraryCode->id;
+        }
+
+        if (isset($this->product->libraryCode)) {
+            return $this->product->libraryCode->id;
+        }
+
+        return null;
     }
 
     /**
@@ -1983,34 +1771,11 @@ class Groschen implements ProductInterface
      */
     public function getMarketingCategory()
     {
-        // Get the latest print project attached to the product
-        $projectNumber = $this->getLatestPrintProject($this->product->ProjectId);
-
-        // Fetch project
-        $schilling = new Project(
-            config('groschen.schilling.hostname'),
-            config('groschen.schilling.port'),
-            config('groschen.schilling.username'),
-            config('groschen.schilling.password'),
-            config('groschen.schilling.company')
-        );
-
-        $project = $schilling->getProjects(['ProjectNo' => $projectNumber])[0];
-
-        if (empty($project->BookDataGroup)) {
-            return null;
+        if (isset($this->product->effortType)) {
+            return $this->product->effortType->name;
         }
 
-        // Don't return those with "Do not use" group
-        switch ($project->BookDataGroup) {
-            case '1':
-            case '5':
-                return $this->getLookupValue(563, $project->BookDataGroup);
-                break;
-            default:
-                return null;
-                break;
-        }
+        return null;
     }
 
     /**
@@ -2019,11 +1784,106 @@ class Groschen implements ProductInterface
      */
     public function getSalesSeason()
     {
-        if (empty($this->product->ReviewCycle)) {
+        if (!isset($this->product->seasonYear)) {
             return null;
         }
 
-        return $this->getLookupValue(580, $this->product->ReviewCycle);
+        // Form sales period
+        switch ($this->product->seasonPeriod->name) {
+            case 'Höst':
+                $period = 2;
+                break;
+            case 'Spring':
+                $period = 1;
+                break;
+        }
+
+        return $this->product->seasonYear->name . '/' . $period;
+    }
+
+    /**
+     * Get the products audience groups
+     * @return Collection
+     */
+    public function getAudiences()
+    {
+        // Collection for audiences
+        $audiences = new Collection;
+
+        // If no age group defined, General/trade
+        if (!isset($this->product->interestAge)) {
+            $audienceCodeValue = '01'; // General/trade
+        } else {
+            // Map the age group to Audience
+            switch ($this->product->interestAge->name) {
+                case '0+':
+                case '3+':
+                case '5+':
+                case '7+':
+                case '9+':
+                case '10+':
+                case '12+':
+                    $audienceCodeValue = '02'; // Children/juvenile
+                    break;
+                case '15+':
+                    $audienceCodeValue = '03'; // Young adult
+                    break;
+            }
+        }
+
+        $audiences->push(['AudienceCodeType' => '01', 'AudienceCodeValue' => $audienceCodeValue]);
+
+        return $audiences;
+    }
+
+    /**
+     * Get the products AudienceRanges
+     * @return Collection
+     */
+    public function getAudienceRanges()
+    {
+        // Collection for audience ranges
+        $audienceRanges = new Collection;
+
+        $interestAges = [
+            '0+',
+            '3+',
+            '5+',
+            '7+',
+            '9+',
+            '10+',
+            '12+',
+            '15+',
+        ];
+
+        if (!empty($this->product->interestAge) && in_array($this->product->interestAge->name, $interestAges)) {
+
+            $fromAge = $this->product->interestAge->name;
+
+            // Calculate to based on the current and next index
+            if ($this->product->interestAge->name !== '15+') {
+                $index = array_search($fromAge, $interestAges);
+                $toAge = $interestAges[$index + 1];
+            } else {
+                $toAge = 18;
+            }
+
+            $audienceRanges->push([
+                'AudienceRangeQualifier' => 17,
+                'AudienceRangeScopes' => [
+                    [
+                        'AudienceRangePrecision' => '03', // From
+                        'AudienceRangeValue' => intval($fromAge),
+                    ],
+                    [
+                        'AudienceRangePrecision' => '04', // To
+                        'AudienceRangeValue' => intval($toAge),
+                    ],
+                ],
+            ]);
+        }
+
+        return $audienceRanges;
     }
 
     /**
@@ -2032,14 +1892,42 @@ class Groschen implements ProductInterface
      */
     public function getLatestStockArrivalDate()
     {
-        $latestPrintProject = $this->getLatestPrintProject($this->product->ProjectId);
-        $activity = $this->getActivity($latestPrintProject, '02.07');
-
-        if (!is_null($activity)) {
-            return DateTime::createFromFormat('Y-m-d*H:i:s', $activity->ExpectedEnd);
+        foreach ($this->product->activePrint->timePlan->entries as $timeplan) {
+            if ($timeplan->type->name === 'Delivery to warehouse') {
+                return DateTime::createFromFormat('Y-m-d*H:i:s', $timeplan->planned);
+            }
         }
 
         return null;
+    }
+
+    /**
+     * Get the latest print number
+     * @return int|null
+     */
+    public function getLatestPrintNumber()
+    {
+        if (!isset($this->product->activePrint->printNumber)) {
+            return null;
+        }
+
+        return $this->product->activePrint->printNumber;
+    }
+
+    /**
+     * Is the product allowed for subscription?
+     * @return boolean
+     */
+    public function isSubscriptionProduct()
+    {
+        // First take only subscription and then those have distribution rights
+        $exportRules = collect($this->product->exportRules)->filter(function ($exportRule) {
+            return $exportRule->salesType->name === 'Subscription';
+        })->filter(function ($exportRule) {
+            return $exportRule->hasDistribution === true;
+        });
+
+        return $exportRules->count() > 0;
     }
 
     /**
@@ -2059,28 +1947,4 @@ class Groschen implements ProductInterface
         return $salesRestrictions;
     }
 
-    /**
-     * Is the product allowed for subscription?
-     * @return boolean
-     */
-    public function isSubscriptionProduct()
-    {
-        return (bool) $this->product->AllowSubscriptionInvoicing;
-    }
-
-    /**
-     * Get the latest print number
-     * @return int|null
-     */
-    public function getLatestPrintNumber()
-    {
-        $projectId = $this->getProductInformation()->ProjectId;
-        $projectNumber = $this->getLatestPrintProject($projectId);
-
-        if (empty($projectNumber)) {
-            return null;
-        }
-
-        return intval(substr($projectNumber, -2));
-    }
 }

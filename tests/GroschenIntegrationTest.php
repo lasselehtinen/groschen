@@ -14,6 +14,7 @@ class GroschenIntegrationTest extends TestCase
         parent::setUp();
 
         $groschen = new Groschen('9789510366264');
+
         $this->groschen = $groschen;
     }
 
@@ -38,12 +39,6 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['ProductIDType' => '01', 'id_type_name' => 'Bonnier Books Finland - Internal product number', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
         $this->assertContains(['ProductIDType' => '03', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
         $this->assertContains(['ProductIDType' => '15', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
-
-        // Product without valid GTIN/EAN/ISBN13
-        $groschen = new Groschen('80000003');
-        $this->assertContains(['ProductIDType' => '01', 'id_type_name' => 'Bonnier Books Finland - Internal product number', 'id_value' => 80000003], $groschen->getProductIdentifiers());
-        $this->assertFalse($groschen->getProductIdentifiers()->contains('ProductIDType', '03'));
-        $this->assertFalse($groschen->getProductIdentifiers()->contains('ProductIDType', '15'));
     }
 
     /**
@@ -54,70 +49,93 @@ class GroschenIntegrationTest extends TestCase
     {
         // Normal trade item
         $this->assertSame('00', $this->groschen->getProductComposition());
-
-        // Trade-only product
-        $groschen = new Groschen('6416889067166');
-        $this->assertSame('20', $groschen->getProductComposition());
     }
 
     /**
-     * Test getting products form
+     * Test getting products form and product form detail
      * @return void
      */
-    public function testGettingProductForm()
+    public function testGettingProductFormAndProductFormDetail()
     {
-        // Hardcover
-        $this->assertSame('BB', $this->groschen->getProductForm());
+        // Hardback
+        $groschen = new Groschen('9789510405314');
+        $this->assertSame('BB', $groschen->getProductForm());
+        $this->assertNull($groschen->getProductFormDetail());
 
-        // E-book mapping for Bokinfo
-        $groschen = new Groschen('9789510365250');
-        $this->assertSame('EA', $groschen->getProductForm());
-
-        // Kit mapping for Bokinfo
-        $groschen = new Groschen('9789513167349');
+        // Saddle-stitched
+        $groschen = new Groschen('9789513173968');
         $this->assertSame('BF', $groschen->getProductForm());
-
-        // MP3-CD mapping for Bokinfo
-        $groschen = new Groschen('9789510417591');
-        $this->assertSame('AC', $groschen->getProductForm());
-
-        // Product without media type should return null
-        $groschen = new Groschen('9789513154097');
-        $this->assertNull($groschen->getProductForm());
-    }
-
-    /**
-     * Test getting products form detail
-     * @return void
-     */
-    public function testGettingFormDetail()
-    {
-        // Hardcover does not have product form detail
-        $this->assertNull($this->groschen->getProductFormDetail());
+        $this->assertNull($groschen->getProductFormDetail());
 
         // Pocket book
-        $groschen = new Groschen('9789510366752');
+        $groschen = new Groschen('9789510362938');
+        $this->assertSame('BC', $groschen->getProductForm());
         $this->assertSame('B104', $groschen->getProductFormDetail());
 
-        // Nokia Ovi ebook
-        $groschen = new Groschen('9789510358535');
-        $this->assertSame('E136', $groschen->getProductFormDetail());
+        // Spiral bound
+        $groschen = new Groschen('9789513147013');
+        $this->assertSame('BE', $groschen->getProductForm());
+        $this->assertNull($groschen->getProductFormDetail());
 
-        // iPhone / iPad
-        $groschen = new Groschen('9789510392263');
-        $this->assertSame('E134', $groschen->getProductFormDetail());
+        // Flex
+        $groschen = new Groschen('9789510425855');
+        $this->assertSame('BC', $groschen->getProductForm());
+        $this->assertSame('B116', $groschen->getProductFormDetail());
 
-        // iPhone / iPad
-        $groschen = new Groschen('9789510394335');
-        $this->assertSame('E134', $groschen->getProductFormDetail());
+        // Trade paperback or "Jättipokkari"
+        $groschen = new Groschen('9789520403072');
+        $this->assertSame('BC', $groschen->getProductForm());
+        $this->assertSame('B106', $groschen->getProductFormDetail());
 
-        // ePub 3
-        $groschen = new Groschen('9789510428627');
+        // Board book
+        $groschen = new Groschen('9789521609336');
+        $this->assertSame('BH', $groschen->getProductForm());
+        $this->assertNull($groschen->getProductFormDetail());
+
+        // ePub2
+        $groschen = new Groschen('9789513199388');
+        $this->assertSame('ED', $groschen->getProductForm());
         $this->assertSame('E101', $groschen->getProductFormDetail());
 
-        // Picture-audio book
-        $groschen = new Groschen('9789510429358');
-        $this->assertSame('A302', $groschen->getProductFormDetail());
+        // ePub3
+        $groschen = new Groschen('9789510428788');
+        $this->assertSame('ED', $groschen->getProductForm());
+        $this->assertSame('W993', $groschen->getProductFormDetail());
+
+        // Application
+        $groschen = new Groschen('9789510392263');
+        $this->assertSame('ED', $groschen->getProductForm());
+        $this->assertNull($groschen->getProductFormDetail());
+
+        // Downloadable audio file
+        $groschen = new Groschen('9789510428412');
+        $this->assertSame('AJ', $groschen->getProductForm());
+        $this->assertSame('A103', $groschen->getProductFormDetail());
+
+        // CD
+        $groschen = new Groschen('9789510379110');
+        $this->assertSame('AC', $groschen->getProductForm());
+        $this->assertNull($groschen->getProductFormDetail());
+
+        // MP3-CD
+        $groschen = new Groschen('9789520402983');
+        $this->assertSame('AE', $groschen->getProductForm());
+        $this->assertSame('A103', $groschen->getProductFormDetail());
+
+        // Paperback
+        $groschen = new Groschen('9789510382745');
+        $this->assertSame('BC', $groschen->getProductForm());
+        $this->assertNull($groschen->getProductFormDetail());
+
+        // Picture-and-audio book
+        $groschen = new Groschen('9789510429945');
+        $this->assertSame('ED', $groschen->getProductForm());
+        $this->assertSame('W994', $groschen->getProductFormDetail());
+
+        // Other audio format
+        $groschen = new Groschen('9789510232644');
+        $this->assertSame('AZ', $groschen->getProductForm());
+        $this->assertNull($groschen->getProductFormDetail());
     }
 
     /**
@@ -140,17 +158,37 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products collections/series
+     * @see https://bonnierforlagen.tpondemand.com/entity/3015-clean-up-series-and-move-some
      * @return void
      */
     public function testGettingCollections()
     {
+        $this->markTestIncomplete();
+
         $this->assertFalse($this->groschen->getCollections()->contains('CollectionType', '10'));
 
-        // Product with series
-        $groschen = new Groschen('9789510400432');
+        // Product with bibliographical series
+        $groschen = new Groschen('9789510424810');
 
         $collection = [
             'CollectionType' => '10', [
+                'TitleDetail' => [
+                    'TitleType' => '01',
+                    'TitleElement' => [
+                        'TitleElementLevel' => '01',
+                        'TitleText' => 'Calendar Girl',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertContains($collection, $groschen->getCollections());
+
+        // Product with marketing series
+        $groschen = new Groschen('9789510400432');
+
+        $collection = [
+            'CollectionType' => '11', [
                 'TitleDetail' => [
                     'TitleType' => '01',
                     'TitleElement' => [
@@ -194,10 +232,13 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting title details
+     * @see https://bonnierforlagen.tpondemand.com/entity/3428-original-title-is-missing-from-work
      * @return void
      */
     public function testGettingTitleDetails()
     {
+        $this->markTestIncomplete();
+
         $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
         $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
 
@@ -224,19 +265,10 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingContributors()
     {
-        // Product without any stakeholder
-        $groschen = new Groschen('6430060030077');
-        $this->assertSame(0, $groschen->getContributors()->count());
-
         // Author
         $author = [
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'NameIdentifier' => [
-                'NameIDType' => '01',
-                'IDTypeName' => 'Creditor number',
-                'IDValue' => '20001267',
-            ],
             'PersonNameInverted' => 'Kyrö, Tuomas',
             'NamesBeforeKey' => 'Tuomas',
             'KeyNames' => 'Kyrö',
@@ -247,18 +279,16 @@ class GroschenIntegrationTest extends TestCase
         // Graphic designer
         $graphicDesigner = [
             'SequenceNumber' => 2,
-            'ContributorRole' => 'A36',
-            'NameIdentifier' => [
-                'NameIDType' => '01',
-                'IDTypeName' => 'Creditor number',
-                'IDValue' => '20005894',
-            ],
+            'ContributorRole' => 'A11',
             'PersonNameInverted' => 'Tuominen, Mika',
             'NamesBeforeKey' => 'Mika',
             'KeyNames' => 'Tuominen',
         ];
 
         $this->assertContains($graphicDesigner, $this->groschen->getContributors());
+
+        // These two should be to only contributors
+        $this->assertCount(2, $this->groschen->getContributors(false));
 
         // Product with confidential resource
         $groschen = new Groschen('9789513176457');
@@ -278,11 +308,6 @@ class GroschenIntegrationTest extends TestCase
         $firstAuthor = [
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'NameIdentifier' => [
-                'NameIDType' => '01',
-                'IDTypeName' => 'Creditor number',
-                'IDValue' => '20000034',
-            ],
             'PersonNameInverted' => 'Aho, Tuulia',
             'NamesBeforeKey' => 'Tuulia',
             'KeyNames' => 'Aho',
@@ -294,11 +319,6 @@ class GroschenIntegrationTest extends TestCase
         $secondAuthor = [
             'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
-            'NameIdentifier' => [
-                'NameIDType' => '01',
-                'IDTypeName' => 'Creditor number',
-                'IDValue' => '20001253',
-            ],
             'PersonNameInverted' => 'Kurjenluoma, Minna',
             'NamesBeforeKey' => 'Minna',
             'KeyNames' => 'Kurjenluoma',
@@ -320,11 +340,6 @@ class GroschenIntegrationTest extends TestCase
         $firstAuthor = [
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'NameIdentifier' => [
-                'NameIDType' => '01',
-                'IDTypeName' => 'Creditor number',
-                'IDValue' => '20006825',
-            ],
             'PersonNameInverted' => 'Aarnio, Jari',
             'NamesBeforeKey' => 'Jari',
             'KeyNames' => 'Aarnio',
@@ -336,11 +351,6 @@ class GroschenIntegrationTest extends TestCase
         $secondAuthor = [
             'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
-            'NameIdentifier' => [
-                'NameIDType' => '01',
-                'IDTypeName' => 'Creditor number',
-                'IDValue' => '20000867',
-            ],
             'PersonNameInverted' => 'Hänninen, Vepe',
             'NamesBeforeKey' => 'Vepe',
             'KeyNames' => 'Hänninen',
@@ -359,12 +369,7 @@ class GroschenIntegrationTest extends TestCase
 
         $editor = [
             'SequenceNumber' => 3,
-            'ContributorRole' => 'B21',
-            'NameIdentifier' => [
-                'NameIDType' => '01',
-                'IDTypeName' => 'Resource ID',
-                'IDValue' => 'SAMKNU',
-            ],
+            'ContributorRole' => 'B01',
             'PersonNameInverted' => 'Knuuti, Samuli',
             'NamesBeforeKey' => 'Samuli',
             'KeyNames' => 'Knuuti',
@@ -401,10 +406,13 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products extents
+     * @see  https://bonnierforlagen.tpondemand.com/entity/3431-audio-book-duration-is-not-converted
      * @return void
      */
     public function testGettingExtents()
     {
+        $this->markTestIncomplete();
+
         $this->assertContains(['ExtentType' => '00', 'ExtentValue' => '128', 'ExtentUnit' => '03'], $this->groschen->getExtents());
         $this->assertCount(1, $this->groschen->getExtents());
 
@@ -414,7 +422,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Audio book with duration
         $groschen = new Groschen('9789513194642');
-        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '0092933', 'ExtentUnit' => '16'], $groschen->getExtents());
+        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '00930', 'ExtentUnit' => '15'], $groschen->getExtents());
         $this->assertCount(1, $groschen->getExtents());
     }
 
@@ -425,17 +433,13 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingTextContents()
     {
         // Check that we can find text
-        $this->assertCount(1, $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00'));
+        //$this->assertCount(1, $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00'));
 
         // Check that text contains string
-        $this->assertContains('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
+        ///$this->assertContains('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
 
         // Product without text
         $groschen = new Groschen('9789510343135');
-        $this->assertFalse($groschen->getTextContents()->contains('TextType', '03'));
-
-        // Product without texts return value in the SOAP response
-        $groschen = new Groschen('9789510403969');
         $this->assertFalse($groschen->getTextContents()->contains('TextType', '03'));
     }
 
@@ -450,10 +454,13 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products weight
+     * @see https://bonnierforlagen.tpondemand.com/entity/3435-measurements-and-weight-are-not-converted
      * @return void
      */
     public function testGettingMeasures()
     {
+        $this->markTestIncomplete();
+
         $this->assertContains(['MeasureType' => '01', 'Measurement' => 204, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
         $this->assertContains(['MeasureType' => '02', 'Measurement' => 136, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
         $this->assertContains(['MeasureType' => '03', 'Measurement' => 14, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
@@ -482,7 +489,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FBA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;novellit;pakinat;monologit;eläkeläiset;mielipiteet;pessimismi;miehet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
@@ -490,13 +497,12 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sota;kokemukset;sotilaat;sotilaat;mielenterveys;mielenterveyshäiriöt;sota;traumat;sota;traumaperäinen stressireaktio;sotilaat;psykiatrinen hoito;sotilaat;sotilaspsykiatria;psykiatria;sota;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;1939-1945;Suomi;sota;kokemukset;sotilaat;sotilaat;mielenterveys;mielenterveyshäiriöt;sota;traumat;sota;traumaperäinen stressireaktio;sotilaat;psykiatrinen hoito;sotilaat;sotilaspsykiatria;psykiatria;sota;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;1939-1945;Suomi;sotarintama;sota;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sota;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;Suomi;1939-1945;kirjallisuuspalkinnot;Tieto-Finlandia;2013'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
         $subjects = $groschen->getSubjects();
-
-        $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => 'N84.2'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => 'Käännetty L&N'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => 'Scifi'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC028000'], $subjects);
@@ -507,7 +513,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => '5AN'], $subjects);
 
         // Product without library class
-        $groschen = new Groschen('9789510353189');
+        $groschen = new Groschen('9789510427057');
         $subjects = $groschen->getSubjects();
         $this->assertNotContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => ''], $subjects);
 
@@ -620,8 +626,8 @@ class GroschenIntegrationTest extends TestCase
         // Normal WSOY product
         $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner Söderström Osakeyhtiö'], $this->groschen->getPublishers());
 
-        // WSOY marketing product
-        $groschen = new Groschen('6430060030275');
+        // Johnny Kniga product
+        $groschen = new Groschen('9789510405314');
         $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner Söderström Osakeyhtiö'], $groschen->getPublishers());
 
         // Normal Tammi product
@@ -630,10 +636,6 @@ class GroschenIntegrationTest extends TestCase
 
         // Manga product
         $groschen = new Groschen('9789521619779');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
-
-        // Tammi marketing product
-        $groschen = new Groschen('6430061220026');
         $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
     }
 
@@ -647,7 +649,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(0, $this->groschen->getImprints());
 
         // Johnny Kniga (imprint of WSOY)
-        $groschen = new Groschen('9789510379325');
+        $groschen = new Groschen('9789510405314');
         $this->assertContains(['ImprintName' => 'Johnny Kniga'], $groschen->getImprints());
     }
 
@@ -665,19 +667,19 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('02', $groschen->getPublishingStatus());
 
         // Exclusive sales
-        $groschen = new Groschen('6430027858348');
+        $groschen = new Groschen('9789513197506');
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Sold out
-        $groschen = new Groschen('6416889067166');
+        $groschen = new Groschen('9789510324370');
         $this->assertSame('07', $groschen->getPublishingStatus());
 
         // Development-confidential
-        $groschen = new Groschen('6430060030169');
+        $groschen = new Groschen('9789510426159');
         $this->assertSame('00', $groschen->getPublishingStatus());
 
         // Cancelled
-        $groschen = new Groschen('6417892033025');
+        $groschen = new Groschen('9789513189556');
         $this->assertSame('01', $groschen->getPublishingStatus());
 
         // POD / shortrun
@@ -691,12 +693,15 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products publishing dates
+     * @see  https://bonnierforlagen.tpondemand.com/entity/3421-publication-date-is-picked-from-wrong
      * @return void
      */
     public function testGettingPublishingDates()
     {
         // Publishing date
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20100601'], $this->groschen->getPublishingDates());
+
+        $this->markTestIncomplete();
 
         // Latest reprint
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());
@@ -713,10 +718,13 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting latest reprint date
+     * @see  https://bonnierforlagen.tpondemand.com/entity/3422-dates-and-print-runs-are-missing
      * @return void
      */
     public function testGettingLatestStockArrivalDate()
     {
+        $this->markTestIncomplete();
+
         // Product with only one print
         $groschen = new Groschen('9789510401514');
         $expectedArrivalDate = new DateTime('2013-05-13');
@@ -739,10 +747,6 @@ class GroschenIntegrationTest extends TestCase
 
         $groschen = new Groschen('9789510355763');
         $this->assertSame(1, $groschen->getLatestPrintNumber());
-
-        // Product without project should return
-        $groschen = new Groschen('6430027858379');
-        $this->assertNull($groschen->getLatestPrintNumber());
     }
 
     /**
@@ -751,14 +755,14 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPrices()
     {
-        // Supplier’s net price excluding tax
+        // Suppliers net price excluding tax
         $suppliersNetPriceExcludingTax = [
             'PriceType' => '05',
             'PriceAmount' => 16.25,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'Z',
-                'TaxRatePercent' => 10,
+                'TaxRatePercent' => 10.0,
                 'TaxableAmount' => 16.25,
                 'TaxAmount' => 0,
             ],
@@ -768,14 +772,14 @@ class GroschenIntegrationTest extends TestCase
             ],
         ];
 
-        // Supplier’s net price including tax
+        // Suppliers net price including tax
         $suppliersNetPriceIncludingTax = [
             'PriceType' => '07',
             'PriceAmount' => 17.88,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 10,
+                'TaxRatePercent' => 10.0,
                 'TaxableAmount' => 16.25,
                 'TaxAmount' => 1.63,
             ],
@@ -795,6 +799,8 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPricesForProductWithMissingPrice()
     {
+        $this->markTestIncomplete();
+
         $groschen = new Groschen('9789510353318');
 
         // RRP excluding tax
@@ -831,7 +837,7 @@ class GroschenIntegrationTest extends TestCase
         // Publishers recommended retail price including tax
         $publishersRecommendedRetailPriceIncludingTax = [
             'PriceType' => '42',
-            'PriceAmount' => 25,
+            'PriceAmount' => 25.00,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
@@ -903,16 +909,19 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains($supportingResource, $this->groschen->getSupportingResources());
 
         // Product without cover image
-        $groschen = new Groschen('6430060030237');
+        $groschen = new Groschen('9789510377161');
         $this->assertCount(0, $groschen->getSupportingResources());
     }
 
     /**
      * Test getting audio sample links to Soundcloud
+     * @see https://bonnierforlagen.tpondemand.com/entity/3444-external-links-are-missing
      * @return void
      */
     public function testGettingExternalLinksInSupportingResources()
     {
+        $this->markTestIncomplete();
+
         // Product with links to multiple external sources
         $groschen = new Groschen('9789510409749');
 
@@ -983,7 +992,7 @@ class GroschenIntegrationTest extends TestCase
         }
 
         // Product without any relations
-        $groschen = new Groschen('6430060030237');
+        $groschen = new Groschen('9789513160753');
         $this->assertCount(0, $groschen->getRelatedProducts());
     }
 
@@ -996,7 +1005,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertFalse($this->groschen->isConfidential());
 
         // Development-confidential
-        $groschen = new Groschen('6430060030169');
+        $groschen = new Groschen('9789510426159');
         $this->assertTrue($groschen->isConfidential());
     }
 
@@ -1009,16 +1018,8 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame(301, $this->groschen->getCostCenter());
 
         // Some other cost center
-        $groschen = new Groschen('6430060030169');
+        $groschen = new Groschen('9789513161873');
         $this->assertSame(902, $groschen->getCostCenter());
-
-        // Cancelled product which does not have cost center
-        $groschen = new Groschen('9789510418666');
-        $this->assertNull($groschen->getCostCenter());
-
-        // Product with only one dimension
-        $groschen = new Groschen('6417892033018');
-        $this->assertSame(350, $groschen->getCostCenter());
     }
 
     /**
@@ -1032,10 +1033,6 @@ class GroschenIntegrationTest extends TestCase
         // Some other cost center
         $groschen = new Groschen('9789510343203');
         $this->assertSame('AJ', $groschen->getMediaType());
-
-        // Cancelled product which does not have media type
-        $groschen = new Groschen('9789510418666');
-        $this->assertNull($groschen->getMediaType());
     }
 
     /**
@@ -1073,7 +1070,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame(2, $this->groschen->getStatusCode());
 
         // Product with a different status code
-        $groschen = new Groschen('6430060030169');
+        $groschen = new Groschen('9789510426159');
         $this->assertSame(6, $groschen->getStatusCode());
     }
 
@@ -1083,7 +1080,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingProductsInSeries()
     {
-        $this->assertNull($this->groschen->getProductsInSeries());
+        //$this->assertNull($this->groschen->getProductsInSeries());
 
         // Product with four products in the serie
         $groschen = new Groschen('9789521610165');
@@ -1109,7 +1106,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testCheckingIfProductIsPrintOnDemand()
     {
-        $this->assertFalse($this->groschen->isPrintOnDemand());
+        //$this->assertFalse($this->groschen->isPrintOnDemand());
 
         // POD product
         $groschen = new Groschen('9789513170585');
@@ -1124,10 +1121,6 @@ class GroschenIntegrationTest extends TestCase
     {
         // Should be same as GTIN
         $this->assertSame('9789510366264', $this->groschen->getInternalProdNo());
-
-        // Old marketing product
-        $groschen = new Groschen('80000003');
-        $this->assertSame('533632', $groschen->getInternalProdNo());
     }
 
     /**
@@ -1156,7 +1149,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('L84.2', $groschen->getLibraryClass());
 
         // Product where product does not have library class
-        $groschen = new Groschen('9789510809556');
+        $groschen = new Groschen('9789521606700');
         $this->assertNull($groschen->getLibraryClass());
     }
 
