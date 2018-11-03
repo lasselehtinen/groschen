@@ -618,6 +618,27 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting the products publisher
+     * @return void
+     */
+    public function testGettingTheProductsPublisher() {
+        // Normal WSOY product
+        $this->assertSame('Werner Söderström Osakeyhtiö', $this->groschen->getPublisher());
+
+        // Johnny Kniga product
+        $groschen = new Groschen('9789510405314');
+        $this->assertSame('Werner Söderström Osakeyhtiö', $groschen->getPublisher());
+
+        // Normal Tammi product
+        $groschen = new Groschen('9789513179564');
+        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublisher());
+
+        // Manga product
+        $groschen = new Groschen('9789521619779');
+        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublisher());
+    }
+
+    /**
      * Test getting the products publisher(s)
      * @return void
      */
@@ -1231,6 +1252,10 @@ class GroschenIntegrationTest extends TestCase
 
         // Digital product
         $groschen = new Groschen('9789510435199');
+        $this->assertSame(24.00, $groschen->getTaxRate());
+
+        // Opus issue with VAT
+        $groschen = new Groschen('9789510384725');
         $this->assertSame(24.00, $groschen->getTaxRate());
     }
 }

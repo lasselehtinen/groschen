@@ -518,18 +518,15 @@ class Groschen implements ProductInterface
      */
     public function getPublisher()
     {
-        switch ($this->product->Owner) {
-            case '1':
-            case '3':
+        switch ($this->product->publishingHouse->name) {
+            case 'WSOY':
                 return 'Werner Söderström Osakeyhtiö';
                 break;
-            case '2:':
-            case '4:':
-            case '5:':
+            case 'Tammi':
                 return 'Kustannusosakeyhtiö Tammi';
                 break;
             default:
-                throw new Exception('No mapping for publisher exists.');
+                return $this->product->publishingHouse->name;
                 break;
         }
     }
@@ -779,20 +776,8 @@ class Groschen implements ProductInterface
     {
         $publishers = new Collection;
 
-        switch ($this->product->publishingHouse->name) {
-            case 'WSOY':
-                $publisherName = 'Werner Söderström Osakeyhtiö';
-                break;
-            case 'Tammi':
-                $publisherName = 'Kustannusosakeyhtiö Tammi';
-                break;
-            default:
-                $publisherName = $this->product->publishingHouse->name;
-                break;
-        }
-
         // Add main publisher
-        $publishers->push(['PublishingRole' => '01', 'PublisherName' => $publisherName]);
+        $publishers->push(['PublishingRole' => '01', 'PublisherName' => $this->getPublisher()]);
 
         return $publishers;
     }
