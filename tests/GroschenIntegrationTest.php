@@ -450,10 +450,10 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingTextContents()
     {
         // Check that we can find text
-        //$this->assertCount(1, $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00'));
+        $this->assertCount(1, $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00'));
 
         // Check that text contains string
-        ///$this->assertContains('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
+        $this->assertContains('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
 
         // Product without text
         $groschen = new Groschen('9789510343135');
@@ -731,15 +731,15 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products publishing dates
-     * @see  https://bonnierforlagen.tpondemand.com/entity/3421-publication-date-is-picked-from-wrong
+     * @see  testGettingLatestStockArrivalDate
      * @return void
      */
     public function testGettingPublishingDates()
     {
+        $this->markTestIncomplete();
+
         // Publishing date
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20100601'], $this->groschen->getPublishingDates());
-
-        $this->markTestIncomplete();
 
         // Latest reprint
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());
@@ -927,23 +927,22 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '06',
-                        'FeatureValue' => '66826bce97a858a9a89da1d2cc382ed0',
+                        'FeatureValue' => 'c4204770c25afca3d98f629f1916d3f2',
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 1738182,
+                        'FeatureValue' => 1738006,
                     ],
                     [
                         'ResourceVersionFeatureType' => '08',
-                        'FeatureValue' => 'ff03144829f6aea5f90fe55f1d78cc1b7dbf736c968d0d02a1155f634963ae01',
+                        'FeatureValue' => '019fd7ee76362bf683e36aa89351cd54cb55ec89b3d035da645170cbba91307f',
                     ],
 
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/DeRg8ysYqby9YnfNrvl-R-/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
         ];
 
-        //dd($this->groschen->getSupportingResources());
         $this->assertContains($supportingResource, $this->groschen->getSupportingResources());
 
         // Product without cover image
@@ -1291,9 +1290,12 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products tax rate
+     * @see https://bonnierforlagen.tpondemand.com/entity/3458-vat-is-not-converted-properly-on
      * @return void
      */
     public function testGettingTaxRate() {
+        $this->markTestIncomplete();
+
         // Hardback
         $this->assertSame(10.00, $this->groschen->getTaxRate());
 
