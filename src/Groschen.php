@@ -1775,7 +1775,7 @@ class Groschen implements ProductInterface
 
         // Form sales period
         switch ($this->product->seasonPeriod->name) {
-            case 'Höst':
+            case 'Autumn':
                 $period = 2;
                 break;
             case 'Spring':

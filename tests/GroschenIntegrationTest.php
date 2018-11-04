@@ -1204,6 +1204,10 @@ class GroschenIntegrationTest extends TestCase
     {
         $this->assertSame('2010/1', $this->groschen->getSalesSeason());
 
+        // Product with the fall sales season 2013/3
+        $groschen = new Groschen('9789510374665');
+        $this->assertSame('2013/2', $groschen->getSalesSeason());
+
         // Product without sales season
         $groschen = new Groschen('9789510102893');
         $this->assertNull($groschen->getSalesSeason());
