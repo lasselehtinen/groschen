@@ -213,6 +213,14 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products type AKA Opus binding code
+     * @return string
+     */
+    public function getProductType() {
+        return $this->product->bindingCode->name;
+    }
+
+    /**
      * Get the products from (Onix codelist 150) - TODO
      * @return string|null
      */

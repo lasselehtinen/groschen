@@ -20,6 +20,12 @@ interface ProductInterface
     public function getProductComposition();
 
     /**
+     * Get the products type AKA Opus binding code
+     * @return string
+     */
+    public function getProductType();
+
+    /**
      * Get the products form (Onix codelist 150)
      * @return string|null
      */

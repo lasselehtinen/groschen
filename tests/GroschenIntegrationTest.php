@@ -52,6 +52,23 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting products type
+     * @return void
+     */
+    public function testGettingProductType() {
+        // Hardback
+        $this->assertSame('Hardback', $this->groschen->getProductType());
+
+        // ePub 3
+        $groschen = new Groschen('9789510441374');
+        $this->assertSame('ePub3', $groschen->getProductType());
+
+        // Downloadable audio file
+        $groschen = new Groschen('9789510423783');
+        $this->assertSame('Downloadable audio file', $groschen->getProductType());
+    }
+
+    /**
      * Test getting products form and product form detail
      * @return void
      */
