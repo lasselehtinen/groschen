@@ -1691,6 +1691,14 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products status
+     * @return string
+     */
+    public function getStatus() {
+        return $this->product->listingCode->name;
+    }
+
+    /**
      * Get the products status code
      * @return int
      */
