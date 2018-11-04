@@ -1044,6 +1044,19 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting products cost center
+     * @return void
+     */
+    public function testGettingCostCenterName()
+    {
+        $this->assertSame('Kotimainen kauno', $this->groschen->getCostCenterName());
+
+        // Some other cost center
+        $groschen = new Groschen('9789513161873');
+        $this->assertSame('Tietokirjat', $groschen->getCostCenterName());
+    }
+
+    /**
      * Test getting products media type
      * @return void
      */

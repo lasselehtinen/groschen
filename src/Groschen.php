@@ -1652,6 +1652,18 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products cost center name
+     * @return string|null
+     */
+    public function getCostCenterName() {
+        if (isset($this->product->costCenter)) {
+            return $this->product->costCenter->name;
+        }
+
+        return null;
+    }
+
+    /**
      * Get the products media type
      * @return string
      */

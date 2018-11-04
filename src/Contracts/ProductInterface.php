@@ -176,6 +176,12 @@ interface ProductInterface
     public function getCostCenter();
 
     /**
+     * Get the products cost center name
+     * @return string|null
+     */
+    public function getCostCenterName();
+
+    /**
      * Get the products media type
      * @return string
      */
