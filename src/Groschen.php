@@ -585,15 +585,15 @@ class Groschen implements ProductInterface
 
         // Add width, height and length
         if (!empty($this->product->height)) {
-            $measures->push(['MeasureType' => '01', 'Measurement' => intval($this->product->height * 1000), 'MeasureUnitCode' => 'mm']);
+            $measures->push(['MeasureType' => '01', 'Measurement' => intval($this->product->height), 'MeasureUnitCode' => 'mm']);
         }
 
         if (!empty($this->product->width)) {
-            $measures->push(['MeasureType' => '02', 'Measurement' => intval($this->product->width * 1000), 'MeasureUnitCode' => 'mm']);
+            $measures->push(['MeasureType' => '02', 'Measurement' => intval($this->product->width), 'MeasureUnitCode' => 'mm']);
         }
 
         if (!empty($this->product->depth)) {
-            $measures->push(['MeasureType' => '03', 'Measurement' => intval($this->product->depth * 1000), 'MeasureUnitCode' => 'mm']);
+            $measures->push(['MeasureType' => '03', 'Measurement' => intval($this->product->depth), 'MeasureUnitCode' => 'mm']);
         }
 
         // Add weight
@@ -1135,43 +1135,6 @@ class Groschen implements ProductInterface
     public function getTaxRate()
     {
         return floatval(preg_replace('/[^0-9]/', '', $this->product->taxCode->name));
-    }
-
-    /**
-     * Get the stakeholders role priority (ie. author is higher than illustrator)
-     * @param  string $roleId
-     * @return int
-     */
-    public function getRolePriority($roleId)
-    {
-        $rolePriorities = [
-            'AUT' => 99,
-            'EIC' => 98,
-            'EDA' => 97,
-            'IND' => 96,
-            'PRE' => 95,
-            'FOR' => 94,
-            'INT' => 93,
-            'PRO' => 92,
-            'AFT' => 91,
-            'EPI' => 90,
-            'ILL' => 89,
-            'PHO' => 88,
-            'REA' => 87,
-            'TRA' => 86,
-            'GDE' => 85,
-            'CDE' => 84,
-            'COM' => 83,
-            'ARR' => 82,
-            'MAP' => 81,
-            'AST' => 80,
-        ];
-
-        if (array_key_exists($roleId, $rolePriorities)) {
-            return $rolePriorities[$roleId];
-        }
-
-        return 0;
     }
 
     /**

@@ -319,15 +319,15 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testContributorAreSortedByLastname()
     {
-        $groschen = new Groschen('9789510370469');
+        $groschen = new Groschen('9789513131524');
 
         // First author
         $firstAuthor = [
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Aho, Tuulia',
-            'NamesBeforeKey' => 'Tuulia',
-            'KeyNames' => 'Aho',
+            'PersonNameInverted' => 'Govindji, Azmina',
+            'NamesBeforeKey' => 'Azmina',
+            'KeyNames' => 'Govindji',
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -336,8 +336,8 @@ class GroschenIntegrationTest extends TestCase
         $secondAuthor = [
             'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Kurjenluoma, Minna',
-            'NamesBeforeKey' => 'Minna',
+            'PersonNameInverted' => 'Worrall Thompson',
+            'NamesBeforeKey' => 'Anthony',
             'KeyNames' => 'Kurjenluoma',
         ];
 
@@ -476,8 +476,6 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingMeasures()
     {
-        $this->markTestIncomplete();
-
         $this->assertContains(['MeasureType' => '01', 'Measurement' => 204, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
         $this->assertContains(['MeasureType' => '02', 'Measurement' => 136, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
         $this->assertContains(['MeasureType' => '03', 'Measurement' => 14, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
