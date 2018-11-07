@@ -216,7 +216,8 @@ class Groschen implements ProductInterface
      * Get the products type AKA Opus binding code
      * @return string
      */
-    public function getProductType() {
+    public function getProductType()
+    {
         return $this->product->bindingCode->name;
     }
 
@@ -425,11 +426,15 @@ class Groschen implements ProductInterface
         $teamMembers = collect($this->product->members)->filter(function ($teamMember) {
             return !is_null($this->getContributorRole($teamMember->role->id));
         })->sortBy(function ($teamMember) {
-            return intval($teamMember->prioLevel->id)*100 + (100-$teamMember->sortOrder);
+            // We sort by priority level, sort order and then by the lastname
+            $rolePriority = $this->getRolePriority($teamMember->role->name);
+            $sortOrder = $teamMember->prioLevel->id . '-' . $teamMember->sortOrder . '-' . $rolePriority . '-' . ord($teamMember->contact->lastName);
+
+            return $sortOrder;
         });
 
         // Remove internal resource if required
-        if($returnInternalResources === false) {
+        if ($returnInternalResources === false) {
             $teamMembers = $teamMembers->filter(function ($teamMember) {
                 return $teamMember->prioLevel->name !== 'Internal';
             });
@@ -439,7 +444,7 @@ class Groschen implements ProductInterface
         $sequenceNumber = 1;
 
         foreach ($teamMembers as $contributor) {
-            if(!isset($contributor->contact->lastName)) {
+            if (!isset($contributor->contact->lastName)) {
                 $personName = $contributor->contact->firstName;
                 $keyNames = $contributor->contact->firstName;
             } else {
@@ -757,14 +762,14 @@ class Groschen implements ProductInterface
 
         // Merge the texts and add missing paragraph tags
         $mergedTexts = $headline->merge($descriptionCore)->merge($descriptionExtra)->merge($authorDescription)->transform(function ($text) {
-            if(substr($text->text, 0, 3) !== '<p>') {
+            if (substr($text->text, 0, 3) !== '<p>') {
                 $text->text = '<p>' . $text->text . '</p>';
             }
             return $text;
         });
 
         // Add if texts exist
-        if($mergedTexts->count() > 0) {
+        if ($mergedTexts->count() > 0) {
             // Add to collection
             $textContents->push([
                 'TextType' => '03',
@@ -1626,7 +1631,8 @@ class Groschen implements ProductInterface
      * Get the products cost center name
      * @return string|null
      */
-    public function getCostCenterName() {
+    public function getCostCenterName()
+    {
         if (isset($this->product->costCenter)) {
             return $this->product->costCenter->name;
         }
@@ -1665,7 +1671,8 @@ class Groschen implements ProductInterface
      * Get the products status
      * @return string
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->product->listingCode->name;
     }
 
@@ -1921,6 +1928,43 @@ class Groschen implements ProductInterface
         }
 
         return $salesRestrictions;
+    }
+
+    /**
+     * Get the role priority
+     * @param  string $role
+     * @return void
+     */
+    public function getRolePriority($role)
+    {
+        $rolePriorities = [
+            'Author' => 1,
+            'Editor in Chief' => 2,
+            'Editing author' => 3,
+            'Index' => 4,
+            'Preface' => 5,
+            'Foreword' => 6,
+            'Introduction' => 7,
+            'Prologue' => 8,
+            'Afterword' => 9,
+            'Epilogue' => 10,
+            'Illustrator' => 11,
+            'Photographer' => 12,
+            'Reader' => 13,
+            'Translator' => 14,
+            'Graphic Designer' => 15,
+            'Cover design or artwork by' => 16,
+            'Composer' => 17,
+            'Arranged by' => 18,
+            'Maps' => 19,
+            'Assistant' => 20,
+        ];
+
+        if (array_key_exists($role, $rolePriorities)) {
+            return $rolePriorities[$role];
+        }
+
+        return 0;
     }
 
 }

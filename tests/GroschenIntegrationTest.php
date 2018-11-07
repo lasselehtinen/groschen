@@ -336,9 +336,9 @@ class GroschenIntegrationTest extends TestCase
         $secondAuthor = [
             'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Worrall Thompson',
+            'PersonNameInverted' => 'Worrall Thompson, Anthony',
             'NamesBeforeKey' => 'Anthony',
-            'KeyNames' => 'Kurjenluoma',
+            'KeyNames' => 'Worrall Thompson',
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
