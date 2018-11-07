@@ -249,13 +249,10 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting title details
-     * @see https://bonnierforlagen.tpondemand.com/entity/3428-original-title-is-missing-from-work
      * @return void
      */
     public function testGettingTitleDetails()
     {
-        $this->markTestIncomplete();
-
         $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
         $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
 
@@ -471,7 +468,6 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products weight
-     * @see https://bonnierforlagen.tpondemand.com/entity/3435-measurements-and-weight-are-not-converted
      * @return void
      */
     public function testGettingMeasures()
