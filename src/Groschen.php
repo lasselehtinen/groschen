@@ -1730,6 +1730,25 @@ class Groschen implements ProductInterface
      */
     public function getCustomsNumber()
     {
+        switch ($this->getProductType()) {
+            // Audio and MP3 CD
+            case 'CD':
+            case 'MP3-CD':
+                return 85234920;
+                break;
+            // Digital products should return null
+            case 'ePub2':
+            case 'ePub3':
+            case 'Application':
+            case 'Downloadable audio file':
+            case 'Picture-and-audio book':
+                return null;
+                break;
+            default:
+                return 49019900;
+                break;
+        }
+
         return intval($this->product->customsNumber);
     }
 

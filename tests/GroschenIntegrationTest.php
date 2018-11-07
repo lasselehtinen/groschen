@@ -1188,7 +1188,11 @@ class GroschenIntegrationTest extends TestCase
     {
         $this->assertSame(49019900, $this->groschen->getCustomsNumber());
 
-        // Product with different customs number
+        // Ebooks should not have TARIC code
+        $groschen = new Groschen('9789510365441');
+        $this->assertNull($groschen->getCustomsNumber());
+
+        // Audio CD's have different TARIC code
         $groschen = new Groschen('9789510344972');
         $this->assertSame(85234920, $groschen->getCustomsNumber());
     }
