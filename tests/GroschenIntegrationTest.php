@@ -725,13 +725,10 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products publishing dates
-     * @see  testGettingLatestStockArrivalDate
      * @return void
      */
     public function testGettingPublishingDates()
     {
-        $this->markTestIncomplete();
-
         // Publishing date
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20100601'], $this->groschen->getPublishingDates());
 
@@ -740,23 +737,15 @@ class GroschenIntegrationTest extends TestCase
 
         // Product without original publishing date
         $groschen = new Groschen('9789513199173');
-        $this->assertContains(['PublishingDateRole' => '12', 'Date' => '23191231'], $groschen->getPublishingDates());
-        $this->assertCount(1, $groschen->getPublishingDates());
-
-        // Product without any dates
-        $groschen = new Groschen('9789513164232');
         $this->assertCount(0, $groschen->getPublishingDates());
     }
 
     /**
      * Test getting latest reprint date
-     * @see  https://bonnierforlagen.tpondemand.com/entity/3422-dates-and-print-runs-are-missing
      * @return void
      */
     public function testGettingLatestStockArrivalDate()
     {
-        $this->markTestIncomplete();
-
         // Product with only one print
         $groschen = new Groschen('9789510401514');
         $expectedArrivalDate = new DateTime('2013-05-13');

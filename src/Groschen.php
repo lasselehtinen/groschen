@@ -840,8 +840,10 @@ class Groschen implements ProductInterface
         $publishingDates = new Collection;
 
         // Add original publishing date
-        $publishingDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->publishingDate);
-        $publishingDates->push(['PublishingDateRole' => '01', 'Date' => $publishingDate->format('Ymd')]);
+        if(!empty($this->product->publishingDate)) {
+            $publishingDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->publishingDate);
+            $publishingDates->push(['PublishingDateRole' => '01', 'Date' => $publishingDate->format('Ymd')]);
+        }
 
         // Get prints
         $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
@@ -852,8 +854,8 @@ class Groschen implements ProductInterface
 
         foreach ($latestPrint->timePlanEntries as $timePlanEntry) {
             // Delivery in stock
-            if ($timePlanEntry->type->id === '11') {
-                $lastReprintDate = DateTime::createFromFormat('Y-m-d*H:i:s', $timePlanEntry->actual);
+            if ($timePlanEntry->type->name === 'Delivery to warehouse' && !empty($timePlanEntry->planned)) {
+                $lastReprintDate = DateTime::createFromFormat('Y-m-d*H:i:s', $timePlanEntry->planned);
                 $publishingDates->push(['PublishingDateRole' => '12', 'Date' => $lastReprintDate->format('Ymd')]);
             }
         }
