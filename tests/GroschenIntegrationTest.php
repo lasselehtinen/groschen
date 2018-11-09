@@ -393,6 +393,25 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test contributors without priority level are handled correctly
+     * @return void
+     */
+    public function testContributorsWithoutPriorityLevelAreHandledCorrectly() {
+        $groschen = new Groschen('9789510433348');
+
+        // Author should be first
+        $author = [
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'A01',
+            'PersonNameInverted' => 'Kettu, Katja',
+            'NamesBeforeKey' => 'Katja',
+            'KeyNames' => 'Kettu',
+        ];
+
+        $this->assertContains($author, $groschen->getContributors());
+    }
+
+    /**
      * Test that private contributors are hidden
      * @return void
      */

@@ -428,11 +428,12 @@ class Groschen implements ProductInterface
             return !is_null($this->getContributorRole($teamMember->role->id));
         })->sortBy(function ($teamMember) {
             // We sort by priority level, sort order and then by the lastname
+            $priorityLevel = (isset($teamMember->prioLevel)) ? $teamMember->prioLevel->id : 0;
             $sortOrderPriority = 100-intval($teamMember->sortOrder);
             $rolePriority = $this->getRolePriority($teamMember->role->name);
             $lastNamePriority = (!empty($teamMember->contact->lastName)) ? ord($teamMember->contact->lastName) : 0;
 
-            $sortOrder = $teamMember->prioLevel->id . '-' . $sortOrderPriority . '-' . $rolePriority . '-' . $lastNamePriority;
+            $sortOrder = $priorityLevel . '-' . $sortOrderPriority . '-' . $rolePriority . '-' . $lastNamePriority;
 
             return $sortOrder;
         });
