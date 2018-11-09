@@ -64,7 +64,7 @@ class Groschen implements ProductInterface
     public function __construct($productNumber)
     {
         // Get access token for Opus
-        $accessToken = Cache::remember('accessToken', 1440, function () {
+        $accessToken = Cache::remember('accessToken', 59, function () {
             $provider = new GenericProvider([
                 'clientId' => config('groschen.opus.clientId'),
                 'clientSecret' => config('groschen.opus.clientSecret'),
