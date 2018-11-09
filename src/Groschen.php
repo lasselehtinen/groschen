@@ -18,6 +18,7 @@ use League\Uri\Modifiers\MergeQuery;
 use League\Uri\Modifiers\RemoveQueryKeys;
 use League\Uri\Schemes\Http as HttpUri;
 use Njasm\Soundcloud\Soundcloud;
+use stdClass;
 
 class Groschen implements ProductInterface
 {
@@ -53,7 +54,7 @@ class Groschen implements ProductInterface
 
     /**
      * Guzzle HTTP client
-     * @var GuzzleHttp\Client
+     * @var \GuzzleHttp\Client
      */
     private $client;
 
@@ -107,7 +108,6 @@ class Groschen implements ProductInterface
 
     /**
      * Searches for productions
-     * @param  string $searchField
      * @param  string $return
      * @return string
      */
@@ -343,14 +343,15 @@ class Groschen implements ProductInterface
             }
         }
 
-        if (isset($this->product->series)) {
+        // Add products marketing serie
+        if (isset($this->product->marketingSerie)) {
             $collections->push([
-                'CollectionType' => '10', [
+                'CollectionType' => '11', [
                     'TitleDetail' => [
                         'TitleType' => '01',
                         'TitleElement' => [
                             'TitleElementLevel' => '01',
-                            'TitleText' => $this->product->series->name,
+                            'TitleText' => $this->product->marketingSerie,
                         ],
                     ],
                 ],
@@ -840,7 +841,7 @@ class Groschen implements ProductInterface
         $publishingDates = new Collection;
 
         // Add original publishing date
-        if(!empty($this->product->publishingDate)) {
+        if (!empty($this->product->publishingDate)) {
             $publishingDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->publishingDate);
             $publishingDates->push(['PublishingDateRole' => '01', 'Date' => $publishingDate->format('Ymd')]);
         }
@@ -1071,8 +1072,11 @@ class Groschen implements ProductInterface
                         $url = $internetLink->Link;
                         break;
                     default:
+                        $resourceContentType = null;
+                        $resourceMode = null;
                         $url = null;
-                        break;}
+                        break;
+                }
 
                 // Add to Collection if URL exists
                 if (!empty($url)) {
@@ -1559,7 +1563,7 @@ class Groschen implements ProductInterface
     /**
      * Convert Schilling role to an Onix codelist 17: Contributor role code
      * @param  string $role
-     * @return string
+     * @return string|null
      */
     public function getContributorRole($role)
     {
@@ -1647,7 +1651,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products media type
-     * @return string
+     * @return string|null
      */
     public function getMediaType()
     {
@@ -1656,7 +1660,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products binding code
-     * @return string
+     * @return string|null
      */
     public function getBindingCode()
     {
@@ -1692,7 +1696,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the number of products in the series
-     * @return void
+     * @return int|null
      */
     public function getProductsInSeries()
     {
@@ -1797,15 +1801,13 @@ class Groschen implements ProductInterface
 
         // Form sales period
         switch ($this->product->seasonPeriod->name) {
-            case 'Autumn':
-                $period = 2;
-                break;
             case 'Spring':
-                $period = 1;
+                return $this->product->seasonYear->name . '/1';
+                break;
+            case 'Autumn':
+                return $this->product->seasonYear->name . '/2';
                 break;
         }
-
-        return $this->product->seasonYear->name . '/' . $period;
     }
 
     /**
@@ -1834,6 +1836,9 @@ class Groschen implements ProductInterface
                     break;
                 case '15+':
                     $audienceCodeValue = '03'; // Young adult
+                    break;
+                default:
+                    $audienceCodeValue = '01'; // General/trade
                     break;
             }
         }
@@ -1864,7 +1869,6 @@ class Groschen implements ProductInterface
         ];
 
         if (!empty($this->product->interestAge) && in_array($this->product->interestAge->name, $interestAges)) {
-
             $fromAge = $this->product->interestAge->name;
 
             // Calculate to based on the current and next index
@@ -1957,7 +1961,7 @@ class Groschen implements ProductInterface
     /**
      * Get the role priority
      * @param  string $role
-     * @return void
+     * @return int
      */
     public function getRolePriority($role)
     {
@@ -1990,5 +1994,4 @@ class Groschen implements ProductInterface
 
         return 0;
     }
-
 }

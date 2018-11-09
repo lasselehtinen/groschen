@@ -175,13 +175,10 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products collections/series
-     * @see https://bonnierforlagen.tpondemand.com/entity/3015-clean-up-series-and-move-some
      * @return void
      */
     public function testGettingCollections()
     {
-        $this->markTestIncomplete();
-
         $this->assertFalse($this->groschen->getCollections()->contains('CollectionType', '10'));
 
         // Product with bibliographical series
@@ -195,6 +192,10 @@ class GroschenIntegrationTest extends TestCase
                         'TitleElementLevel' => '01',
                         'TitleText' => 'Calendar Girl',
                     ],
+                ],
+                'CollectionSequence' => [
+                    'CollectionSequenceType' => '03',
+                    'CollectionSequenceNumber' => 9,
                 ],
             ],
         ];
