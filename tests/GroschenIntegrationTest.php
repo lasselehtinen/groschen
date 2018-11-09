@@ -311,6 +311,24 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test contributor with only one name or pseudonym is handled correctly
+     * @return void
+     */
+    public function testContributorWithOnlyOneNameOrPseudonymIsHandledCorrectly() {
+        $groschen = new Groschen('9789521619021');
+
+        // Author
+        $author = [
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'A01',
+            'PersonNameInverted' => 'Sunaakugan',
+            'NamesBeforeKey' => 'Sunaakugan',
+        ];
+
+        $this->assertContains($author, $groschen->getContributors());
+    }
+
+    /**
      * Test that stakeholders with same priority are sorted by last name
      * @group contributors
      * @return void

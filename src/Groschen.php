@@ -448,22 +448,23 @@ class Groschen implements ProductInterface
         $sequenceNumber = 1;
 
         foreach ($teamMembers as $contributor) {
-            if (!isset($contributor->contact->lastName)) {
-                $personName = $contributor->contact->firstName;
-                $keyNames = $contributor->contact->firstName;
+            // Form contributor data
+            $contributorData = [
+                'SequenceNumber' => $sequenceNumber,
+                'ContributorRole' => $this->getContributorRole($contributor->role->id),
+                'NamesBeforeKey' => $contributor->contact->firstName,
+            ];
+
+            // Handle PersonNameInverted and KeyNames differently depending if they have the lastname or not
+            if (empty($contributor->contact->lastName)) {
+                $contributorData['PersonNameInverted'] = $contributor->contact->firstName;
             } else {
-                $personName = $contributor->contact->lastName . ', ' . $contributor->contact->firstName;
-                $keyNames = $contributor->contact->lastName;
+                $contributorData['PersonNameInverted'] = $contributor->contact->lastName . ', ' . $contributor->contact->firstName;
+                $contributorData['KeyNames'] = $contributor->contact->lastName;
             }
 
             // Add to collection
-            $contributors->push([
-                'SequenceNumber' => $sequenceNumber,
-                'ContributorRole' => $this->getContributorRole($contributor->role->id),
-                'PersonNameInverted' => $personName,
-                'NamesBeforeKey' => $contributor->contact->firstName,
-                'KeyNames' => $keyNames,
-            ]);
+            $contributors->push($contributorData);
 
             $sequenceNumber++;
         }
