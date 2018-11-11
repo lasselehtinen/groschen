@@ -1996,4 +1996,24 @@ class Groschen implements ProductInterface
 
         return 0;
     }
+
+    /**
+     * Get the rights and distribution for each channel
+     * @return Collection
+     */
+    public function getDistributionChannels() {
+        // Collection for distribution channels
+        $distributionChannels = new Collection;
+
+        foreach($this->product->exportRules as $exportRule) {
+            $distributionChannels->push([
+                'channel' => $exportRule->salesChannel->name,
+                'channelType' => $exportRule->salesType->name,
+                'hasRights' => $exportRule->hasRights,
+                'distributionAllowed' => $exportRule->hasDistribution,
+            ]);
+        }
+
+        return $distributionChannels;
+    }
 }

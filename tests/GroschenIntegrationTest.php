@@ -1332,4 +1332,29 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510384725');
         $this->assertSame(24.00, $groschen->getTaxRate());
     }
+
+    /**
+     * Get the distribution channels in Opus
+     * @return void
+     */
+    public function testGettingDistributionChannels() {
+        // ePub 2 unit sales only product
+        $groschen = new Groschen('9789510417188');
+
+        $elisa = $groschen->getDistributionChannels()
+            ->where('channel', 'Elisa Kirja')
+            ->where('channelType', 'Unit sales')
+            ->where('hasRights', true)
+            ->where('distributionAllowed', true);
+
+        $this->assertCount(1, $elisa->toArray());
+
+        $bookbeat = $groschen->getDistributionChannels()
+            ->where('channel', 'BookBeat')
+            ->where('channelType', 'Subscription')
+            ->where('hasRights', true)
+            ->where('distributionAllowed', true);
+
+        $this->assertCount(0, $bookbeat->toArray());
+    }
 }

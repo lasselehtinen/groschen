@@ -288,4 +288,10 @@ interface ProductInterface
      * @return Collection
      */
     public function getSalesRestrictions();
+
+    /**
+     * Get the rights and distribution for each channel
+     * @return Collection
+     */
+    public function getDistributionChannels();
 }
