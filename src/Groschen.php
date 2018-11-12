@@ -429,7 +429,7 @@ class Groschen implements ProductInterface
         })->sortBy(function ($teamMember) {
             // We sort by priority level, sort order and then by the lastname
             $priorityLevel = (isset($teamMember->prioLevel)) ? $teamMember->prioLevel->id : 0;
-            $sortOrderPriority = 100-intval($teamMember->sortOrder);
+            $sortOrderPriority = 100 - intval($teamMember->sortOrder);
             $rolePriority = $this->getRolePriority($teamMember->role->name);
             $lastNamePriority = (!empty($teamMember->contact->lastName)) ? ord($teamMember->contact->lastName) : 0;
 
@@ -568,21 +568,29 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Get the products recommended retail price RRP including VAT
+     * Get the products net price RRP including VAT
      * @return float|null
      */
     public function getPrice()
     {
-        return floatval($this->product->resellerPriceIncludingVat);
+        return (isset($this->product->resellerPriceIncludingVat)) ? floatval($this->product->resellerPriceIncludingVat) : null;
     }
 
     /**
-     * Get the products recommended retail price RRP excluding VAT
+     * Get the products net price excluding VAT
      * @return float|null
      */
     public function getPriceExcludingVat()
     {
-        return floatval($this->product->resellerPrice);
+        return (isset($this->product->resellerPrice)) ? floatval($this->product->resellerPrice) : null;
+    }
+
+    /**
+     * Get the products retail price including VAT
+     * @return float|null
+     */
+    public function getPublisherRetailPrice() {
+        return (isset($this->product->publisherRetailPriceIncludingVat)) ? floatval($this->product->publisherRetailPriceIncludingVat) : null;
     }
 
     /**
@@ -900,8 +908,13 @@ class Groschen implements ProductInterface
             'PriceTypeCode' => '42',
             'TaxIncluded' => true,
             'TaxRateCode' => 'S',
-            'PriceAmount' => floatval($this->product->publisherRetailPriceIncludingVat),
+            'PriceAmount' => $this->getPublisherRetailPrice(),
         ]);
+
+        // Remove price types that don't have price
+        $priceTypes = $priceTypes->filter(function ($priceType, $key) {
+            return !is_null($priceType['PriceAmount']);
+        });
 
         // Go through all Price Types
         foreach ($priceTypes as $priceType) {
@@ -2003,11 +2016,12 @@ class Groschen implements ProductInterface
      * Get the rights and distribution for each channel
      * @return Collection
      */
-    public function getDistributionChannels() {
+    public function getDistributionChannels()
+    {
         // Collection for distribution channels
         $distributionChannels = new Collection;
 
-        foreach($this->product->exportRules as $exportRule) {
+        foreach ($this->product->exportRules as $exportRule) {
             $distributionChannels->push([
                 'channel' => $exportRule->salesChannel->name,
                 'channelType' => $exportRule->salesType->name,

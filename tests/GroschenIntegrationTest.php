@@ -863,6 +863,16 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that missing prices do not produce an exception
+     * @return
+     */
+    public function testMissingPricesDoNotProduceException() {
+        $groschen = new Groschen('9789510442012');
+
+        $this->assertInstanceOf('Illuminate\Support\Collection', $groschen->getPrices());
+    }
+
+    /**
      * Test getting products prices for product with missing prices and 24% VAT
      * @return void
      */
