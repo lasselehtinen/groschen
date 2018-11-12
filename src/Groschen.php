@@ -521,9 +521,14 @@ class Groschen implements ProductInterface
 
         // Audio duration, convert from HH:MM to HHHMM - TODO - audioPlaytimeHours what is the accuracy? No minutes?
         if (isset($this->product->audioPlaytimeHours)) {
+            $audioPlaytimeHours = str_pad($this->product->audioPlaytimeHours, 3, '0', STR_PAD_LEFT);
+
+            // If no minutes are given, use 00
+            $audioPlaytimeMinutes = (!isset($this->product->audioPlaytimeMinutes)) ? '00' : str_pad($this->product->audioPlaytimeMinutes, 2, '0', STR_PAD_LEFT);
+
             $extents->push([
                 'ExtentType' => '09',
-                'ExtentValue' => str_pad($this->product->audioPlaytimeHours, 3, '0', STR_PAD_LEFT) . str_pad($this->product->audioPlaytimeMinutes, 2, '0', STR_PAD_LEFT),
+                'ExtentValue' => $audioPlaytimeHours . $audioPlaytimeMinutes,
                 'ExtentUnit' => '15',
             ]);
         }

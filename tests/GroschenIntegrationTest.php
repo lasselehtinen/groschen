@@ -479,6 +479,16 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting audio books duration only with hours
+     * @return void
+     */
+    public function testGettingAudioBookDurationOnlyWithHours() {
+        $groschen = new Groschen('9789510442128');
+        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '01400', 'ExtentUnit' => '15'], $groschen->getExtents());
+        $this->assertCount(1, $groschen->getExtents());
+    }
+
+    /**
      * Test getting product text contents
      * @return void
      */
