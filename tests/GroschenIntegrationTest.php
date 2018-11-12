@@ -579,6 +579,16 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test product without subgroup is not throwing exception
+     * @return void
+     */
+    public function testProductWithoutSubgroupIsNotThrowingException() {
+        $groschen = new Groschen('9789520405328');
+        $subjects = $groschen->getSubjects();
+        $this->assertInstanceOf('Illuminate\Support\Collection', $subjects);
+    }
+
+    /**
      * Test getting audiences
      * @return void
      */
