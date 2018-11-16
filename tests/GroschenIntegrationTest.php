@@ -1345,12 +1345,9 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products tax rate
-     * @see https://bonnierforlagen.tpondemand.com/entity/3458-vat-is-not-converted-properly-on
      * @return void
      */
     public function testGettingTaxRate() {
-        $this->markTestIncomplete();
-
         // Hardback
         $this->assertSame(10.00, $this->groschen->getTaxRate());
 
