@@ -941,6 +941,28 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $this->assertContains($publishersRecommendedRetailPriceIncludingTax, $groschen->getPrices());
+
+        // Workaround for Opus having too many decimals in publishers retail price, this one has 12,896
+        $groschen = new Groschen('9789510441374');
+
+        // Publishers recommended retail price including tax
+        $publishersRecommendedRetailPriceIncludingTax = [
+            'PriceType' => '42',
+            'PriceAmount' => 12.90,
+            'Tax' => [
+                'TaxType' => '01',
+                'TaxRateCode' => 'S',
+                'TaxRatePercent' => 24,
+                'TaxableAmount' => 10.40,
+                'TaxAmount' => 2.50,
+            ],
+            'CurrencyCode' => 'EUR',
+            'Territory' => [
+                'RegionsIncluded' => 'WORLD',
+            ],
+        ];
+
+        $this->assertContains($publishersRecommendedRetailPriceIncludingTax, $groschen->getPrices());
     }
 
     /**

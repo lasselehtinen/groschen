@@ -913,7 +913,7 @@ class Groschen implements ProductInterface
             'PriceTypeCode' => '42',
             'TaxIncluded' => true,
             'TaxRateCode' => 'S',
-            'PriceAmount' => $this->getPublisherRetailPrice(),
+            'PriceAmount' => round($this->getPublisherRetailPrice(), 2), // Always round to two decimals
         ]);
 
         // Remove price types that don't have price
