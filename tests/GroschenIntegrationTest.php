@@ -397,18 +397,18 @@ class GroschenIntegrationTest extends TestCase
      * @return void
      */
     public function testContributorsWithoutPriorityLevelAreHandledCorrectly() {
-        $groschen = new Groschen('9789510433348');
+        $groschen = new Groschen('9789510434123');
 
         // Author should be first
         $author = [
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Kettu, Katja',
-            'NamesBeforeKey' => 'Katja',
-            'KeyNames' => 'Kettu',
+            'PersonNameInverted' => 'Fredman, Virve',
+            'NamesBeforeKey' => 'Virve',
+            'KeyNames' => 'Fredman',
         ];
 
-        $this->assertContains($author, $groschen->getContributors());
+        $this->assertContains($author, $groschen->getContributors(false));
     }
 
     /**
@@ -1405,5 +1405,17 @@ class GroschenIntegrationTest extends TestCase
             ->where('distributionAllowed', true);
 
         $this->assertCount(0, $bookbeat->toArray());
+    }
+
+    /**
+     * Test the is connected to ERP
+     * @return void
+     */
+    public function testIfProductIsConnectedToErp() {
+        $this->assertTrue($this->groschen->isConnectedToErp());
+
+        // Product that is not connected to ERP
+        $groschen = new Groschen('9789510442593');
+        $this->assertFalse($groschen->isConnectedToErp());
     }
 }

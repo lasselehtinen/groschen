@@ -294,4 +294,10 @@ interface ProductInterface
      * @return Collection
      */
     public function getDistributionChannels();
+
+    /**
+     * Is the product connected to ERP?
+     * @return boolean
+     */
+    public function isConnectedToErp();
 }

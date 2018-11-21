@@ -2037,4 +2037,12 @@ class Groschen implements ProductInterface
 
         return $distributionChannels;
     }
+
+    /**
+     * Is the product connected to ERP?
+     * @return boolean
+     */
+    public function isConnectedToErp() {
+        return (bool) $this->product->isConnectedToERP;
+    }
 }
