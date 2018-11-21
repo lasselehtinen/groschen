@@ -435,8 +435,6 @@ class Groschen implements ProductInterface
 
             $sortOrder = $priorityLevel . '-' . $sortOrderPriority . '-' . $rolePriority . '-' . $lastNamePriority;
 
-            dump($teamMember->role->name, $teamMember->contact->lastName, $sortOrder);
-
             return $sortOrder;
         });
 
