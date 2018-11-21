@@ -453,15 +453,15 @@ class Groschen implements ProductInterface
             $contributorData = [
                 'SequenceNumber' => $sequenceNumber,
                 'ContributorRole' => $this->getContributorRole($contributor->role->id),
-                'NamesBeforeKey' => $contributor->contact->firstName,
+                'NamesBeforeKey' => trim($contributor->contact->firstName),
             ];
 
             // Handle PersonNameInverted and KeyNames differently depending if they have the lastname or not
             if (empty($contributor->contact->lastName)) {
-                $contributorData['PersonNameInverted'] = $contributor->contact->firstName;
+                $contributorData['PersonNameInverted'] = trim($contributor->contact->firstName);
             } else {
-                $contributorData['PersonNameInverted'] = $contributor->contact->lastName . ', ' . $contributor->contact->firstName;
-                $contributorData['KeyNames'] = $contributor->contact->lastName;
+                $contributorData['PersonNameInverted'] = trim($contributor->contact->lastName) . ', ' . trim($contributor->contact->firstName);
+                $contributorData['KeyNames'] = trim($contributor->contact->lastName);
             }
 
             // Add to collection

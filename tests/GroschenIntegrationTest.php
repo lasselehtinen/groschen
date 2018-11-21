@@ -417,14 +417,14 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testPrivateContributorsAreHidden()
     {
-        $groschen = new Groschen('9789510412893');
+        $groschen = new Groschen('9789510415344');
 
         $editor = [
-            'SequenceNumber' => 3,
+            'SequenceNumber' => 2,
             'ContributorRole' => 'B01',
-            'PersonNameInverted' => 'Knuuti, Samuli',
-            'NamesBeforeKey' => 'Samuli',
-            'KeyNames' => 'Knuuti',
+            'PersonNameInverted' => 'Rouhiainen, Mikko',
+            'NamesBeforeKey' => 'Mikko',
+            'KeyNames' => 'Rouhiainen',
         ];
 
         $this->assertNotContains($editor, $groschen->getContributors(false));
