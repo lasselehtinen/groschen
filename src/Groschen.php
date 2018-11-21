@@ -435,13 +435,15 @@ class Groschen implements ProductInterface
 
             $sortOrder = $priorityLevel . '-' . $sortOrderPriority . '-' . $rolePriority . '-' . $lastNamePriority;
 
+            dump($teamMember->role->name, $teamMember->contact->lastName, $sortOrder);
+
             return $sortOrder;
         });
 
         // Remove internal resource if required
         if ($returnInternalResources === false) {
             $teamMembers = $teamMembers->filter(function ($teamMember) {
-                return $teamMember->prioLevel->name !== 'Internal';
+                return isset($teamMember->prioLevel->name) && $teamMember->prioLevel->name !== 'Internal';
             });
         }
 
