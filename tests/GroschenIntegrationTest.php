@@ -813,6 +813,11 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510374665');
         $expectedArrivalDate = new DateTime('2013-12-18');
         $this->assertEquals($expectedArrivalDate, $groschen->getLatestStockArrivalDate());
+
+        // Product with second print having only actual date
+        $groschen = new Groschen('9789510437605');
+        $expectedArrivalDate = new DateTime('2018-12-03');
+        $this->assertEquals($expectedArrivalDate, $groschen->getLatestStockArrivalDate());
     }
 
     /**

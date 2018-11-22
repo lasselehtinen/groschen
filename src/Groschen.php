@@ -1926,8 +1926,14 @@ class Groschen implements ProductInterface
     public function getLatestStockArrivalDate()
     {
         foreach ($this->product->activePrint->timePlan->entries as $timeplan) {
-            if (isset($timeplan->planned) && $timeplan->type->name === 'Delivery to warehouse') {
-                return DateTime::createFromFormat('Y-m-d*H:i:s', $timeplan->planned);
+            if (isset($timeplan->type->name) && $timeplan->type->name === 'Delivery to warehouse') {
+                if(isset($timeplan->actual)) {
+                    return DateTime::createFromFormat('Y-m-d*H:i:s', $timeplan->actual);
+                }
+
+                if(isset($timeplan->planned)) {
+                    return DateTime::createFromFormat('Y-m-d*H:i:s', $timeplan->planned);
+                }
             }
         }
 
