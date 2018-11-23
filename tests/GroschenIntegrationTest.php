@@ -323,6 +323,7 @@ class GroschenIntegrationTest extends TestCase
             'ContributorRole' => 'A01',
             'PersonNameInverted' => 'Sunaakugan',
             'NamesBeforeKey' => 'Sunaakugan',
+            'KeyNames' => 'Sunaakugan',
         ];
 
         $this->assertContains($author, $groschen->getContributors());
