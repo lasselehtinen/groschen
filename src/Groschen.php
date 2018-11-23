@@ -893,28 +893,34 @@ class Groschen implements ProductInterface
         $priceTypes = new Collection;
 
         // Supplier’s net price excluding tax
+        if(!is_null($this->getPriceExcludingVat())) {
         $priceTypes->push([
             'PriceTypeCode' => '05',
             'TaxIncluded' => false,
             'TaxRateCode' => 'Z',
             'PriceAmount' => $this->getPriceExcludingVat(),
         ]);
+        }
 
         // Supplier’s net price including tax
+        if(!is_null($this->getPrice())) {
         $priceTypes->push([
             'PriceTypeCode' => '07',
             'TaxIncluded' => true,
             'TaxRateCode' => 'S',
             'PriceAmount' => $this->getPrice(),
         ]);
+        }
 
         // Publishers recommended retail price including tax
-        $priceTypes->push([
-            'PriceTypeCode' => '42',
-            'TaxIncluded' => true,
-            'TaxRateCode' => 'S',
-            'PriceAmount' => round($this->getPublisherRetailPrice(), 2), // Always round to two decimals
-        ]);
+        if(!is_null($this->getPublisherRetailPrice())) {
+            $priceTypes->push([
+                'PriceTypeCode' => '42',
+                'TaxIncluded' => true,
+                'TaxRateCode' => 'S',
+                'PriceAmount' => round($this->getPublisherRetailPrice(), 2), // Always round to two decimals
+            ]);
+        }
 
         // Remove price types that don't have price
         $priceTypes = $priceTypes->filter(function ($priceType, $key) {
