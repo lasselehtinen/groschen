@@ -1606,7 +1606,7 @@ class Groschen implements ProductInterface
             //'306' => '', // Coordinator
             //'307' => '', // Copy Writer
             '308' => 'A36', // Cover design or artwork by
-            //'309' => '', // Editing author
+            '309' => 'B11', // Editor-in-chief
             '310' => 'B01', // Editor
             '311' => 'B11', // Editor in Chief
             '312' => 'A22', // Epilogue
