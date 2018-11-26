@@ -432,6 +432,11 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains($editor, $groschen->getContributors(true));
     }
 
+    public function testFoobar() {
+        $groschen = new Groschen('9789510441244');
+        dd($groschen->getContributors());
+    }
+
     /**
      * Test getting products languages
      * @return void
@@ -594,7 +599,7 @@ class GroschenIntegrationTest extends TestCase
      * @return void
      */
     public function testProductWithoutSubgroupIsNotThrowingException() {
-        $groschen = new Groschen('9789520405328');
+        $groschen = new Groschen('9789510430347');
         $subjects = $groschen->getSubjects();
         $this->assertInstanceOf('Illuminate\Support\Collection', $subjects);
     }

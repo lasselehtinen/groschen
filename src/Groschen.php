@@ -711,7 +711,7 @@ class Groschen implements ProductInterface
         $subjects->push(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => $this->getThemaInterestAge()]);
 
         // Fiktiivisen aineiston lisäluokitus
-        if (isset($this->product->mainGroup)) {
+        if (isset($this->product->mainGroup, $this->product->subGroup)) {
             $subjects->push(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisäluokitus', 'SubjectCode' => $this->getFiktiivisenAineistonLisaluokitus()]);
         }
 
