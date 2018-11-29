@@ -12,7 +12,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "lasselehtinen/schilling-soap-wrapper": "^1.0.1",
         "ezyang/htmlpurifier": "^4.9",
         "guzzlehttp/guzzle": "~6.0",
         "fale/isbn": "^3.0",
