@@ -432,11 +432,6 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains($editor, $groschen->getContributors(true));
     }
 
-    public function testFoobar() {
-        $groschen = new Groschen('9789510441244');
-        dd($groschen->getContributors());
-    }
-
     /**
      * Test getting products languages
      * @return void
