@@ -2089,7 +2089,7 @@ class Groschen implements ProductInterface
 
             $printOrders->push([
                 'printNumber' => $print->print,
-                'orderedQuantity' => $print->quantityOrdered,
+                'orderedQuantity' => isset($print->quantityOrdered) ? $print->quantityOrdered : null,
                 'deliveries' => collect($deliveries),
             ]);
         }
