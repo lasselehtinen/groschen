@@ -300,4 +300,10 @@ interface ProductInterface
      * @return boolean
      */
     public function isConnectedToErp();
+
+    /**
+     * Get the products print orders
+     * @return Collection
+     */
+    public function getPrintOrders();
 }

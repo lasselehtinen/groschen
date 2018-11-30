@@ -2058,4 +2058,42 @@ class Groschen implements ProductInterface
     public function isConnectedToErp() {
         return (bool) $this->product->isConnectedToERP;
     }
+
+    /**
+     * Get the products print orders
+     * @return Collection
+     */
+    public function getPrintOrders() {
+        // Get the production print orders from Opus
+        $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
+        $opusPrintOrders = json_decode($response->getBody()->getContents());
+
+        // Collection for print orders
+        $printOrders = new Collection;
+
+        foreach ($opusPrintOrders->prints as $print) {
+            // Get deliveries
+            $response = $this->client->get('/v2/works/' . $this->workId . '/productions/' . $this->productionId . '/prints/' . $print->print . '/deliveryspecifications');
+            $opusDeliviries = json_decode($response->getBody()->getContents());
+
+            // Store all delivieries to array for later use
+            $deliveries = [];
+            foreach ($opusDeliviries->deliverySpecifications as $delivery) {
+                $deliveries[] = [
+                    'recipient' => $delivery->deliveryType->name,
+                    'supplier' => $delivery->printerContact->name,
+                    'orderedQuantity' => $delivery->deliveryItems[0]->quantityOrdered,
+                    'plannedDeliveryDate' => isset($delivery->deliveryItems[0]->plannedDeliveryDate) ? $delivery->deliveryItems[0]->plannedDeliveryDate : null,
+                ];
+            }
+
+            $printOrders->push([
+                'printNumber' => $print->print,
+                'orderedQuantity' => $print->quantityOrdered,
+                'deliveries' => collect($deliveries),
+            ]);
+        }
+
+        return $printOrders;
+    }
 }

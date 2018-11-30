@@ -1424,4 +1424,25 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510442593');
         $this->assertFalse($groschen->isConnectedToErp());
     }
+
+    /**
+     * Test getting print orders and their recipients
+     * @return void
+     */
+    public function testGettingPrintOrders() {
+        $groschen = new Groschen('9789521620348');
+        $firstPrint = $groschen->getPrintOrders()->where('printNumber', 1)->first();
+
+        $this->assertSame(4100, $firstPrint['orderedQuantity']);
+
+        // Delivery without planned delivery date
+        $this->assertSame('ScandBook / Liettua', $firstPrint['deliveries']->where('recipient', 'Production department')->pluck('supplier')->first());
+        $this->assertSame(5, $firstPrint['deliveries']->where('recipient', 'Production department')->pluck('orderedQuantity')->first());
+        $this->assertNull($firstPrint['deliveries']->where('recipient', 'Production department')->pluck('plannedDeliveryDate')->first());
+
+        // Delivery with planned delivery date
+        $this->assertSame('ScandBook / Liettua', $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('supplier')->first());
+        $this->assertSame(700, $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('orderedQuantity')->first());
+        $this->assertSame('2018-11-19T00:00:00', $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('plannedDeliveryDate')->first());
+    }
 }
