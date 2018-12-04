@@ -1004,7 +1004,7 @@ class Groschen implements ProductInterface
         }
 
         // Search for cover image in Elvis
-        $response = $client->request('GET', 'search', [
+        $response = $client->request('POST', 'search', [
             'query' => [
                 'q' => 'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND (ancestorPaths:/WSOY/Kansikuvat OR ancestorPaths:/Tammi/Kansikuvat)',
                 'metadataToReturn' => 'height, width, mimeType, fileSize',
