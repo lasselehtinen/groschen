@@ -55,7 +55,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting products type
      * @return void
      */
-    public function testGettingProductType() {
+    public function testGettingProductType()
+    {
         // Hardback
         $this->assertSame('Hardback', $this->groschen->getProductType());
 
@@ -314,7 +315,8 @@ class GroschenIntegrationTest extends TestCase
      * Test contributor with only one name or pseudonym is handled correctly
      * @return void
      */
-    public function testContributorWithOnlyOneNameOrPseudonymIsHandledCorrectly() {
+    public function testContributorWithOnlyOneNameOrPseudonymIsHandledCorrectly()
+    {
         $groschen = new Groschen('9789521619021');
 
         // Author
@@ -397,7 +399,8 @@ class GroschenIntegrationTest extends TestCase
      * Test contributors without priority level are handled correctly
      * @return void
      */
-    public function testContributorsWithoutPriorityLevelAreHandledCorrectly() {
+    public function testContributorsWithoutPriorityLevelAreHandledCorrectly()
+    {
         $groschen = new Groschen('9789510434123');
 
         // Author should be first
@@ -483,7 +486,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting audio books duration only with hours
      * @return void
      */
-    public function testGettingAudioBookDurationOnlyWithHours() {
+    public function testGettingAudioBookDurationOnlyWithHours()
+    {
         $groschen = new Groschen('9789510442128');
         $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '01400', 'ExtentUnit' => '15'], $groschen->getExtents());
         $this->assertCount(1, $groschen->getExtents());
@@ -593,7 +597,8 @@ class GroschenIntegrationTest extends TestCase
      * Test product without subgroup is not throwing exception
      * @return void
      */
-    public function testProductWithoutSubgroupIsNotThrowingException() {
+    public function testProductWithoutSubgroupIsNotThrowingException()
+    {
         $groschen = new Groschen('9789510430347');
         $subjects = $groschen->getSubjects();
         $this->assertInstanceOf('Illuminate\Support\Collection', $subjects);
@@ -691,7 +696,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting the products publisher
      * @return void
      */
-    public function testGettingTheProductsPublisher() {
+    public function testGettingTheProductsPublisher()
+    {
         // Normal WSOY product
         $this->assertSame('Werner Söderström Osakeyhtiö', $this->groschen->getPublisher());
 
@@ -882,7 +888,8 @@ class GroschenIntegrationTest extends TestCase
      * Test that missing prices do not produce an exception
      * @return
      */
-    public function testMissingPricesDoNotProduceException() {
+    public function testMissingPricesDoNotProduceException()
+    {
         $groschen = new Groschen('9789510442012');
 
         $this->assertInstanceOf('Illuminate\Support\Collection', $groschen->getPrices());
@@ -1110,6 +1117,27 @@ class GroschenIntegrationTest extends TestCase
         // Product without any relations
         $groschen = new Groschen('9789513160753');
         $this->assertCount(0, $groschen->getRelatedProducts());
+    }
+
+    /**
+     * Getting related products without GTIN
+     * @return void
+     */
+    public function testGettingRelatedProductsWithoutGtin()
+    {
+        $groschen = new Groschen('9789510433669');
+
+        $relation = [
+            'ProductRelationCode' => '06',
+            'ProductIdentifiers' => [
+                [
+                    'ProductIDType' => '03',
+                    'IDValue' => 9789510442074,
+                ],
+            ],
+        ];
+
+        $this->assertContains($relation, $groschen->getRelatedProducts());
     }
 
     /**
@@ -1375,7 +1403,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting the products tax rate
      * @return void
      */
-    public function testGettingTaxRate() {
+    public function testGettingTaxRate()
+    {
         // Hardback
         $this->assertSame(10.00, $this->groschen->getTaxRate());
 
@@ -1392,7 +1421,8 @@ class GroschenIntegrationTest extends TestCase
      * Get the distribution channels in Opus
      * @return void
      */
-    public function testGettingDistributionChannels() {
+    public function testGettingDistributionChannels()
+    {
         // ePub 2 unit sales only product
         $groschen = new Groschen('9789510417188');
 
@@ -1417,7 +1447,8 @@ class GroschenIntegrationTest extends TestCase
      * Test the is connected to ERP
      * @return void
      */
-    public function testIfProductIsConnectedToErp() {
+    public function testIfProductIsConnectedToErp()
+    {
         $this->assertTrue($this->groschen->isConnectedToErp());
 
         // Product that is not connected to ERP
@@ -1429,7 +1460,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting print orders and their recipients
      * @return void
      */
-    public function testGettingPrintOrders() {
+    public function testGettingPrintOrders()
+    {
         $groschen = new Groschen('9789521620348');
         $firstPrint = $groschen->getPrintOrders()->where('printNumber', 1)->first();
 

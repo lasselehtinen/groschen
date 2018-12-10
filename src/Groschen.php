@@ -1155,7 +1155,7 @@ class Groschen implements ProductInterface
 
         foreach ($this->workLevel->productions as $production) {
             // Do not add current product
-            if ($production->isbn !== $this->productNumber) {
+            if (isset($production->isbn) && $production->isbn !== $this->productNumber) {
                 $relatedProducts->push([
                     'ProductRelationCode' => '06',
                     'ProductIdentifiers' => [
