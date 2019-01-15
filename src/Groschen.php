@@ -767,14 +767,14 @@ class Groschen implements ProductInterface
             return $text->textType->name === 'Headline';
         });
 
-        // Description (core)
-        $descriptionCore = $texts->filter(function ($text) {
-            return $text->textType->name === 'Description (core) - for booksellers and consumers';
+        // Copy 1
+        $copyOne = $texts->filter(function ($text) {
+            return $text->textType->name === 'Copy 1';
         });
 
-        // Description (extra)
-        $descriptionExtra = $texts->filter(function ($text) {
-            return $text->textType->name === 'Description (extra) - additional and optional';
+        // Copy 2
+        $copyTwo = $texts->filter(function ($text) {
+            return $text->textType->name === 'Copy 2';
         });
 
         // Author description
@@ -783,7 +783,7 @@ class Groschen implements ProductInterface
         });
 
         // Merge the texts and add missing paragraph tags
-        $mergedTexts = $headline->merge($descriptionCore)->merge($descriptionExtra)->merge($authorDescription)->transform(function ($text) {
+        $mergedTexts = $headline->merge($copyOne)->merge($copyTwo)->merge($authorDescription)->transform(function ($text) {
             if (substr($text->text, 0, 3) !== '<p>') {
                 $text->text = '<p>' . $text->text . '</p>';
             }
