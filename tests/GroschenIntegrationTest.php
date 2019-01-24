@@ -1043,8 +1043,6 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingExternalLinksInSupportingResources()
     {
-        $this->markTestIncomplete();
-
         // Product with links to multiple external sources
         $groschen = new Groschen('9789510409749');
 

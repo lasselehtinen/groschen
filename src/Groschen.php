@@ -19,6 +19,7 @@ use League\Uri\Modifiers\RemoveQueryKeys;
 use League\Uri\Schemes\Http as HttpUri;
 use Njasm\Soundcloud\Soundcloud;
 use stdClass;
+use GuzzleHttp\Exception\ServerException;
 
 class Groschen implements ProductInterface
 {
@@ -148,7 +149,11 @@ class Groschen implements ProductInterface
     public function getProduct()
     {
         // Get the production from Opus
-        $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId);
+        try {
+            $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId);
+        } catch (ServerException $e) {
+            throw new Exception('Server exception: ' . $e->getResponse()->getBody(true));
+        }
 
         return json_decode($response->getBody()->getContents());
     }
@@ -595,7 +600,8 @@ class Groschen implements ProductInterface
      * Get the products retail price including VAT
      * @return float|null
      */
-    public function getPublisherRetailPrice() {
+    public function getPublisherRetailPrice()
+    {
         return (isset($this->product->publisherRetailPriceIncludingVat)) ? floatval($this->product->publisherRetailPriceIncludingVat) : null;
     }
 
@@ -894,27 +900,27 @@ class Groschen implements ProductInterface
         $priceTypes = new Collection;
 
         // Supplier’s net price excluding tax
-        if(!is_null($this->getPriceExcludingVat())) {
-        $priceTypes->push([
-            'PriceTypeCode' => '05',
-            'TaxIncluded' => false,
-            'TaxRateCode' => 'Z',
-            'PriceAmount' => $this->getPriceExcludingVat(),
-        ]);
+        if (!is_null($this->getPriceExcludingVat())) {
+            $priceTypes->push([
+                'PriceTypeCode' => '05',
+                'TaxIncluded' => false,
+                'TaxRateCode' => 'Z',
+                'PriceAmount' => $this->getPriceExcludingVat(),
+            ]);
         }
 
         // Supplier’s net price including tax
-        if(!is_null($this->getPrice())) {
-        $priceTypes->push([
-            'PriceTypeCode' => '07',
-            'TaxIncluded' => true,
-            'TaxRateCode' => 'S',
-            'PriceAmount' => $this->getPrice(),
-        ]);
+        if (!is_null($this->getPrice())) {
+            $priceTypes->push([
+                'PriceTypeCode' => '07',
+                'TaxIncluded' => true,
+                'TaxRateCode' => 'S',
+                'PriceAmount' => $this->getPrice(),
+            ]);
         }
 
         // Publishers recommended retail price including tax
-        if(!is_null($this->getPublisherRetailPrice())) {
+        if (!is_null($this->getPublisherRetailPrice())) {
             $priceTypes->push([
                 'PriceTypeCode' => '42',
                 'TaxIncluded' => true,
@@ -1077,48 +1083,29 @@ class Groschen implements ProductInterface
         $response = $client->request('GET', 'logout');
 
         // Add audio/reading samples and YouTube trailers
-        if (isset($this->product->InternetInformation->InternetTexts[0]->InternetLinks)) {
-            foreach ($this->product->InternetInformation->InternetTexts[0]->InternetLinks as $internetLink) {
-                switch ($internetLink->LinkType) {
-                    case 'ääninäyte':
-                        $resourceContentType = '15';
-                        $resourceMode = '02';
+        foreach ($this->product->links as $link) {
+            switch ($link->linkType->name) {
+                case 'YouTube':
+                    $resourceContentType = '26';
+                    $resourceMode = '05';
+                    break;
+                case 'Issuu reading sample':
+                case 'Reading sample':
+                    $resourceContentType = '15';
+                    $resourceMode = '04';
+                    break;
+            }
 
-                        // Get permalink URL from Soundcloud
-                        $soundcloud = new Soundcloud(config('groschen.soundcloud.clientId'), config('groschen.soundcloud.clientSecret'));
-                        $soundcloud->get('/tracks/' . $internetLink->Link);
-                        $response = $soundcloud->request();
-                        $url = $response->bodyObject()->permalink_url;
-                        break;
-                    case 'issuu':
-                        $resourceContentType = '15';
-                        $resourceMode = '04';
-                        $url = $internetLink->Link;
-                        break;
-                    case 'youtube':
-                        $resourceContentType = '26';
-                        $resourceMode = '05';
-                        $url = $internetLink->Link;
-                        break;
-                    default:
-                        $resourceContentType = null;
-                        $resourceMode = null;
-                        $url = null;
-                        break;
-                }
-
-                // Add to Collection if URL exists
-                if (!empty($url)) {
-                    $supportingResources->push([
-                        'ResourceContentType' => $resourceContentType,
-                        'ContentAudience' => '00',
-                        'ResourceMode' => $resourceMode,
-                        'ResourceVersion' => [
-                            'ResourceForm' => '03',
-                            'ResourceLink' => $url,
-                        ],
-                    ]);
-                }
+            if(isset($resourceContentType)) {
+                $supportingResources->push([
+                    'ResourceContentType' => $resourceContentType,
+                    'ContentAudience' => '00',
+                    'ResourceMode' => $resourceMode,
+                    'ResourceVersion' => [
+                        'ResourceForm' => '03',
+                        'ResourceLink' => $link->url,
+                    ],
+                ]);
             }
         }
 
@@ -1934,11 +1921,11 @@ class Groschen implements ProductInterface
     {
         foreach ($this->product->activePrint->timePlan->entries as $timeplan) {
             if (isset($timeplan->type->name) && $timeplan->type->name === 'Delivery to warehouse') {
-                if(isset($timeplan->actual)) {
+                if (isset($timeplan->actual)) {
                     return DateTime::createFromFormat('Y-m-d*H:i:s', $timeplan->actual);
                 }
 
-                if(isset($timeplan->planned)) {
+                if (isset($timeplan->planned)) {
                     return DateTime::createFromFormat('Y-m-d*H:i:s', $timeplan->planned);
                 }
             }
@@ -2055,7 +2042,8 @@ class Groschen implements ProductInterface
      * Is the product connected to ERP?
      * @return boolean
      */
-    public function isConnectedToErp() {
+    public function isConnectedToErp()
+    {
         return (bool) $this->product->isConnectedToERP;
     }
 
@@ -2063,7 +2051,8 @@ class Groschen implements ProductInterface
      * Get the products print orders
      * @return Collection
      */
-    public function getPrintOrders() {
+    public function getPrintOrders()
+    {
         // Get the production print orders from Opus
         $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
         $opusPrintOrders = json_decode($response->getBody()->getContents());
