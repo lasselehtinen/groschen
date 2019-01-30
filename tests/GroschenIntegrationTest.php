@@ -644,9 +644,20 @@ class GroschenIntegrationTest extends TestCase
                     'AudienceRangePrecision' => '03', // From
                     'AudienceRangeValue' => 0,
                 ],
+            ],
+        ];
+
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+
+        // Product with age group of 5 should be mapped to 6 because of Bokinfo
+        $groschen = new Groschen('9789513181512');
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
                 [
-                    'AudienceRangePrecision' => '04', // To
-                    'AudienceRangeValue' => 3,
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 0,
                 ],
             ],
         ];
@@ -663,10 +674,6 @@ class GroschenIntegrationTest extends TestCase
                     'AudienceRangePrecision' => '03', // From
                     'AudienceRangeValue' => 12,
                 ],
-                [
-                    'AudienceRangePrecision' => '04', // To
-                    'AudienceRangeValue' => 15,
-                ],
             ],
         ];
 
@@ -681,10 +688,6 @@ class GroschenIntegrationTest extends TestCase
                 [
                     'AudienceRangePrecision' => '03', // From
                     'AudienceRangeValue' => 15,
-                ],
-                [
-                    'AudienceRangePrecision' => '04', // To
-                    'AudienceRangeValue' => 18,
                 ],
             ],
         ];

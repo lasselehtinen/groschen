@@ -1874,37 +1874,23 @@ class Groschen implements ProductInterface
         $audienceRanges = new Collection;
 
         $interestAges = [
-            '0+',
-            '3+',
-            '5+',
-            '7+',
-            '9+',
-            '10+',
-            '12+',
-            '15+',
+            '0+' => 0,
+            '3+' => 3,
+            '5+' => 5,
+            '7+' => 7,
+            '9+' => 9,
+            '10+' => 10,
+            '12+' => 12,
+            '15+' => 15,
         ];
 
         if (!empty($this->product->interestAge) && in_array($this->product->interestAge->name, $interestAges)) {
-            $fromAge = $this->product->interestAge->name;
-
-            // Calculate to based on the current and next index
-            if ($this->product->interestAge->name !== '15+') {
-                $index = array_search($fromAge, $interestAges);
-                $toAge = $interestAges[$index + 1];
-            } else {
-                $toAge = 18;
-            }
-
             $audienceRanges->push([
                 'AudienceRangeQualifier' => 17,
                 'AudienceRangeScopes' => [
                     [
                         'AudienceRangePrecision' => '03', // From
-                        'AudienceRangeValue' => intval($fromAge),
-                    ],
-                    [
-                        'AudienceRangePrecision' => '04', // To
-                        'AudienceRangeValue' => intval($toAge),
+                        'AudienceRangeValue' => $interestAges[$this->product->interestAge->name],
                     ],
                 ],
             ]);
