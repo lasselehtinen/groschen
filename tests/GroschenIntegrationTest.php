@@ -30,6 +30,15 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that deactivated product is fetched also
+     * @return void
+     */
+    public function testDeactivatedProductWorksFine() {
+        $groschen = new Groschen('9789510439555');
+        $this->assertSame('00', $this->groschen->getProductComposition());
+    }
+
+    /**
      * Test getting all products identifiers
      * @return void
      */

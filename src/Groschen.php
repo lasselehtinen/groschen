@@ -121,6 +121,7 @@ class Groschen implements ProductInterface
                 'limit' => 1,
                 'searchFields' => 'isbn',
                 '$select' => $return,
+                '$filter' => '(isCancelled eq true or isCancelled eq false)',
             ],
         ]);
 
