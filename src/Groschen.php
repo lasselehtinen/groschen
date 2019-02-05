@@ -1495,11 +1495,13 @@ class Groschen implements ProductInterface
 
                         // Go through all the headings/subjects
                         foreach ($subject->heading as $heading) {
-                            $keywords[] = [
-                                'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
-                                'SubjectSchemeName' => $subjectSchemeName,
-                                'SubjectCode' => $heading,
-                            ];
+                            if($heading !== 'Ellibs') {
+                                $keywords[] = [
+                                    'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
+                                    'SubjectSchemeName' => $subjectSchemeName,
+                                    'SubjectCode' => $heading,
+                                ];
+                            }
                         }
                     }
                 }
