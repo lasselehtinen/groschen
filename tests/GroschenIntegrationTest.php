@@ -454,6 +454,11 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'fin'], $this->groschen->getLanguages());
         $this->assertCount(1, $this->groschen->getLanguages());
 
+        // Book with issue
+        $groschen = new Groschen('9789510438039');
+        $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'fin'], $groschen->getLanguages());
+        $this->assertCount(1, $groschen->getLanguages());
+
         // Book that is translated
         $groschen = new Groschen('9789510409749');
         $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'fin'], $groschen->getLanguages());
@@ -819,6 +824,9 @@ class GroschenIntegrationTest extends TestCase
     {
         // Publishing date
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20100601'], $this->groschen->getPublishingDates());
+
+        // Public announcement date / Season
+        $this->assertContains(['PublishingDateRole' => '09', 'Date' => '2010 Spring'], $this->groschen->getPublishingDates());
 
         // Latest reprint
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());

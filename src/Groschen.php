@@ -893,19 +893,16 @@ class Groschen implements ProductInterface
             $publishingDates->push(['PublishingDateRole' => '01', 'Date' => $publishingDate->format('Ymd')]);
         }
 
-        // Get prints
-        $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
-        $prints = json_decode($response->getBody()->getContents());
+        // Add public announcement date / Season
+        if(!empty($this->product->seasonYear) && !empty($this->product->seasonPeriod)) {
+            $publishingDates->push(['PublishingDateRole' => '09', 'Date' => $this->product->seasonYear->name . ' ' . $this->product->seasonPeriod->name]);
+        }
 
         // Latest reprint date
-        $latestPrint = end($prints->prints);
+        $latestStockArrivalDate = $this->getLatestStockArrivalDate();
 
-        foreach ($latestPrint->timePlanEntries as $timePlanEntry) {
-            // Delivery in stock
-            if ($timePlanEntry->type->name === 'Delivery to warehouse' && !empty($timePlanEntry->planned)) {
-                $lastReprintDate = DateTime::createFromFormat('Y-m-d*H:i:s', $timePlanEntry->planned);
-                $publishingDates->push(['PublishingDateRole' => '12', 'Date' => $lastReprintDate->format('Ymd')]);
-            }
+        if(!is_null($latestStockArrivalDate)) {
+           $publishingDates->push(['PublishingDateRole' => '12', 'Date' => $latestStockArrivalDate->format('Ymd')]); 
         }
 
         return $publishingDates;
