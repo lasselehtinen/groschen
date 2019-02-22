@@ -828,6 +828,10 @@ class GroschenIntegrationTest extends TestCase
         // Public announcement date / Season
         $this->assertContains(['PublishingDateRole' => '09', 'Date' => '2010 Spring', 'Format' => 12], $this->groschen->getPublishingDates());
 
+        // Check that fake season 2099 N/A is not shown
+        $groschen = new Groschen('9789527144404');
+        $this->assertNotContains(['PublishingDateRole' => '09', 'Date' => '2099 N/A', 'Format' => 12], $groschen->getPublishingDates());
+
         // Latest reprint
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());
 

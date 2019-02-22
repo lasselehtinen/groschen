@@ -895,11 +895,13 @@ class Groschen implements ProductInterface
 
         // Add public announcement date / Season
         if(!empty($this->product->seasonYear) && !empty($this->product->seasonPeriod)) {
-            $publishingDates->push([
-                'PublishingDateRole' => '09',
-                'Date' => $this->product->seasonYear->name . ' ' . $this->product->seasonPeriod->name,
-                'Format' => 12
-            ]);
+            if($this->product->seasonYear->name !== '2099' && $this->product->seasonPeriod->name !== 'N/A') {
+                $publishingDates->push([
+                    'PublishingDateRole' => '09',
+                    'Date' => $this->product->seasonYear->name . ' ' . $this->product->seasonPeriod->name,
+                    'Format' => 12
+                ]);
+            }
         }
 
         // Latest reprint date
