@@ -5,6 +5,7 @@ use Cache;
 use DateTime;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\HandlerStack;
 use HTMLPurifier;
 use HTMLPurifier_Config;
@@ -17,9 +18,7 @@ use League\OAuth2\Client\Provider\GenericProvider;
 use League\Uri\Modifiers\MergeQuery;
 use League\Uri\Modifiers\RemoveQueryKeys;
 use League\Uri\Schemes\Http as HttpUri;
-use Njasm\Soundcloud\Soundcloud;
 use stdClass;
-use GuzzleHttp\Exception\ServerException;
 
 class Groschen implements ProductInterface
 {
@@ -810,7 +809,7 @@ class Groschen implements ProductInterface
         // Review quotes
         $maxReviews = 3;
 
-        for ($i=1; $i <= $maxReviews; $i++) {
+        for ($i = 1; $i <= $maxReviews; $i++) {
             $reviewQuote = $texts->filter(function ($text) use ($i) {
                 return $text->textType->name === 'Review quote ' . $i;
             })->first();
@@ -819,7 +818,7 @@ class Groschen implements ProductInterface
                 return $text->textType->name === 'Review quote source ' . $i;
             })->first();
 
-            if(!empty($reviewQuote) && !empty($reviewQuoteSource)) {
+            if (!empty($reviewQuote) && !empty($reviewQuoteSource)) {
                 $textContents->push([
                     'TextType' => '06',
                     'ContentAudience' => '00',
@@ -894,12 +893,12 @@ class Groschen implements ProductInterface
         }
 
         // Add public announcement date / Season
-        if(!empty($this->product->seasonYear) && !empty($this->product->seasonPeriod)) {
-            if($this->product->seasonYear->name !== '2099' && $this->product->seasonPeriod->name !== 'N/A') {
+        if (!empty($this->product->seasonYear) && !empty($this->product->seasonPeriod)) {
+            if ($this->product->seasonYear->name !== '2099' && $this->product->seasonPeriod->name !== 'N/A') {
                 $publishingDates->push([
                     'PublishingDateRole' => '09',
                     'Date' => $this->product->seasonYear->name . ' ' . $this->product->seasonPeriod->name,
-                    'Format' => 12
+                    'Format' => 12,
                 ]);
             }
         }
@@ -907,8 +906,8 @@ class Groschen implements ProductInterface
         // Latest reprint date
         $latestStockArrivalDate = $this->getLatestStockArrivalDate();
 
-        if(!is_null($latestStockArrivalDate)) {
-           $publishingDates->push(['PublishingDateRole' => '12', 'Date' => $latestStockArrivalDate->format('Ymd')]); 
+        if (!is_null($latestStockArrivalDate)) {
+            $publishingDates->push(['PublishingDateRole' => '12', 'Date' => $latestStockArrivalDate->format('Ymd')]);
         }
 
         return $publishingDates;
@@ -1122,7 +1121,7 @@ class Groschen implements ProductInterface
                     break;
             }
 
-            if(isset($resourceContentType)) {
+            if (isset($resourceContentType)) {
                 $supportingResources->push([
                     'ResourceContentType' => $resourceContentType,
                     'ContentAudience' => '00',
@@ -1520,7 +1519,7 @@ class Groschen implements ProductInterface
 
                         // Go through all the headings/subjects
                         foreach ($subject->heading as $heading) {
-                            if($heading !== 'Ellibs') {
+                            if ($heading !== 'Ellibs') {
                                 $keywords[] = [
                                     'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
                                     'SubjectSchemeName' => $subjectSchemeName,
@@ -2098,5 +2097,35 @@ class Groschen implements ProductInterface
         }
 
         return $printOrders;
+    }
+
+    /**
+     * Is the product "Main edition"?
+     * @return boolean
+     */
+    public function isMainEdition()
+    {
+        foreach($this->workLevel->productions as $production) {
+            if($production->id === $this->product->id && $production->isMainEdition === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Is the product "Internet edition"?
+     * @return boolean
+     */
+    public function isInternetEdition()
+    {
+        foreach($this->workLevel->productions as $production) {
+            if($production->id === $this->product->id && $production->externalPrimaryEdition->isPrimary === true) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -306,4 +306,16 @@ interface ProductInterface
      * @return Collection
      */
     public function getPrintOrders();
+
+    /**
+     * Is the product "Main edition"?
+     * @return boolean
+     */
+    public function isMainEdition();
+
+    /**
+     * Is the product "Internet edition"?
+     * @return boolean
+     */
+    public function isInternetEdition();
 }

@@ -1510,4 +1510,32 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame(700, $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('orderedQuantity')->first());
         $this->assertSame('2018-11-19T00:00:00', $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('plannedDeliveryDate')->first());
     }
+
+    /**
+     * Test if product is main edition
+     * @return void
+     */
+    public function testIfProductIsMainEdition() {
+        // Main edition
+        $groschen = new Groschen('9789510389997');
+        $this->assertTrue($groschen->isMainEdition());
+
+        // Product that is not main edition
+        $groschen = new Groschen('9789510409169');
+        $this->assertFalse($groschen->isMainEdition());
+    }
+
+    /**
+     * Test if product is internet edition
+     * @return void
+     */
+    public function testIfProductIsInternetEdition() {
+        // Internet edition
+        $groschen = new Groschen('9789510390795');
+        $this->assertTrue($groschen->isInternetEdition());
+
+        // Product that is not internet edition
+        $groschen = new Groschen('9789510390016');
+        $this->assertFalse($groschen->isInternetEdition());
+    }
 }
