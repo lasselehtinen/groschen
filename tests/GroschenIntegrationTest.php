@@ -481,8 +481,6 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingExtents()
     {
-        $this->markTestIncomplete();
-
         $this->assertContains(['ExtentType' => '00', 'ExtentValue' => '128', 'ExtentUnit' => '03'], $this->groschen->getExtents());
         $this->assertCount(1, $this->groschen->getExtents());
 
