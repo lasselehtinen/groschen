@@ -325,7 +325,7 @@ class Groschen implements ProductInterface
                     'TitleDetail' => [
                         'TitleType' => '01',
                         'TitleElement' => [
-                            'TitleElementLevel' => '01',
+                            'TitleElementLevel' => '02',
                             'TitleText' => $this->product->series->name,
                         ],
                     ],
@@ -355,7 +355,7 @@ class Groschen implements ProductInterface
                     'TitleDetail' => [
                         'TitleType' => '01',
                         'TitleElement' => [
-                            'TitleElementLevel' => '01',
+                            'TitleElementLevel' => '02',
                             'TitleText' => $this->product->marketingSerie,
                         ],
                     ],

@@ -199,7 +199,7 @@ class GroschenIntegrationTest extends TestCase
                 'TitleDetail' => [
                     'TitleType' => '01',
                     'TitleElement' => [
-                        'TitleElementLevel' => '01',
+                        'TitleElementLevel' => '02',
                         'TitleText' => 'Calendar Girl',
                     ],
                 ],
@@ -220,7 +220,7 @@ class GroschenIntegrationTest extends TestCase
                 'TitleDetail' => [
                     'TitleType' => '01',
                     'TitleElement' => [
-                        'TitleElementLevel' => '01',
+                        'TitleElementLevel' => '02',
                         'TitleText' => 'Bon-pokkarit',
                     ],
                 ],
