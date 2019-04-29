@@ -1059,6 +1059,21 @@ class Groschen implements ProductInterface
             // Download the file for MD5/SHA checksums
             $contents = file_get_contents($this->getAuthCredUrl($hit->originalUrl));
 
+            // Check that we have all the required metadata fields
+            $requiredMetadataFields = [
+                'mimeType',
+                'height',
+                'width',
+                'filename',
+                'fileSize',
+            ];
+
+            foreach ($requiredMetadataFields as $requiredMetadataField) {
+                if(property_exists($hit->metadata, $requiredMetadataField) === false) {
+                    throw new Exception('The required metadata field '. $requiredMetadataField . ' does not exist in Elvis.');                    
+                } 
+            }
+
             $supportingResources->push([
                 'ResourceContentType' => '01',
                 'ContentAudience' => '00',
