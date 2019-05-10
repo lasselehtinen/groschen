@@ -1549,6 +1549,8 @@ class GroschenIntegrationTest extends TestCase
         $productionPlan = $groschen->getProductionPlan();        
 
         $plannedDate = $productionPlan->where('print', 1)->where('name', 'Delivery to warehouse')->pluck('planned_date')->first();
-        $this->assertSame('2019-03-11', $plannedDate->format('Y-m-d'));
+        $expectedDate = new DateTime('2019-03-11');
+
+        $this->assertSame($plannedDate->format('Y-m-d'), $expectedDate->format('Y-m-d'));
     }
 }

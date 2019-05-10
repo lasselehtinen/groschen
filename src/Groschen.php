@@ -2174,14 +2174,14 @@ class Groschen implements ProductInterface
         foreach ($this->productionPlan->prints as $productionPlanEntry) {
              // Add all time plan entries
             foreach ($productionPlanEntry->timePlanEntries as $timePlanEntry) {
+                
                 $productionPlan->push([
                     'print' => $productionPlanEntry->print,
                     'id' => $timePlanEntry->type->id,
                     'name' => $timePlanEntry->type->name,
-                    'planned_date' => isset($timePlanEntry->planned) ? DateTime::createFromFormat('Y-m-d\T00:00:00', $timePlanEntry->planned) : null,
-                    'actual_date' => isset($timePlanEntry->actual) ? DateTime::createFromFormat('Y-m-d\T00:00:00', $timePlanEntry->actual) : null,
+                    'planned_date' => isset($timePlanEntry->planned) ? DateTime::createFromFormat('Y-m-d\TH:i:s', $timePlanEntry->planned) : null,
+                    'actual_date' => isset($timePlanEntry->actual) ? DateTime::createFromFormat('Y-m-d\TH:i:s', $timePlanEntry->actual) : null,
                 ]);
-
             }
         }
 
