@@ -1513,7 +1513,8 @@ class GroschenIntegrationTest extends TestCase
      * Test if product is main edition
      * @return void
      */
-    public function testIfProductIsMainEdition() {
+    public function testIfProductIsMainEdition()
+    {
         // Main edition
         $groschen = new Groschen('9789510389997');
         $this->assertTrue($groschen->isMainEdition());
@@ -1527,7 +1528,8 @@ class GroschenIntegrationTest extends TestCase
      * Test if product is internet edition
      * @return void
      */
-    public function testIfProductIsInternetEdition() {
+    public function testIfProductIsInternetEdition()
+    {
         // Internet edition
         $groschen = new Groschen('9789510390795');
         $this->assertTrue($groschen->isInternetEdition());
@@ -1535,5 +1537,18 @@ class GroschenIntegrationTest extends TestCase
         // Product that is not internet edition
         $groschen = new Groschen('9789510390016');
         $this->assertFalse($groschen->isInternetEdition());
+    }
+
+    /**
+     * Test getting production plan
+     * @return void
+     */
+    public function testGettingProductionPlan()
+    {
+        $groschen = new Groschen('9789510423417');
+        $productionPlan = $groschen->getProductionPlan();        
+
+        $plannedDate = $productionPlan->where('print', 1)->where('name', 'Delivery to warehouse')->pluck('planned_date')->first();
+        $this->assertSame('2019-03-11', $plannedDate->format('Y-m-d'));
     }
 }

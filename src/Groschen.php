@@ -53,6 +53,12 @@ class Groschen implements ProductInterface
     private $workLevel;
 
     /**
+     * Production plan
+     * @var stdClass
+     */
+    private $productionPlan;
+
+    /**
      * Guzzle HTTP client
      * @var \GuzzleHttp\Client
      */
@@ -104,6 +110,7 @@ class Groschen implements ProductInterface
         $this->productionId = $this->searchProductions('id');
         $this->product = $this->getProduct();
         $this->workLevel = $this->getWorkLevel();
+        $this->productionPlan = $this->getPrintProductionPlan();
     }
 
     /**
@@ -156,6 +163,18 @@ class Groschen implements ProductInterface
         }
 
         return json_decode($response->getBody()->getContents());
+    }
+
+    public function getPrintProductionPlan()
+    {
+        // Get the production from Opus
+        try {
+            $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
+        } catch (ServerException $e) {
+            throw new Exception('Server exception: ' . $e->getResponse()->getBody(true));
+        }
+
+        return json_decode($response->getBody()->getContents());        
     }
 
     /**
@@ -2142,5 +2161,30 @@ class Groschen implements ProductInterface
         }
 
         return false;
+    }
+
+    /**
+     * Get the products production plan
+     * @return Collection
+     */
+    public function getProductionPlan()
+    {
+        $productionPlan = new Collection;
+
+        foreach ($this->productionPlan->prints as $productionPlanEntry) {
+             // Add all time plan entries
+            foreach ($productionPlanEntry->timePlanEntries as $timePlanEntry) {
+                $productionPlan->push([
+                    'print' => $productionPlanEntry->print,
+                    'id' => $timePlanEntry->type->id,
+                    'name' => $timePlanEntry->type->name,
+                    'planned_date' => isset($timePlanEntry->planned) ? DateTime::createFromFormat('Y-m-d\T00:00:00', $timePlanEntry->planned) : null,
+                    'actual_date' => isset($timePlanEntry->actual) ? DateTime::createFromFormat('Y-m-d\T00:00:00', $timePlanEntry->actual) : null,
+                ]);
+
+            }
+        }
+
+        return $productionPlan;
     }
 }

@@ -318,4 +318,10 @@ interface ProductInterface
      * @return boolean
      */
     public function isInternetEdition();
+
+    /**
+     * Get the products production plan
+     * @return Collection
+     */
+    public function getProductionPlan();
 }
