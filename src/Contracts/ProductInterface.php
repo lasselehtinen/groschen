@@ -38,6 +38,12 @@ interface ProductInterface
     public function getProductFormDetail();
 
     /**
+     * Get the products technical binding type
+     * @return string|null
+     */
+    public function getTechnicalBindingType();
+
+    /**
      * Get the products form features
      * @return Collection
      */

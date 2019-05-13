@@ -165,6 +165,21 @@ class GroschenIntegrationTest extends TestCase
         $this->assertNull($groschen->getProductFormDetail());
     }
 
+     /**
+     * Test getting ProductFormFeatures
+     * @return void
+     */
+    public function testGettingTechnicalBindingType()
+    {
+        // ePub 2
+        $groschen = new Groschen('9789510439838');
+        $this->assertNull($groschen->getTechnicalBindingType());
+
+        // Hardback
+        $groschen = new Groschen('9789510423417');
+        $this->assertSame('Printed cover, glued binding', $groschen->getTechnicalBindingType());
+    }   
+
     /**
      * Test getting ProductFormFeatures
      * @return void

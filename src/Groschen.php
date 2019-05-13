@@ -290,6 +290,19 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products technical binding type
+     * @return string|null
+     */
+    public function getTechnicalBindingType() 
+    {
+        if (property_exists($this->product, 'technicalProductionType') === false) {
+            return null;
+        }
+
+        return $this->product->technicalProductionType->name;
+    }
+
+    /**
      * Get the products form features
      * @return Collection
      */
