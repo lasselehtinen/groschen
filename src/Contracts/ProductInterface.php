@@ -74,6 +74,12 @@ interface ProductInterface
     public function getContributors();
 
     /**
+     * Get the all contributors, including those that don't have Onix roles
+     * @return Collection
+     */
+    public function getAllContributors();
+
+    /**
      * Get the products languages
      * @return Collection
      */

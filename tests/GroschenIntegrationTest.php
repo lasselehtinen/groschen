@@ -460,6 +460,29 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting all contributors
+     * @return void
+     */
+    public function testGettingAllContributors()
+    {
+        // Keski-Suomen Sivu
+        $layout = [
+            'Role' => 'Layout',
+            'Name' => 'Keski-Suomen Sivu',
+        ];
+
+        $this->assertContains($layout, $this->groschen->getAllContributors());
+
+        // Printer
+        $printer = [
+            'Role' => 'Printer',
+            'Name' => 'Bookwell Oy',
+        ];
+
+        $this->assertContains($printer, $this->groschen->getAllContributors());
+    }
+
+    /**
      * Test getting products languages
      * @return void
      */

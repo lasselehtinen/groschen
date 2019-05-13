@@ -512,6 +512,31 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the all contributors, including those that don't have Onix roles
+     * @return Collection
+     */
+    public function getAllContributors()
+    {
+        $contributors = new Collection;
+
+        // If no stakeholders present
+        if (!isset($this->product->members)) {
+            return $contributors;
+        }
+
+        foreach ($this->product->members as $member) {
+            $name = (isset($member->contact->lastName)) ? $member->contact->firstName . ' ' . $member->contact->lastName : $member->contact->firstName;
+
+            $contributors->push([
+                'Role' => $member->role->name,
+                'Name' => $name,
+            ]);
+        }
+
+        return $contributors;
+    }
+
+    /**
      * Get the products languages
      * @return Collection
      */
