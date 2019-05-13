@@ -1591,4 +1591,14 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertSame($plannedDate->format('Y-m-d'), $expectedDate->format('Y-m-d'));
     }
+
+    /**
+     * Test getting comments
+     * @return void
+     */
+    public function testGettingTechnicalDescriptionComment()
+    {
+        $groschen = new Groschen('9789520405786');
+        $this->assertSame('PMS on cover PMS 322 C.', $groschen->getTechnicalDescriptionComment());
+    }
 }

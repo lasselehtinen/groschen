@@ -336,4 +336,10 @@ interface ProductInterface
      * @return Collection
      */
     public function getProductionPlan();
+
+    /**
+     * Get the technical description comment
+     * @return string|null
+     */
+    public function getTechnicalDescriptionComment();
 }

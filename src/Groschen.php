@@ -2225,4 +2225,14 @@ class Groschen implements ProductInterface
 
         return $productionPlan;
     }
+
+    /**
+     * Test getting the technical description comment
+     * 
+     * @return Collection
+     */
+    public function getTechnicalDescriptionComment()
+    {
+        return $this->product->activePrint->miscComment;
+    }
 }
