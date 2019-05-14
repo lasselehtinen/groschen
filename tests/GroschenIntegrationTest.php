@@ -83,8 +83,7 @@ class GroschenIntegrationTest extends TestCase
      * @return void
      */
     public function testGettingProductFormAndProductFormDetail()
-    {
-        /*
+    {        
         // Hardback
         $groschen = new Groschen('9789510405314');
         $this->assertSame('BB', $groschen->getProductForm());
@@ -159,7 +158,7 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510429945');
         $this->assertSame('ED', $groschen->getProductForm());
         $this->assertSame('W994', $groschen->getProductFormDetail());
-*/
+
         // PDF e-book
         $groschen = new Groschen('9789510422281');
         $this->assertSame('EA', $groschen->getProductForm());
@@ -401,7 +400,7 @@ class GroschenIntegrationTest extends TestCase
     public function testContributorPriorityIsHandledCorrectly()
     {
         $groschen = new Groschen('9789510421987');
-
+        
         // First author
         $firstAuthor = [
             'SequenceNumber' => 1,
@@ -410,7 +409,7 @@ class GroschenIntegrationTest extends TestCase
             'NamesBeforeKey' => 'Jari',
             'KeyNames' => 'Aarnio',
         ];
-
+        
         $this->assertContains($firstAuthor, $groschen->getContributors());
 
         // Second author
@@ -900,7 +899,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Product with second print having only actual date
         $groschen = new Groschen('9789510437605');
-        $expectedArrivalDate = new DateTime('2018-12-03');
+        $expectedArrivalDate = new DateTime('2018-12-04');
         $this->assertEquals($expectedArrivalDate, $groschen->getLatestStockArrivalDate());
     }
 
@@ -1038,13 +1037,13 @@ class GroschenIntegrationTest extends TestCase
         // Publishers recommended retail price including tax
         $publishersRecommendedRetailPriceIncludingTax = [
             'PriceType' => '42',
-            'PriceAmount' => 12.90,
+            'PriceAmount' => 8.90,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 24,
-                'TaxableAmount' => 10.40,
-                'TaxAmount' => 2.50,
+                'TaxableAmount' => 7.177,
+                'TaxAmount' => 1.72,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -1090,15 +1089,15 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '06',
-                        'FeatureValue' => 'c4204770c25afca3d98f629f1916d3f2',
+                        'FeatureValue' => 'b35478750c98b5a67671d06c62f3dcfd',
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 1738006,
+                        'FeatureValue' => 1738034,
                     ],
                     [
                         'ResourceVersionFeatureType' => '08',
-                        'FeatureValue' => '019fd7ee76362bf683e36aa89351cd54cb55ec89b3d035da645170cbba91307f',
+                        'FeatureValue' => 'ea2cba4463cb5c0b77c157d0185603bdbedaa05836ec28c763edf0bce99007bd',
                     ],
 
                 ],
