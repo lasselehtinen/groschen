@@ -142,7 +142,7 @@ class GroschenIntegrationTest extends TestCase
         // CD
         $groschen = new Groschen('9789510379110');
         $this->assertSame('AC', $groschen->getProductForm());
-        $this->assertNull($groschen->getProductFormDetail());
+        $this->assertSame('A101', $groschen->getProductFormDetail());
 
         // MP3-CD
         $groschen = new Groschen('9789520402983');

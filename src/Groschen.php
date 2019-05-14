@@ -282,6 +282,10 @@ class Groschen implements ProductInterface
             case 'EPUB3':
                 return 'W993';
                 break;
+            // Audio CD
+            case 'AC':
+                return 'A101';
+                break;
             // Return last three characters if they are 2+4 combo
             default:
                 return (strlen($this->product->bindingCode->id) === 6) ? substr($this->product->bindingCode->id, 2, 4) : null;
