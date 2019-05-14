@@ -260,6 +260,10 @@ class Groschen implements ProductInterface
             case 'EPUB3':
                 return 'ED';
                 break;
+            // PDF
+            case 'PDF':
+                return 'EA';
+                break;
             // For all others we can just pick the two first letters
             default:
                 return substr($this->product->bindingCode->id, 0, 2);
@@ -285,6 +289,10 @@ class Groschen implements ProductInterface
             // Audio CD
             case 'AC':
                 return 'A101';
+                break;
+            // PDF
+            case 'PDF':
+                return 'E107';
                 break;
             // Return last three characters if they are 2+4 combo
             default:
