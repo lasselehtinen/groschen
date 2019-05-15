@@ -1617,125 +1617,118 @@ class GroschenIntegrationTest extends TestCase
 
         // Insides
         $inside = [
-            'inside' => [
-                'width' => 135,
-                'height' => 215,
-                'paperType' => null,
-                'paperName' => 'HOLBFSC',
-                'grammage' => 70,
-                'bulk' => 'Other',
-                'bulkValue' => '1,8',
-                'colors' => '1/1',
-                'colorNames' => null,
-                //'hasPhotoSection' => false,
-                //'photoSectionExtent' => null,
-                'numberOfPages' => 300,
-            ],
+            'partName' => 'inside',
+            'width' => 135,
+            'height' => 215,
+            'paperType' => null,
+            'paperName' => 'HOLBFSC',
+            'grammage' => 70,
+            'bulk' => 'Other',
+            'bulkValue' => '1,8',
+            'colors' => '1/1',
+            'colorNames' => null,
+            //'hasPhotoSection' => false,
+            //'photoSectionExtent' => null,
+            'numberOfPages' => 300,            
         ];
         
         $this->assertContains($inside, $groschen->getTechnicalData());
 
         // Case
         $case = [
-            'case' => [
-                'coverMaterial' => 'GEL-LS-191 black',
-                'foil' => 'Kurz Luxor 220 gold',
-                'embossing' => false,
-                'foilPlacement' => null,                
-            ],
+            'partName' => 'case',
+            'coverMaterial' => 'GEL-LS-191 black',
+            'foil' => 'Kurz Luxor 220 gold',
+            'embossing' => false,
+            'foilPlacement' => null,
         ];
 
         $this->assertContains($case, $groschen->getTechnicalData());
 
         // Printed cover
         $printedCover = [
-            'printedCover' => [                
-                'paperType' => 'Other',
-                'paperName' => 'GEL',
-                'grammage' => 115,
-                'colors' => '0/0',
-                'colorNames' => null,
-                'foil' => null,
-                'hasBlindEmbossing' => false,
-                'hasUvSpotVarnishGlossy' => false,
-                'hasUvSpotVarnishMatt' => false,
-                'hasDispersionVarnish' => false,
-                'hasReliefSpotVarnish' => false,
-                'placement' => null,
-                'lamination' => null,
-            ],
+            'partName' => 'printedCover',           
+            'paperType' => 'Other',
+            'paperName' => 'GEL',
+            'grammage' => 115,
+            'colors' => '0/0',
+            'colorNames' => null,
+            'foil' => null,
+            'hasBlindEmbossing' => false,
+            'hasUvSpotVarnishGlossy' => false,
+            'hasUvSpotVarnishMatt' => false,
+            'hasDispersionVarnish' => false,
+            'hasReliefSpotVarnish' => false,
+            'placement' => null,
+            'lamination' => null,
         ];
 
         $this->assertContains($printedCover, $groschen->getTechnicalData());
 
         // Dust jacket
         $dustJacket = [
-            'dustJacket' => [
-                'paperType' => 'Other',
-                'paperName' => 'ARTG130',
-                'grammage' => 130,
-                'colors' => '5/0',
-                'colorNames' => null,
-                'foil' => 'Yes',
-                'hasBlindEmbossing' => false,
-                'hasUvSpotVarnishGlossy' => false,
-                'hasUvSpotVarnishMatt' => false,
-                'hasDispersionVarnish' => false,
-                'hasReliefSpotVarnish' => false,
-                'placement' => null,
-                'lamination' => 'Matt lamination',
-            ],
+            'partName' => 'dustJacket',
+            'paperType' => 'Other',
+            'paperName' => 'ARTG130',
+            'grammage' => 130,
+            'colors' => '5/0',
+            'colorNames' => null,
+            'foil' => 'Yes',
+            'hasBlindEmbossing' => false,
+            'hasUvSpotVarnishGlossy' => false,
+            'hasUvSpotVarnishMatt' => false,
+            'hasDispersionVarnish' => false,
+            'hasReliefSpotVarnish' => false,
+            'placement' => null,
+            'lamination' => 'Matt lamination',
         ];        
         
         $this->assertContains($dustJacket, $groschen->getTechnicalData());
 
         // Soft cover
         $softCover = [
-            'softCover' => [
-                'paperType' => null,
-                'grammage' => null,
-                'colors' => null,
-                'colorNames' => null,
-                'foil' => null,
-                'hasBlindEmbossing'  => false,
-                'hasFlaps'  => false,
-                'hasUvSpotVarnishGlossy'  => false,
-                'hasUvSpotVarnishMatt'  => false,
-                'hasDispersionVarnish'  => false,
-                'hasReliefSpotVarnish'  => false,
-                'placement' => null,
-                'lamination' => null,
-            ],
+            'partName' => 'softCover',
+            'paperType' => null,
+            'grammage' => null,
+            'colors' => null,
+            'colorNames' => null,
+            'foil' => null,
+            'hasBlindEmbossing'  => false,
+            'hasFlaps'  => false,
+            'hasUvSpotVarnishGlossy'  => false,
+            'hasUvSpotVarnishMatt'  => false,
+            'hasDispersionVarnish'  => false,
+            'hasReliefSpotVarnish'  => false,
+            'placement' => null,
+            'lamination' => null,
         ];        
         
         $this->assertContains($softCover, $groschen->getTechnicalData());
 
         // End papers
         $endPapers = [
-            'endPapers' => [
-                'paperType' => 'Other',
-                'paperName' => 'MUNPC115_15',
-                'grammage' => 115,
-                'colors' => 'Other',
-                'colorNames' => '4+0',
-                'selfEnds' => false,
-            ],
+            'partName' => 'endPapers',
+            'paperType' => 'Other',
+            'paperName' => 'MUNPC115_15',
+            'grammage' => 115,
+            'colors' => 'Other',
+            'colorNames' => '4+0',
+            'selfEnds' => false,
         ];        
         
         $this->assertContains($endPapers, $groschen->getTechnicalData());
 
         // Book binding
         $bookBinding = [
-            'bookBinding' => [
-                'bindingType' => 'GLUED',
-                'boardThickness' => 2.0,
-                'headBand' => 'black',
-                'ribbonMarker' => null,
-                'spineType' => 'Rounded',
-                'spideWidth' => 21,
-                'clothedSpineMaterial' => null,
-                'comments' => 'Kannen mittapiirros Saara S/Sanna U  5.11.18'
-            ],
+            'partName' => 'bookBinding',
+            'bindingType' => 'GLUED',
+            'boardThickness' => 2.0,
+            'headBand' => 'black',
+            'ribbonMarker' => null,
+            'spineType' => 'Rounded',
+            'spideWidth' => 21,
+            'clothedSpineMaterial' => null,
+            'comments' => 'Kannen mittapiirros Saara S/Sanna U  5.11.18'
         ];
 
         $this->assertContains($bookBinding, $groschen->getTechnicalData());
