@@ -342,4 +342,10 @@ interface ProductInterface
      * @return string|null
      */
     public function getTechnicalDescriptionComment();
+
+    /**
+     * Get the products technical printing data
+     * @return Collection
+     */
+    public function getTechnicalData();
 }

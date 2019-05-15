@@ -2247,4 +2247,126 @@ class Groschen implements ProductInterface
     {
         return $this->product->activePrint->miscComment;
     }
+
+    /**
+     * Get the products technical printing data
+     * @return Collection
+     */
+    public function getTechnicalData()
+    {
+        $technicalData = new Collection;
+
+        // Inside
+        $technicalData->push([
+            'inside' => [
+                'width' => intval($this->product->activePrint->insideTrimmedFormatWidth),
+                'height' => intval($this->product->activePrint->insideTrimmedFormatHeight),
+                'paperType' => $this->product->activePrint->insidePaper->name ?? null,
+                'paperName' => $this->product->activePrint->insideName ?? null,
+                'grammage' => intval($this->product->activePrint->insideWeight->name),
+                'bulk' => $this->product->activePrint->insideBulk->name,
+                'bulkValue' => $this->product->activePrint->insideBulkOther,
+                'colors' => (isset($this->product->activePrint->insidePrinting->name)) ? str_replace('+', '/', $this->product->activePrint->insidePrinting->name) : null,
+                'colorNames' => $this->product->activePrint->insideColors ?? null,
+                //'hasPhotoSection' => false,
+                //'photoSectionExtent' => null,
+                'numberOfPages' => $this->product->pages,
+            ]
+        ]);
+
+        // Case 
+        $technicalData->push([
+            'case' => [
+                'coverMaterial' => $this->product->activePrint->cover->material ?? null,
+                'foil' => $this->product->activePrint->cover->foil ?? null,
+                'embossing' => $this->product->activePrint->cover->hasBlindEmbossing ?? null,
+                'foilPlacement' => $this->product->activePrint->cover->placement->name ?? null,                
+            ]
+        ]);
+
+        // Printed Cover
+        $technicalData->push([
+            'printedCover' => [
+                'paperType' => $this->product->activePrint->printedCover->paper->name ?? null,
+                'paperName' => $this->product->activePrint->printedCover->paperOther ?? null,
+                'grammage' => (isset($this->product->activePrint->printedCover->paperWeight)) ? intval($this->product->activePrint->printedCover->paperWeight) : null,
+                'colors' => (isset($this->product->activePrint->printedCover->printing->name)) ? str_replace('+', '/', $this->product->activePrint->printedCover->printing->name) : null,
+                'colorNames' => $this->product->activePrint->printedCover->colors ?? null,
+                'foil' => $this->product->activePrint->printedCover->foil ?? null,
+                'hasBlindEmbossing' => $this->product->activePrint->printedCover->hasBlindEmbossing,
+                'hasUvSpotVarnishGlossy' => $this->product->activePrint->printedCover->hasUvSpotVarnishGlossy,
+                'hasUvSpotVarnishMatt' => $this->product->activePrint->printedCover->hasUvSpotVarnishMatt,
+                'hasDispersionVarnish' => $this->product->activePrint->printedCover->hasDispersionVarnish,
+                'hasReliefSpotVarnish' => $this->product->activePrint->printedCover->hasReliefSpotVarnish,
+                'placement' => $this->product->activePrint->printedCover->placement->name ?? null,
+                'lamination' => $this->product->activePrint->printedCover->lamination->name ?? null,
+            ]
+        ]);
+
+        // Dust jacket
+        $technicalData->push([
+            'dustJacket' => [                
+                'paperType' => $this->product->activePrint->jacket->paper->name ?? null,
+                'paperName' => $this->product->activePrint->jacket->paperOther ?? null,
+                'grammage' => intval($this->product->activePrint->jacket->paperWeight),
+                'colors' => (isset($this->product->activePrint->jacket->printing->name)) ? str_replace('+', '/', $this->product->activePrint->jacket->printing->name) : null,
+                'colorNames' => $this->product->activePrint->jacket->colors ?? null,
+                'foil' => $this->product->activePrint->jacket->foil ?? null,
+                'hasBlindEmbossing' => $this->product->activePrint->jacket->hasBlindEmbossing,
+                'hasUvSpotVarnishGlossy' => $this->product->activePrint->jacket->hasUvSpotVarnishGlossy,
+                'hasUvSpotVarnishMatt' => $this->product->activePrint->jacket->hasUvSpotVarnishMatt,
+                'hasDispersionVarnish' => $this->product->activePrint->jacket->hasDispersionVarnish,
+                'hasReliefSpotVarnish' => $this->product->activePrint->jacket->hasReliefSpotVarnish,
+                'placement' => $this->product->activePrint->jacket->placement->name ?? null,
+                'lamination' => $this->product->activePrint->jacket->lamination->name ?? null,
+            ]
+        ]);
+
+        // Soft cover
+        $technicalData->push([
+            'softCover' => [
+                'paperType' => null,
+                'grammage' => null,
+                'colors' => null,
+                'colorNames' => null,
+                'foil' => null,
+                'hasBlindEmbossing'  => false,
+                'hasFlaps'  => false,
+                'hasUvSpotVarnishGlossy'  => false,
+                'hasUvSpotVarnishMatt'  => false,
+                'hasDispersionVarnish'  => false,
+                'hasReliefSpotVarnish'  => false,
+                'placement' => null,
+                'lamination' => null,
+            ],
+        ]);
+
+        // End papers
+        $technicalData->push([
+            'endPapers' => [                
+                'paperType' => $this->product->activePrint->foePaper->name ?? null,
+                'paperName' => $this->product->activePrint->foePaperOther ?? null,
+                'grammage' => intval($this->product->activePrint->foeWeight),
+                'colors' => (isset($this->product->activePrint->foePaper)) ? str_replace('+', '/', $this->product->activePrint->foePaper->name) : null,
+                'colorNames' => $this->product->activePrint->foeColors ?? null,
+                'selfEnds' => $this->product->activePrint->foeIsPressed,
+            ]
+        ]);        
+
+        // End papers
+        $technicalData->push([
+            'bookBinding' => [                
+                'bindingType' => $this->product->activePrint->bookbindingBinding->name ?? null,
+                'boardThickness' => (isset($this->product->activePrint->bookbindingBinderThickness)) ? floatval($this->product->activePrint->bookbindingBinderThickness->name) : null,
+                'headBand' => $this->product->activePrint->bookbindingHeadband ?? null,
+                'ribbonMarker' => $this->product->activePrint->bookbindingClampingBand ?? null,
+                'spineType' => $this->product->activePrint->bookbindingSpineType->name ?? null,
+                'spideWidth' => (isset($this->product->activePrint->definitiveSpineWidth)) ? intval($this->product->activePrint->definitiveSpineWidth) : null,
+                'clothedSpineMaterial' => $this->product->activePrint->bookbindingMaterial ?? null,
+                'comments' => $this->product->activePrint->bookbindingComment ?? null,
+            ]
+        ]);   
+
+        return $technicalData;
+    }
 }
