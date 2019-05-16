@@ -1760,7 +1760,7 @@ class GroschenIntegrationTest extends TestCase
             'paperName' => 'G-Print',
             'grammage' => 115,
             'numberOfPages' => 16,
-            'colors' => '1/1',
+            'colors' => '4/4',
             'colorNames' => null,
         ];
 
@@ -1774,6 +1774,6 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingTechnicalDataForProductWithoutAnyDoesNotThrowException() 
     {
         $groschen = new Groschen('9789510429938');
-        $this->assertCount(7, $groschen->getTechnicalData());
+        $this->assertCount(8, $groschen->getTechnicalData());
     }
 }
