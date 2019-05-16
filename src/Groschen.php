@@ -2286,7 +2286,7 @@ class Groschen implements ProductInterface
             'partName' => 'attachment',
             'paperType' => $this->product->activePrint->imageSheetPaper->name ?? null,
             'paperName' => $this->product->activePrint->imageSheetName ?? null,
-            'grammage' => intval($this->product->activePrint->imageSheetWeight),
+            'grammage' => (isset($this->product->activePrint->imageSheetWeight)) ? intval($this->product->activePrint->imageSheetWeight) : null,
             'numberOfPages' => (isset($this->product->activePrint->imageSheetPages)) ? intval($this->product->activePrint->imageSheetPages) : null,
             'colors' => (isset($this->product->activePrint->imageSheetPrinting->name)) ? str_replace('+', '/', $this->product->activePrint->imageSheetPrinting->name) : null,
             'colorNames' => $this->product->activePrint->imageSheetColors ?? null,
