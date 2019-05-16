@@ -1745,6 +1745,32 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains($bookBinding, $groschen->getTechnicalData());
     }
 
+    /**
+     * Test getting technical printing data for image attachment
+     * @return void
+     */
+    public function testGettingAttachmentTechnicalData()
+    {
+        $groschen = new Groschen('9789510439203');
+
+        // Attachment
+        $attachment = [
+            'partName' => 'attachment',
+            'paperType' => 'Wood-free coated',
+            'paperName' => 'G-Print',
+            'grammage' => 115,
+            'numberOfPages' => 16,
+            'colors' => '1/1',
+            'colorNames' => null,
+        ];
+
+        $this->assertContains($attachment, $groschen->getTechnicalData());
+    }
+
+    /**
+     * Test getting technical data for a project that does not have any does not throw exception
+     * @return void
+     */
     public function testGettingTechnicalDataForProductWithoutAnyDoesNotThrowException() 
     {
         $groschen = new Groschen('9789510429938');

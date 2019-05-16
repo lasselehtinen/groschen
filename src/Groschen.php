@@ -2264,7 +2264,7 @@ class Groschen implements ProductInterface
             'paperName' => $this->product->activePrint->insideName ?? null,
             'grammage' => intval($this->product->activePrint->insideWeight->name),
             'bulk' => $this->product->activePrint->insideBulk->name,
-            'bulkValue' => $this->product->activePrint->insideBulkOther,
+            'bulkValue' => $this->product->activePrint->insideBulkOther ?? null,
             'colors' => (isset($this->product->activePrint->insidePrinting->name)) ? str_replace('+', '/', $this->product->activePrint->insidePrinting->name) : null,
             'colorNames' => $this->product->activePrint->insideColors ?? null,
             //'hasPhotoSection' => false,
@@ -2281,6 +2281,17 @@ class Groschen implements ProductInterface
             'foilPlacement' => $this->product->activePrint->cover->placement->name ?? null,
         ]);
 
+        // Attachment
+        $technicalData->push([
+            'partName' => 'attachment',
+            'paperType' => $this->product->activePrint->imageSheetPaper->name ?? null,
+            'paperName' => $this->product->activePrint->imageSheetName ?? null,
+            'grammage' => intval($this->product->activePrint->imageSheetWeight),
+            'numberOfPages' => intval($this->product->activePrint->imageSheetPages),
+            'colors' => '1/1',
+            'colorNames' => null,
+        ]);        
+
         // Printed Cover
         $technicalData->push([
             'partName' => 'printedCover',
@@ -2290,11 +2301,11 @@ class Groschen implements ProductInterface
             'colors' => (isset($this->product->activePrint->printedCover->printing->name)) ? str_replace('+', '/', $this->product->activePrint->printedCover->printing->name) : null,
             'colorNames' => $this->product->activePrint->printedCover->colors ?? null,
             'foil' => $this->product->activePrint->printedCover->foil ?? null,
-            'hasBlindEmbossing' => $this->product->activePrint->printedCover->hasBlindEmbossing,
-            'hasUvSpotVarnishGlossy' => $this->product->activePrint->printedCover->hasUvSpotVarnishGlossy,
-            'hasUvSpotVarnishMatt' => $this->product->activePrint->printedCover->hasUvSpotVarnishMatt,
-            'hasDispersionVarnish' => $this->product->activePrint->printedCover->hasDispersionVarnish,
-            'hasReliefSpotVarnish' => $this->product->activePrint->printedCover->hasReliefSpotVarnish,
+            'hasBlindEmbossing' => $this->product->activePrint->printedCover->hasBlindEmbossing ?? null,
+            'hasUvSpotVarnishGlossy' => $this->product->activePrint->printedCover->hasUvSpotVarnishGlossy ?? null,
+            'hasUvSpotVarnishMatt' => $this->product->activePrint->printedCover->hasUvSpotVarnishMatt ?? null,
+            'hasDispersionVarnish' => $this->product->activePrint->printedCover->hasDispersionVarnish ?? null,
+            'hasReliefSpotVarnish' => $this->product->activePrint->printedCover->hasReliefSpotVarnish ?? null,
             'placement' => $this->product->activePrint->printedCover->placement->name ?? null,
             'lamination' => $this->product->activePrint->printedCover->lamination->name ?? null,
         ]);
