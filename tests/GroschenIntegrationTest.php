@@ -470,10 +470,20 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingAllContributors()
     {
+        // Author
+        $author = [
+            'Role' => 'Author',
+            'FirstName' => 'Tuomas',
+            'LastName' => 'Kyrö',
+        ];
+
+        $this->assertContains($author, $this->groschen->getAllContributors());
+
         // Keski-Suomen Sivu
         $layout = [
             'Role' => 'Layout',
-            'Name' => 'Keski-Suomen Sivu',
+            'FirstName' => 'Keski-Suomen Sivu',
+            'LastName' => null,
         ];
 
         $this->assertContains($layout, $this->groschen->getAllContributors());
@@ -481,7 +491,8 @@ class GroschenIntegrationTest extends TestCase
         // Printer
         $printer = [
             'Role' => 'Printer',
-            'Name' => 'Bookwell Oy',
+            'FirstName' => 'Bookwell Oy',
+            'LastName' => null,
         ];
 
         $this->assertContains($printer, $this->groschen->getAllContributors());

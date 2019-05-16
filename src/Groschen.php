@@ -537,11 +537,10 @@ class Groschen implements ProductInterface
         }
 
         foreach ($this->product->members as $member) {
-            $name = (isset($member->contact->lastName)) ? $member->contact->firstName . ' ' . $member->contact->lastName : $member->contact->firstName;
-
             $contributors->push([
                 'Role' => $member->role->name,
-                'Name' => $name,
+                'FirstName' => $member->contact->firstName ?? null,
+                'LastName' => $member->contact->lastName ?? null,
             ]);
         }
 
