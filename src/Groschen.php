@@ -2240,11 +2240,11 @@ class Groschen implements ProductInterface
     /**
      * Test getting the technical description comment
      * 
-     * @return Collection
+     * @return string|null
      */
     public function getTechnicalDescriptionComment()
     {
-        return $this->product->activePrint->miscComment;
+        return $this->product->activePrint->miscComment ?? null;
     }
 
     /**
@@ -2262,14 +2262,14 @@ class Groschen implements ProductInterface
             'height' => intval($this->product->activePrint->insideTrimmedFormatHeight),
             'paperType' => $this->product->activePrint->insidePaper->name ?? null,
             'paperName' => $this->product->activePrint->insideName ?? null,
-            'grammage' => intval($this->product->activePrint->insideWeight->name),
+            'grammage' => (isset($this->product->activePrint->insideWeight->name)) ? intval($this->product->activePrint->insideWeight->name) : null,
             'bulk' => $this->product->activePrint->insideBulk->name,
             'bulkValue' => $this->product->activePrint->insideBulkOther ?? null,
             'colors' => (isset($this->product->activePrint->insidePrinting->name)) ? str_replace('+', '/', $this->product->activePrint->insidePrinting->name) : null,
             'colorNames' => $this->product->activePrint->insideColors ?? null,
             //'hasPhotoSection' => false,
             //'photoSectionExtent' => null,
-            'numberOfPages' => $this->product->pages,
+            'numberOfPages' => $this->product->pages ?? null,
         ]);
 
         // Case 
@@ -2315,7 +2315,7 @@ class Groschen implements ProductInterface
             'partName' => 'dustJacket',
             'paperType' => $this->product->activePrint->jacket->paper->name ?? null,
             'paperName' => $this->product->activePrint->jacket->paperOther ?? null,
-            'grammage' => intval($this->product->activePrint->jacket->paperWeight),
+            'grammage' => (isset($this->product->activePrint->jacket->paperWeight)) ? intval($this->product->activePrint->jacket->paperWeight) : null,
             'colors' => (isset($this->product->activePrint->jacket->printing->name)) ? str_replace('+', '/', $this->product->activePrint->jacket->printing->name) : null,
             'colorNames' => $this->product->activePrint->jacket->colors ?? null,
             'foil' => $this->product->activePrint->jacket->foil ?? null,
