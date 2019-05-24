@@ -960,6 +960,12 @@ class Groschen implements ProductInterface
             $publishingDates->push(['PublishingDateRole' => '01', 'Date' => $publishingDate->format('Ymd')]);
         }
 
+        // Add Embargo / First permitted day of sale
+        if (!empty($this->product->firstSellingDay)) {
+            $embargoDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->firstSellingDay);
+            $publishingDates->push(['PublishingDateRole' => '02', 'Date' => $embargoDate->format('Ymd')]);
+        }
+        
         // Add public announcement date / Season
         if (!empty($this->product->seasonYear) && !empty($this->product->seasonPeriod)) {
             if ($this->product->seasonYear->name !== '2099' && $this->product->seasonPeriod->name !== 'N/A') {
