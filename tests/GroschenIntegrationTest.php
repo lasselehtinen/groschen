@@ -483,7 +483,7 @@ class GroschenIntegrationTest extends TestCase
         $layout = [
             'Role' => 'Layout',
             'FirstName' => 'Keski-Suomen Sivu',
-            'LastName' => null,
+            'LastName' => 'Oy',
         ];
 
         $this->assertContains($layout, $this->groschen->getAllContributors());
@@ -1133,17 +1133,6 @@ class GroschenIntegrationTest extends TestCase
         // Product with links to multiple external sources
         $groschen = new Groschen('9789510409749');
 
-        // Audio sample in Soundcloud
-        $audioSample = [
-            'ResourceContentType' => '15',
-            'ContentAudience' => '00',
-            'ResourceMode' => '02',
-            'ResourceVersion' => [
-                'ResourceForm' => '03',
-                'ResourceLink' => 'https://soundcloud.com/wsoy/9789510409749-kaikki-se-valo-jota-emme-naee',
-            ],
-        ];
-
         // Youtube
         $youTube = [
             'ResourceContentType' => '26',
@@ -1166,7 +1155,6 @@ class GroschenIntegrationTest extends TestCase
             ],
         ];
 
-        $this->assertContains($audioSample, $groschen->getSupportingResources());
         $this->assertContains($youTube, $groschen->getSupportingResources());
         $this->assertContains($readingSample, $groschen->getSupportingResources());
     }
@@ -1537,7 +1525,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertTrue($this->groschen->isConnectedToErp());
 
         // Product that is not connected to ERP
-        $groschen = new Groschen('9789510442593');
+        $groschen = new Groschen('9789510443781');
         $this->assertFalse($groschen->isConnectedToErp());
     }
 
