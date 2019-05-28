@@ -2374,4 +2374,21 @@ class Groschen implements ProductInterface
 
         return $technicalData;
     }
+
+        /**
+     * Get the prizes that the product has received
+     * @return Collection
+     */
+    public function getPrizes()
+    {
+        $prizes = new Collection;
+
+        foreach ($this->product->awards as $award) {
+            $prizes->push([
+                'PrizeName' => $award->name,
+            ]);
+        }
+        
+        return $prizes;
+    }
 }

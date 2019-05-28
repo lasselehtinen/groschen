@@ -348,4 +348,10 @@ interface ProductInterface
      * @return Collection
      */
     public function getTechnicalData();
+
+    /**
+     * Get the prizes that the product has received
+     * @return Collection
+     */
+    public function getPrizes();
 }

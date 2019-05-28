@@ -1764,4 +1764,23 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510429938');
         $this->assertCount(8, $groschen->getTechnicalData());
     }
+
+    /**
+     * Test getting products prizes
+     * @return void
+     */
+    public function testGettingPrizes()
+    {
+        // Product without awards
+        $this->assertCount(0, $this->groschen->getPrizes());
+
+        // Product with prize/awayd
+        $groschen = new Groschen('9789510382745');
+
+        $prizes = [
+            'PrizeName' => 'Finlandia-palkinto'
+        ];
+
+        $this->assertContains($prizes, $groschen->getPrizes());    
+    }
 }
