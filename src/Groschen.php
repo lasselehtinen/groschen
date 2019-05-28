@@ -2383,9 +2383,19 @@ class Groschen implements ProductInterface
     {
         $prizes = new Collection;
 
+        // Won awards
         foreach ($this->product->awards as $award) {
             $prizes->push([
                 'PrizeName' => $award->name,
+                'PrizeCode' => '01',
+            ]);
+        }
+
+        // Nominations
+        foreach ($this->product->nominations as $nomination) {
+            $prizes->push([
+                'PrizeName' => $nomination->name,
+                'PrizeCode' => '07',
             ]);
         }
         
