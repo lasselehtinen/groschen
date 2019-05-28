@@ -286,10 +286,6 @@ class Groschen implements ProductInterface
             case 'EPUB3':
                 return 'W993';
                 break;
-            // Audio CD
-            case 'AC':
-                return 'A101';
-                break;
             // PDF
             case 'PDF':
                 return 'E107';
