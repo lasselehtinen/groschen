@@ -1923,8 +1923,12 @@ class Groschen implements ProductInterface
      */
     public function getSalesSeason()
     {
-        if (!isset($this->product->seasonYear)) {
+        if (!isset($this->product->seasonYear) && !isset($this->product->seasonPeriod)) {
             return null;
+        }
+
+        if (isset($this->product->seasonYear) && !isset($this->product->seasonPeriod)) {
+            return $this->product->seasonYear->name;
         }
 
         // Form sales period

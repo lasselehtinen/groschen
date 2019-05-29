@@ -1437,6 +1437,10 @@ class GroschenIntegrationTest extends TestCase
         // Product without sales season
         $groschen = new Groschen('9789510102893');
         $this->assertNull($groschen->getSalesSeason());
+
+        // Product that season but no period
+        $groschen = new Groschen('9789513130855');
+        $this->assertSame('2019', $groschen->getSalesSeason());         
     }
 
     /**
