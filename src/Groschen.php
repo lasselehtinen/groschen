@@ -6,6 +6,7 @@ use DateTime;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
 use HTMLPurifier;
 use HTMLPurifier_Config;
@@ -710,7 +711,7 @@ class Groschen implements ProductInterface
      */
     public function getOriginalPublicationDate()
     {
-        if (is_null($this->product->OriginalPublishingDate)) {
+        if (empty($this->product->OriginalPublishingDate)) {
             return null;
         }
 
@@ -723,11 +724,11 @@ class Groschen implements ProductInterface
      */
     public function getLatestPublicationDate()
     {
-        if (is_null($this->product->PublishingDate)) {
+        if (is_null($this->product->publishingDate)) {
             return null;
         }
 
-        return DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->PublishingDate);
+        return DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->publishingDate);
     }
 
     /**
@@ -2379,7 +2380,7 @@ class Groschen implements ProductInterface
         return $technicalData;
     }
 
-        /**
+    /**
      * Get the prizes that the product has received
      * @return Collection
      */
@@ -2404,5 +2405,127 @@ class Groschen implements ProductInterface
         }
         
         return $prizes;
+    }
+
+    /**
+     * Get products availability code
+     * @return string|null
+     */
+    public function getProductAvailability()
+    {
+        // Digital products
+        if($this->isImmaterial()) {
+            // Only statuses Published and Development are affected by the publication date
+            if($this->product->listingCode->name === 'Development' || $this->product->listingCode->name === 'Published') {                
+                // Either "In stock" or "Not yet available"
+                return $this->isPublicationDatePassed() ? '21' : '10';
+            }
+
+            // All other governing codes
+            switch ($this->product->listingCode->name) {
+                case 'Sold out':
+                case 'Short Run':
+                    return '40';
+                    break;
+            }
+        }
+
+        // Governing codes which are mapped directly where available stock or publishing date do not affect
+        switch ($this->product->listingCode->name) {
+            case 'Cancelled':
+                return '01';
+                break;
+            case 'Development-Confidential':
+            case 'Delivery block':
+                return '40';
+                break;            
+            case 'Sold out':
+                return '31';
+                break;  
+        }
+
+        // Already published product
+        if ($this->product->listingCode->name === 'Published') {
+            // Check if the product has free stock
+            $onHand = $this->getStocks()->pluck('OnHand')->first();
+            $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
+
+            if($hasStock) {
+                return '21';
+            } 
+
+            $tomorrow = new DateTime('tomorrow');
+            $stockArrivalDate = $this->getLatestStockArrivalDate();
+
+            return ($tomorrow > $stockArrivalDate) ? '31' : '30';                    
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if original publication date has passed
+     * @return bool
+     */
+    public function isPublicationDatePassed()
+    {        
+        $publicationDate = $this->getOriginalPublicationDate() ?? $this->getLatestPublicationDate();        
+        $tomorrow = new DateTime('tomorrow');
+
+        return ($tomorrow > $publicationDate);        
+    }
+
+    /**
+     * Get the products stocks
+     * @return Collection
+     */
+    public function getStocks() {
+        $stocks = new Collection;
+
+        // Get stocks from API
+        $client = new Client([
+            'base_uri' => 'http://stocks.books.local/api/products/gtin/',
+            'timeout'  => 2.0,
+        ]);
+
+        try {
+            $response = $client->request('GET', $this->productNumber);
+            $json = json_decode($response->getBody()->getContents());
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+
+            if (empty($response)) {
+                throw new Exception('Stock API response is empty for GTIN ' . $gtin);
+            }
+
+            $json = json_decode($response->getBody()->getContents());
+
+            if ($json->data->error_code !== 404 && $json->data->error_message !== 'The model could not be found.') {
+                throw new Exception('Could not fetch stock data for GTIN ' . $gtin);
+            } else {
+                return $stocks;
+            }
+        }
+
+        // Determine correct proximity value, 0-100 = Exactly and 101 - = More than
+        if ($json->data->available_stock > 100) {
+            $proximityValue = '07';
+            $onHand = 100; // With on hand values more than 100, don't show exact value but > 100
+        } else {
+            $proximityValue = '03';
+            $onHand = $json->data->available_stock;
+        }
+
+        $stocks->push([
+            'LocationIdentifier' => [
+                'LocationIDType' => '06',
+                'IDValue' => '6430049920009',
+            ],
+            'LocationName' => 'Porvoon Kirjakeskus / Tarmolan päävarasto',
+            'OnHand' => $onHand,
+            'Proximity' => $proximityValue,
+        ]);
+
+        return $stocks;
     }
 }
