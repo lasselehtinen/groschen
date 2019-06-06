@@ -224,7 +224,7 @@ class GroschenIntegrationTest extends TestCase
                     ],
                 ],
                 'CollectionSequence' => [
-                    'CollectionSequenceType' => '03',
+                    'CollectionSequenceType' => '02',
                     'CollectionSequenceNumber' => 9,
                 ],
             ],
@@ -627,7 +627,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FBA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;kaunokirjallisuus;suomenkielinen kirjallisuus;romaanit;lyhytproosa'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
@@ -635,7 +635,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sota;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;Suomi;1939-1945;kirjallisuuspalkinnot;Tieto-Finlandia;2013'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sota;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;Suomi;1939-1945;sotarintama'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
@@ -980,39 +980,6 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510442012');
 
         $this->assertInstanceOf('Illuminate\Support\Collection', $groschen->getPrices());
-    }
-
-    /**
-     * Test getting products prices for product with missing prices and 24% VAT
-     * @return void
-     */
-    public function testGettingPricesForProductWithMissingPrice()
-    {
-        $this->markTestIncomplete();
-
-        $groschen = new Groschen('9789510353318');
-
-        // RRP excluding tax
-        $suppliersNetPriceExcludingTax = [
-            'PriceType' => '05',
-            'PriceAmount' => 20.32,
-            'Tax' => [
-                'TaxType' => '01',
-                'TaxRateCode' => 'Z',
-                'TaxRatePercent' => 24,
-                'TaxableAmount' => 20.32,
-                'TaxAmount' => 0,
-            ],
-            'CurrencyCode' => 'EUR',
-            'Territory' => [
-                'RegionsIncluded' => 'WORLD',
-            ],
-        ];
-
-        $this->assertContains($suppliersNetPriceExcludingTax, $groschen->getPrices());
-
-        // Should not have PriceType 02
-        $this->assertFalse($groschen->getPrices()->contains('PriceType', '02'));
     }
 
     /**
@@ -1440,7 +1407,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Product that season but no period
         $groschen = new Groschen('9789513130855');
-        $this->assertSame('2019', $groschen->getSalesSeason());         
+        $this->assertNull($groschen->getSalesSeason());
     }
 
     /**
