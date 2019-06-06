@@ -261,16 +261,16 @@ class GroschenIntegrationTest extends TestCase
 
         $collection = [
             'CollectionType' => '10', [
-                'CollectionSequence' => [
-                    'CollectionSequenceType' => '03',
-                    'CollectionSequenceNumber' => '12',
-                ],
                 'TitleDetail' => [
                     'TitleType' => '01',
                     'TitleElement' => [
-                        'TitleElementLevel' => '01',
+                        'TitleElementLevel' => '02',
                         'TitleText' => 'Tokyo Ghoul',
                     ],
+                ],
+                'CollectionSequence' => [
+                    'CollectionSequenceType' => '02',
+                    'CollectionSequenceNumber' => 12,
                 ],
             ],
         ];
