@@ -2460,6 +2460,11 @@ class Groschen implements ProductInterface
             return ($tomorrow > $stockArrivalDate) ? '31' : '30';                    
         }
 
+        // Short-run is always available        
+        if ($this->product->listingCode->name === 'Short run') {
+            return '21';
+        }
+
         return null;
     }
 
