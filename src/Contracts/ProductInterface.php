@@ -354,4 +354,22 @@ interface ProductInterface
      * @return Collection
      */
     public function getPrizes();
+
+    /**
+     * Get products availability code
+     * @return string|null
+     */
+    public function getProductAvailability();
+
+    /**
+     * Check if original publication date has passed
+     * @return bool
+     */
+    public function isPublicationDatePassed();
+
+    /**
+     * Get the products stocks
+     * @return Collection
+     */
+    public function getStocks();
 }

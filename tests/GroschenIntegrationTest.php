@@ -1798,4 +1798,92 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($prizes, $groschen->getPrizes());  
     }
+
+    /**
+     * Test getting product availability
+     * @return void
+     */
+    public function testGettingProductAvailability()
+    {                
+        // Development, digital and publishing date is in the future
+        $groschen = new Groschen('9789510438343');
+        $this->assertSame('10', $groschen->getProductAvailability());
+        
+        // Published, digital and publishing date is in the future
+        $groschen = new Groschen('9789510446447');
+        $this->assertSame('10', $groschen->getProductAvailability());
+       
+        // Development, digital and publishing date is in the past
+        $groschen = new Groschen('9789510420157');
+        $this->assertSame('21', $groschen->getProductAvailability());
+
+        // Published, digital and publishing date is in the past
+        $groschen = new Groschen('9789513151409');
+        $this->assertSame('21', $groschen->getProductAvailability());
+        
+        // Cancelled digital product
+        $groschen = new Groschen('9789510384763');
+        $this->assertSame('01', $groschen->getProductAvailability());
+
+        // Published physical product that has stock
+        $groschen = new Groschen('9789513140045');
+        $this->assertSame('21', $groschen->getProductAvailability());
+
+        // Published physical product that does not have stock and no planned reprint date
+        $groschen = new Groschen('9789521610509');
+        $this->assertSame('31', $groschen->getProductAvailability());
+
+        // Published physical product that does not have stock but reprint is coming
+        $groschen = new Groschen('9789513122225');
+        $this->assertSame('30', $groschen->getProductAvailability());
+        
+        // Short-run product with stock
+        $groschen = new Groschen('9789510407356');
+        $this->assertSame('21', $groschen->getProductAvailability());    
+
+        // Short-run product without any stock
+        $groschen = new Groschen('9789510409701');
+        $this->assertSame('21', $groschen->getProductAvailability());
+
+        // Development-confidential should return 40
+        $groschen = new Groschen('9789510369401');
+        $this->assertSame('40', $groschen->getProductAvailability()); 
+    }
+
+    /**
+     * Test if the publication date passed is handled correctly
+     * @return void
+     */
+    public function testIfPublicationDateIsPassed()
+    {
+        $groschen = new Groschen('9789513178888');
+        $this->assertFalse($groschen->isPublicationDatePassed());
+
+        $groschen = new Groschen('9789520401122');
+        $this->assertTrue($groschen->isPublicationDatePassed());        
+    }
+
+    /**
+     * Test getting products stocks
+     * @return void
+     */
+    public function testGettingStocks() {
+        // Product with stock
+        $stock = [
+            'LocationIdentifier' => [
+                'LocationIDType' => '06',
+                'IDValue' => '6430049920009',
+            ],
+            'LocationName' => 'Porvoon Kirjakeskus / Tarmolan päävarasto',
+            'OnHand' => 100,
+            'Proximity' => '07',
+        ];
+
+        $this->assertContains($stock, $this->groschen->getStocks());
+
+        // Digital product should not return anything
+        $groschen = new Groschen('9789510420157');
+        $this->assertCount(0, $groschen->getStocks());
+    }
+
 }
