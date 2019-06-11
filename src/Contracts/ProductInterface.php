@@ -372,4 +372,11 @@ interface ProductInterface
      * @return Collection
      */
     public function getStocks();
+
+    /**
+     * Get the supply dates
+     * @return Collection
+     */
+    public function getSupplyDates();
+
 }

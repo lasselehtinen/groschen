@@ -2533,4 +2533,21 @@ class Groschen implements ProductInterface
 
         return $stocks;
     }
+
+    /**
+     * Get the supply dates
+     * @return Collection
+     */
+    public function getSupplyDates() {
+        $supplyDates = new Collection;
+
+        // Latest reprint date
+        $latestStockArrivalDate = $this->getLatestStockArrivalDate();
+
+        if (!is_null($latestStockArrivalDate)) {
+            $supplyDates->push(['SupplyDateRole' => '08', 'Date' => $latestStockArrivalDate->format('Ymd')]);
+        }
+
+        return $supplyDates;
+    }
 }

@@ -1853,4 +1853,23 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(0, $groschen->getStocks());
     }
 
+    /**
+     * Test getting SupplyDates
+     * @return void
+     */
+    public function testGettingSupplyDates() {
+        // Product with stock
+        $supplyDate = [
+            'SupplyDateRole' => '08',
+            'Date' => '20171003',
+        ];
+
+        $this->assertCount(1, $this->groschen->getSupplyDates());
+        $this->assertContains($supplyDate, $this->groschen->getSupplyDates());
+
+        // Digital product should not return anything
+        $groschen = new Groschen('9789510420157');
+        $this->assertCount(0, $groschen->getSupplyDates());
+    }
+
 }
