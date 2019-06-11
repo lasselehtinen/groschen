@@ -175,7 +175,7 @@ class Groschen implements ProductInterface
             throw new Exception('Server exception: ' . $e->getResponse()->getBody(true));
         }
 
-        return json_decode($response->getBody()->getContents());        
+        return json_decode($response->getBody()->getContents());
     }
 
     /**
@@ -302,7 +302,7 @@ class Groschen implements ProductInterface
      * Get the products technical binding type
      * @return string|null
      */
-    public function getTechnicalBindingType() 
+    public function getTechnicalBindingType()
     {
         if (property_exists($this->product, 'technicalProductionType') === false) {
             return null;
@@ -482,7 +482,7 @@ class Groschen implements ProductInterface
             $sortOrder = $priorityLevel . '-' . $sortOrderPriority . '-' . $rolePriority . '-' . $lastNamePriority;
 
             return $sortOrder;
-        });        
+        });
 
         // Remove internal resource if required
         if ($returnInternalResources === false) {
@@ -1140,9 +1140,9 @@ class Groschen implements ProductInterface
             ];
 
             foreach ($requiredMetadataFields as $requiredMetadataField) {
-                if(property_exists($hit->metadata, $requiredMetadataField) === false) {
-                    throw new Exception('The required metadata field '. $requiredMetadataField . ' does not exist in Elvis.');                    
-                } 
+                if (property_exists($hit->metadata, $requiredMetadataField) === false) {
+                    throw new Exception('The required metadata field '. $requiredMetadataField . ' does not exist in Elvis.');
+                }
             }
 
             $supportingResources->push([
@@ -2195,8 +2195,8 @@ class Groschen implements ProductInterface
      */
     public function isMainEdition()
     {
-        foreach($this->workLevel->productions as $production) {
-            if($production->id === $this->product->id && $production->isMainEdition === true) {
+        foreach ($this->workLevel->productions as $production) {
+            if ($production->id === $this->product->id && $production->isMainEdition === true) {
                 return true;
             }
         }
@@ -2210,8 +2210,8 @@ class Groschen implements ProductInterface
      */
     public function isInternetEdition()
     {
-        foreach($this->workLevel->productions as $production) {
-            if($production->id === $this->product->id && $production->externalPrimaryEdition->isPrimary === true) {
+        foreach ($this->workLevel->productions as $production) {
+            if ($production->id === $this->product->id && $production->externalPrimaryEdition->isPrimary === true) {
                 return true;
             }
         }
@@ -2230,7 +2230,6 @@ class Groschen implements ProductInterface
         foreach ($this->productionPlan->prints as $productionPlanEntry) {
              // Add all time plan entries
             foreach ($productionPlanEntry->timePlanEntries as $timePlanEntry) {
-                
                 $productionPlan->push([
                     'print' => $productionPlanEntry->print,
                     'id' => $timePlanEntry->type->id,
@@ -2246,7 +2245,7 @@ class Groschen implements ProductInterface
 
     /**
      * Test getting the technical description comment
-     * 
+     *
      * @return string|null
      */
     public function getTechnicalDescriptionComment()
@@ -2279,7 +2278,7 @@ class Groschen implements ProductInterface
             'numberOfPages' => $this->product->pages ?? null,
         ]);
 
-        // Case 
+        // Case
         $technicalData->push([
             'partName' => 'case',
             'coverMaterial' => $this->product->activePrint->cover->material ?? null,
@@ -2297,7 +2296,7 @@ class Groschen implements ProductInterface
             'numberOfPages' => (isset($this->product->activePrint->imageSheetPages)) ? intval($this->product->activePrint->imageSheetPages) : null,
             'colors' => (isset($this->product->activePrint->imageSheetPrinting->name)) ? str_replace('+', '/', $this->product->activePrint->imageSheetPrinting->name) : null,
             'colorNames' => $this->product->activePrint->imageSheetColors ?? null,
-        ]);        
+        ]);
 
         // Printed Cover
         $technicalData->push([
@@ -2362,7 +2361,7 @@ class Groschen implements ProductInterface
             'colors' => (isset($this->product->activePrint->foePaper)) ? str_replace('+', '/', $this->product->activePrint->foePaper->name) : null,
             'colorNames' => $this->product->activePrint->foeColors ?? null,
             'selfEnds' => $this->product->activePrint->foeIsPressed,
-        ]);        
+        ]);
 
         // End papers
         $technicalData->push([
@@ -2375,7 +2374,7 @@ class Groschen implements ProductInterface
             'spideWidth' => (isset($this->product->activePrint->definitiveSpineWidth)) ? intval($this->product->activePrint->definitiveSpineWidth) : null,
             'clothedSpineMaterial' => $this->product->activePrint->bookbindingMaterial ?? null,
             'comments' => $this->product->activePrint->bookbindingComment ?? null,
-        ]);   
+        ]);
 
         return $technicalData;
     }
@@ -2414,9 +2413,9 @@ class Groschen implements ProductInterface
     public function getProductAvailability()
     {
         // Digital products
-        if($this->isImmaterial()) {
+        if ($this->isImmaterial()) {
             // Only statuses Published and Development are affected by the publication date
-            if($this->product->listingCode->name === 'Development' || $this->product->listingCode->name === 'Published') {                
+            if ($this->product->listingCode->name === 'Development' || $this->product->listingCode->name === 'Published') {
                 // Either "In stock" or "Not yet available"
                 return $this->isPublicationDatePassed() ? '21' : '10';
             }
@@ -2438,10 +2437,10 @@ class Groschen implements ProductInterface
             case 'Development-Confidential':
             case 'Delivery block':
                 return '40';
-                break;            
+                break;
             case 'Sold out':
                 return '31';
-                break;  
+                break;
         }
 
         // Already published product
@@ -2450,17 +2449,17 @@ class Groschen implements ProductInterface
             $onHand = $this->getStocks()->pluck('OnHand')->first();
             $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
 
-            if($hasStock) {
+            if ($hasStock) {
                 return '21';
-            } 
+            }
 
             $tomorrow = new DateTime('tomorrow');
             $stockArrivalDate = $this->getLatestStockArrivalDate();
 
-            return ($tomorrow > $stockArrivalDate) ? '31' : '30';                    
+            return ($tomorrow > $stockArrivalDate) ? '31' : '30';
         }
 
-        // Short-run is always available        
+        // Short-run is always available
         if ($this->product->listingCode->name === 'Short run') {
             return '21';
         }
@@ -2473,18 +2472,19 @@ class Groschen implements ProductInterface
      * @return bool
      */
     public function isPublicationDatePassed()
-    {        
-        $publicationDate = $this->getOriginalPublicationDate() ?? $this->getLatestPublicationDate();        
+    {
+        $publicationDate = $this->getOriginalPublicationDate() ?? $this->getLatestPublicationDate();
         $tomorrow = new DateTime('tomorrow');
 
-        return ($tomorrow > $publicationDate);        
+        return ($tomorrow > $publicationDate);
     }
 
     /**
      * Get the products stocks
      * @return Collection
      */
-    public function getStocks() {
+    public function getStocks()
+    {
         $stocks = new Collection;
 
         // Get stocks from API
@@ -2500,13 +2500,13 @@ class Groschen implements ProductInterface
             $response = $e->getResponse();
 
             if (empty($response)) {
-                throw new Exception('Stock API response is empty for GTIN ' . $gtin);
+                throw new Exception('Stock API response is empty for GTIN ' . $this->productNumber);
             }
 
             $json = json_decode($response->getBody()->getContents());
 
             if ($json->data->error_code !== 404 && $json->data->error_message !== 'The model could not be found.') {
-                throw new Exception('Could not fetch stock data for GTIN ' . $gtin);
+                throw new Exception('Could not fetch stock data for GTIN ' . $this->productNumber);
             } else {
                 return $stocks;
             }
@@ -2538,7 +2538,8 @@ class Groschen implements ProductInterface
      * Get the supply dates
      * @return Collection
      */
-    public function getSupplyDates() {
+    public function getSupplyDates()
+    {
         $supplyDates = new Collection;
 
         // Latest reprint date

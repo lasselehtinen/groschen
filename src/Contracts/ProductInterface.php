@@ -378,5 +378,4 @@ interface ProductInterface
      * @return Collection
      */
     public function getSupplyDates();
-
 }
