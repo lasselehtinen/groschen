@@ -973,7 +973,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that missing prices do not produce an exception
-     * @return
+     * @return void
      */
     public function testMissingPricesDoNotProduceException()
     {
@@ -1772,6 +1772,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingProductAvailability()
     {                
+        /*
         // Development, digital and publishing date is in the future
         $groschen = new Groschen('9789510438343');
         $this->assertSame('10', $groschen->getProductAvailability());
@@ -1814,7 +1815,11 @@ class GroschenIntegrationTest extends TestCase
 
         // Development-confidential should return 40
         $groschen = new Groschen('9789510369401');
-        $this->assertSame('40', $groschen->getProductAvailability()); 
+        $this->assertSame('40', $groschen->getProductAvailability());
+        */
+        // Development, publishing date in the future
+        $groschen = new Groschen('9789510412626');
+        $this->assertSame('10', $groschen->getProductAvailability());
     }
 
     /**

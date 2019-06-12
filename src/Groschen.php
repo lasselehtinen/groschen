@@ -2431,6 +2431,9 @@ class Groschen implements ProductInterface
 
         // Governing codes which are mapped directly where available stock or publishing date do not affect
         switch ($this->product->listingCode->name) {
+            case 'Development':
+                return '10';
+                break;
             case 'Cancelled':
                 return '01';
                 break;
