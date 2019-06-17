@@ -1771,8 +1771,7 @@ class GroschenIntegrationTest extends TestCase
      * @return void
      */
     public function testGettingProductAvailability()
-    {                
-        /*
+    {
         // Development, digital and publishing date is in the future
         $groschen = new Groschen('9789510438343');
         $this->assertSame('10', $groschen->getProductAvailability());
@@ -1816,10 +1815,14 @@ class GroschenIntegrationTest extends TestCase
         // Development-confidential should return 40
         $groschen = new Groschen('9789510369401');
         $this->assertSame('40', $groschen->getProductAvailability());
-        */
+        
         // Development, publishing date in the future
         $groschen = new Groschen('9789510412626');
         $this->assertSame('10', $groschen->getProductAvailability());
+        
+        // Exclusive sales
+        $groschen = new Groschen('9789510408513');
+        $this->assertSame('22', $groschen->getProductAvailability());        
     }
 
     /**

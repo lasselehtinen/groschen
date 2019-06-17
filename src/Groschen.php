@@ -2437,6 +2437,9 @@ class Groschen implements ProductInterface
             case 'Cancelled':
                 return '01';
                 break;
+            case 'Exclusive Sales':
+                return '22';
+                break;
             case 'Development-Confidential':
             case 'Delivery block':
                 return '40';
