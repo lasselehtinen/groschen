@@ -1734,13 +1734,9 @@ class Groschen implements ProductInterface
             '334' => 'B06', // Translator
             //'335' => '', // Studio
             //'336' => '', // Printer
-        ];
+        ];          
 
-        if (array_key_exists($role, $roleMappings)) {
-            return $roleMappings[$role];
-        } else {
-            return null;
-        }
+        return (array_key_exists($role, $roleMappings)) ? $roleMappings[$role] : null;            
     }
 
     /**
