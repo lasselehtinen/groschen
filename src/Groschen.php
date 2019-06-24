@@ -160,7 +160,7 @@ class Groschen implements ProductInterface
         try {
             $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId);
         } catch (ServerException $e) {
-            throw new Exception('Server exception: ' . $e->getResponse()->getBody(true));
+            throw new Exception('Server exception: ' . $e->getResponse()->getBody());
         }
 
         return json_decode($response->getBody()->getContents());
@@ -172,7 +172,7 @@ class Groschen implements ProductInterface
         try {
             $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
         } catch (ServerException $e) {
-            throw new Exception('Server exception: ' . $e->getResponse()->getBody(true));
+            throw new Exception('Server exception: ' . $e->getResponse()->getBody());
         }
 
         return json_decode($response->getBody()->getContents());
@@ -1207,7 +1207,7 @@ class Groschen implements ProductInterface
                     break;
             }
 
-            if (isset($resourceContentType)) {
+            if (isset($resourceContentType) && isset($resourceMode)) {
                 $supportingResources->push([
                     'ResourceContentType' => $resourceContentType,
                     'ContentAudience' => '00',
