@@ -188,6 +188,12 @@ interface ProductInterface
     public function isConfidential();
 
     /**
+     * Is the product a luxury book?
+     * @return boolean
+     */
+    public function isLuxuryBook();
+
+    /**
      * Get the products cost center
      * @return int|null
      */

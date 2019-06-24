@@ -1194,6 +1194,23 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test checking if product is a luxury book
+     * @return void
+     */
+    public function testCheckingIfProductIsLuxuryBook()
+    {
+        $this->assertFalse($this->groschen->isLuxuryBook());
+        
+        // WSOY luxury book
+        $groschen = new Groschen('9789510385876');
+        $this->assertTrue($groschen->isLuxuryBook());
+
+        // Tammi luxury book
+        $groschen = new Groschen('9789513195144');
+        $this->assertTrue($groschen->isLuxuryBook());
+    }
+
+    /**
      * Test getting products cost center
      * @return void
      */

@@ -1753,6 +1753,21 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Is the product a luxury book?
+     * @return boolean
+     */
+    public function isLuxuryBook()
+    {
+        $costCenter = $this->getCostCenter();
+
+        if ($costCenter === 314 || $costCenter === 935) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Get the products cost center
      * @return int|null
      */
