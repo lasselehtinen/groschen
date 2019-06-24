@@ -33,7 +33,8 @@ class GroschenIntegrationTest extends TestCase
      * Test that deactivated product is fetched also
      * @return void
      */
-    public function testDeactivatedProductWorksFine() {
+    public function testDeactivatedProductWorksFine()
+    {
         $groschen = new Groschen('9789510439555');
         $this->assertSame('00', $this->groschen->getProductComposition());
     }
@@ -83,7 +84,7 @@ class GroschenIntegrationTest extends TestCase
      * @return void
      */
     public function testGettingProductFormAndProductFormDetail()
-    {        
+    {
         // Hardback
         $groschen = new Groschen('9789510405314');
         $this->assertSame('BB', $groschen->getProductForm());
@@ -183,7 +184,7 @@ class GroschenIntegrationTest extends TestCase
         // Hardback
         $groschen = new Groschen('9789510423417');
         $this->assertSame('Printed cover, glued binding', $groschen->getTechnicalBindingType());
-    }   
+    }
 
     /**
      * Test getting ProductFormFeatures
@@ -576,7 +577,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('Sari Orhinmaa, toimittaja', $this->groschen->getTextContents()->where('TextType', '06')->where('ContentAudience', '00')->pluck('SourceTitle')->first());
 
         // Product without reviews
-        $groschen = new Groschen('9789510433911'); 
+        $groschen = new Groschen('9789510433911');
         $this->assertContains('Ulkoministerin poika Juho Nortamo saa tietää olevansa ottolapsi.', $groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
 
         // Product without text
@@ -873,7 +874,7 @@ class GroschenIntegrationTest extends TestCase
      * @return void
      */
     public function testGettingPublishingDates()
-    {        
+    {
         // Publishing date
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20100601'], $this->groschen->getPublishingDates());
 
@@ -1576,7 +1577,7 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingProductionPlan()
     {
         $groschen = new Groschen('9789510423417');
-        $productionPlan = $groschen->getProductionPlan();        
+        $productionPlan = $groschen->getProductionPlan();
 
         $plannedDate = $productionPlan->where('print', 1)->where('name', 'Delivery to warehouse')->pluck('planned_date')->first();
         $expectedDate = new DateTime('2019-03-11');
@@ -1616,7 +1617,7 @@ class GroschenIntegrationTest extends TestCase
             'colorNames' => null,
             //'hasPhotoSection' => false,
             //'photoSectionExtent' => null,
-            'numberOfPages' => 300,            
+            'numberOfPages' => 300,
         ];
         
         $this->assertContains($inside, $groschen->getTechnicalData());
@@ -1634,7 +1635,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Printed cover
         $printedCover = [
-            'partName' => 'printedCover',           
+            'partName' => 'printedCover',
             'paperType' => 'Other',
             'paperName' => 'GEL',
             'grammage' => 115,
@@ -1668,7 +1669,7 @@ class GroschenIntegrationTest extends TestCase
             'hasReliefSpotVarnish' => false,
             'placement' => null,
             'lamination' => 'Matt lamination',
-        ];        
+        ];
         
         $this->assertContains($dustJacket, $groschen->getTechnicalData());
 
@@ -1688,7 +1689,7 @@ class GroschenIntegrationTest extends TestCase
             'hasReliefSpotVarnish'  => false,
             'placement' => null,
             'lamination' => null,
-        ];        
+        ];
         
         $this->assertContains($softCover, $groschen->getTechnicalData());
 
@@ -1701,7 +1702,7 @@ class GroschenIntegrationTest extends TestCase
             'colors' => 'Other',
             'colorNames' => '4+0',
             'selfEnds' => false,
-        ];        
+        ];
         
         $this->assertContains($endPapers, $groschen->getTechnicalData());
 
@@ -1747,7 +1748,7 @@ class GroschenIntegrationTest extends TestCase
      * Test getting technical data for a project that does not have any does not throw exception
      * @return void
      */
-    public function testGettingTechnicalDataForProductWithoutAnyDoesNotThrowException() 
+    public function testGettingTechnicalDataForProductWithoutAnyDoesNotThrowException()
     {
         $groschen = new Groschen('9789510429938');
         $this->assertCount(8, $groschen->getTechnicalData());
@@ -1780,7 +1781,7 @@ class GroschenIntegrationTest extends TestCase
             'PrizeCode' => '07',
         ];
 
-        $this->assertContains($prizes, $groschen->getPrizes());  
+        $this->assertContains($prizes, $groschen->getPrizes());
     }
 
     /**
@@ -1823,7 +1824,7 @@ class GroschenIntegrationTest extends TestCase
         
         // Short-run product with stock
         $groschen = new Groschen('9789510407356');
-        $this->assertSame('21', $groschen->getProductAvailability());    
+        $this->assertSame('21', $groschen->getProductAvailability());
 
         // Short-run product without any stock
         $groschen = new Groschen('9789510409701');
@@ -1839,7 +1840,7 @@ class GroschenIntegrationTest extends TestCase
         
         // Exclusive sales
         $groschen = new Groschen('9789510408513');
-        $this->assertSame('22', $groschen->getProductAvailability());        
+        $this->assertSame('22', $groschen->getProductAvailability());
     }
 
     /**
@@ -1852,14 +1853,15 @@ class GroschenIntegrationTest extends TestCase
         $this->assertFalse($groschen->isPublicationDatePassed());
 
         $groschen = new Groschen('9789520401122');
-        $this->assertTrue($groschen->isPublicationDatePassed());        
+        $this->assertTrue($groschen->isPublicationDatePassed());
     }
 
     /**
      * Test getting products stocks
      * @return void
      */
-    public function testGettingStocks() {
+    public function testGettingStocks()
+    {
         // Product with stock
         $stock = [
             'LocationIdentifier' => [
@@ -1882,7 +1884,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting SupplyDates
      * @return void
      */
-    public function testGettingSupplyDates() {
+    public function testGettingSupplyDates()
+    {
         // Product with stock
         $supplyDate = [
             'SupplyDateRole' => '08',
@@ -1896,5 +1899,4 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510420157');
         $this->assertCount(0, $groschen->getSupplyDates());
     }
-
 }
