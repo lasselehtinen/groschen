@@ -1736,7 +1736,7 @@ class Groschen implements ProductInterface
             //'336' => '', // Printer
         ];          
 
-        return (array_key_exists($role, $roleMappings)) ? $roleMappings[$role] : null;            
+        return (isset($roleMappings[$role])) ? $roleMappings[$role] : null;            
     }
 
     /**

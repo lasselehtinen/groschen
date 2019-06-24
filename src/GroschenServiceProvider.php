@@ -25,7 +25,7 @@ class GroschenServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(Groschen::class, function () {
-            return new Groschen(null);
+            return new Groschen('foobar');
         });
 
         $this->app->alias(Groschen::class, 'groschen');
