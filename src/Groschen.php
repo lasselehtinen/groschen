@@ -597,11 +597,15 @@ class Groschen implements ProductInterface
             // If no minutes are given, use 00
             $audioPlaytimeMinutes = (!isset($this->product->audioPlaytimeMinutes)) ? '00' : str_pad($this->product->audioPlaytimeMinutes, 2, '0', STR_PAD_LEFT);
 
-            $extents->push([
-                'ExtentType' => '09',
-                'ExtentValue' => $audioPlaytimeHours . $audioPlaytimeMinutes,
-                'ExtentUnit' => '15',
-            ]);
+            // Skip if we don't have value
+            $extentValue = $audioPlaytimeHours . $audioPlaytimeMinutes;
+            if($extentValue !== '00000') {
+                $extents->push([
+                    'ExtentType' => '09',
+                    'ExtentValue' => $extentValue,
+                    'ExtentUnit' => '15',
+                ]);
+            }
         }
 
         return $extents;
