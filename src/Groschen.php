@@ -104,6 +104,9 @@ class Groschen implements ProductInterface
             'base_uri' => config('groschen.opus.hostname'),
             'handler' => $stack,
             'auth' => 'oauth',
+            'headers' => [
+                'User-Agent' => gethostname() . ' / ' . Client::VERSION . ' PHP/' . PHP_VERSION,
+            ],
         ]);
 
         $this->productNumber = $productNumber;
