@@ -763,7 +763,8 @@ class Groschen implements ProductInterface
             $subjects->push([
                 'SubjectSchemeIdentifier' => '23',
                 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group',
-                'SubjectCode' => $this->product->mainGroup->name,
+                'SubjectCode' => $this->product->mainGroup->id,
+                'SubjectHeadingText' => $this->product->mainGroup->name,
             ]);
         }
 
@@ -772,7 +773,8 @@ class Groschen implements ProductInterface
             $subjects->push([
                 'SubjectSchemeIdentifier' => '23',
                 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group',
-                'SubjectCode' => trim($this->product->subGroup->name),
+                'SubjectCode' => $this->product->subGroup->id,
+                'SubjectHeadingText' => trim($this->product->subGroup->name),
             ]);
 
             // BISAC Subject Heading
