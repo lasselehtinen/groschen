@@ -535,7 +535,7 @@ class GroschenIntegrationTest extends TestCase
      * @return void
      */
     public function testGettingExtents()
-    {        
+    {
         $this->assertContains(['ExtentType' => '00', 'ExtentValue' => '128', 'ExtentUnit' => '03'], $this->groschen->getExtents());
         $this->assertCount(1, $this->groschen->getExtents());
 
@@ -550,7 +550,7 @@ class GroschenIntegrationTest extends TestCase
         
         // Audio book with duration 0 should not return anything
         $groschen = new Groschen('9789510447871');
-        $this->assertNotContains(['ExtentType' => '09', 'ExtentValue' => '00000', 'ExtentUnit' => '15'], $groschen->getExtents());        
+        $this->assertNotContains(['ExtentType' => '09', 'ExtentValue' => '00000', 'ExtentUnit' => '15'], $groschen->getExtents());
     }
 
     /**
@@ -1916,7 +1916,7 @@ class GroschenIntegrationTest extends TestCase
             'supplierId' => 20004662,
         ];
 
-        $this->assertContains($contact, $this->groschen->getContacts());   
+        $this->assertContains($contact, $this->groschen->getContacts());
     }
 
     /**
@@ -1930,6 +1930,6 @@ class GroschenIntegrationTest extends TestCase
             'title' => 'Vallasrouva',
         ];
 
-        $this->assertContains($edition, $this->groschen->getEditions());   
+        $this->assertContains($edition, $this->groschen->getEditions());
     }
 }
