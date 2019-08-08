@@ -25,6 +25,7 @@ class TestCase extends OrchestraTestCase
         $dotenv->required('SOUNDCLOUD_CLIENTID');
         $dotenv->required('SOUNDCLOUD_CLIENTSECRET');
         $dotenv->required('OPUS_HOSTNAME');
+        $dotenv->required('OPUS_SEARCH_HOSTNAME');
         $dotenv->required('OPUS_CLIENT_ID');
         $dotenv->required('OPUS_CLIENT_SECRET');
         $dotenv->required('OPUS_OAUTH_BASE_URL');
@@ -37,6 +38,7 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('groschen.soundcloud.clientId', getenv('SOUNDCLOUD_CLIENTID'));
         $app['config']->set('groschen.soundcloud.clientSecret', getenv('SOUNDCLOUD_CLIENTSECRET'));
         $app['config']->set('groschen.opus.hostname', getenv('OPUS_HOSTNAME'));
+        $app['config']->set('groschen.opus.search_hostname', getenv('OPUS_SEARCH_HOSTNAME'));
         $app['config']->set('groschen.opus.clientId', getenv('OPUS_CLIENT_ID'));
         $app['config']->set('groschen.opus.clientSecret', getenv('OPUS_CLIENT_SECRET'));
         $app['config']->set('groschen.opus.urlAuthorize', getenv('OPUS_OAUTH_BASE_URL') . '/core/connect/authorize');

@@ -65,6 +65,13 @@ class Groschen implements ProductInterface
      */
     private $client;
 
+
+    /**
+     * Guzzle HTTP client
+     * @var \GuzzleHttp\Client
+     */
+    private $searchClient;
+
     /**
      * @param string $productNumber
      */
@@ -102,6 +109,16 @@ class Groschen implements ProductInterface
         // Create Guzzle and push the OAuth middleware to the handler stack
         $this->client = new Client([
             'base_uri' => config('groschen.opus.hostname'),
+            'handler' => $stack,
+            'auth' => 'oauth',
+            'headers' => [
+                'User-Agent' => gethostname() . ' / ' . Client::VERSION . ' PHP/' . PHP_VERSION,
+            ],
+        ]);
+
+        // Create Guzzle and push the OAuth middleware to the handler stack
+        $this->searchClient = new Client([
+            'base_uri' => config('groschen.opus.search_hostname'),
             'handler' => $stack,
             'auth' => 'oauth',
             'headers' => [
@@ -2576,5 +2593,109 @@ class Groschen implements ProductInterface
         }
 
         return $supplyDates;
+    }
+
+    /**
+     * Get all contacts
+     * @return Collection
+     */
+    public function getContacts()
+    {
+        $contacts = new Collection;
+
+        // Get the maximum amount
+        $response = $this->searchClient->get('v3/search/contacts', [
+            'query' => [
+                'limit' => 1,
+            ],
+        ]);
+
+        $json = json_decode($response->getBody()->getContents());
+        $totalCount = $json->pagination->itemsTotalCount;
+
+        // Loop through all pages, maximum is 1000
+        $offset = 0;
+        $limit = 1000;
+
+        while ($offset <= $totalCount) {
+            // Query current page with offset
+            $response = $this->searchClient->get('v3/search/contacts', [
+                'query' => [
+                    '$select' => 'id,firstName,lastName,erpSupplierId',
+                    'limit' => $limit,
+                    'offset' => $offset,
+                ],
+            ]);
+
+            $json = json_decode($response->getBody()->getContents());
+
+            foreach ($json->results as $result) {
+                if(isset($result->document->erpSupplierId)) {
+                    $contacts->push([
+                        'firstName' => optional($result->document)->firstName,
+                        'lastName' => optional($result->document)->lastName,
+                        'supplierId' => intval($result->document->erpSupplierId),
+                    ]);
+                }
+            }
+      
+            // Increase offset
+            $offset += $limit;
+        }
+
+        return $contacts;
+    }
+
+    /**
+     * Get all editions
+     * @return Collection
+     */
+    public function getEditions()
+    {
+        $editions = new Collection;
+
+        // Get the maximum amount
+        $response = $this->client->get('v2/search/productions', [
+            'query' => [
+                'limit' => 1,
+                '$select' => 'isbn,title',
+                '$filter' => '(isCancelled eq true or isCancelled eq false)',
+            ],
+        ]);
+
+        $json = json_decode($response->getBody()->getContents());
+        $totalCount = $json->pagination->itemsTotalCount;
+
+        // Loop through all pages, maximum is 1000
+        $offset = 0;
+        $limit = 1000;
+
+        while ($offset <= $totalCount) {
+            // Query current page with offset
+            $response = $this->client->get('v2/search/productions', [
+                'query' => [
+                    '$select' => 'isbn,title',
+                    '$filter' => '(isCancelled eq true or isCancelled eq false)',
+                    'limit' => $limit,
+                    'offset' => $offset,
+                ],
+            ]);
+
+            $json = json_decode($response->getBody()->getContents());
+
+            foreach ($json->results as $result) {
+                if(isset($result->document->isbn)) {
+                    $editions->push([
+                        'isbn' => intval($result->document->isbn),
+                        'title' => optional($result->document)->title,                        
+                    ]);
+                }
+            }
+      
+            // Increase offset
+            $offset += $limit;
+        }
+
+        return $editions;
     }
 }

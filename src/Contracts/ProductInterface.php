@@ -384,4 +384,16 @@ interface ProductInterface
      * @return Collection
      */
     public function getSupplyDates();
+
+    /**
+     * Get all contacts
+     * @return Collection
+     */
+    public function getContacts();
+
+    /**
+     * Get all editions
+     * @return Collection
+     */
+    public function getEditions();
 }

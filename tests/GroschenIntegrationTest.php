@@ -1903,4 +1903,33 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510420157');
         $this->assertCount(0, $groschen->getSupplyDates());
     }
+
+    /**
+     * Test getting all contacts
+     * @return void
+     */
+    public function testGettingContacts()
+    {
+        $contact = [
+            'firstName' => 'Veikko',
+            'lastName' => 'Neuvonen',
+            'supplierId' => 20004662,
+        ];
+
+        $this->assertContains($contact, $this->groschen->getContacts());   
+    }
+
+    /**
+     * Test getting all editions
+     * @return void
+     */
+    public function testGettingEditions()
+    {
+        $edition = [
+            'isbn' => 9789520411299,
+            'title' => 'Vallasrouva',
+        ];
+
+        $this->assertContains($edition, $this->groschen->getEditions());   
+    }
 }

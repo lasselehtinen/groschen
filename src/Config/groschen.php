@@ -12,6 +12,7 @@ return [
     ],
     'opus' => [
         'hostname' => env('OPUS_HOSTNAME'),
+        'search_hostname' => env('OPUS_SEARCH_HOSTNAME'),
         'clientId' => env('OPUS_CLIENT_ID'),
         'clientSecret' => env('OPUS_CLIENT_SECRET'),
         'urlAuthorize' => env('OPUS_OAUTH_BASE_URL') . '/core/connect/authorize',
