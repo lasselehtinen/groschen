@@ -1770,8 +1770,8 @@ class Groschen implements ProductInterface
      * @return boolean
      */
     public function isConfidential()
-    {
-        return $this->product->listingCode->name === 'Development-Confidential';
+    {        
+        return $this->product->listingCode->name === 'Development-Confidential' || $this->product->listingCode->name === 'Cancelled-Confidential';
     }
 
     /**
@@ -1857,6 +1857,11 @@ class Groschen implements ProductInterface
      */
     public function getStatusCode()
     {
+        /*
+        if(!isset($this->product->listingCode->customProperties->schillingId_1001)) {
+            throw new Exception('Status is not mapped between Opus and Schilling');
+        }*/
+
         return intval($this->product->listingCode->customProperties->schillingId_1001);
     }
 

@@ -1196,6 +1196,10 @@ class GroschenIntegrationTest extends TestCase
         // Development-confidential
         $groschen = new Groschen('9789510426159');
         $this->assertTrue($groschen->isConfidential());
+
+        // Cancelled-Confidential
+        $groschen = new Groschen('9789510446041');
+        $this->assertTrue($groschen->isConfidential());
     }
 
     /**
