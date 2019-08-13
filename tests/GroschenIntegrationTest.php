@@ -1002,31 +1002,9 @@ class GroschenIntegrationTest extends TestCase
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 10,
+                'TaxRatePercent' => 10.0,
                 'TaxableAmount' => 22.73,
                 'TaxAmount' => 2.27,
-            ],
-            'CurrencyCode' => 'EUR',
-            'Territory' => [
-                'RegionsIncluded' => 'WORLD',
-            ],
-        ];
-
-        $this->assertContains($publishersRecommendedRetailPriceIncludingTax, $groschen->getPrices());
-
-        // Workaround for Opus having too many decimals in publishers retail price, this one has 12,896
-        $groschen = new Groschen('9789510441374');
-
-        // Publishers recommended retail price including tax
-        $publishersRecommendedRetailPriceIncludingTax = [
-            'PriceType' => '42',
-            'PriceAmount' => 8.90,
-            'Tax' => [
-                'TaxType' => '01',
-                'TaxRateCode' => 'S',
-                'TaxRatePercent' => 24,
-                'TaxableAmount' => 7.177,
-                'TaxAmount' => 1.72,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -1072,15 +1050,15 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '06',
-                        'FeatureValue' => 'b35478750c98b5a67671d06c62f3dcfd',
+                        'FeatureValue' => 'd36970ebb03a0f7389d10e7377c647fc',
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 1738034,
+                        'FeatureValue' => 1738043,
                     ],
                     [
                         'ResourceVersionFeatureType' => '08',
-                        'FeatureValue' => 'ea2cba4463cb5c0b77c157d0185603bdbedaa05836ec28c763edf0bce99007bd',
+                        'FeatureValue' => 'ca41d940ffb4e0cbeeee1503b4b42443f019f59ce6ef249bf24030bdabf3281a',
                     ],
 
                 ],
@@ -1480,10 +1458,10 @@ class GroschenIntegrationTest extends TestCase
 
         // Digital product
         $groschen = new Groschen('9789510435199');
-        $this->assertSame(24.00, $groschen->getTaxRate());
+        $this->assertSame(10.00, $groschen->getTaxRate());
 
-        // Opus issue with VAT
-        $groschen = new Groschen('9789510384725');
+        // Product with 24% VAT
+        $groschen = new Groschen('9789510338728');
         $this->assertSame(24.00, $groschen->getTaxRate());
     }
 

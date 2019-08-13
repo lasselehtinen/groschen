@@ -1630,7 +1630,6 @@ class Groschen implements ProductInterface
                         }
 
                         // Go through all the headings/subjects
-                        /** @var mixed $f */
                         foreach ($subject->heading as $heading) {
                             if ($heading !== 'Ellibs') {
                                 $keywords[] = [
