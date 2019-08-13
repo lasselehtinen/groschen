@@ -1936,4 +1936,23 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($edition, $this->groschen->getEditions());
     }
+
+    /**
+     * Test getting web publishing dates
+     * @return void
+     */
+    public function testGettingWebPublishingDates()
+    {
+        // Product with start date but with no end date
+        $expectedWebPublishingStartDate = new DateTime('2014-08-15');
+        $this->assertEquals($expectedWebPublishingStartDate, $this->groschen->getWebPublishingStartDate());
+        $this->assertNull($this->groschen->getWebPublishingEndDate());
+        
+        // Product with both dates
+        $groschen = new Groschen('9789510240243');
+        $expectedWebPublishingStartDate = new DateTime('2019-02-21');
+        $expectedWebPublishingEndDate = new DateTime('2019-02-25');
+        $this->assertEquals($expectedWebPublishingStartDate, $groschen->getWebPublishingStartDate());
+        $this->assertEquals($expectedWebPublishingEndDate, $groschen->getWebPublishingEndDate());
+    }
 }

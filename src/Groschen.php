@@ -523,7 +523,7 @@ class Groschen implements ProductInterface
             ];
 
             // Handle PersonNameInverted and KeyNames differently depending if they have the lastname or not
-            if (empty($contributor->contact->lastName)) {
+            if (empty($contributor->contact->lastName) && !empty($contributor->contact->firstName)) {
                 $contributorData['PersonNameInverted'] = trim($contributor->contact->firstName);
                 $contributorData['KeyNames'] = trim($contributor->contact->firstName);
             } else {
@@ -1630,6 +1630,7 @@ class Groschen implements ProductInterface
                         }
 
                         // Go through all the headings/subjects
+                        /** @var mixed $f */
                         foreach ($subject->heading as $heading) {
                             if ($heading !== 'Ellibs') {
                                 $keywords[] = [
@@ -2702,5 +2703,31 @@ class Groschen implements ProductInterface
         }
 
         return $editions;
+    }
+
+    /**
+     * Get the first publication date of the products web page
+     * @return DateTime|null
+     */
+    public function getWebPublishingStartDate()
+    {
+        if(!isset($this->product->activeWebPeriod->startDate)) {
+            return null;
+        }
+
+        return DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->activeWebPeriod->startDate);
+    }
+
+    /**
+     * Get the end date for the products web page
+     * @return DateTime|null
+     */
+    public function getWebPublishingEndDate()
+    {
+        if(!isset($this->product->activeWebPeriod->endDate)) {
+            return null;
+        }
+        
+        return DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->activeWebPeriod->endDate);
     }
 }

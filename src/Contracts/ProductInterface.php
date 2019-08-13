@@ -396,4 +396,16 @@ interface ProductInterface
      * @return Collection
      */
     public function getEditions();
+
+    /**
+     * Get the first publication date of the products web page
+     * @return DateTime|null
+     */
+    public function getWebPublishingStartDate();
+
+    /**
+     * Get the end date for the products web page
+     * @return DateTime|null
+     */
+    public function getWebPublishingEndDate(); 
 }
