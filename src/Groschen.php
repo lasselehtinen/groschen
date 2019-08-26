@@ -2133,9 +2133,11 @@ class Groschen implements ProductInterface
                 return [
                     'SalesOutlet' => [
                         'SalesOutletIdentifiers' => [
-                            'SalesOutletIDType' => '01',
-                            'IDValue' => $distributionChannel['channel'],
-                        ],
+                            [
+                                'SalesOutletIDType' => '01',
+                                'IDValue' => $distributionChannel['channel'],
+                            ],
+                        ]
                     ],
                 ];
             });
@@ -2152,8 +2154,10 @@ class Groschen implements ProductInterface
                 return [
                     'SalesOutlet' => [
                         'SalesOutletIdentifiers' => [
-                            'SalesOutletIDType' => '01',
-                            'IDValue' => $distributionChannel['channel'],
+                            [
+                                'SalesOutletIDType' => '01',
+                                'IDValue' => $distributionChannel['channel'],
+                            ],
                         ],
                     ],
                 ];

@@ -1448,17 +1448,21 @@ class GroschenIntegrationTest extends TestCase
         $salesOutlet = [
             'SalesOutlet' => [
               'SalesOutletIdentifiers' => [
-                'SalesOutletIDType' => '01',
-                'IDValue' => 'Ellibs',
-              ],
+                  [
+                    'SalesOutletIDType' => '01',
+                    'IDValue' => 'Ellibs',
+                  ],
+                ],
             ],
         ];
 
         $library = [
             'SalesOutlet' => [
               'SalesOutletIdentifiers' => [
-                'SalesOutletIDType' => '01',
-                'IDValue' => 'Ellibs (Finnish libraries)',
+                  [
+                    'SalesOutletIDType' => '01',
+                    'IDValue' => 'Ellibs (Finnish libraries)',
+                  ],
               ],
             ],
         ];
