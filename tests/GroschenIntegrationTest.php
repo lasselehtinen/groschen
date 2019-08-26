@@ -483,8 +483,8 @@ class GroschenIntegrationTest extends TestCase
         // Keski-Suomen Sivu
         $layout = [
             'Role' => 'Layout',
-            'FirstName' => 'Keski-Suomen Sivu',
-            'LastName' => 'Oy',
+            'FirstName' => 'Keski-Suomen Sivu Oy',
+            'LastName' => null,
         ];
 
         $this->assertContains($layout, $this->groschen->getAllContributors());
@@ -1822,7 +1822,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('10', $groschen->getProductAvailability());
         
         // Published, digital and publishing date is in the future
-        $groschen = new Groschen('9789510446447');
+        $groschen = new Groschen('9789510442425');
         $this->assertSame('10', $groschen->getProductAvailability());
        
         // Development, digital and publishing date is in the past
