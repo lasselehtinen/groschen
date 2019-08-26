@@ -296,12 +296,6 @@ interface ProductInterface
     public function getLatestPrintNumber();
 
     /**
-     * Is the product allowed for subscription?
-     * @return boolean
-     */
-    public function isSubscriptionProduct();
-
-    /**
      * Get the sales restrictions
      * @return Collection
      */

@@ -1415,36 +1415,77 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test checking if the product is allowed for subscription services
-     * @return void
-     */
-    public function testCheckingIfProductIsAllowedForSubscriptionServices()
-    {
-        $this->assertFalse($this->groschen->isSubscriptionProduct());
-
-        // Subscription product
-        $groschen = new Groschen('9789510435199');
-        $this->assertTrue($groschen->isSubscriptionProduct());
-    }
-
-    /**
      * Test getting sales restrictions
      * @return void
      */
-    public function testGettingSalesRestrictions()
+    public function testGettingSalesRestrictionsSubscriptionAndLibraryExcludedProducts()
     {
-        // Product does not have subscription rights
-        $this->assertCount(1, $this->groschen->getSalesRestrictions());
+        // Product does not have subscription or library rights
+        $this->assertTrue($this->groschen->getSalesRestrictions()->contains('SalesRestrictionType', '12'));
+        $this->assertTrue($this->groschen->getSalesRestrictions()->contains('SalesRestrictionType', '09'));
+        $this->assertFalse($this->groschen->getSalesRestrictions()->contains('SalesRestrictionType', '13'));
 
-        $expectedSalesRestriction = [
-            'SalesRestrictionType' => 12, // Not for sale to subscription services
+        // Product that has subscription and library rights
+        $groschen = new Groschen('9789510445297');
+        $this->assertFalse($groschen->getSalesRestrictions()->contains('SalesRestrictionType', '12'));
+        $this->assertFalse($groschen->getSalesRestrictions()->contains('SalesRestrictionType', '09'));
+        $this->assertFalse($groschen->getSalesRestrictions()->contains('SalesRestrictionType', '13'));
+    }
+
+    /**
+     * Test getting sales restrictions for each outlot
+     * @return void
+     */
+    public function testGettingSalesRestrictionsForEachSalesOutlet()
+    {
+        // ePub with unit and subscription rights but no library
+        $groschen = new Groschen('9789510369654');
+        $salesRestrictions = $groschen->getSalesRestrictions();
+        $exclusiveRetailers = $salesRestrictions->where('SalesRestrictionType', '04')->pluck('SalesOutlets')->first();
+        $retailerExceptions = $salesRestrictions->where('SalesRestrictionType', '11')->pluck('SalesOutlets')->first();
+
+        // Check that normal unit sales library exists, but library not
+        $salesOutlet = [
+            'SalesOutlet' => [
+              'SalesOutletIdentifiers' => [
+                'SalesOutletIDType' => '01',
+                'IDValue' => 'Ellibs',
+              ],
+            ],
         ];
 
-        $this->assertSame($expectedSalesRestriction, $this->groschen->getSalesRestrictions()->first());
+        $library = [
+            'SalesOutlet' => [
+              'SalesOutletIdentifiers' => [
+                'SalesOutletIDType' => '01',
+                'IDValue' => 'Ellibs (Finnish libraries)',
+              ],
+            ],
+        ];
 
-        // Product that has subscription rights
-        $groschen = new Groschen('9789510435199');
-        $this->assertCount(0, $groschen->getSalesRestrictions());
+        // Normal unit sales channel should appear in exclusive retailers, not in exceptions
+        $this->assertContains($salesOutlet, $exclusiveRetailers);
+        $this->assertNotContains($salesOutlet, $retailerExceptions);
+        
+        // Library should appear on exceptions and not in exclusive retailers
+        $this->assertNotContains($library, $exclusiveRetailers);
+        $this->assertContains($library, $retailerExceptions);
+    }
+
+    /**
+     * Test getting sales restrictions for subscription only product
+     * @return void
+     */
+    public function testGettingSalesRestrictionsForSubscriptionOnlyProduct()
+    {
+        $groschen = new Groschen('9789510446126');
+        $salesRestrictions = $groschen->getSalesRestrictions();
+
+        // Should have "Not for sale to libraries"
+        $this->assertTrue($salesRestrictions->contains('SalesRestrictionType', '09'));
+
+        // Should have "Subscription services only"
+        $this->assertTrue($salesRestrictions->contains('SalesRestrictionType', '13'));
     }
 
     /**

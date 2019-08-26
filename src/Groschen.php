@@ -2093,22 +2093,6 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Is the product allowed for subscription?
-     * @return boolean
-     */
-    public function isSubscriptionProduct()
-    {
-        // First take only subscription and then those have distribution rights
-        $exportRules = collect($this->product->exportRules)->filter(function ($exportRule) {
-            return $exportRule->salesType->name === 'Subscription';
-        })->filter(function ($exportRule) {
-            return $exportRule->hasDistribution === true;
-        });
-
-        return $exportRules->count() > 0;
-    }
-
-    /**
      * Get the sales restrictions
      * @return Collection
      */
@@ -2116,13 +2100,72 @@ class Groschen implements ProductInterface
     {
         $salesRestrictions = new Collection;
 
-        if ($this->isSubscriptionProduct() === false) {
+        // Get list of distribution channels
+        $distributionChannels = $this->getDistributionChannels();
+        
+        // If none of the library channels has rights, add restriction "Not for sale to libraries"
+        if ($distributionChannels->where('channelType', 'Licencing for libraries')->contains('hasRights', true) === false) {
             $salesRestrictions->push([
-                'SalesRestrictionType' => 12, // Not for sale to subscription services
+                'SalesRestrictionType' => '09', // Not for sale to libraries
             ]);
         }
 
-        return $salesRestrictions;
+        // If none of the subscription channels has rights, add restriction "Not for sale to subscription services"
+        if ($distributionChannels->where('channelType', 'Subscription')->contains('hasRights', true) === false) {
+            $salesRestrictions->push([
+                'SalesRestrictionType' => '12', // Not for sale to subscription services
+            ]);
+        }
+
+        // Check if we have subscription only product
+        if ($distributionChannels->where('channelType', 'Subscription')->contains('hasRights', true)) {
+            // Check if all other channels contain false
+            if ($distributionChannels->where('channelType', '!=', 'Subscription')->contains('hasRights', true) === false) {
+                $salesRestrictions->push([
+                    'SalesRestrictionType' => '13', // Subscription services only
+                ]);
+            } 
+        }
+
+        // Add SalesOutlets where we have rights as "Retailer exclusive"
+        if($distributionChannels->contains('hasRights', true)) {
+            $retailerExclusiveSalesOutlets = $distributionChannels->where('hasRights', true)->map(function ($distributionChannel, $key) {
+                return [
+                    'SalesOutlet' => [
+                        'SalesOutletIdentifiers' => [
+                            'SalesOutletIDType' => '01',
+                            'IDValue' => $distributionChannel['channel'],
+                        ],
+                    ],
+                ];
+            });
+
+            $salesRestrictions->push([
+                'SalesRestrictionType' => '04', // Retailer exclusive
+                'SalesOutlets' => $retailerExclusiveSalesOutlets->toArray(),
+            ]);
+        }
+
+        // Add SalesOutlets where we don't have rights as " Retailer exception"
+        if($distributionChannels->contains('hasRights', false)) {
+            $retailerExceptionSalesOutlets = $distributionChannels->where('hasRights', false)->map(function ($distributionChannel, $key) {
+                return [
+                    'SalesOutlet' => [
+                        'SalesOutletIdentifiers' => [
+                            'SalesOutletIDType' => '01',
+                            'IDValue' => $distributionChannel['channel'],
+                        ],
+                    ],
+                ];
+            });
+
+            $salesRestrictions->push([
+                'SalesRestrictionType' => '11', // Retailer exception
+                'SalesOutlets' => $retailerExceptionSalesOutlets->toArray(),
+            ]);
+        }
+
+        return $salesRestrictions->sortBy('SalesRestrictionType');
     }
 
     /**
