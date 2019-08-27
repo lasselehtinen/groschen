@@ -2539,7 +2539,7 @@ class Groschen implements ProductInterface
                 return '40';
                 break;
             case 'Sold out':
-                return '31';
+                return '43';
                 break;
         }
 
