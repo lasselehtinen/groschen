@@ -1420,10 +1420,14 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingSalesRestrictionsSubscriptionAndLibraryExcludedProducts()
     {
-        // Product does not have subscription or library rights
-        $this->assertTrue($this->groschen->getSalesRestrictions()->contains('SalesRestrictionType', '12'));
-        $this->assertTrue($this->groschen->getSalesRestrictions()->contains('SalesRestrictionType', '09'));
-        $this->assertFalse($this->groschen->getSalesRestrictions()->contains('SalesRestrictionType', '13'));
+        // Physical products should not have any restrictions as they are not supported yet
+        $this->assertCount(0, $this->groschen->getSalesRestrictions());
+
+        // Product that does not have subscription or library rights
+        $groschen = new Groschen('9789510439555');
+        $this->assertTrue($groschen->getSalesRestrictions()->contains('SalesRestrictionType', '12'));
+        $this->assertTrue($groschen->getSalesRestrictions()->contains('SalesRestrictionType', '09'));
+        $this->assertFalse($groschen->getSalesRestrictions()->contains('SalesRestrictionType', '13'));
 
         // Product that has subscription and library rights
         $groschen = new Groschen('9789510445297');

@@ -2100,6 +2100,11 @@ class Groschen implements ProductInterface
     {
         $salesRestrictions = new Collection;
 
+        // We currently only support digital products
+        if ($this->isImmaterial() === false) {
+            return $salesRestrictions;
+        }
+
         // Get list of distribution channels
         $distributionChannels = $this->getDistributionChannels();
         
