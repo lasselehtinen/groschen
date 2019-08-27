@@ -11,6 +11,7 @@ use GuzzleHttp\HandlerStack;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Isbn;
 use kamermans\OAuth2\GrantType\NullGrantType;
 use kamermans\OAuth2\OAuth2Middleware;
@@ -54,17 +55,10 @@ class Groschen implements ProductInterface
     private $workLevel;
 
     /**
-     * Production plan
-     * @var stdClass
-     */
-    private $productionPlan;
-
-    /**
      * Guzzle HTTP client
      * @var \GuzzleHttp\Client
      */
     private $client;
-
 
     /**
      * Guzzle HTTP client
@@ -127,19 +121,17 @@ class Groschen implements ProductInterface
         ]);
 
         $this->productNumber = $productNumber;
-        $this->workId = $this->searchProductions('workId');
-        $this->productionId = $this->searchProductions('id');
+        list($this->workId, $this->productionId) = $this->getEditionAndWorkId();
         $this->product = $this->getProduct();
         $this->workLevel = $this->getWorkLevel();
-        $this->productionPlan = $this->getPrintProductionPlan();
     }
 
     /**
      * Searches for productions
      * @param  string $return
-     * @return string
+     * @return array
      */
-    public function searchProductions($return)
+    public function getEditionAndWorkId()
     {
         // Search for the ISBN in Opus
         $response = $this->client->get('v2/search/productions', [
@@ -147,7 +139,7 @@ class Groschen implements ProductInterface
                 'q' => $this->productNumber,
                 'limit' => 1,
                 'searchFields' => 'isbn',
-                '$select' => $return,
+                '$select' => 'workId,id',
                 '$filter' => '(isCancelled eq true or isCancelled eq false)',
             ],
         ]);
@@ -162,12 +154,10 @@ class Groschen implements ProductInterface
             throw new Exception('Too many results found in Opus.');
         }
 
-        // Check that attribute exists
-        if (empty($json->results[0]->document->{$return})) {
-            throw new Exception('The return field in Opus does not exist in response.');
-        }
-
-        return $json->results[0]->document->{$return};
+        return [
+            $json->results[0]->document->workId,
+            $json->results[0]->document->id,
+        ];
     }
 
     /**
@@ -186,6 +176,10 @@ class Groschen implements ProductInterface
         return json_decode($response->getBody()->getContents());
     }
 
+    /**
+     * Get the print production plan
+     * @return void
+     */
     public function getPrintProductionPlan()
     {
         // Get the production from Opus
@@ -208,15 +202,6 @@ class Groschen implements ProductInterface
         $response = $this->client->get('/v1/works/' . $this->workId);
 
         return json_decode($response->getBody()->getContents());
-    }
-
-    /**
-     * Return the raw product information
-     * @return stdClass
-     */
-    public function getProductInformation()
-    {
-        return $this->product;
     }
 
     /**
@@ -2321,7 +2306,9 @@ class Groschen implements ProductInterface
     {
         $productionPlan = new Collection;
 
-        foreach ($this->productionPlan->prints as $productionPlanEntry) {
+        $opusProductionPlan = $this->getPrintProductionPlan();
+
+        foreach ($opusProductionPlan->prints as $productionPlanEntry) {
              // Add all time plan entries
             foreach ($productionPlanEntry->timePlanEntries as $timePlanEntry) {
                 $productionPlan->push([
