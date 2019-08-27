@@ -249,6 +249,23 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $this->assertContains($collection, $groschen->getCollections());
+
+        // Product with extra spaces in the series name
+        $groschen = new Groschen('9789520410568');
+
+        $collection = [
+            'CollectionType' => '10', [
+                'TitleDetail' => [
+                    'TitleType' => '01',
+                    'TitleElement' => [
+                        'TitleElementLevel' => '02',
+                        'TitleText' => 'Lumikki-kirjat',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertContains($collection, $groschen->getCollections());
     }
 
     /**

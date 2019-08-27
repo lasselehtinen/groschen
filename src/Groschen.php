@@ -387,7 +387,7 @@ class Groschen implements ProductInterface
                         'TitleType' => '01',
                         'TitleElement' => [
                             'TitleElementLevel' => '02',
-                            'TitleText' => $this->product->series->name,
+                            'TitleText' => trim($this->product->series->name),
                         ],
                     ],
                 ],
