@@ -882,24 +882,17 @@ class Groschen implements ProductInterface
             ]);
         }
 
-        // Review quotes
-        $maxReviews = 3;
+        // Get review quotes
+        $response = $this->client->get('/v1/works/' . $this->workId . '/reviewquotes');
+        $json = json_decode($response->getBody()->getContents());
 
-        for ($i = 1; $i <= $maxReviews; $i++) {
-            $reviewQuote = $texts->filter(function ($text) use ($i) {
-                return $text->textType->name === 'Review quote ' . $i;
-            })->first();
-
-            $reviewQuoteSource = $texts->filter(function ($text) use ($i) {
-                return $text->textType->name === 'Review quote source ' . $i;
-            })->first();
-
-            if (!empty($reviewQuote) && !empty($reviewQuoteSource)) {
+        foreach ($json->reviewQuotes as $reviewQuote) {
+            if (!empty($reviewQuote->quote) && !empty($reviewQuote->source)) {
                 $textContents->push([
                     'TextType' => '06',
                     'ContentAudience' => '00',
-                    'Text' => $this->purifyHtml($reviewQuote->text),
-                    'SourceTitle' => $this->purifyHtml($reviewQuoteSource->text),
+                    'Text' => $this->purifyHtml($reviewQuote->quote),
+                    'SourceTitle' => $this->purifyHtml($reviewQuote->source),
                 ]);
             }
         }

@@ -594,6 +594,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
 
         // Check that text contains review quotes and sources
+        $this->assertTrue($this->groschen->getTextContents()->contains('TextType', '06'));
         $this->assertContains('Herrajumala, en ole mistään nauttinut näin aikapäiviin! Aivan mahtavia - ja täyttä asiaa!', $this->groschen->getTextContents()->where('TextType', '06')->where('ContentAudience', '00')->pluck('Text')->first());
         $this->assertContains('Sari Orhinmaa, toimittaja', $this->groschen->getTextContents()->where('TextType', '06')->where('ContentAudience', '00')->pluck('SourceTitle')->first());
 
