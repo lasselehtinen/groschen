@@ -127,8 +127,7 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Searches for productions
-     * @param  string $return
+     * Get the editions and works id
      * @return array
      */
     public function getEditionAndWorkId()
@@ -178,7 +177,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the print production plan
-     * @return void
+     * @return mixed
      */
     public function getPrintProductionPlan()
     {
@@ -1608,13 +1607,15 @@ class Groschen implements ProductInterface
                         }
 
                         // Go through all the headings/subjects
-                        foreach ($subject->heading as $heading) {
-                            if ($heading !== 'Ellibs') {
-                                $keywords[] = [
-                                    'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
-                                    'SubjectSchemeName' => $subjectSchemeName,
-                                    'SubjectCode' => $heading,
-                                ];
+                        if(isset($subject->heading) && is_array($subject->heading)) {
+                            foreach ($subject->heading as $heading) {
+                                if ($heading !== 'Ellibs') {
+                                    $keywords[] = [
+                                        'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
+                                        'SubjectSchemeName' => $subjectSchemeName,
+                                        'SubjectCode' => $heading,
+                                    ];
+                                }
                             }
                         }
                     }
