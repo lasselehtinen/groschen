@@ -621,17 +621,7 @@ class Groschen implements ProductInterface
      */
     public function getPublisher()
     {
-        switch ($this->product->publishingHouse->name) {
-            case 'WSOY':
-                return 'Werner Söderström Osakeyhtiö';
-                break;
-            case 'Tammi':
-                return 'Kustannusosakeyhtiö Tammi';
-                break;
-            default:
-                return $this->product->publishingHouse->name;
-                break;
-        }
+        return $this->product->publishingHouse->name;
     }
 
     /**
@@ -2243,6 +2233,7 @@ class Groschen implements ProductInterface
 
             // Store all delivieries to array for later use
             $deliveries = [];
+
             foreach ($opusDeliviries->deliverySpecifications as $delivery) {
                 $deliveries[] = [
                     'recipient' => $delivery->deliveryType->name,

@@ -824,19 +824,23 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingPublishers()
     {
         // Normal WSOY product
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner Söderström Osakeyhtiö'], $this->groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'WSOY'], $this->groschen->getPublishers());
 
         // Johnny Kniga product
         $groschen = new Groschen('9789510405314');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Werner Söderström Osakeyhtiö'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'WSOY'], $groschen->getPublishers());
 
         // Normal Tammi product
         $groschen = new Groschen('9789513179564');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Tammi'], $groschen->getPublishers());
 
         // Manga product
         $groschen = new Groschen('9789521619779');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kustannusosakeyhtiö Tammi'], $groschen->getPublishers());
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Tammi'], $groschen->getPublishers());
+
+        // Kosmos product
+        $groschen = new Groschen('9789523520189');
+        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kosmos'], $groschen->getPublishers());
     }
 
     /**
@@ -1577,10 +1581,10 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPrintOrders()
     {
-        $groschen = new Groschen('9789521620348');
+        $groschen = new Groschen('9789510383124');
         $firstPrint = $groschen->getPrintOrders()->where('printNumber', 1)->first();
 
-        $this->assertSame(4100, $firstPrint['orderedQuantity']);
+        $this->assertSame(4350, $firstPrint['orderedQuantity']);
 
         // Delivery without planned delivery date
         $this->assertSame('ScandBook / Liettua', $firstPrint['deliveries']->where('recipient', 'Production department')->pluck('supplier')->first());
@@ -1589,8 +1593,8 @@ class GroschenIntegrationTest extends TestCase
 
         // Delivery with planned delivery date
         $this->assertSame('ScandBook / Liettua', $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('supplier')->first());
-        $this->assertSame(700, $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('orderedQuantity')->first());
-        $this->assertSame('2018-11-19T00:00:00', $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('plannedDeliveryDate')->first());
+        $this->assertSame(750, $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('orderedQuantity')->first());
+        $this->assertSame('2019-05-13T00:00:00', $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('plannedDeliveryDate')->first());
     }
 
     /**
