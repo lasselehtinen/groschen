@@ -802,19 +802,19 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingTheProductsPublisher()
     {
         // Normal WSOY product
-        $this->assertSame('Werner Söderström Osakeyhtiö', $this->groschen->getPublisher());
+        $this->assertSame('WSOY', $this->groschen->getPublisher());
 
         // Johnny Kniga product
         $groschen = new Groschen('9789510405314');
-        $this->assertSame('Werner Söderström Osakeyhtiö', $groschen->getPublisher());
+        $this->assertSame('WSOY', $groschen->getPublisher());
 
         // Normal Tammi product
         $groschen = new Groschen('9789513179564');
-        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublisher());
+        $this->assertSame('Tammi', $groschen->getPublisher());
 
         // Manga product
         $groschen = new Groschen('9789521619779');
-        $this->assertSame('Kustannusosakeyhtiö Tammi', $groschen->getPublisher());
+        $this->assertSame('Tammi', $groschen->getPublisher());
     }
 
     /**
@@ -1583,6 +1583,8 @@ class GroschenIntegrationTest extends TestCase
     {
         $groschen = new Groschen('9789510383124');
         $firstPrint = $groschen->getPrintOrders()->where('printNumber', 1)->first();
+
+        dd($groschen->getPrintOrders());
 
         $this->assertSame(4350, $firstPrint['orderedQuantity']);
 

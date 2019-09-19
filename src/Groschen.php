@@ -55,6 +55,12 @@ class Groschen implements ProductInterface
     private $workLevel;
 
     /**
+     * Whether the work level is already fetched
+     * @var bool
+     */
+    private $workLevelFetched;
+
+    /**
      * Guzzle HTTP client
      * @var \GuzzleHttp\Client
      */
@@ -123,7 +129,7 @@ class Groschen implements ProductInterface
         $this->productNumber = $productNumber;
         list($this->workId, $this->productionId) = $this->getEditionAndWorkId();
         $this->product = $this->getProduct();
-        $this->workLevel = $this->getWorkLevel();
+        $this->workLevelFetched = false;
     }
 
     /**
@@ -197,10 +203,14 @@ class Groschen implements ProductInterface
      */
     public function getWorkLevel()
     {
-        // Get the production from Opus
-        $response = $this->client->get('/v1/works/' . $this->workId);
+        if($this->workLevelFetched === false) {
+            // Get the production from Opus
+            $response = $this->client->get('/v1/works/' . $this->workId);
+            $this->workLevel = json_decode($response->getBody()->getContents());
+            $this->workLevelFetched = true;
+        }
 
-        return json_decode($response->getBody()->getContents());
+        return $this->workLevel;
     }
 
     /**
@@ -567,7 +577,7 @@ class Groschen implements ProductInterface
         }
 
         // Add original languages
-        foreach ($this->workLevel->originalLanguages as $originalLanguage) {
+        foreach ($this->getWorkLevel()->originalLanguages as $originalLanguage) {
             $languages->push([
                 'LanguageRole' => '02',
                 'LanguageCode' => $originalLanguage->id,
@@ -1244,7 +1254,7 @@ class Groschen implements ProductInterface
     {
         $relatedProducts = new Collection;
 
-        foreach ($this->workLevel->productions as $production) {
+        foreach ($this->getWorkLevel()->productions as $production) {
             // Do not add current product
             if (isset($production->isbn) && $production->isbn !== $this->productNumber) {
                 $relatedProducts->push([
@@ -2259,7 +2269,7 @@ class Groschen implements ProductInterface
      */
     public function isMainEdition()
     {
-        foreach ($this->workLevel->productions as $production) {
+        foreach ($this->getWorkLevel()->productions as $production) {
             if ($production->id === $this->product->id && $production->isMainEdition === true) {
                 return true;
             }
@@ -2274,7 +2284,7 @@ class Groschen implements ProductInterface
      */
     public function isInternetEdition()
     {
-        foreach ($this->workLevel->productions as $production) {
+        foreach ($this->getWorkLevel()->productions as $production) {
             if ($production->id === $this->product->id && $production->externalPrimaryEdition->isPrimary === true) {
                 return true;
             }
