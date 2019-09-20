@@ -732,7 +732,7 @@ class Groschen implements ProductInterface
      */
     public function getLatestPublicationDate()
     {
-        if (is_null($this->product->publishingDate)) {
+        if (!isset($this->product->publishingDate) || is_null($this->product->publishingDate)) {
             return null;
         }
 
