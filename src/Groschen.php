@@ -1914,16 +1914,11 @@ class Groschen implements ProductInterface
      */
     public function getLibraryClass()
     {
-        // If both prefix and library code are set
-        if (isset($this->product->libraryCodePrefix) && isset($this->product->libraryCode)) {
-            return $this->product->libraryCodePrefix->id . $this->product->libraryCode->id;
+        if (!isset($this->product->libraryCode)) {
+            return null;            
         }
 
-        if (isset($this->product->libraryCode)) {
-            return $this->product->libraryCode->id;
-        }
-
-        return null;
+        return $this->product->libraryCode->id;
     }
 
     /**

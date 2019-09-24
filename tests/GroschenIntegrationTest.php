@@ -1384,13 +1384,31 @@ class GroschenIntegrationTest extends TestCase
     {
         $this->assertSame('84.2', $this->groschen->getLibraryClass());
 
-        // Product with library class with a prefix
+        // Product with library class with a prefix should only return the Dewey part
         $groschen = new Groschen('9789513158699');
-        $this->assertSame('L84.2', $groschen->getLibraryClass());
+        $this->assertSame('84.2', $groschen->getLibraryClass());
 
         // Product where product does not have library class
         $groschen = new Groschen('9789521606700');
         $this->assertNull($groschen->getLibraryClass());
+    }
+
+
+    /**
+     * Test getting the products library class
+     * @return void
+     */
+    public function testGettingFinnishBookTradeCategorisation()
+    {
+        $this->assertNull($this->groschen->getFinnishBookTradeCategorisation());
+
+        // Product with library class with a prefix
+        $groschen = new Groschen('9789513158699');
+        $this->assertSame('L', $groschen->getFinnishBookTradeCategorisation());
+
+        // Product where product does not have library class
+        $groschen = new Groschen('9789521606700');
+        $this->assertNull($groschen->getFinnishBookTradeCategorisation());
     }
 
     /**
