@@ -1739,6 +1739,12 @@ class Groschen implements ProductInterface
             '334' => 'B06', // Translator
             //'335' => '', // Studio
             //'336' => '', // Printer
+            '337' => 'A36', // Cover design or artwork by
+            '338' => 'A11', // Designed by
+            '340' => 'A36', // Cover design or artwork by
+            '341' => 'A12', // Illustrator
+            '342' => 'A36', // Cover design or artwork by
+            '343' => 'A13', // Photographs by
         ];          
 
         return (isset($roleMappings[$role])) ? $roleMappings[$role] : null;            
