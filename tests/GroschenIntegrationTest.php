@@ -663,7 +663,7 @@ class GroschenIntegrationTest extends TestCase
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
         $subjects = $groschen->getSubjects();
-        $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => 'N84.2'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Main product group', 'SubjectCode' => '4', 'SubjectHeadingText' => 'Käännetty L&N'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group', 'SubjectCode' => '31', 'SubjectHeadingText' => 'Scifi'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC028000'], $subjects);

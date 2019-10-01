@@ -1403,7 +1403,7 @@ class Groschen implements ProductInterface
             '32' => 'AK',
             '33' => 'K',
             '34' => 'HR',
-            '35' => 'FR',
+            '35' => 'FQ',
             '36' => 'J',
             '37' => 'W',
             '38' => 'P',
@@ -1470,7 +1470,7 @@ class Groschen implements ProductInterface
             '32' => 'AK',
             '33' => 'K',
             '34' => 'QR',
-            '35' => 'FB',
+            '35' => 'FQ',
             '36' => 'J',
             '37' => 'W',
             '38' => 'P',
@@ -1524,7 +1524,7 @@ class Groschen implements ProductInterface
             //'32' => '', Industrial / commercial art & design
             //'33' => '', Economics, Finance, Business & Management
             '34' => 'YNR',
-            '35' => 'YFB',
+            '35' => 'YFQ',
             '36' => 'YNK',
             '37' => 'YNV',
             //'38' => '', Mathematics & Science
