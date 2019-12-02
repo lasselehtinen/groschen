@@ -925,7 +925,6 @@ class Groschen implements ProductInterface
             }
         }
 
-        dd($textContents);
         return $textContents;
     }
 
