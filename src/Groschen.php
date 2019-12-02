@@ -652,6 +652,19 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products brand
+     * @return brand
+     */
+    public function getBrand()
+    {
+        if($this->getCostCenter() === 909) {
+            return 'Disney';
+        }
+
+        return $this->product->brand->name;
+    }
+
+    /**
      * Get the products net price RRP including VAT
      * @return float|null
      */
@@ -965,7 +978,7 @@ class Groschen implements ProductInterface
             $embargoDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->firstSellingDay);
             $publishingDates->push(['PublishingDateRole' => '02', 'Date' => $embargoDate->format('Ymd')]);
         }
-        
+
         // Add public announcement date / Season
         if (!empty($this->product->seasonYear) && !empty($this->product->seasonPeriod)) {
             if ($this->product->seasonYear->name !== '2099' && $this->product->seasonPeriod->name !== 'N/A') {
@@ -1745,9 +1758,9 @@ class Groschen implements ProductInterface
             '341' => 'A12', // Illustrator
             '342' => 'A36', // Cover design or artwork by
             '343' => 'A13', // Photographs by
-        ];          
+        ];
 
-        return (isset($roleMappings[$role])) ? $roleMappings[$role] : null;            
+        return (isset($roleMappings[$role])) ? $roleMappings[$role] : null;
     }
 
     /**
@@ -1755,7 +1768,7 @@ class Groschen implements ProductInterface
      * @return boolean
      */
     public function isConfidential()
-    {        
+    {
         return $this->product->listingCode->name === 'Development-Confidential' || $this->product->listingCode->name === 'Cancelled-Confidential';
     }
 
@@ -1921,7 +1934,7 @@ class Groschen implements ProductInterface
     public function getLibraryClass()
     {
         if (!isset($this->product->libraryCode)) {
-            return null;            
+            return null;
         }
 
         return $this->product->libraryCode->id;
@@ -2087,7 +2100,7 @@ class Groschen implements ProductInterface
 
         // Get list of distribution channels
         $distributionChannels = $this->getDistributionChannels();
-        
+
         // If none of the library channels has rights, add restriction "Not for sale to libraries"
         if ($distributionChannels->where('channelType', 'Licencing for libraries')->contains('hasRights', true) === false) {
             $salesRestrictions->push([
@@ -2109,7 +2122,7 @@ class Groschen implements ProductInterface
                 $salesRestrictions->push([
                     'SalesRestrictionType' => '13', // Subscription services only
                 ]);
-            } 
+            }
         }
 
         // Add SalesOutlets where we have rights as "Retailer exclusive"
@@ -2479,7 +2492,7 @@ class Groschen implements ProductInterface
                 'PrizeCode' => '07',
             ]);
         }
-        
+
         return $prizes;
     }
 
@@ -2678,7 +2691,7 @@ class Groschen implements ProductInterface
                     ]);
                 }
             }
-      
+
             // Increase offset
             $offset += $limit;
         }
@@ -2727,11 +2740,11 @@ class Groschen implements ProductInterface
                 if(isset($result->document->isbn)) {
                     $editions->push([
                         'isbn' => intval($result->document->isbn),
-                        'title' => optional($result->document)->title,                        
+                        'title' => optional($result->document)->title,
                     ]);
                 }
             }
-      
+
             // Increase offset
             $offset += $limit;
         }
@@ -2761,7 +2774,7 @@ class Groschen implements ProductInterface
         if(!isset($this->product->activeWebPeriod->endDate)) {
             return null;
         }
-        
+
         return DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->activeWebPeriod->endDate);
     }
 }

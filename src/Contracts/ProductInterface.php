@@ -110,6 +110,12 @@ interface ProductInterface
     public function getImprints();
 
     /**
+     * Get the products brand
+     * @return string
+     */
+    public function getBrand();
+
+    /**
      * Get the product RRP including tax
      * @return float
      */
@@ -401,5 +407,5 @@ interface ProductInterface
      * Get the end date for the products web page
      * @return DateTime|null
      */
-    public function getWebPublishingEndDate(); 
+    public function getWebPublishingEndDate();
 }

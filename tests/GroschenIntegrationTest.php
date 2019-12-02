@@ -564,7 +564,7 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789513194642');
         $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '00930', 'ExtentUnit' => '15'], $groschen->getExtents());
         $this->assertCount(1, $groschen->getExtents());
-        
+
         // Audio book with duration 0 should not return anything
         $groschen = new Groschen('9789510447871');
         $this->assertNotContains(['ExtentType' => '09', 'ExtentValue' => '00000', 'ExtentUnit' => '15'], $groschen->getExtents());
@@ -855,6 +855,20 @@ class GroschenIntegrationTest extends TestCase
         // Johnny Kniga (imprint of WSOY)
         $groschen = new Groschen('9789510405314');
         $this->assertContains(['ImprintName' => 'Johnny Kniga'], $groschen->getImprints());
+    }
+
+    /**
+     * Test getting the products brands
+     * @return void
+     */
+    public function testGettingBrands()
+    {
+        // Normal WSOY product
+        $this->assertSame('WSOY', $this->groschen->getBrand());
+
+        // Disney product (Tammi)
+        $groschen = new Groschen('9789520416904');
+        $this->assertContains('Disney', $groschen->getBrand());
     }
 
     /**
@@ -1209,7 +1223,7 @@ class GroschenIntegrationTest extends TestCase
     public function testCheckingIfProductIsLuxuryBook()
     {
         $this->assertFalse($this->groschen->isLuxuryBook());
-        
+
         // WSOY luxury book
         $groschen = new Groschen('9789510385876');
         $this->assertTrue($groschen->isLuxuryBook());
@@ -1514,7 +1528,7 @@ class GroschenIntegrationTest extends TestCase
         // Normal unit sales channel should appear in exclusive retailers, not in exceptions
         $this->assertContains($salesOutlet, $exclusiveRetailers);
         $this->assertNotContains($salesOutlet, $retailerExceptions);
-        
+
         // Library should appear on exceptions and not in exclusive retailers
         $this->assertNotContains($library, $exclusiveRetailers);
         $this->assertContains($library, $retailerExceptions);
@@ -1696,7 +1710,7 @@ class GroschenIntegrationTest extends TestCase
             //'photoSectionExtent' => null,
             'numberOfPages' => 300,
         ];
-        
+
         $this->assertContains($inside, $groschen->getTechnicalData());
 
         // Case
@@ -1747,7 +1761,7 @@ class GroschenIntegrationTest extends TestCase
             'placement' => null,
             'lamination' => 'Matt lamination',
         ];
-        
+
         $this->assertContains($dustJacket, $groschen->getTechnicalData());
 
         // Soft cover
@@ -1767,7 +1781,7 @@ class GroschenIntegrationTest extends TestCase
             'placement' => null,
             'lamination' => null,
         ];
-        
+
         $this->assertContains($softCover, $groschen->getTechnicalData());
 
         // End papers
@@ -1780,7 +1794,7 @@ class GroschenIntegrationTest extends TestCase
             'colorNames' => '4+0',
             'selfEnds' => false,
         ];
-        
+
         $this->assertContains($endPapers, $groschen->getTechnicalData());
 
         // Book binding
@@ -1870,11 +1884,11 @@ class GroschenIntegrationTest extends TestCase
         // Development, digital and publishing date is in the future
         $groschen = new Groschen('9789510438343');
         $this->assertSame('10', $groschen->getProductAvailability());
-        
+
         // Published, digital and publishing date is in the future
         $groschen = new Groschen('9789510442425');
         $this->assertSame('10', $groschen->getProductAvailability());
-       
+
         // Development, digital and publishing date is in the past
         $groschen = new Groschen('9789510420157');
         $this->assertSame('21', $groschen->getProductAvailability());
@@ -1882,7 +1896,7 @@ class GroschenIntegrationTest extends TestCase
         // Published, digital and publishing date is in the past
         $groschen = new Groschen('9789513151409');
         $this->assertSame('21', $groschen->getProductAvailability());
-        
+
         // Cancelled digital product
         $groschen = new Groschen('9789510384763');
         $this->assertSame('01', $groschen->getProductAvailability());
@@ -1898,7 +1912,7 @@ class GroschenIntegrationTest extends TestCase
         // Published physical product that does not have stock but reprint is coming
         $groschen = new Groschen('9789513122225');
         $this->assertSame('30', $groschen->getProductAvailability());
-        
+
         // Short-run product with stock
         $groschen = new Groschen('9789510407356');
         $this->assertSame('21', $groschen->getProductAvailability());
@@ -1910,11 +1924,11 @@ class GroschenIntegrationTest extends TestCase
         // Development-confidential should return 40
         $groschen = new Groschen('9789510369401');
         $this->assertSame('40', $groschen->getProductAvailability());
-        
+
         // Development, publishing date in the future
         $groschen = new Groschen('9789510412626');
         $this->assertSame('10', $groschen->getProductAvailability());
-        
+
         // Exclusive sales
         $groschen = new Groschen('9789510408513');
         $this->assertSame('22', $groschen->getProductAvailability());
@@ -2016,7 +2030,7 @@ class GroschenIntegrationTest extends TestCase
         $expectedWebPublishingStartDate = new DateTime('2014-08-15');
         $this->assertEquals($expectedWebPublishingStartDate, $this->groschen->getWebPublishingStartDate());
         $this->assertNull($this->groschen->getWebPublishingEndDate());
-        
+
         // Product with both dates
         $groschen = new Groschen('9789510240243');
         $expectedWebPublishingStartDate = new DateTime('2019-02-21');
