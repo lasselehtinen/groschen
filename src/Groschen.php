@@ -861,10 +861,26 @@ class Groschen implements ProductInterface
             return $text->textType->name === 'Headline';
         });
 
+        if ($headline->count() === 1) {
+            $textContents->push([
+                'TextType' => '10',
+                'ContentAudience' => '00',
+                'Text' => $headline->pluck('text')->first(),
+            ]);
+        }
+
         // Copy 1
         $copyOne = $texts->filter(function ($text) {
             return $text->textType->name === 'Copy 1';
         });
+
+        if ($copyOne->count() === 1) {
+            $textContents->push([
+                'TextType' => '02',
+                'ContentAudience' => '00',
+                'Text' => $copyOne->pluck('text')->first(),
+            ]);
+        }
 
         // Copy 2
         $copyTwo = $texts->filter(function ($text) {
@@ -909,6 +925,7 @@ class Groschen implements ProductInterface
             }
         }
 
+        dd($textContents);
         return $textContents;
     }
 
