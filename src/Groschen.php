@@ -801,6 +801,16 @@ class Groschen implements ProductInterface
             $subjects->push(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => $this->getThemaSubjectCode()]);
         }
 
+        // Internal category
+        if(isset($this->product->internalCategory)) {
+            $subjects->push([
+                'SubjectSchemeIdentifier' => '24',
+                'SubjectSchemeName' => 'Internal category',
+                'SubjectCode' => $this->product->internalCategory->id,
+                'SubjectHeadingText' => $this->product->internalCategory->name,
+            ]);
+        }
+
         // Thema interest age
         $subjects->push(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => $this->getThemaInterestAge()]);
 
@@ -840,7 +850,7 @@ class Groschen implements ProductInterface
             $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => implode(';', array_unique($keywords))]);
         }
 
-        return $subjects;
+        return $subjects->sortBy('SubjectSchemeIdentifier');
     }
 
     /**
@@ -2792,5 +2802,33 @@ class Groschen implements ProductInterface
         }
 
         return DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->activeWebPeriod->endDate);
+    }
+
+    /**
+     * Get all comments
+     * @return Collection
+     */
+    public function getComments() {
+        $comments = new Collection;
+
+        // List of comments fields that we want to pick
+        $commentFields = [
+            'general' => 'comment',
+            'insert/cover material' => 'miscMaterialInsertCover',
+            'print order' => 'miscComment',
+            'price' => 'miscPrice',
+            'rights' => 'rightsComment',
+        ];
+
+        foreach ($commentFields as $name => $field) {
+            if(isset($this->product->{$field}) || isset($this->product->activePrint->{$field})) {
+                $comments->push([
+                    'type' => $name,
+                    'comment' => (isset($this->product->{$field})) ? $this->product->{$field} : $this->product->activePrint->{$field},
+                ]);
+            }
+        }
+
+        return $comments;
     }
 }

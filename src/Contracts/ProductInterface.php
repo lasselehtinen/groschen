@@ -408,4 +408,10 @@ interface ProductInterface
      * @return DateTime|null
      */
     public function getWebPublishingEndDate();
+
+    /**
+     * Get all comments
+     * @return Collection
+     */
+    public function getComments();
 }

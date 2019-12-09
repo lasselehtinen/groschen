@@ -694,6 +694,17 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting the products internal category
+     * @return void
+     */
+    public function testGettingInternalCategory() {
+        $this->assertFalse($this->groschen->getSubjects()->contains('SubjectSchemeIdentifier', '24'));
+
+        $groschen = new Groschen('9789520418564');
+        $this->assertContains(['SubjectSchemeIdentifier' => '24', 'SubjectSchemeName' => 'Internal category', 'SubjectCode' => 'valmis', 'SubjectHeadingText' => 'Valmis'], $groschen->getSubjects());
+    }
+
+    /**
      * Test product without subgroup is not throwing exception
      * @return void
      */
@@ -2037,5 +2048,22 @@ class GroschenIntegrationTest extends TestCase
         $expectedWebPublishingEndDate = new DateTime('2019-02-25');
         $this->assertEquals($expectedWebPublishingStartDate, $groschen->getWebPublishingStartDate());
         $this->assertEquals($expectedWebPublishingEndDate, $groschen->getWebPublishingEndDate());
+    }
+
+    /**
+     * Test getting editions comments
+     * @return void
+     */
+    public function testGettingComments()
+    {
+        $groschen = new Groschen('9789520404338');
+        $comments = $groschen->getComments();
+
+        $this->assertContains(['type' => 'general', 'comment' => 'Waterbased varnish glossy to cover and inside!'], $comments);
+        $this->assertFalse($comments->contains('type', 'insert/cover material'), $comments);
+        $this->assertContains(['type' => 'print order', 'comment' => 'Your offer no. 6100745'], $comments);
+        $this->assertContains(['type' => 'price', 'comment' => '2 x 2000 cps 1,11 / kpl. for 2 x 2.500 copies would be 0,98 EURO/cop. = 4.900,00 EURO'], $comments);
+        $this->assertFalse($comments->contains('type', 'rights'), $comments);
+
     }
 }
