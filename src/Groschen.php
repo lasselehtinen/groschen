@@ -653,7 +653,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products brand
-     * @return brand
+     * @return string
      */
     public function getBrand()
     {
