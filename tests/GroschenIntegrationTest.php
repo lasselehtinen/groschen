@@ -2077,6 +2077,17 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['type' => 'print order', 'comment' => 'Your offer no. 6100745'], $comments);
         $this->assertContains(['type' => 'price', 'comment' => '2 x 2000 cps 1,11 / kpl. for 2 x 2.500 copies would be 0,98 EURO/cop. = 4.900,00 EURO'], $comments);
         $this->assertFalse($comments->contains('type', 'rights'), $comments);
+    }
 
+    /**
+     * Test getting products sales status
+     * @return void
+     */
+    public function testGettingSalesStatus()
+    {
+        //$this->assertNull($this->groschen->getSalesStatus());
+
+        $groschen = new Groschen('9789510433058');
+        $this->assertSame('Star', $groschen->getSalesStatus());
     }
 }

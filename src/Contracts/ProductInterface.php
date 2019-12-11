@@ -420,4 +420,10 @@ interface ProductInterface
      * @return Collection
      */
     public function getComments();
+
+    /**
+     * Get products sales status
+     * @return string|null
+     */
+    public function getSalesStatus();
 }

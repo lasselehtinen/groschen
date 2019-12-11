@@ -2849,4 +2849,16 @@ class Groschen implements ProductInterface
 
         return $comments;
     }
+
+    /**
+     * Get products sales status
+     * @return string|null
+     */
+    public function getSalesStatus() {
+        if(!isset($this->product->effortType)) {
+            return null;
+        }
+
+        return $this->product->effortType->name;
+    }
 }
