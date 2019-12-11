@@ -2005,6 +2005,24 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products backlist sales season
+     * @return string|null
+     */
+    public function getBacklistSalesSeason() {
+
+        if (!isset($this->product->backlistSeasonYear) && !isset($this->product->backlistSeasonPeriod)) {
+            return null;
+        }
+
+        if (isset($this->product->backlistSeasonYear) && !isset($this->product->backlistSeasonPeriod)) {
+            return $this->product->backlistSeasonYear->name;
+        }
+
+
+        return $this->product->backlistSeasonYear->name . ' ' . $this->product->backlistSeasonPeriod->name;
+    }
+
+    /**
      * Get the products audience groups
      * @return Collection
      */

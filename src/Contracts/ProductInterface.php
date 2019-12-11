@@ -290,6 +290,12 @@ interface ProductInterface
     public function getSalesSeason();
 
     /**
+     * Get the products backlist sales season
+     * @return string|null
+     */
+    public function getBacklistSalesSeason();
+
+    /**
      * Get the latest stock arrival date
      * @return DateTime|null
      */

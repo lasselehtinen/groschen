@@ -1480,6 +1480,19 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting products sales season
+     * @return void
+     */
+    public function testGettingBacklistSalesSeason()
+    {
+        $this->assertNull($this->groschen->getBacklistSalesSeason());
+
+        // Product with the fall sales season 2013/3
+        $groschen = new Groschen('9789513129071');
+        $this->assertSame('2016 Autumn', $groschen->getBacklistSalesSeason());
+    }
+
+    /**
      * Test getting sales restrictions
      * @return void
      */
