@@ -697,7 +697,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting the products internal category
      * @return void
      */
-    public function testGettingInternalCategory() {
+    public function testGettingInternalCategory()
+    {
         $this->assertFalse($this->groschen->getSubjects()->contains('SubjectSchemeIdentifier', '24'));
 
         $groschen = new Groschen('9789520418564');
