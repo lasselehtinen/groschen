@@ -2170,14 +2170,24 @@ class Groschen implements ProductInterface
         }
 
         // Add SalesOutlets where we have rights as "Retailer exclusive"
-        if($distributionChannels->contains('hasRights', true)) {
+        if ($distributionChannels->contains('hasRights', true)) {
             $retailerExclusiveSalesOutlets = $distributionChannels->where('hasRights', true)->map(function ($distributionChannel, $key) {
+                // Get IDValue
+                $salesOutletIdentifierIdValue = $this->getSalesOutletIdValue($distributionChannel['channel']);
+                $salesOutletIDType = '03';
+
+                // In case mapping is not found, fall back to propietary
+                if (is_null($salesOutletIdentifierIdValue)) {
+                    $salesOutletIDType = '01';
+                    $salesOutletIdentifierIdValue = $distributionChannel['channel'];
+                }
+
                 return [
                     'SalesOutlet' => [
                         'SalesOutletIdentifiers' => [
                             [
-                                'SalesOutletIDType' => '01',
-                                'IDValue' => $distributionChannel['channel'],
+                                'SalesOutletIDType' => $salesOutletIDType,
+                                'IDValue' => $salesOutletIdentifierIdValue,
                             ],
                         ]
                     ],
@@ -2190,17 +2200,27 @@ class Groschen implements ProductInterface
             ]);
         }
 
-        // Add SalesOutlets where we don't have rights as " Retailer exception"
-        if($distributionChannels->contains('hasRights', false)) {
+        // Add SalesOutlets where we don't have rights as "Retailer exception"
+        if ($distributionChannels->contains('hasRights', false)) {
             $retailerExceptionSalesOutlets = $distributionChannels->where('hasRights', false)->map(function ($distributionChannel, $key) {
+                // Get IDValue
+                $salesOutletIdentifierIdValue = $this->getSalesOutletIdValue($distributionChannel['channel']);
+                $salesOutletIDType = '03';
+
+                // In case mapping is not found, fall back to propietary
+                if (is_null($salesOutletIdentifierIdValue)) {
+                    $salesOutletIDType = '01';
+                    $salesOutletIdentifierIdValue = $distributionChannel['channel'];
+                }
+
                 return [
                     'SalesOutlet' => [
                         'SalesOutletIdentifiers' => [
                             [
-                                'SalesOutletIDType' => '01',
-                                'IDValue' => $distributionChannel['channel'],
+                                'SalesOutletIDType' => $salesOutletIDType,
+                                'IDValue' => $salesOutletIdentifierIdValue,
                             ],
-                        ],
+                        ]
                     ],
                 ];
             });
@@ -2212,6 +2232,40 @@ class Groschen implements ProductInterface
         }
 
         return $salesRestrictions->sortBy('SalesRestrictionType');
+    }
+
+    /**
+     * Get sales outlet id value for the given sales outlet
+     * @param  string $salesOutletName
+     * @return string|null
+     */
+    public function getSalesOutletIdValue($salesOutletName)
+    {
+        // Mapping table for Opus
+        $salesOutlets = [
+            'Adlibris.com' => 'ADL',
+            'Alma Talent' => 'ALT',
+            'Apple Books (iBooks)' => 'APC',
+            'Axiell (Swedish libraries)' => 'ELB',
+            'BookBeat' => 'BOO',
+            'CDon.com' => 'CDN',
+            'Elisa Kirja' => 'ELS',
+            'Ellibs' => 'ELL',
+            'Ellibs (Finnish libraries)' => 'ELL',
+            'Google Play Store' => 'GOO',
+            //'Kirjavälitys' => '',
+            //'Lasten Oma Satukirjasto' => '',
+            //'Lukulumo (ILT)' => '',
+            'Nextory' => 'NXT',
+            'Storytel' => 'STT',
+            'Suomalainen.com' => 'SKK',
+        ];
+
+        if(!array_key_exists($salesOutletName, $salesOutlets)) {
+            return null;
+        }
+
+        return $salesOutlets[$salesOutletName];
     }
 
     /**

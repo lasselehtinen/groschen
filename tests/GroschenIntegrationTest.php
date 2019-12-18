@@ -1516,10 +1516,10 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting sales restrictions for each outlot
+     * Test getting sales restrictions for each outlet
      * @return void
      */
-    public function testGettingSalesRestrictionsForEachSalesOutlet()
+    public function testGettingSalesRestrictionsForSalesOutlet()
     {
         // ePub with unit and subscription rights but no library
         $groschen = new Groschen('9789510369654');
@@ -1532,8 +1532,8 @@ class GroschenIntegrationTest extends TestCase
             'SalesOutlet' => [
               'SalesOutletIdentifiers' => [
                   [
-                    'SalesOutletIDType' => '01',
-                    'IDValue' => 'Ellibs',
+                    'SalesOutletIDType' => '03',
+                    'IDValue' => 'ELL',
                   ],
                 ],
             ],
@@ -1543,8 +1543,8 @@ class GroschenIntegrationTest extends TestCase
             'SalesOutlet' => [
               'SalesOutletIdentifiers' => [
                   [
-                    'SalesOutletIDType' => '01',
-                    'IDValue' => 'Ellibs (Finnish libraries)',
+                    'SalesOutletIDType' => '03',
+                    'IDValue' => 'ELL',
                   ],
               ],
             ],
