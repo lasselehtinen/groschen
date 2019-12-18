@@ -570,7 +570,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting extents for audio book
      * @return void
      */
-    public function testGettingExtentsForAudioBook() {
+    public function testGettingExtentsForAudioBook()
+    {
         $groschen = new Groschen('9789513194642');
         $extents = $groschen->getExtents();
         $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '00930', 'ExtentUnit' => '15'], $extents);
