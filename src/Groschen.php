@@ -622,7 +622,40 @@ class Groschen implements ProductInterface
             }
         }
 
-        return $extents;
+        // E-book word and pages count by approximation (Finnish words is 8.5 characters on average and around 1500 characters per page)
+        if (isset($this->product->numberOfCharacters)) {
+            $extents->push([
+                'ExtentType' => '10',
+                'ExtentValue' => intval(round($this->product->numberOfCharacters / 8.5)),
+                'ExtentUnit' => '02',
+            ]);
+
+            $extents->push([
+                'ExtentType' => '10',
+                'ExtentValue' => intval(round($this->product->numberOfCharacters / 1500)),
+                'ExtentUnit' => '03',
+            ]);
+        }
+
+        // Add number of pages in the printer counterpart for digital products
+        if($this->isImmaterial()) {
+            // Get page number for the first printed version we have
+            foreach ($this->getWorkLevel()->productions as $production) {
+                if ($production->bindingCode->type === 'printed') {
+                    $groschen = new Groschen($production->isbn);
+
+                    if ($groschen->isImmaterial() === false && $groschen->getExtents()->contains('ExtentType', '00')) {
+                        // Swap ExtentType
+                        $extent = $groschen->getExtents()->where('ExtentType', '00')->first();
+                        $extent['ExtentType'] = '08';
+                        $extents->push($extent);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $extents->sortBy('ExtentType');
     }
 
     /**

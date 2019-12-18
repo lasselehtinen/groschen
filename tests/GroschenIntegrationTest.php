@@ -548,26 +548,62 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products extents
-     * @see  https://bonnierforlagen.tpondemand.com/entity/3431-audio-book-duration-is-not-converted
      * @return void
      */
     public function testGettingExtents()
     {
         $this->assertContains(['ExtentType' => '00', 'ExtentValue' => '128', 'ExtentUnit' => '03'], $this->groschen->getExtents());
-        $this->assertCount(1, $this->groschen->getExtents());
+    }
 
+    /**
+     * Test getting extents from book without any
+     * @return void
+     */
+    public function testGettingExtentsFromBookWithoutAny()
+    {
         // Book without any extents
         $groschen = new Groschen('9789510303108');
         $this->assertCount(0, $groschen->getExtents());
+    }
 
-        // Audio book with duration
+    /**
+     * Test getting extents for audio book
+     * @return void
+     */
+    public function testGettingExtentsForAudioBook() {
         $groschen = new Groschen('9789513194642');
-        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '00930', 'ExtentUnit' => '15'], $groschen->getExtents());
-        $this->assertCount(1, $groschen->getExtents());
+        $extents = $groschen->getExtents();
+        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '00930', 'ExtentUnit' => '15'], $extents);
+        $this->assertContains(['ExtentType' => '08', 'ExtentValue' => '338', 'ExtentUnit' => '03'], $extents);
+    }
 
+    /**
+     * Test getting extents for audio book without duration
+     * @return void
+     */
+    public function testGettingExtentsForAudioBookWithoutDuration()
+    {
         // Audio book with duration 0 should not return anything
         $groschen = new Groschen('9789510447871');
         $this->assertNotContains(['ExtentType' => '09', 'ExtentValue' => '00000', 'ExtentUnit' => '15'], $groschen->getExtents());
+    }
+
+    /**
+     * Test getting extents for an e-book
+     * @return void
+     */
+    public function testGettingExtentsForAnEbook()
+    {
+        // E-book character count should be converted to number of words and pages by approximation from the number of characters
+        $groschen = new Groschen('9789510411858');
+        $extents = $groschen->getExtents();
+
+        // Number of words and pages
+        $this->assertContains(['ExtentType' => '10', 'ExtentValue' => '93984', 'ExtentUnit' => '02'], $extents);
+        $this->assertContains(['ExtentType' => '10', 'ExtentValue' => '533', 'ExtentUnit' => '03'], $extents);
+
+        // Number of pages in the printer counterpart
+        $this->assertContains(['ExtentType' => '08', 'ExtentValue' => '544', 'ExtentUnit' => '03'], $extents);
     }
 
     /**
