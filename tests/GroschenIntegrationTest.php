@@ -169,6 +169,11 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510232644');
         $this->assertSame('AZ', $groschen->getProductForm());
         $this->assertNull($groschen->getProductFormDetail());
+
+        // Miscellaneous
+        $groschen = new Groschen('6430060034020');
+        $this->assertSame('ZZ', $groschen->getProductForm());
+        $this->assertNull($groschen->getProductFormDetail());
     }
 
      /**

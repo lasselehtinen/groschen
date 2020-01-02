@@ -279,6 +279,10 @@ class Groschen implements ProductInterface
             case 'PDF':
                 return 'EA';
                 break;
+            // Miscellaneous
+            case 'MISC':
+                return 'ZZ';
+                break;
             // For all others we can just pick the two first letters
             default:
                 return substr($this->product->bindingCode->id, 0, 2);
