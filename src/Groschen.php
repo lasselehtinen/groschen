@@ -641,7 +641,7 @@ class Groschen implements ProductInterface
         if($this->isImmaterial()) {
             // Get page number for the first printed version we have
             foreach ($this->getWorkLevel()->productions as $production) {
-                if ($production->bindingCode->type === 'printed') {
+                if (!empty($production->isbn) && $production->bindingCode->type === 'printed') {
                     $groschen = new Groschen($production->isbn);
 
                     if ($groschen->isImmaterial() === false && $groschen->getExtents()->contains('ExtentType', '00')) {
