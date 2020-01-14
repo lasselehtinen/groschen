@@ -788,65 +788,58 @@ class GroschenIntegrationTest extends TestCase
         // General/trade should not contain any audience ranges
         $this->assertCount(0, $this->groschen->getAudienceRanges());
 
-        // Product with age group of 0 should be from 0 to 3
-        $groschen = new Groschen('9789513181512');
-
-        $expectedAudienceRange = [
-            'AudienceRangeQualifier' => 17, // Interest age, years
-            'AudienceRangeScopes' => [
-                [
-                    'AudienceRangePrecision' => '03', // From
-                    'AudienceRangeValue' => 0,
-                ],
+        // Age group mapping
+        $ageGroups = [
+            '0+' => [
+                'gtin' => 9789513181512,
+                'expectedAudienceRange' => 0,
+            ],
+            '3+' => [
+                'gtin' => 9789513133030,
+                'expectedAudienceRange' => 3,
+            ],
+            '5+' => [
+                'gtin' => 9789513176730,
+                'expectedAudienceRange' => 6,
+            ],
+            '7+' => [
+                'gtin' => 9789510426319,
+                'expectedAudienceRange' => 6,
+            ],
+            '9+' => [
+                'gtin' => 9789510411735,
+                'expectedAudienceRange' => 9,
+            ],
+            '10+' => [
+                'gtin' => 9789520412050,
+                'expectedAudienceRange' => 9,
+            ],
+            '12+' => [
+                'gtin' => 9789521619571,
+                'expectedAudienceRange' => 12,
+            ],
+            '15+' => [
+                'gtin' => 9789510401521,
+                'expectedAudienceRange' => 15,
             ],
         ];
 
-        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+        // Go through all the options
+        foreach ($ageGroups as $ageGroup => $parameters) {
+            $groschen = new Groschen($parameters['gtin']);
 
-        // Product with age group of 5 should be mapped to 6 because of Bokinfo
-        $groschen = new Groschen('9789513181512');
-
-        $expectedAudienceRange = [
-            'AudienceRangeQualifier' => 17, // Interest age, years
-            'AudienceRangeScopes' => [
-                [
-                    'AudienceRangePrecision' => '03', // From
-                    'AudienceRangeValue' => 0,
+            $expectedAudienceRange = [
+                'AudienceRangeQualifier' => 17, // Interest age, years
+                'AudienceRangeScopes' => [
+                    [
+                        'AudienceRangePrecision' => '03', // From
+                        'AudienceRangeValue' => $parameters['expectedAudienceRange'],
+                    ],
                 ],
-            ],
-        ];
+            ];
 
-        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
-
-        // Product with age group of 12 should be from 12 to 15
-        $groschen = new Groschen('9789521619571');
-
-        $expectedAudienceRange = [
-            'AudienceRangeQualifier' => 17, // Interest age, years
-            'AudienceRangeScopes' => [
-                [
-                    'AudienceRangePrecision' => '03', // From
-                    'AudienceRangeValue' => 12,
-                ],
-            ],
-        ];
-
-        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
-
-        // Product with age group of 15 should be from 15 to 18
-        $groschen = new Groschen('9789510401521');
-
-        $expectedAudienceRange = [
-            'AudienceRangeQualifier' => 17, // Interest age, years
-            'AudienceRangeScopes' => [
-                [
-                    'AudienceRangePrecision' => '03', // From
-                    'AudienceRangeValue' => 15,
-                ],
-            ],
-        ];
-
-        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+            $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+        }
     }
 
     /**

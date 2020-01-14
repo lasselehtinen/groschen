@@ -2109,15 +2109,15 @@ class Groschen implements ProductInterface
         $interestAges = [
             '0+' => 0,
             '3+' => 3,
-            '5+' => 5,
-            '7+' => 7,
+            '5+' => 6,
+            '7+' => 6,
             '9+' => 9,
-            '10+' => 10,
+            '10+' => 9,
             '12+' => 12,
             '15+' => 15,
         ];
 
-        if (!empty($this->product->interestAge) && in_array($this->product->interestAge->name, $interestAges)) {
+        if (!empty($this->product->interestAge) && array_key_exists($this->product->interestAge->name, $interestAges)) {
             $audienceRanges->push([
                 'AudienceRangeQualifier' => 17,
                 'AudienceRangeScopes' => [
