@@ -561,6 +561,19 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting products estimated number of pages
+     * @return void
+     */
+    public function testGettingEstimatedNumberOfPages()
+    {
+        $groschen = new Groschen('9789510448892');
+        $this->assertSame(220, $groschen->getEstimatedNumberOfPages());
+
+        $groschen = new Groschen('9789522798565');
+        $this->assertNull($groschen->getEstimatedNumberOfPages());
+    }
+
+    /**
      * Test getting extents from book without any
      * @return void
      */

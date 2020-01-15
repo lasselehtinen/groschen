@@ -92,6 +92,12 @@ interface ProductInterface
     public function getExtents();
 
     /**
+     * Get the products estimated number of pages
+     * @return int|null
+     */
+    public function getEstimatedNumberOfPages();
+
+    /**
      * Get the products text contents
      * @return Collection
      */
