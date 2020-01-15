@@ -17,7 +17,7 @@ class TestCase extends OrchestraTestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-        $dotenv = new Dotenv(__DIR__ . '/..');
+        $dotenv = Dotenv::create(__DIR__ . '/..');
         $dotenv->load();
         $dotenv->required('ELVIS_HOSTNAME');
         $dotenv->required('ELVIS_USERNAME');
