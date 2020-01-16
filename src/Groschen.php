@@ -1377,6 +1377,7 @@ class Groschen implements ProductInterface
         $config->set('HTML.TidyLevel', 'heavy');
         $config->set('HTML.Allowed', 'p,br,strong,em,b,i,ul,ol,li,sub,sup,dl,dt,dd');
         $config->set('Cache.DefinitionImpl', null);
+        $config->set('AutoFormat.RemoveEmpty', true);
 
         $purifier = new HTMLPurifier($config);
         return $purifier->purify($text);
