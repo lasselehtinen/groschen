@@ -592,7 +592,9 @@ class GroschenIntegrationTest extends TestCase
     {
         $groschen = new Groschen('9789513194642');
         $extents = $groschen->getExtents();
+
         $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '00930', 'ExtentUnit' => '15'], $extents);
+        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '34200', 'ExtentUnit' => '06'], $extents);
         $this->assertContains(['ExtentType' => '08', 'ExtentValue' => '338', 'ExtentUnit' => '03'], $extents);
     }
 
