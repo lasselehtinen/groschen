@@ -600,7 +600,7 @@ class Groschen implements ProductInterface
         $extents = new Collection;
 
         // Number of pages
-        if (isset($this->product->pages) && $this->product->pages > 0) {
+        if (isset($this->product->pages) && $this->product->pages > 0 && $this->isImmaterial() === false) {
             $extents->push([
                 'ExtentType' => '00',
                 'ExtentValue' => $this->product->pages,
