@@ -627,9 +627,6 @@ class GroschenIntegrationTest extends TestCase
         // Number of words and pages
         $this->assertContains(['ExtentType' => '10', 'ExtentValue' => '93984', 'ExtentUnit' => '02'], $extents);
         $this->assertContains(['ExtentType' => '10', 'ExtentValue' => '533', 'ExtentUnit' => '03'], $extents);
-
-        // Number of pages in the printer counterpart
-        $this->assertContains(['ExtentType' => '08', 'ExtentValue' => '544', 'ExtentUnit' => '03'], $extents);
     }
 
     /**

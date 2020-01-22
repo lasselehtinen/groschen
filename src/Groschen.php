@@ -649,22 +649,13 @@ class Groschen implements ProductInterface
             ]);
         }
 
-        // Add number of pages in the printer counterpart for digital products
-        if($this->isImmaterial()) {
-            // Get page number for the first printed version we have
-            foreach ($this->getWorkLevel()->productions as $production) {
-                if (!empty($production->isbn) && $production->bindingCode->type === 'printed') {
-                    $groschen = new Groschen($production->isbn);
-
-                    if ($groschen->isImmaterial() === false && $groschen->getExtents()->contains('ExtentType', '00')) {
-                        // Swap ExtentType
-                        $extent = $groschen->getExtents()->where('ExtentType', '00')->first();
-                        $extent['ExtentType'] = '08';
-                        $extents->push($extent);
-                        break;
-                    }
-                }
-            }
+        // Add number of pages in the printer counterpart for digital products from main edition
+        if($this->isImmaterial() && isset($this->product->pages) && $this->product->pages > 0) {
+            $extents->push([
+                'ExtentType' => '08',
+                'ExtentValue' => $this->product->pages,
+                'ExtentUnit' => '03',
+            ]);
         }
 
         return $extents->sortBy('ExtentType');
