@@ -270,23 +270,18 @@ class Groschen implements ProductInterface
             // ePub2
             case 'EPUB2':
                 return 'ED';
-                break;
             // ePub3
             case 'EPUB3':
                 return 'ED';
-                break;
             // PDF
             case 'PDF':
                 return 'EA';
-                break;
             // Miscellaneous
             case 'MISC':
                 return 'ZZ';
-                break;
             // For all others we can just pick the two first letters
             default:
                 return substr($this->product->bindingCode->id, 0, 2);
-                break;
         }
     }
 
@@ -300,19 +295,15 @@ class Groschen implements ProductInterface
             // ePub2
             case 'EPUB2':
                 return 'E101';
-                break;
             // ePub3
             case 'EPUB3':
                 return 'W993';
-                break;
             // PDF
             case 'PDF':
                 return 'E107';
-                break;
             // Return last three characters if they are 2+4 combo
             default:
                 return (strlen($this->product->bindingCode->id) === 6) ? substr($this->product->bindingCode->id, 2, 4) : null;
-                break;
         }
     }
 
@@ -628,7 +619,7 @@ class Groschen implements ProductInterface
                 // Seconds
                 $extents->push([
                     'ExtentType' => '09',
-                    'ExtentValue' => ($audioPlaytimeHours * 3600) + ($audioPlaytimeMinutes * 60),
+                    'ExtentValue' => (intval($audioPlaytimeHours) * 3600) + (intval($audioPlaytimeMinutes) * 60),
                     'ExtentUnit' => '06',
                 ]);
             }
@@ -1007,25 +998,18 @@ class Groschen implements ProductInterface
             case 'Exclusive Sales':
             case 'Short run':
                 return '04';
-                break;
             case 'Development':
                 return '02';
-                break;
             case 'Sold out':
                 return '07';
-                break;
             case 'Development-Confidential':
                 return '00';
-                break;
             case 'Cancelled':
                 return '01';
-                break;
             case 'Delivery block':
                 return '16';
-                break;
             default:
                 throw new Exception('Could not map product governing code to publishing status');
-                break;
         }
     }
 
@@ -1981,7 +1965,6 @@ class Groschen implements ProductInterface
             case 'CD':
             case 'MP3-CD':
                 return 85234920;
-                break;
             // Digital products should return null
             case 'ePub2':
             case 'ePub3':
@@ -1989,13 +1972,9 @@ class Groschen implements ProductInterface
             case 'Downloadable audio file':
             case 'Picture-and-audio book':
                 return null;
-                break;
             default:
                 return 49019900;
-                break;
         }
-
-        return intval($this->product->customsNumber);
     }
 
     /**
@@ -2042,11 +2021,11 @@ class Groschen implements ProductInterface
         switch ($this->product->seasonPeriod->name) {
             case 'Spring':
                 return $this->product->seasonYear->name . '/1';
-                break;
             case 'Autumn':
                 return $this->product->seasonYear->name . '/2';
-                break;
         }
+
+        return null;
     }
 
     /**
@@ -2658,7 +2637,6 @@ class Groschen implements ProductInterface
                 case 'Sold out':
                 case 'Short Run':
                     return '40';
-                    break;
             }
         }
 
@@ -2666,20 +2644,15 @@ class Groschen implements ProductInterface
         switch ($this->product->listingCode->name) {
             case 'Development':
                 return '10';
-                break;
             case 'Cancelled':
                 return '01';
-                break;
             case 'Exclusive Sales':
                 return '22';
-                break;
             case 'Development-Confidential':
             case 'Delivery block':
                 return '40';
-                break;
             case 'Sold out':
                 return '43';
-                break;
         }
 
         // Already published product
