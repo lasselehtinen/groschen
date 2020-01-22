@@ -254,23 +254,6 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $this->assertContains($collection, $groschen->getCollections());
-
-        // Product with extra spaces in the series name
-        $groschen = new Groschen('9789520410568');
-
-        $collection = [
-            'CollectionType' => '10', [
-                'TitleDetail' => [
-                    'TitleType' => '01',
-                    'TitleElement' => [
-                        'TitleElementLevel' => '02',
-                        'TitleText' => 'Lumikki-kirjat',
-                    ],
-                ],
-            ],
-        ];
-
-        $this->assertContains($collection, $groschen->getCollections());
     }
 
     /**
@@ -495,7 +478,7 @@ class GroschenIntegrationTest extends TestCase
     {
         // Author
         $author = [
-            'Role' => 'Author',
+            'Role' => 'Author WS',
             'FirstName' => 'Tuomas',
             'LastName' => 'Kyrö',
         ];
@@ -504,7 +487,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Keski-Suomen Sivu
         $layout = [
-            'Role' => 'Layout',
+            'Role' => 'Layout WS',
             'FirstName' => 'Keski-Suomen Sivu Oy',
             'LastName' => null,
         ];
@@ -513,7 +496,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Printer
         $printer = [
-            'Role' => 'Printer',
+            'Role' => 'Printer WS',
             'FirstName' => 'Bookwell Oy',
             'LastName' => null,
         ];
@@ -637,7 +620,8 @@ class GroschenIntegrationTest extends TestCase
     {
         $groschen = new Groschen('9789510442128');
         $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '01400', 'ExtentUnit' => '15'], $groschen->getExtents());
-        $this->assertCount(1, $groschen->getExtents());
+        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '50400', 'ExtentUnit' => '06'], $groschen->getExtents());
+        $this->assertCount(2, $groschen->getExtents());
     }
 
     /**
@@ -650,16 +634,16 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(1, $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00'));
 
         // Check that text contains description
-        $this->assertContains('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
+        $this->assertStringContainsString('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
 
         // Check that text contains review quotes and sources
         $this->assertTrue($this->groschen->getTextContents()->contains('TextType', '06'));
-        $this->assertContains('Herrajumala, en ole mistään nauttinut näin aikapäiviin! Aivan mahtavia - ja täyttä asiaa!', $this->groschen->getTextContents()->where('TextType', '06')->where('ContentAudience', '00')->pluck('Text')->first());
-        $this->assertContains('Sari Orhinmaa, toimittaja', $this->groschen->getTextContents()->where('TextType', '06')->where('ContentAudience', '00')->pluck('SourceTitle')->first());
+        $this->assertStringContainsString('Herrajumala, en ole mistään nauttinut näin aikapäiviin! Aivan mahtavia - ja täyttä asiaa!', $this->groschen->getTextContents()->where('TextType', '06')->where('ContentAudience', '00')->pluck('Text')->first());
+        $this->assertStringContainsString('Sari Orhinmaa, toimittaja', $this->groschen->getTextContents()->where('TextType', '06')->where('ContentAudience', '00')->pluck('SourceTitle')->first());
 
         // Product without reviews
         $groschen = new Groschen('9789510433911');
-        $this->assertContains('Ulkoministerin poika Juho Nortamo saa tietää olevansa ottolapsi.', $groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
+        $this->assertStringContainsString('Ulkoministerin poika Juho Nortamo saa tietää olevansa ottolapsi.', $groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
 
         // Product without text
         $groschen = new Groschen('9789510343135');
@@ -742,10 +726,6 @@ class GroschenIntegrationTest extends TestCase
         $subjects = $groschen->getSubjects();
         $this->assertNotContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => ''], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => ''], $subjects);
-
-        // Product where Finna API does not return heading
-        $groschen = new Groschen('9789510401378');
-        $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'äänikirjat'], $groschen->getSubjects());
 
         // Check that "Ellibs" is not added as a keyword
         $groschen = new Groschen('9789513170424');
@@ -932,7 +912,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Disney product (Tammi)
         $groschen = new Groschen('9789520416904');
-        $this->assertContains('Disney', $groschen->getBrand());
+        $this->assertStringContainsString('Disney', $groschen->getBrand());
     }
 
     /**
@@ -1150,15 +1130,15 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '06',
-                        'FeatureValue' => 'd36970ebb03a0f7389d10e7377c647fc',
+                        'FeatureValue' => 'd1a5615e4e0e71610e364ddb0cbfeb53',
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 1738043,
+                        'FeatureValue' => 1738016,
                     ],
                     [
                         'ResourceVersionFeatureType' => '08',
-                        'FeatureValue' => 'ca41d940ffb4e0cbeeee1503b4b42443f019f59ce6ef249bf24030bdabf3281a',
+                        'FeatureValue' => 'c251a4df3d83d470ad2acb4c1c0956a37c7820d8bd44f98c21f313d4d44355bc',
                     ],
 
                 ],
@@ -1577,38 +1557,21 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510369654');
         $salesRestrictions = $groschen->getSalesRestrictions();
         $exclusiveRetailers = $salesRestrictions->where('SalesRestrictionType', '04')->pluck('SalesOutlets')->first();
-        $retailerExceptions = $salesRestrictions->where('SalesRestrictionType', '11')->pluck('SalesOutlets')->first();
 
-        // Check that normal unit sales library exists, but library not
+        // Check that normal unit sales exists
         $salesOutlet = [
             'SalesOutlet' => [
               'SalesOutletIdentifiers' => [
                   [
                     'SalesOutletIDType' => '03',
-                    'IDValue' => 'ELL',
+                    'IDValue' => 'BOO',
                   ],
                 ],
             ],
         ];
 
-        $library = [
-            'SalesOutlet' => [
-              'SalesOutletIdentifiers' => [
-                  [
-                    'SalesOutletIDType' => '03',
-                    'IDValue' => 'ELL',
-                  ],
-              ],
-            ],
-        ];
-
         // Normal unit sales channel should appear in exclusive retailers, not in exceptions
         $this->assertContains($salesOutlet, $exclusiveRetailers);
-        $this->assertNotContains($salesOutlet, $retailerExceptions);
-
-        // Library should appear on exceptions and not in exclusive retailers
-        $this->assertNotContains($library, $exclusiveRetailers);
-        $this->assertContains($library, $retailerExceptions);
     }
 
     /**
@@ -1691,21 +1654,19 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingPrintOrders()
     {
         $groschen = new Groschen('9789510383124');
-        $firstPrint = $groschen->getPrintOrders()->where('printNumber', 1)->first();
+        $printOrder = $groschen->getPrintOrders()->where('printNumber', 24)->first();
 
-        dd($groschen->getPrintOrders());
-
-        $this->assertSame(4350, $firstPrint['orderedQuantity']);
+        $this->assertSame(5000, $printOrder['orderedQuantity']);
 
         // Delivery without planned delivery date
-        $this->assertSame('ScandBook / Liettua', $firstPrint['deliveries']->where('recipient', 'Production department')->pluck('supplier')->first());
-        $this->assertSame(5, $firstPrint['deliveries']->where('recipient', 'Production department')->pluck('orderedQuantity')->first());
-        $this->assertNull($firstPrint['deliveries']->where('recipient', 'Production department')->pluck('plannedDeliveryDate')->first());
+        $this->assertSame('Livonia Print Ltd', $printOrder['deliveries']->where('recipient', 'Production department')->pluck('supplier')->first());
+        $this->assertSame(2, $printOrder['deliveries']->where('recipient', 'Production department')->pluck('orderedQuantity')->first());
+        $this->assertNull($printOrder['deliveries']->where('recipient', 'Production department')->pluck('plannedDeliveryDate')->first());
 
         // Delivery with planned delivery date
-        $this->assertSame('ScandBook / Liettua', $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('supplier')->first());
-        $this->assertSame(750, $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('orderedQuantity')->first());
-        $this->assertSame('2019-05-13T00:00:00', $firstPrint['deliveries']->where('recipient', 'Warehouse')->pluck('plannedDeliveryDate')->first());
+        $this->assertSame('Livonia Print Ltd', $printOrder['deliveries']->where('recipient', 'Warehouse')->pluck('supplier')->first());
+        $this->assertSame(5000, $printOrder['deliveries']->where('recipient', 'Warehouse')->pluck('orderedQuantity')->first());
+        $this->assertSame('2019-09-02T00:00:00', $printOrder['deliveries']->where('recipient', 'Warehouse')->pluck('plannedDeliveryDate')->first());
     }
 
     /**
@@ -1963,7 +1924,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('10', $groschen->getProductAvailability());
 
         // Published, digital and publishing date is in the future
-        $groschen = new Groschen('9789510442425');
+        $groschen = new Groschen('9789520411930');
         $this->assertSame('10', $groschen->getProductAvailability());
 
         // Development, digital and publishing date is in the past
@@ -1987,7 +1948,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('31', $groschen->getProductAvailability());
 
         // Published physical product that does not have stock but reprint is coming
-        $groschen = new Groschen('9789513122225');
+        $groschen = new Groschen('9789521613982');
         $this->assertSame('30', $groschen->getProductAvailability());
 
         // Short-run product with stock
