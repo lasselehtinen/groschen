@@ -656,8 +656,18 @@ class Groschen implements ProductInterface
      * Get the products estimated number of pages
      * @return int|null
      */
-    public function getEstimatedNumberOfPages() {
+    public function getEstimatedNumberOfPages()
+    {
         return (isset($this->product->estimatedNumberOfPages)) ? intval($this->product->estimatedNumberOfPages) : null;
+    }
+
+    /**
+     * Get the products number of characters
+     * @return int|null
+     */
+    public function getNumberOfCharacters()
+    {
+        return (isset($this->product->numberOfCharacters)) ? intval($this->product->numberOfCharacters) : null;
     }
 
     /**

@@ -98,6 +98,12 @@ interface ProductInterface
     public function getEstimatedNumberOfPages();
 
     /**
+     * Get the products number of characters
+     * @return int|null
+     */
+    public function getNumberOfCharacters();
+
+    /**
      * Get the products text contents
      * @return Collection
      */
