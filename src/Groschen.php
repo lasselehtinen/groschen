@@ -166,6 +166,22 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Returns the editions work id
+     * @return int
+     */
+    public function getWorkId() {
+        return intval($this->workId);
+    }
+
+    /**
+     * Returns the editions id
+     * @return int
+     */
+    public function getEditionId() {
+        return intval($this->productionId);
+    }
+
+    /**
      * Get the product information
      * @return stdClass
      */
@@ -2942,5 +2958,31 @@ class Groschen implements ProductInterface
         }
 
         return $this->product->effortType->name;
+    }
+
+    /**
+     * Get the products main editions ISBN
+     * @return int|null
+     */
+    public function getMainEditionIsbn() {
+        foreach ($this->getWorkLevel()->productions as $production) {
+            if ($production->isMainEdition === true) {
+                return intval($production->isbn);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the products main editions cost center
+     * @return int|null
+     */
+    public function getMainEditionCostCenter() {
+        if (isset($this->getWorkLevel()->costCenter->id)) {
+            return intval($this->getWorkLevel()->costCenter->id);
+        }
+
+        return null;
     }
 }

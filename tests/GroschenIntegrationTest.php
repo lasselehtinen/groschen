@@ -2099,9 +2099,51 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingSalesStatus()
     {
-        //$this->assertNull($this->groschen->getSalesStatus());
+        $this->assertNull($this->groschen->getSalesStatus());
 
         $groschen = new Groschen('9789510433058');
         $this->assertSame('Star', $groschen->getSalesStatus());
+    }
+
+    /**
+     * Test getting products main editions ISBN
+     * @return void
+     */
+    public function testGettingMainEditionIsbn()
+    {
+        $this->assertSame(9789510366264, $this->groschen->getMainEditionIsbn());
+
+        // ePub version of the same book
+        $groschen = new Groschen('9789510369654');
+        $this->assertSame(9789510366264, $groschen->getMainEditionIsbn());
+    }
+
+    /**
+     * Test getting products main editions cost center
+     * @return void
+     */
+    public function testGettingMainEditionCostCenter()
+    {
+        // ePub version
+        $groschen = new Groschen('9789510369654');
+        $this->assertSame(301, $groschen->getMainEditionCostCenter());
+    }
+
+    /**
+     * Test getting products work id
+     * @return void
+     */
+    public function testGettingWorkId()
+    {
+        $this->assertSame(243763, $this->groschen->getWorkId());
+    }
+
+    /**
+     * Test getting products edition id
+     * @return void
+     */
+    public function testGettingEditionId()
+    {
+        $this->assertSame(243764, $this->groschen->getEditionId());
     }
 }

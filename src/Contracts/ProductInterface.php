@@ -7,6 +7,19 @@ use DateTime;
 
 interface ProductInterface
 {
+
+    /**
+     * Returns the editions work id
+     * @return int
+     */
+    public function getWorkId();
+
+    /**
+     * Returns the editions id
+     * @return int
+     */
+    public function getEditionId();
+
     /**
      * Get the products identifiers
      * @return Collection
@@ -438,4 +451,16 @@ interface ProductInterface
      * @return string|null
      */
     public function getSalesStatus();
+
+    /**
+     * Get the products main editions ISBN
+     * @return int|null
+     */
+    public function getMainEditionIsbn();
+
+    /**
+     * Get the products main editions cost center
+     * @return int|null
+     */
+    public function getMainEditionCostCenter();
 }
