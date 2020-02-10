@@ -1029,6 +1029,8 @@ class Groschen implements ProductInterface
             case 'Sold out':
                 return '07';
             case 'Development-Confidential':
+            case 'Cancelled-Confidential':
+            case 'Exclusive - Direct Delivery':
                 return '00';
             case 'Cancelled':
                 return '01';
@@ -1850,7 +1852,13 @@ class Groschen implements ProductInterface
      */
     public function isConfidential()
     {
-        return $this->product->listingCode->name === 'Development-Confidential' || $this->product->listingCode->name === 'Cancelled-Confidential';
+        $confidentialStatuses = [
+            'Development-Confidential',
+            'Cancelled-Confidential',
+            'Exclusive - Direct Delivery',
+        ]
+
+        return in_array($this->product->listingCode->name, $confidentialStatuses);
     }
 
     /**
@@ -2676,6 +2684,8 @@ class Groschen implements ProductInterface
             case 'Exclusive Sales':
                 return '22';
             case 'Development-Confidential':
+            case 'Cancelled-Confidential':
+            case 'Exclusive - Direct Delivery':
             case 'Delivery block':
                 return '40';
             case 'Sold out':
