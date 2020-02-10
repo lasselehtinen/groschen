@@ -2309,6 +2309,7 @@ class Groschen implements ProductInterface
             'Nextory' => 'NXT',
             'Storytel' => 'STT',
             'Suomalainen.com' => 'SKK',
+            'Suomalainen Plus' => 'SPL',
         ];
 
         if(!array_key_exists($salesOutletName, $salesOutlets)) {
