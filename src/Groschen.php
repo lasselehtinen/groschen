@@ -1856,7 +1856,7 @@ class Groschen implements ProductInterface
             'Development-Confidential',
             'Cancelled-Confidential',
             'Exclusive - Direct Delivery',
-        ]
+        ];
 
         return in_array($this->product->listingCode->name, $confidentialStatuses);
     }
