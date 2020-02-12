@@ -2250,6 +2250,8 @@ class Groschen implements ProductInterface
                         ]
                     ],
                 ];
+            })->unique(function ($retailerExclusiveSalesOutlet) {
+                return $retailerExclusiveSalesOutlet['SalesOutlet']['SalesOutletIdentifiers'][0]['IDValue'];
             });
 
             $salesRestrictions->push([
@@ -2281,6 +2283,8 @@ class Groschen implements ProductInterface
                         ]
                     ],
                 ];
+            })->unique(function ($retailerExceptionSalesOutlet) {
+                return $retailerExceptionSalesOutlet['SalesOutlet']['SalesOutletIdentifiers'][0]['IDValue'];
             });
 
             $salesRestrictions->push([
