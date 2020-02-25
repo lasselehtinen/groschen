@@ -703,7 +703,7 @@ class Groschen implements ProductInterface
     {
         $imprints = new Collection;
 
-        if ($this->product->publishingHouse->name !== $this->product->brand->name) {
+        if (isset($this->product->brand->name) && $this->product->publishingHouse->name !== $this->product->brand->name) {
             $imprints->push([
                 'ImprintName' => $this->product->brand->name,
             ]);
