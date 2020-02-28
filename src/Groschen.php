@@ -2068,7 +2068,7 @@ class Groschen implements ProductInterface
      */
     public function getBacklistSalesSeason() {
 
-        if (!isset($this->product->backlistSeasonYear) && !isset($this->product->backlistSeasonPeriod)) {
+        if (!isset($this->product->backlistSeasonYear) || !isset($this->product->backlistSeasonPeriod)) {
             return null;
         }
 
