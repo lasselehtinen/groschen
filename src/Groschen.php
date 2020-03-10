@@ -2076,7 +2076,6 @@ class Groschen implements ProductInterface
             return $this->product->backlistSeasonYear->name;
         }
 
-
         return $this->product->backlistSeasonYear->name . ' ' . $this->product->backlistSeasonPeriod->name;
     }
 
@@ -2774,11 +2773,40 @@ class Groschen implements ProductInterface
             $onHand = $json->data->available_stock;
         }
 
+        // Add LocationIdentifiers
+        if (is_object($json->data->stock_location)) {
+            $locationIdentifiers = [];
+
+            // Bokinfo ID
+            if (!empty($json->data->stock_location->bokinfo_id)) {
+                $locationIdentifiers[] = [
+                    'LocationIDType' => '01',
+                    'IDTypeName' => 'BR-ID',
+                    'IDValue' => $json->data->stock_location->bokinfo_id,
+                ];
+            }
+
+            // GLN number
+            if (!empty($json->data->stock_location->gln)) {
+                $locationIdentifiers[] = [
+                    'LocationIDType' => '06',
+                    'IDTypeName' => 'GLN',
+                    'IDValue' => $json->data->stock_location->gln,
+                ];
+            }
+
+            // VAT identity number
+            if (!empty($json->data->stock_location->vat_identity_number)) {
+                $locationIdentifiers[] = [
+                    'LocationIDType' => '23',
+                    'IDTypeName' => 'VAT Identity Number',
+                    'IDValue' => $json->data->stock_location->vat_identity_number,
+                ];
+            }
+        }
+
         $stocks->push([
-            'LocationIdentifier' => [
-                'LocationIDType' => '06',
-                'IDValue' => '6430049920009',
-            ],
+            'LocationIdentifiers' => $locationIdentifiers,
             'LocationName' => 'Porvoon Kirjakeskus / Tarmolan päävarasto',
             'OnHand' => $onHand,
             'Proximity' => $proximityValue,

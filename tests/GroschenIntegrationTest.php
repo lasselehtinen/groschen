@@ -1531,6 +1531,10 @@ class GroschenIntegrationTest extends TestCase
         // Product with only period and no year
         $groschen = new Groschen('9789510455388');
         $this->assertNull($groschen->getBacklistSalesSeason());
+
+        // Product with only year, no period
+        $groschen = new Groschen('9789510455289');
+        $this->assertNull($groschen->getBacklistSalesSeason());
     }
 
     /**
@@ -2001,9 +2005,22 @@ class GroschenIntegrationTest extends TestCase
     {
         // Product with stock
         $stock = [
-            'LocationIdentifier' => [
-                'LocationIDType' => '06',
-                'IDValue' => '6430049920009',
+            'LocationIdentifiers' => [
+                [
+                    'LocationIDType' => '01',
+                    'IDTypeName' => 'BR-ID',
+                    'IDValue' => '10002',
+                ],
+                [
+                    'LocationIDType' => '06',
+                    'IDTypeName' => 'GLN',
+                    'IDValue' => '6430049920009',
+                ],
+                [
+                    'LocationIDType' => '23',
+                    'IDTypeName' => 'VAT Identity Number',
+                    'IDValue' => 'FI24059226',
+                ],
             ],
             'LocationName' => 'Porvoon Kirjakeskus / Tarmolan päävarasto',
             'OnHand' => 100,
