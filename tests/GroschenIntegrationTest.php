@@ -1998,40 +1998,43 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting products stocks
+     * Test getting products suppliers
      * @return void
      */
-    public function testGettingStocks()
+    public function testGettingSuppliers()
     {
-        // Product with stock
-        $stock = [
-            'LocationIdentifiers' => [
+        // Product with supplier
+        $supplier = [
+            'SupplierRole' => '03',
+            'SupplierIdentifiers' => [
                 [
-                    'LocationIDType' => '01',
+                    'SupplierIDType' => '01',
                     'IDTypeName' => 'BR-ID',
-                    'IDValue' => '10002',
+                    'IDValue' => 10002,
                 ],
                 [
-                    'LocationIDType' => '06',
+                    'SupplierIDType' => '06',
                     'IDTypeName' => 'GLN',
-                    'IDValue' => '6430049920009',
+                    'IDValue' => 6430049920009,
                 ],
                 [
-                    'LocationIDType' => '23',
+                    'SupplierIDType' => '23',
                     'IDTypeName' => 'VAT Identity Number',
                     'IDValue' => 'FI24059226',
                 ],
             ],
-            'LocationName' => 'Porvoon Kirjakeskus',
+            'SupplierName' => 'Porvoon Kirjakeskus',
+            'TelephoneNumber' => '+358 2016 620',
+            'EmailAddress' => 'tilaukset@kirjakeskus.fi',
             'OnHand' => 100,
             'Proximity' => '07',
         ];
 
-        $this->assertContains($stock, $this->groschen->getStocks());
+        $this->assertContains($supplier, $this->groschen->getSuppliers());
 
         // Digital product should not return anything
         $groschen = new Groschen('9789510420157');
-        $this->assertCount(0, $groschen->getStocks());
+        $this->assertCount(0, $groschen->getSuppliers());
     }
 
     /**

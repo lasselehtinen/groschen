@@ -2698,7 +2698,7 @@ class Groschen implements ProductInterface
         // Already published product
         if ($this->product->listingCode->name === 'Published') {
             // Check if the product has free stock
-            $onHand = $this->getStocks()->pluck('OnHand')->first();
+            $onHand = $this->getSuppliers()->pluck('OnHand')->first();
             $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
 
             if ($hasStock) {
@@ -2732,10 +2732,10 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Get the products stocks
+     * Get the products suppliers
      * @return Collection
      */
-    public function getStocks()
+    public function getSuppliers()
     {
         $stocks = new Collection;
 
@@ -2775,12 +2775,12 @@ class Groschen implements ProductInterface
 
         // Add LocationIdentifiers
         if (is_object($json->data->stock_location)) {
-            $locationIdentifiers = [];
+            $supplierIdentifiers = [];
 
             // Bokinfo ID
             if (!empty($json->data->stock_location->bokinfo_id)) {
-                $locationIdentifiers[] = [
-                    'LocationIDType' => '01',
+                $supplierIdentifiers[] = [
+                    'SupplierIDType' => '01',
                     'IDTypeName' => 'BR-ID',
                     'IDValue' => $json->data->stock_location->bokinfo_id,
                 ];
@@ -2788,8 +2788,8 @@ class Groschen implements ProductInterface
 
             // GLN number
             if (!empty($json->data->stock_location->gln)) {
-                $locationIdentifiers[] = [
-                    'LocationIDType' => '06',
+                $supplierIdentifiers[] = [
+                    'SupplierIDType' => '06',
                     'IDTypeName' => 'GLN',
                     'IDValue' => $json->data->stock_location->gln,
                 ];
@@ -2797,8 +2797,8 @@ class Groschen implements ProductInterface
 
             // VAT identity number
             if (!empty($json->data->stock_location->vat_identity_number)) {
-                $locationIdentifiers[] = [
-                    'LocationIDType' => '23',
+                $supplierIdentifiers[] = [
+                    'SupplierIDType' => '23',
                     'IDTypeName' => 'VAT Identity Number',
                     'IDValue' => $json->data->stock_location->vat_identity_number,
                 ];
@@ -2806,8 +2806,11 @@ class Groschen implements ProductInterface
         }
 
         $stocks->push([
-            'LocationIdentifiers' => $locationIdentifiers,
-            'LocationName' => $json->data->stock_location->name,
+            'SupplierRole' => '03',
+            'SupplierIdentifiers' => $supplierIdentifiers,
+            'SupplierName' => $json->data->stock_location->name,
+            'TelephoneNumber' => $json->data->stock_location->telephone_number,
+            'EmailAddress' => $json->data->stock_location->email,
             'OnHand' => $onHand,
             'Proximity' => $proximityValue,
         ]);

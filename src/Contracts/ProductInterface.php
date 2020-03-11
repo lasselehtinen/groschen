@@ -405,10 +405,10 @@ interface ProductInterface
     public function isPublicationDatePassed();
 
     /**
-     * Get the products stocks
+     * Get the products suppliers
      * @return Collection
      */
-    public function getStocks();
+    public function getSuppliers();
 
     /**
      * Get the supply dates
