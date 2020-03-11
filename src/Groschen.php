@@ -2807,7 +2807,7 @@ class Groschen implements ProductInterface
 
         $stocks->push([
             'LocationIdentifiers' => $locationIdentifiers,
-            'LocationName' => 'Porvoon Kirjakeskus / Tarmolan päävarasto',
+            'LocationName' => $json->data->stock_location->name,
             'OnHand' => $onHand,
             'Proximity' => $proximityValue,
         ]);

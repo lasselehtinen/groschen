@@ -2022,7 +2022,7 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI24059226',
                 ],
             ],
-            'LocationName' => 'Porvoon Kirjakeskus / Tarmolan päävarasto',
+            'LocationName' => 'Porvoon Kirjakeskus',
             'OnHand' => 100,
             'Proximity' => '07',
         ];
