@@ -2194,13 +2194,14 @@ class Groschen implements ProductInterface
     {
         $salesRestrictions = new Collection;
 
-        // We currently only support digital products
-        if ($this->isImmaterial() === false) {
-            return $salesRestrictions;
-        }
-
         // Get list of distribution channels
         $distributionChannels = $this->getDistributionChannels();
+
+        // We currently only support digital products and also if none of sales channels contain true, don't return restriction at
+        // all because it means they are not checked
+        if ($this->isImmaterial() === false || $distributionChannels->contains('hasRights', true) === false) {
+            return $salesRestrictions;
+        }
 
         // If none of the library channels has rights, add restriction "Not for sale to libraries"
         if ($distributionChannels->where('channelType', 'Licencing for libraries')->contains('hasRights', true) === false) {
