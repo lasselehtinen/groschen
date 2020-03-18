@@ -2321,6 +2321,7 @@ class Groschen implements ProductInterface
             'Storytel' => 'STT',
             'Suomalainen.com' => 'SKK',
             'Suomalainen Plus' => 'SPL',
+            'Prisma.fi' => 'SGR',
         ];
 
         if(!array_key_exists($salesOutletName, $salesOutlets)) {
