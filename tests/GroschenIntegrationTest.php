@@ -2042,9 +2042,9 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($supplier, $this->groschen->getSuppliers());
 
-        // Digital product should not return anything
+        // Digital product should not return fake PKK supplier
         $groschen = new Groschen('9789510420157');
-        $this->assertCount(0, $groschen->getSuppliers());
+        $this->assertContains($supplier, $groschen->getSuppliers());
     }
 
     /**

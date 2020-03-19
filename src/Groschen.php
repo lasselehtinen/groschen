@@ -2741,6 +2741,37 @@ class Groschen implements ProductInterface
     {
         $stocks = new Collection;
 
+        // Add fake PKK supplier for digital products
+        if ($this->isImmaterial()) {
+            $stocks->push([
+                'SupplierRole' => '03',
+                'SupplierIdentifiers' => [
+                    [
+                        'SupplierIDType' => '01',
+                        'IDTypeName' => 'BR-ID',
+                        'IDValue' => 10002,
+                    ],
+                    [
+                        'SupplierIDType' => '06',
+                        'IDTypeName' => 'GLN',
+                        'IDValue' => 6430049920009,
+                    ],
+                    [
+                        'SupplierIDType' => '23',
+                        'IDTypeName' => 'VAT Identity Number',
+                        'IDValue' => 'FI24059226',
+                    ],
+                ],
+                'SupplierName' => 'Porvoon Kirjakeskus',
+                'TelephoneNumber' => '+358 2016 620',
+                'EmailAddress' => 'tilaukset@kirjakeskus.fi',
+                'OnHand' => 100,
+                'Proximity' => '07',
+            ]);
+
+            return $stocks;
+        }
+
         // Get stocks from API
         $client = new Client([
             'base_uri' => 'http://stocks.books.local/api/products/gtin/',
