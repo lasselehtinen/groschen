@@ -5,13 +5,14 @@ use Cache;
 use DateTime;
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\HandlerStack;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Isbn;
 use kamermans\OAuth2\GrantType\NullGrantType;
 use kamermans\OAuth2\OAuth2Middleware;
@@ -1208,7 +1209,6 @@ class Groschen implements ProductInterface
             'query' => [
                 'q' => 'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND (ancestorPaths:/WSOY/Kansikuvat OR ancestorPaths:/Tammi/Kansikuvat OR ancestorPaths:/Kosmos/Kansikuvat OR ancestorPaths:/Disney/Kansikuvat OR ancestorPaths:/Bazar/Kansikuvat)',
                 'metadataToReturn' => 'height, width, mimeType, fileSize',
-                'num' => 1,
             ],
         ]);
 
@@ -1223,7 +1223,7 @@ class Groschen implements ProductInterface
             'image/tiff' => 'D504',
         ];
 
-        // Add cover image to collection
+        // Add cover images to collection
         foreach ($searchResults->hits as $hit) {
             // Download the file for MD5/SHA checksums
             $contents = file_get_contents($this->getAuthCredUrl($hit->originalUrl));
@@ -1243,8 +1243,11 @@ class Groschen implements ProductInterface
                 }
             }
 
+            // Determine ResourceContentType (either normal frontcover or 3D)
+            $resourceContentType = (Str::contains($hit->metadata->filename, '_3d.')) ? '03' : '01';
+
             $supportingResources->push([
-                'ResourceContentType' => '01',
+                'ResourceContentType' => $resourceContentType,
                 'ContentAudience' => '00',
                 'ResourceMode' => '03',
                 'ResourceVersion' => [

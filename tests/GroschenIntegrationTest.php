@@ -1158,6 +1158,108 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting Bazar 3D cover image
+     * @return void
+     */
+    public function testGettingBazar3dCoverImage()
+    {
+        $coverImageNormal = [
+            'ResourceContentType' => '01',
+            'ContentAudience' => '00',
+            'ResourceMode' => '03',
+            'ResourceVersion' => [
+                'ResourceForm' => '02',
+                'ResourceVersionFeatures' => [
+                    [
+                        'ResourceVersionFeatureType' => '01',
+                        'FeatureValue' => 'D502',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '02',
+                        'FeatureValue' => 5079,
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '03',
+                        'FeatureValue' => 3308,
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '04',
+                        'FeatureValue' => '9789522796714_frontcover_final.jpg',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '05',
+                        'FeatureValue' => '1.6',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '06',
+                        'FeatureValue' => '445d7c7a3fea42bf7cf9010d193fca3b',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '07',
+                        'FeatureValue' => 1632039,
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '08',
+                        'FeatureValue' => 'a022f800a71295c0d9d3835e35477331b76744ad91a7390770d9d0f1c078cb48',
+                    ],
+
+                ],
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/EnfeCLahawWASi-G08b4bh/*/9789522796714_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+            ],
+        ];
+
+        $coverImage3D = [
+            'ResourceContentType' => '03',
+            'ContentAudience' => '00',
+            'ResourceMode' => '03',
+            'ResourceVersion' => [
+                'ResourceForm' => '02',
+                'ResourceVersionFeatures' => [
+                    [
+                        'ResourceVersionFeatureType' => '01',
+                        'FeatureValue' => 'D503',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '02',
+                        'FeatureValue' => 2436,
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '03',
+                        'FeatureValue' => 1716,
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '04',
+                        'FeatureValue' => '9789522796714_frontcover_final_3d.png',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '05',
+                        'FeatureValue' => '3.7',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '06',
+                        'FeatureValue' => '13c0ea691d1142182206fa28906d2926',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '07',
+                        'FeatureValue' => 3836788,
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '08',
+                        'FeatureValue' => 'd9ae9b4220f4757fac6d6668db0ccd0130abcfbe8e5c5ed53b84b3863c47b5ac',
+                    ],
+
+                ],
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/8V4HW-00aJUASGSHpJCNB1/*/9789522796714_frontcover_final_3d.png?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+            ],
+        ];
+
+        $groschen = new Groschen('9789522796714');
+
+        $this->assertContains($coverImageNormal, $groschen->getSupportingResources());
+        $this->assertContains($coverImage3D, $groschen->getSupportingResources());
+    }
+
+    /**
      * Test getting audio sample links to Soundcloud
      * @see https://bonnierforlagen.tpondemand.com/entity/3444-external-links-are-missing
      * @return void
