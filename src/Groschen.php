@@ -2326,6 +2326,7 @@ class Groschen implements ProductInterface
             'Suomalainen.com' => 'SKK',
             'Suomalainen Plus' => 'SPL',
             'Prisma.fi' => 'SGR',
+            'Supla' => 'SUP',
         ];
 
         if(!array_key_exists($salesOutletName, $salesOutlets)) {
