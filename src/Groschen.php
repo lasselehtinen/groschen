@@ -1308,7 +1308,7 @@ class Groschen implements ProductInterface
                     break;
             }
 
-            if (isset($resourceContentType) && isset($resourceMode)) {
+            if (isset($resourceContentType) && isset($resourceMode) && isset($link->url)) {
                 $supportingResources->push([
                     'ResourceContentType' => $resourceContentType,
                     'ContentAudience' => '00',
