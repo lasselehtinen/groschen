@@ -2743,11 +2743,11 @@ class Groschen implements ProductInterface
      */
     public function getSuppliers()
     {
-        $stocks = new Collection;
+        $suppliers = new Collection;
 
         // Add fake PKK supplier for digital products
         if ($this->isImmaterial()) {
-            $stocks->push([
+            $suppliers->push([
                 'SupplierRole' => '03',
                 'SupplierIdentifiers' => [
                     [
@@ -2773,7 +2773,7 @@ class Groschen implements ProductInterface
                 'Proximity' => '07',
             ]);
 
-            return $stocks;
+            return $suppliers;
         }
 
         // Get stocks from API
@@ -2797,7 +2797,71 @@ class Groschen implements ProductInterface
             if ($json->data->error_code !== 404 && $json->data->error_message !== 'The model could not be found.') {
                 throw new Exception('Could not fetch stock data for GTIN ' . $this->productNumber);
             } else {
-                return $stocks;
+                // Add default supplier based on publisher (PKK or Kirjavälitys)
+                $publisher = $this->getPublisher();
+
+                // Only Bazar in Kirjavälitys, everything else in Porvoon Kirjakeskus
+                if ($publisher === 'Bazar') {
+                    // Kirjavälitys contact information
+                    $supplierName = 'Kirjavälitys';
+                    $telephoneNumber = '+358 10 345 1520';
+                    $emailAddress = 'tilaukset@kirjavalitys.fi';
+
+                    // Kirjavälitys identifiers
+                    $supplierIdentifiers = [
+                        [
+                            'SupplierIDType' => '01',
+                            'IDTypeName' => 'BR-ID',
+                            'IDValue' => 10012,
+                        ],
+                        [
+                            'SupplierIDType' => '06',
+                            'IDTypeName' => 'GLN',
+                            'IDValue' => 6418616999993,
+                        ],
+                        [
+                            'SupplierIDType' => '23',
+                            'IDTypeName' => 'VAT Identity Number',
+                            'IDValue' => 'FI01100310',
+                        ],
+                    ];
+                } else {
+                    // PKK contact information
+                    $supplierName = 'Porvoon Kirjakeskus';
+                    $telephoneNumber = '+358 2016 620';
+                    $emailAddress = 'tilaukset@kirjakeskus.fi';
+
+                    // PKK identifiers
+                    $supplierIdentifiers = [
+                        [
+                            'SupplierIDType' => '01',
+                            'IDTypeName' => 'BR-ID',
+                            'IDValue' => 10002,
+                        ],
+                        [
+                            'SupplierIDType' => '06',
+                            'IDTypeName' => 'GLN',
+                            'IDValue' => 6430049920009,
+                        ],
+                        [
+                            'SupplierIDType' => '23',
+                            'IDTypeName' => 'VAT Identity Number',
+                            'IDValue' => 'FI24059226',
+                        ],
+                    ];
+                }
+
+                $suppliers->push([
+                    'SupplierRole' => '03',
+                    'SupplierIdentifiers' => $supplierIdentifiers,
+                    'SupplierName' => $supplierName,
+                    'TelephoneNumber' => $telephoneNumber,
+                    'EmailAddress' => $emailAddress,
+                    'OnHand' => 0,
+                    'Proximity' => '03',
+                ]);
+
+                return $suppliers;
             }
         }
 
@@ -2842,7 +2906,7 @@ class Groschen implements ProductInterface
             }
         }
 
-        $stocks->push([
+        $suppliers->push([
             'SupplierRole' => '03',
             'SupplierIdentifiers' => $supplierIdentifiers,
             'SupplierName' => $json->data->stock_location->name,
@@ -2852,7 +2916,7 @@ class Groschen implements ProductInterface
             'Proximity' => $proximityValue,
         ]);
 
-        return $stocks;
+        return $suppliers;
     }
 
     /**

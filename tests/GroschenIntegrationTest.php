@@ -2110,12 +2110,11 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting products suppliers
+     * Test getting products suppliers for WSOY product
      * @return void
      */
-    public function testGettingSuppliers()
+    public function testGettingSupplierForWsoyProduct()
     {
-        // Product with supplier
         $supplier = [
             'SupplierRole' => '03',
             'SupplierIdentifiers' => [
@@ -2142,10 +2141,118 @@ class GroschenIntegrationTest extends TestCase
             'Proximity' => '07',
         ];
 
+        // WSOY product with supplier
         $this->assertContains($supplier, $this->groschen->getSuppliers());
+    }
 
-        // Digital product should not return fake PKK supplier
+    /**
+     * Test getting fake supplier for digital product
+     * @return void
+     */
+    public function testGettingSupplierForDigitalProduct()
+    {
+        $supplier = [
+            'SupplierRole' => '03',
+            'SupplierIdentifiers' => [
+                [
+                    'SupplierIDType' => '01',
+                    'IDTypeName' => 'BR-ID',
+                    'IDValue' => 10002,
+                ],
+                [
+                    'SupplierIDType' => '06',
+                    'IDTypeName' => 'GLN',
+                    'IDValue' => 6430049920009,
+                ],
+                [
+                    'SupplierIDType' => '23',
+                    'IDTypeName' => 'VAT Identity Number',
+                    'IDValue' => 'FI24059226',
+                ],
+            ],
+            'SupplierName' => 'Porvoon Kirjakeskus',
+            'TelephoneNumber' => '+358 2016 620',
+            'EmailAddress' => 'tilaukset@kirjakeskus.fi',
+            'OnHand' => 100,
+            'Proximity' => '07',
+        ];
+
+        // Digital product should return fake PKK supplier
         $groschen = new Groschen('9789510420157');
+        $this->assertContains($supplier, $groschen->getSuppliers());
+    }
+
+    /**
+     * Test getting supplier for Bazar product in Kirjavälitys stock
+     * @return void
+     */
+    public function testGettingSupplierForBazarProduct()
+    {
+        $supplier = [
+            'SupplierRole' => '03',
+            'SupplierIdentifiers' => [
+                [
+                    'SupplierIDType' => '01',
+                    'IDTypeName' => 'BR-ID',
+                    'IDValue' => 10012,
+                ],
+                [
+                    'SupplierIDType' => '06',
+                    'IDTypeName' => 'GLN',
+                    'IDValue' => 6418616999993,
+                ],
+                [
+                    'SupplierIDType' => '23',
+                    'IDTypeName' => 'VAT Identity Number',
+                    'IDValue' => 'FI01100310',
+                ],
+            ],
+            'SupplierName' => 'Kirjavälitys',
+            'TelephoneNumber' => '+358 10 345 1520',
+            'EmailAddress' => 'tilaukset@kirjavalitys.fi',
+            'OnHand' => 0,
+            'Proximity' => '03',
+        ];
+
+        // Product in Kirjavälitys stock return them as supplier
+        $groschen = new Groschen('9789525637595');
+        $this->assertContains($supplier, $groschen->getSuppliers());
+    }
+
+    /**
+     * Test getting supplier for Bazar product in Kirjavälitys stock
+     * @return void
+     */
+    public function testGettingSupplierForBazarProductThatDoesNotExistInKirjavalitys()
+    {
+        $supplier = [
+            'SupplierRole' => '03',
+            'SupplierIdentifiers' => [
+                [
+                    'SupplierIDType' => '01',
+                    'IDTypeName' => 'BR-ID',
+                    'IDValue' => 10012,
+                ],
+                [
+                    'SupplierIDType' => '06',
+                    'IDTypeName' => 'GLN',
+                    'IDValue' => 6418616999993,
+                ],
+                [
+                    'SupplierIDType' => '23',
+                    'IDTypeName' => 'VAT Identity Number',
+                    'IDValue' => 'FI01100310',
+                ],
+            ],
+            'SupplierName' => 'Kirjavälitys',
+            'TelephoneNumber' => '+358 10 345 1520',
+            'EmailAddress' => 'tilaukset@kirjavalitys.fi',
+            'OnHand' => 0,
+            'Proximity' => '03',
+        ];
+
+        // Digital product should return fake PKK supplier
+        $groschen = new Groschen('9789523760622');
         $this->assertContains($supplier, $groschen->getSuppliers());
     }
 
