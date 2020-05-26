@@ -651,6 +651,19 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting texts
+     * @return void
+     */
+    public function testGettingText() {
+        // Check that text contains description
+        $this->assertStringContainsString('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getText('Copy 1'));
+        $this->assertStringContainsString('40 tapaa pahoittaa mielensä!', $this->groschen->getText('Headline'));
+
+        // Ask for non-existant text-type should return null
+        $this->assertNull($this->groschen->getText('foobar'));
+    }
+
+    /**
      * Test getting the products RRP incl. VAT
      * @return void
      */

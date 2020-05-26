@@ -1001,6 +1001,29 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get a spesific text
+     * @param  string $name
+     * @return string
+     */
+    public function getText($name)
+    {
+        // Get texts
+        $response = $this->client->get('v1/works/' . $this->workId . '/productions/' . $this->productionId . '/texts');
+        $json = json_decode($response->getBody()->getContents());
+        $texts = collect($json->texts);
+
+        $text = $texts->filter(function ($text) use ($name) {
+            return $text->textType->name === $name;
+        });
+
+        if($text->count() === 0) {
+            return null;
+        }
+
+        return $text->first()->text;
+    }
+
+    /**
      * Get the products publishers and their role
      * @return Collection
      */
