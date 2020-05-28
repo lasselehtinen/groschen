@@ -15,10 +15,11 @@
         "ezyang/htmlpurifier": "^4.9",
         "guzzlehttp/guzzle": "~6.0",
         "fale/isbn": "^3.0",
-        "league/uri": "^5.0",
+        "league/uri": "^6.0",
         "njasm/soundcloud": "^2.2",
         "league/oauth2-client": "^2.3",
-        "kamermans/guzzle-oauth2-subscriber": "^1.0"
+        "kamermans/guzzle-oauth2-subscriber": "^1.0",
+        "league/uri-components": "^2.2"
     },
     "autoload": {
         "psr-4": {
