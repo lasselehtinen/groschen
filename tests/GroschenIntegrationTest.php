@@ -30,6 +30,19 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that product without brand throws exception
+     * @return void
+     */
+    public function testNonExistingBrandThrowsException()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('The edition is missing brand.');
+
+        $groschen = new Groschen('9789522797339');
+        $groschen->getBrand();
+    }
+
+    /**
      * Test that deactivated product is fetched also
      * @return void
      */

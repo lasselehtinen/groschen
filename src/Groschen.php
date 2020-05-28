@@ -719,6 +719,10 @@ class Groschen implements ProductInterface
      */
     public function getBrand()
     {
+        if (!isset($this->product->brand)) {
+            throw new Exception('The edition is missing brand.');
+        }
+
         if($this->getCostCenter() === 909) {
             return 'Disney';
         }
