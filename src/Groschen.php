@@ -18,9 +18,8 @@ use kamermans\OAuth2\GrantType\NullGrantType;
 use kamermans\OAuth2\OAuth2Middleware;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
 use League\OAuth2\Client\Provider\GenericProvider;
-use League\Uri\Modifiers\MergeQuery;
-use League\Uri\Modifiers\RemoveQueryKeys;
-use League\Uri\Schemes\Http as HttpUri;
+use League\Uri\Uri;
+use League\Uri\UriModifier;
 use stdClass;
 
 class Groschen implements ProductInterface
@@ -1358,15 +1357,12 @@ class Groschen implements ProductInterface
      */
     public function getAuthCredUrl($url)
     {
-        $uri = HttpUri::createFromString($url);
-
         // Add authCred to query parameters
-        $modifier = new MergeQuery('authcred=' . base64_encode(config('groschen.elvis.username') . ':' . config('groschen.elvis.password')));
-        $newUri = $modifier->__invoke($uri);
+        $uri = Uri::createFromString($url);
+        $newUri = UriModifier::mergeQuery($uri, 'authcred=' . base64_encode(config('groschen.elvis.username') . ':' . config('groschen.elvis.password')));
 
         // Remove the underscore version parameter
-        $modifier = new RemoveQueryKeys(['_']);
-        $newUri = $modifier->__invoke($newUri);
+        $newUri = UriModifier::removeParams($newUri, '_');
 
         return (string) $newUri;
     }
