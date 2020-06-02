@@ -348,6 +348,21 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that original title is returned correctly
+     * @return void
+     */
+    public function testOriginalTitleIsReturnedCorrectly()
+    {
+        // Translated book that has same title and original title should return the original title
+        $groschen = new Groschen('9789510403266');
+        $this->assertContains(['TitleType' => '03', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Red Notice']], $groschen->getTitleDetails());
+
+        // Non-translated that have same title and original title
+        $groschen = new Groschen('9789527144732');
+        $this->assertFalse($groschen->getTitleDetails()->contains('TitleType', '03'));
+    }
+
+    /**
      * Test getting products contributors
      * @group contributors
      * @return void

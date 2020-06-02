@@ -458,14 +458,17 @@ class Groschen implements ProductInterface
         }
 
         // Original title
+        // Note: Since title is automatically copied to original title, we don't want to return if they are the same
         if (!empty($this->product->originalTitle)) {
-            $titleDetails->push([
-                'TitleType' => '03',
-                'TitleElement' => [
-                    'TitleElementLevel' => '01',
-                    'TitleText' => $this->product->originalTitle,
-                ],
-            ]);
+            if($this->isTranslated() || $this->product->title !== $this->product->originalTitle) {
+                $titleDetails->push([
+                    'TitleType' => '03',
+                    'TitleElement' => [
+                        'TitleElementLevel' => '01',
+                        'TitleText' => $this->product->originalTitle,
+                    ],
+                ]);
+            }
         }
 
         // Distributors title
