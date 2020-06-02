@@ -463,4 +463,10 @@ interface ProductInterface
      * @return int|null
      */
     public function getMainEditionCostCenter();
+
+    /**
+     * Check if the product is translated or not
+     * @return boolean
+     */
+    public function isTranslated();
 }

@@ -323,6 +323,31 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test check if the book is translated or not
+     * @return void
+     */
+    public function testGettingBookIsTranslatedOrNot()
+    {
+        $this->assertFalse($this->groschen->isTranslated());
+
+        // Non-fiction with translator and no original title
+        $groschen = new Groschen('9789510450741');
+        $this->assertTrue($groschen->isTranslated());
+
+        // Translated children and juvenile without original title and translator
+        $groschen = new Groschen('9789510343777');
+        $this->assertTrue($groschen->isTranslated());
+
+        // Non-fiction book with different title and original title
+        $groschen = new Groschen('9789510450741');
+        $this->assertTrue($groschen->isTranslated());
+
+        // Domestic fiction with finnish-swede author that has translator
+        $groschen = new Groschen('9789520402945');
+        $this->assertTrue($groschen->isTranslated());
+    }
+
+    /**
      * Test getting products contributors
      * @group contributors
      * @return void

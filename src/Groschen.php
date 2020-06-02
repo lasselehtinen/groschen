@@ -3155,4 +3155,19 @@ class Groschen implements ProductInterface
 
         return null;
     }
+
+    /**
+     * Check if the product is translated or not
+     * @return boolean
+     */
+    public function isTranslated() {
+        // Check if main group contains "Käännetty" / "Translated" or contains contributor with translator role
+        $mainGroup = $this->getSubjects()->where('SubjectSchemeIdentifier', '23')->where('SubjectSchemeName', 'Bonnier Books Finland - Main product group')->pluck('SubjectHeadingText')->first();
+
+        if(Str::contains($mainGroup, 'Käännetty') || $this->getContributors()->contains('ContributorRole', 'B06')) {
+            return true;
+        }
+
+        return false;
+    }
 }
