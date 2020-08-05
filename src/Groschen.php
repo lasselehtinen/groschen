@@ -865,8 +865,26 @@ class Groschen implements ProductInterface
             // BIC subject category
             $subjects->push(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => $this->getBicCode()]);
 
-            // Thema subject category
+        }
+
+        // Get Thema codes
+        $themaCodes = $this->getThemaCodes();
+
+        foreach ($themaCodes as $themaCode) {
+            $subjects->push([
+                'SubjectSchemeIdentifier' => $themaCode['subjectSchemeIdentifier'],
+                'SubjectSchemeName' => $themaCode['subjectSchemeName'],
+                'SubjectCode' => $themaCode['codeValue'],
+            ]);
+        }
+
+        // Add old sub-group and age groups as a backup if Thema is missing
+        if ($themaCodes->contains('subjectSchemeIdentifier', '93') === false) {
             $subjects->push(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => $this->getThemaSubjectCode()]);
+        }
+
+        if ($themaCodes->contains('subjectSchemeIdentifier', '98') === false) {
+            $subjects->push(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => $this->getThemaInterestAge()]);
         }
 
         // Internal category
@@ -878,9 +896,6 @@ class Groschen implements ProductInterface
                 'SubjectHeadingText' => $this->product->internalCategory->name,
             ]);
         }
-
-        // Thema interest age
-        $subjects->push(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => $this->getThemaInterestAge()]);
 
         // Fiktiivisen aineiston lisäluokitus
         if (isset($this->product->mainGroup, $this->product->subGroup)) {
@@ -3172,5 +3187,71 @@ class Groschen implements ProductInterface
         }
 
         return false;
+    }
+
+    /**
+     * Return list of Thema codes
+     * @return Collection
+     */
+    public function getThemaCodes()
+    {
+        $themaCodes = new Collection;
+
+        // Get Thema codes from work level
+        $response = $this->client->get('/v1/works/' . $this->workId . '/themas');
+        $contents = json_decode($response->getBody()->getContents());
+
+        foreach ($contents as $themaCode) {
+            // Map themaCodeType name to Onix codelist subject scheme identifier
+            switch ($themaCode->themaCodeType->name) {
+                case 'Primary':
+                    $subjectSchemeIdentifier = 93;
+                    $subjectSchemeName = 'Thema subject category';
+                    break;
+                case 'Place qualifier':
+                    $subjectSchemeIdentifier = 94;
+                    $subjectSchemeName = 'Thema place qualifier';
+                    break;
+                case 'Language qualifier':
+                    $subjectSchemeIdentifier = 95;
+                    $subjectSchemeName = 'Thema language qualifier';
+                    break;
+                case 'Time period qualifier':
+                    $subjectSchemeIdentifier = 96;
+                    $subjectSchemeName = 'Thema time period qualifier';
+                    break;
+                case 'Educational purpose qualifier':
+                    $subjectSchemeIdentifier = 97;
+                    $subjectSchemeName = 'Thema educational purpose qualifier';
+                    break;
+                case 'Interest qualifier':
+                    $subjectSchemeIdentifier = 98;
+                    $subjectSchemeName = 'Thema interest age / special interest qualifier';
+                    break;
+                case 'Style qualifier':
+                    $subjectSchemeIdentifier = 99;
+                    $subjectSchemeName = 'Thema style qualifier';
+                    break;
+                default:
+                    $subjectSchemeIdentifier = null;
+                    $subjectSchemeName = null;
+                    break;
+            }
+
+            $themaCodes->push([
+                'codeValue' => $themaCode->themaCodeValue,
+                'subjectSchemeIdentifier' => $subjectSchemeIdentifier,
+                'subjectSchemeName' => $subjectSchemeName,
+                'sortOrder' => $themaCode->sortOrder,
+
+            ]);
+        }
+
+        // Sort the codes by identifier and sort order from Mockingbird
+        $themaCodes = $themaCodes->sortBy(function($themaCode) {
+            return $themaCode['subjectSchemeIdentifier'] . '-' . $themaCode['sortOrder'];
+        });
+
+        return $themaCodes;
     }
 }

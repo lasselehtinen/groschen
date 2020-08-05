@@ -800,6 +800,28 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that manually given Thema subjects override the default mapping from sub-group
+     * @return void
+     */
+    public function testManuallyGivenThemaSubjectsOverrideMapping()
+    {
+        $groschen = new Groschen('9789520426538');
+        $subjects = $groschen->getSubjects();
+
+        // Default mapping from "Lasten kuvakirjat" to YBC
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YBC'], $subjects);
+
+        // Given Thema codes
+        $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YB'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '94', 'SubjectSchemeName' => 'Thema place qualifier', 'SubjectCode' => '1F'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '95', 'SubjectSchemeName' => 'Thema language qualifier', 'SubjectCode' => '2A'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '96', 'SubjectSchemeName' => 'Thema time period qualifier', 'SubjectCode' => '3MP'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '97', 'SubjectSchemeName' => 'Thema educational purpose qualifier', 'SubjectCode' => '4C'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age / special interest qualifier', 'SubjectCode' => '5AC'], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '99'], $subjects);
+    }
+
+    /**
      * Test getting the products internal category
      * @return void
      */
