@@ -867,6 +867,10 @@ class Groschen implements ProductInterface
 
         }
 
+        // This is disabled until the Thema project has completed
+        $themaCodes = collect([]);
+
+        /*
         // Get Thema codes
         $themaCodes = $this->getThemaCodes();
 
@@ -876,7 +880,7 @@ class Groschen implements ProductInterface
                 'SubjectSchemeName' => $themaCode['subjectSchemeName'],
                 'SubjectCode' => $themaCode['codeValue'],
             ]);
-        }
+        }*/
 
         // Add old sub-group and age groups as a backup if Thema is missing
         if ($themaCodes->contains('subjectSchemeIdentifier', '93') === false) {

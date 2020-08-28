@@ -760,7 +760,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FBA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;kaunokirjallisuus;suomenkielinen kirjallisuus;romaanit;lyhytproosa'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
@@ -768,7 +768,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sota;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;Suomi;1939-1945;sotarintama'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sota;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;Suomi;1939-1945'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
@@ -800,24 +800,24 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test that manually given Thema subjects override the default mapping from sub-group
+     * Test that manually given Thema subjects do not override the default mapping from sub-group
      * @return void
      */
-    public function testManuallyGivenThemaSubjectsOverrideMapping()
+    public function testManuallyGivenThemaSubjectsDoesNotOverrideMapping()
     {
         $groschen = new Groschen('9789520426538');
         $subjects = $groschen->getSubjects();
 
         // Default mapping from "Lasten kuvakirjat" to YBC
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YBC'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YBC'], $subjects);
 
         // Given Thema codes
-        $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YB'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '94', 'SubjectSchemeName' => 'Thema place qualifier', 'SubjectCode' => '1F'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '95', 'SubjectSchemeName' => 'Thema language qualifier', 'SubjectCode' => '2A'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '96', 'SubjectSchemeName' => 'Thema time period qualifier', 'SubjectCode' => '3MP'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '97', 'SubjectSchemeName' => 'Thema educational purpose qualifier', 'SubjectCode' => '4C'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age / special interest qualifier', 'SubjectCode' => '5AC'], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YB'], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '94', 'SubjectSchemeName' => 'Thema place qualifier', 'SubjectCode' => '1F'], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '95', 'SubjectSchemeName' => 'Thema language qualifier', 'SubjectCode' => '2A'], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '96', 'SubjectSchemeName' => 'Thema time period qualifier', 'SubjectCode' => '3MP'], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '97', 'SubjectSchemeName' => 'Thema educational purpose qualifier', 'SubjectCode' => '4C'], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age / special interest qualifier', 'SubjectCode' => '5AC'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '99'], $subjects);
     }
 
