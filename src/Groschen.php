@@ -1693,7 +1693,7 @@ class Groschen implements ProductInterface
         }
 
         // Adults Thema mapping
-        if (array_key_exists($this->product->subGroup->id, $themaMappingTableAdults)) {
+        if (isset($this->product->subGroup->id) && array_key_exists($this->product->subGroup->id, $themaMappingTableAdults)) {
             return $themaMappingTableAdults[$this->product->subGroup->id];
         }
 
@@ -1807,7 +1807,7 @@ class Groschen implements ProductInterface
         ];
 
         // Return "Fiktiivisen aineiston lisäluokitus" if mapping exist and main group is not "Tietokirjallisuus" aka Non-fiction
-        if ($this->product->mainGroup->name !== 'Tietokirjallisuus' && array_key_exists($this->product->subGroup->id, $mappingTable)) {
+        if ($this->product->mainGroup->name !== 'Tietokirjallisuus' && isset($this->product->subGroup->id) && array_key_exists($this->product->subGroup->id, $mappingTable)) {
             return $mappingTable[$this->product->subGroup->id];
         } else {
             return null;
