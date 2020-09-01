@@ -2105,6 +2105,8 @@ class Groschen implements ProductInterface
                 return $this->product->seasonYear->name . '/1';
             case 'Autumn':
                 return $this->product->seasonYear->name . '/2';
+            default:
+                return $this->product->seasonYear->name . '/' . $this->product->seasonPeriod->name;
         }
 
         return null;
