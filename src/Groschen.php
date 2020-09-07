@@ -1688,7 +1688,7 @@ class Groschen implements ProductInterface
         ];
 
         // Use different mapping for children and young adults
-        if (($this->product->mainGroup->id === '3' || $this->product->mainGroup->id === '4') && array_key_exists($this->product->subGroup->id, $themaMappingTableChildren)) {
+        if (isset($this->product->mainGroup) && ($this->product->mainGroup->id === '3' || $this->product->mainGroup->id === '4') && array_key_exists($this->product->subGroup->id, $themaMappingTableChildren)) {
             return $themaMappingTableChildren[$this->product->subGroup->id];
         }
 
