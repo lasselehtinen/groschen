@@ -53,6 +53,18 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting work and edition id
+     * @return void
+     */
+    public function testGettingWorkAndEditionId()
+    {
+        $ids = $this->groschen->getEditionAndWorkId();
+        $this->assertCount(2, $ids);
+        $this->assertSame('243763', $ids[0]);
+        $this->assertSame('243764', $ids[1]);
+    }
+
+    /**
      * Test getting all products identifiers
      * @return void
      */
