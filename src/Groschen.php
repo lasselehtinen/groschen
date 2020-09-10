@@ -1028,7 +1028,7 @@ class Groschen implements ProductInterface
     /**
      * Get a spesific text
      * @param  string $name
-     * @return string
+     * @return null|string
      */
     public function getText($name)
     {
@@ -2108,8 +2108,6 @@ class Groschen implements ProductInterface
             default:
                 return $this->product->seasonYear->name . '/' . $this->product->seasonPeriod->name;
         }
-
-        return null;
     }
 
     /**
@@ -2922,9 +2920,9 @@ class Groschen implements ProductInterface
         }
 
         // Add LocationIdentifiers
-        if (is_object($json->data->stock_location)) {
-            $supplierIdentifiers = [];
+        $supplierIdentifiers = [];
 
+        if (is_object($json->data->stock_location)) {
             // Bokinfo ID
             if (!empty($json->data->stock_location->bokinfo_id)) {
                 $supplierIdentifiers[] = [
