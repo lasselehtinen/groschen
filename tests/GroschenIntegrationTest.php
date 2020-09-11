@@ -2141,8 +2141,8 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingProductAvailability()
     {
         // Development, digital and publishing date is in the future
-        //$groschen = new Groschen('9789510438343');
-        //$this->assertSame('10', $groschen->getProductAvailability());
+        $groschen = new Groschen('9789510438343');
+        $this->assertSame('10', $groschen->getProductAvailability());
 
         // Published, digital and publishing date is in the future
         $groschen = new Groschen('9789510449660');
