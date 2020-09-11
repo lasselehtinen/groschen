@@ -17,7 +17,7 @@ class TestCase extends OrchestraTestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-        $dotenv = Dotenv::create(__DIR__ . '/..');
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
         $dotenv->load();
         $dotenv->required('ELVIS_HOSTNAME');
         $dotenv->required('ELVIS_USERNAME');
@@ -32,20 +32,20 @@ class TestCase extends OrchestraTestCase
         $dotenv->required('OPUS_USERNAME');
         $dotenv->required('OPUS_PASSWORD');
 
-        $app['config']->set('groschen.elvis.hostname', getenv('ELVIS_HOSTNAME'));
-        $app['config']->set('groschen.elvis.username', getenv('ELVIS_USERNAME'));
-        $app['config']->set('groschen.elvis.password', getenv('ELVIS_PASSWORD'));
-        $app['config']->set('groschen.soundcloud.clientId', getenv('SOUNDCLOUD_CLIENTID'));
-        $app['config']->set('groschen.soundcloud.clientSecret', getenv('SOUNDCLOUD_CLIENTSECRET'));
-        $app['config']->set('groschen.opus.hostname', getenv('OPUS_HOSTNAME'));
-        $app['config']->set('groschen.opus.search_hostname', getenv('OPUS_SEARCH_HOSTNAME'));
-        $app['config']->set('groschen.opus.clientId', getenv('OPUS_CLIENT_ID'));
-        $app['config']->set('groschen.opus.clientSecret', getenv('OPUS_CLIENT_SECRET'));
-        $app['config']->set('groschen.opus.urlAuthorize', getenv('OPUS_OAUTH_BASE_URL') . '/core/connect/authorize');
-        $app['config']->set('groschen.opus.urlAccessToken', getenv('OPUS_OAUTH_BASE_URL') . '/core/connect/token');
-        $app['config']->set('groschen.opus.urlResourceOwnerDetails', getenv('OPUS_OAUTH_BASE_URL') . '/core/connect/resource');
-        $app['config']->set('groschen.opus.username', getenv('OPUS_USERNAME'));
-        $app['config']->set('groschen.opus.password', getenv('OPUS_PASSWORD'));
+        $app['config']->set('groschen.elvis.hostname', $_ENV['ELVIS_HOSTNAME']);
+        $app['config']->set('groschen.elvis.username', $_ENV['ELVIS_USERNAME']);
+        $app['config']->set('groschen.elvis.password', $_ENV['ELVIS_PASSWORD']);
+        $app['config']->set('groschen.soundcloud.clientId', $_ENV['SOUNDCLOUD_CLIENTID']);
+        $app['config']->set('groschen.soundcloud.clientSecret', $_ENV['SOUNDCLOUD_CLIENTSECRET']);
+        $app['config']->set('groschen.opus.hostname', $_ENV['OPUS_HOSTNAME']);
+        $app['config']->set('groschen.opus.search_hostname', $_ENV['OPUS_SEARCH_HOSTNAME']);
+        $app['config']->set('groschen.opus.clientId', $_ENV['OPUS_CLIENT_ID']);
+        $app['config']->set('groschen.opus.clientSecret', $_ENV['OPUS_CLIENT_SECRET']);
+        $app['config']->set('groschen.opus.urlAuthorize', $_ENV['OPUS_OAUTH_BASE_URL'] . '/core/connect/authorize');
+        $app['config']->set('groschen.opus.urlAccessToken', $_ENV['OPUS_OAUTH_BASE_URL'] . '/core/connect/token');
+        $app['config']->set('groschen.opus.urlResourceOwnerDetails', $_ENV['OPUS_OAUTH_BASE_URL'] . '/core/connect/resource');
+        $app['config']->set('groschen.opus.username', $_ENV['OPUS_USERNAME']);
+        $app['config']->set('groschen.opus.password', $_ENV['OPUS_PASSWORD']);
     }
 
     /**
