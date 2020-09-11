@@ -1831,8 +1831,8 @@ class Groschen implements ProductInterface
             '15+' => '5AQ', // Interest age: from c 14 years - Please note that the Thema qualifiers end on 14+, so we have to use that
         ];
 
-        if (isset($this->product->interestAge) && array_key_exists($this->product->interestAge->id, $mappingTable)) {
-            return $mappingTable[$this->product->interestAge->id];
+        if (isset($this->product->interestAge) && array_key_exists($this->product->interestAge->name, $mappingTable)) {
+            return $mappingTable[$this->product->interestAge->name];
         } else {
             return null;
         }
