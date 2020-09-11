@@ -112,7 +112,7 @@ class Groschen implements ProductInterface
             'handler' => $stack,
             'auth' => 'oauth',
             'headers' => [
-                'User-Agent' => gethostname() . ' / ' . Client::VERSION . ' PHP/' . PHP_VERSION,
+                'User-Agent' => gethostname() . ' / ' . ' PHP/' . PHP_VERSION,
             ],
         ]);
 
@@ -122,7 +122,7 @@ class Groschen implements ProductInterface
             'handler' => $stack,
             'auth' => 'oauth',
             'headers' => [
-                'User-Agent' => gethostname() . ' / ' . Client::VERSION . ' PHP/' . PHP_VERSION,
+                'User-Agent' => gethostname() . ' / ' . ' PHP/' . PHP_VERSION,
             ],
         ]);
 
