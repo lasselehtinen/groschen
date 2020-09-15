@@ -11,19 +11,11 @@
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "repositories": [
-      {
-        "type": "package",
-        "package": {
-          "name": "lasselehtinen/guzzle-oauth2-subscriber",
-          "version": "v1.0.8",
-          "source": {
-            "url": "git@github.com:lasselehtinen/guzzle-oauth2-subscriber.git",
-            "type": "git",
-            "reference": "73612438ec55b803d784cad623da311dd05091d8"
-          }
+    "repositories":[
+        {
+            "type": "vcs",
+            "url": "git@github.com:lasselehtinen/guzzle-oauth2-subscriber.git"
         }
-      }
     ],
     "require": {
         "ezyang/htmlpurifier": "^4.9",
@@ -32,7 +24,7 @@
         "league/uri": "^6.0",
         "njasm/soundcloud": "^2.2",
         "league/oauth2-client": "^2.3",
-        "lasselehtinen/guzzle-oauth2-subscriber": "^1.0.8",
+        "kamermans/guzzle-oauth2-subscriber": "dev-master#458d03ee60dd9881f62cd0bf80ecc3f1d2dbdecf",
         "league/uri-components": "^2.2"
     },
     "autoload": {

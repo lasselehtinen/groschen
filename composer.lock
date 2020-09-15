@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2fce6dc0e4ac23b393bf83b22a72ede1",
+    "content-hash": "f14b43996c7c61820dd6cdbc202c4e6d",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -339,14 +339,52 @@
             "time": "2019-07-01T23:21:34+00:00"
         },
         {
-            "name": "lasselehtinen/guzzle-oauth2-subscriber",
-            "version": "v1.0.8",
+            "name": "kamermans/guzzle-oauth2-subscriber",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:lasselehtinen/guzzle-oauth2-subscriber.git",
-                "reference": "73612438ec55b803d784cad623da311dd05091d8"
+                "url": "https://github.com/lasselehtinen/guzzle-oauth2-subscriber.git",
+                "reference": "458d03ee60dd9881f62cd0bf80ecc3f1d2dbdecf"
             },
-            "type": "library"
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lasselehtinen/guzzle-oauth2-subscriber/zipball/458d03ee60dd9881f62cd0bf80ecc3f1d2dbdecf",
+                "reference": "458d03ee60dd9881f62cd0bf80ecc3f1d2dbdecf",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~4.0|~5.0|~6.0|~7.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "kamermans\\OAuth2\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "kamermans\\OAuth2\\Tests\\": "tests"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Steve Kamerman",
+                    "email": "stevekamerman@gmail.com"
+                }
+            ],
+            "description": "OAuth 2.0 client for Guzzle 4, 5 and 6+",
+            "keywords": [
+                "guzzle",
+                "oauth"
+            ],
+            "support": {
+                "source": "https://github.com/lasselehtinen/guzzle-oauth2-subscriber/tree/v1.0.7"
+            },
+            "time": "2020-09-09T10:37:43+00:00"
         },
         {
             "name": "league/oauth2-client",
@@ -8858,7 +8896,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "kamermans/guzzle-oauth2-subscriber": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
