@@ -3158,7 +3158,7 @@ class Groschen implements ProductInterface
      */
     public function getMainEditionIsbn() {
         foreach ($this->getWorkLevel()->productions as $production) {
-            if ($production->isMainEdition === true) {
+            if ($production->isMainEdition === true && !empty($production->isbn)) {
                 return intval($production->isbn);
             }
         }

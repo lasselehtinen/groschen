@@ -811,6 +811,16 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting main edition if it does not have ISBN
+     * @return void
+     */
+    public function testGettingMainEditionIfDoesNotHaveIsbn()
+    {
+        $groschen = new Groschen('9789520422813');
+        $this->assertNull($groschen->getMainEditionIsbn());
+    }
+
+    /**
      * Test that manually given Thema subjects do not override the default mapping from sub-group
      * @return void
      */
