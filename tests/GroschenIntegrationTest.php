@@ -2500,4 +2500,14 @@ class GroschenIntegrationTest extends TestCase
     {
         $this->assertSame(243764, $this->groschen->getEditionId());
     }
+
+    /**
+     * Test getting subjects if subgroup is missing
+     * @return void
+     */
+    public function testGettingSubjectsIfSubgroupIsMissing()
+    {
+        $groschen = new Groschen('9789510466506');
+        $this->assertNull($groschen->getThemaSubjectCode());
+    }
 }

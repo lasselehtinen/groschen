@@ -1579,6 +1579,10 @@ class Groschen implements ProductInterface
      */
     public function getThemaSubjectCode()
     {
+        if (empty($this->product->subGroup)) {
+            return null;
+        }
+
         // Mapping from Schilling subgroup to Thema for adults
         $themaMappingTableAdults = [
             '1' => 'DNL',
