@@ -672,9 +672,10 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510411858');
         $extents = $groschen->getExtents();
 
-        // Number of words and pages
+        // Number of words, pages and characters
         $this->assertContains(['ExtentType' => '10', 'ExtentValue' => '93984', 'ExtentUnit' => '02'], $extents);
         $this->assertContains(['ExtentType' => '10', 'ExtentValue' => '533', 'ExtentUnit' => '03'], $extents);
+        $this->assertContains(['ExtentType' => '02', 'ExtentValue' => '798865', 'ExtentUnit' => '01'], $extents);
     }
 
     /**

@@ -647,6 +647,12 @@ class Groschen implements ProductInterface
         // E-book word and pages count by approximation (Finnish words is 8.5 characters on average and around 1500 characters per page)
         if (isset($this->product->numberOfCharacters)) {
             $extents->push([
+                'ExtentType' => '02',
+                'ExtentValue' => intval($this->product->numberOfCharacters),
+                'ExtentUnit' => '01',
+            ]);
+
+            $extents->push([
                 'ExtentType' => '10',
                 'ExtentValue' => intval(round($this->product->numberOfCharacters / 8.5)),
                 'ExtentUnit' => '02',
