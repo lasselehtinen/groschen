@@ -679,6 +679,24 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting extents for an e-book with only one page
+     * @return void
+     */
+    public function testGettingExtentsForAnEbookWithOnlyOnePage()
+    {
+        // E-book character count should be converted to number of words and pages by approximation from the number of characters
+        $groschen = new Groschen('9789520409722');
+        $extents = $groschen->getExtents();
+
+        // Number of words, pages and characters
+        $this->assertContains(['ExtentType' => '02', 'ExtentValue' => '733', 'ExtentUnit' => '01'], $extents);
+        $this->assertContains(['ExtentType' => '08', 'ExtentValue' => '48', 'ExtentUnit' => '03'], $extents);
+        $this->assertContains(['ExtentType' => '10', 'ExtentValue' => '86', 'ExtentUnit' => '02'], $extents);
+        $this->assertContains(['ExtentType' => '10', 'ExtentValue' => '1', 'ExtentUnit' => '03'], $extents);
+
+    }
+
+    /**
      * Test getting audio books duration only with hours
      * @return void
      */

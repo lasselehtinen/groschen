@@ -660,7 +660,7 @@ class Groschen implements ProductInterface
 
             $extents->push([
                 'ExtentType' => '10',
-                'ExtentValue' => intval(round($this->product->numberOfCharacters / 1500)),
+                'ExtentValue' => intval(max(1, round($this->product->numberOfCharacters / 1500))),
                 'ExtentUnit' => '03',
             ]);
         }
