@@ -2105,6 +2105,10 @@ class Groschen implements ProductInterface
             return null;
         }
 
+        if (!isset($this->product->seasonYear) && isset($this->product->seasonPeriod)) {
+            return null;
+        }
+
         if (isset($this->product->seasonYear) && !isset($this->product->seasonPeriod)) {
             return $this->product->seasonYear->name;
         }
