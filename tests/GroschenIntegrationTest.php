@@ -2178,7 +2178,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('10', $groschen->getProductAvailability());
 
         // Published, digital and publishing date is in the future
-        $groschen = new Groschen('9789510449660');
+        $groschen = new Groschen('9789520429669');
         $this->assertSame('10', $groschen->getProductAvailability());
 
         // Published, digital and publishing date is in the past
@@ -2220,6 +2220,77 @@ class GroschenIntegrationTest extends TestCase
         // Exclusive sales
         $groschen = new Groschen('9789510408513');
         $this->assertSame('22', $groschen->getProductAvailability());
+    }
+
+    /**
+     * Test getting publishing status and product availability for Kirjavälitys
+     * @return void
+     */
+    public function testGettingPublishingStatusAndProductAvailabilityForKirjavälitys()
+    {
+        $provider = 'Kirjavälitys';
+
+        // Sold-out
+        $groschen = new Groschen('9789510381380');
+        $this->assertSame('07', $groschen->getPublishingStatus($provider));
+        $this->assertSame('40', $groschen->getProductAvailability($provider));
+
+        // Cancelled
+        $groschen = new Groschen('9789510423042');
+        $this->assertSame('01', $groschen->getPublishingStatus($provider));
+        $this->assertSame('01', $groschen->getProductAvailability($provider));
+
+        // Development product
+        $groschen = new Groschen('9789510421611');
+        $this->assertSame('02', $groschen->getPublishingStatus($provider));
+        $this->assertSame('10', $groschen->getProductAvailability($provider));
+
+        // Exclusive sales
+        $groschen = new Groschen('9789510446737');
+        $this->assertSame('04', $groschen->getPublishingStatus($provider));
+        $this->assertSame('30', $groschen->getProductAvailability($provider));
+
+        // Delivery block
+        $groschen = new Groschen('9789513191801');
+        $this->assertSame('04', $groschen->getPublishingStatus($provider));
+        $this->assertSame('34', $groschen->getProductAvailability($provider));
+
+        // Published digital product
+        $groschen = new Groschen('9789510365274');
+        $this->assertSame('04', $groschen->getPublishingStatus($provider));
+        $this->assertSame('21', $groschen->getProductAvailability($provider));
+
+        // Published product that has stock
+        $groschen = new Groschen('9789510423370');
+        $this->assertSame('04', $groschen->getPublishingStatus($provider));
+        $this->assertSame('21', $groschen->getProductAvailability($provider));
+
+        // Published product with 0 stock and no planned reprint in the future
+        $groschen = new Groschen('9789521610301');
+        $this->assertSame('06', $groschen->getPublishingStatus($provider));
+        $this->assertSame('31', $groschen->getProductAvailability($provider));
+
+        // Published product with 0 stock and planned reprint date in the future
+        $groschen = new Groschen('9789510386033');
+        $this->assertSame('04', $groschen->getPublishingStatus($provider));
+        $this->assertSame('32', $groschen->getProductAvailability($provider));
+
+        // Short-run product with 0 stock and planned reprint date in the future
+        $groschen = new Groschen('9789510407301');
+        $this->assertSame('04', $groschen->getPublishingStatus($provider));
+        $this->assertSame('32', $groschen->getProductAvailability($provider));
+
+        // Short-run product that has stock
+        $groschen = new Groschen('9789510414378');
+        $this->assertSame('04', $groschen->getPublishingStatus($provider));
+        $this->assertSame('21', $groschen->getProductAvailability($provider));
+
+        // Published product with 0 stock and no planned reprint - Such combination does not exist at this time
+        /*
+        $groschen = new Groschen('9789522201355');
+        $this->assertSame('06', $groschen->getPublishingStatus($provider));
+        $this->assertSame('31', $groschen->getProductAvailability($provider));
+        */
     }
 
     /**

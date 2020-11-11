@@ -1072,27 +1072,68 @@ class Groschen implements ProductInterface
      * Get the products publishing status (Onix codelist 64)
      * @return string
      */
-    public function getPublishingStatus()
+    public function getPublishingStatus($provider = 'Porvoon Kirjakeskus')
     {
-        switch ($this->product->listingCode->name) {
-            case 'Published':
-            case 'Exclusive Sales':
-            case 'Short run':
-                return '04';
-            case 'Development':
-                return '02';
-            case 'Sold out':
-                return '07';
-            case 'Development-Confidential':
-            case 'Cancelled-Confidential':
-            case 'Exclusive - Direct Delivery':
-                return '00';
-            case 'Cancelled':
-                return '01';
-            case 'Delivery block':
-                return '16';
-            default:
-                throw new Exception('Could not map product governing code to publishing status');
+        if ($provider == 'Kirjavälitys') {
+            // For published and short run books, the books stocks affect the publishing status.
+            if (in_array($this->product->listingCode->name, ['Published', 'Short run'])) {
+                // For digital/immaterial products, we don't need to check the stock balances
+                if($this->isImmaterial()) {
+                    return '04';
+                }
+
+                // Check if the product has free stock
+                $onHand = $this->getSuppliers()->pluck('OnHand')->first();
+                $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
+
+                if ($hasStock) {
+                    return '04';
+                }
+
+                // If product has no stock, check if we have stock arrival date in the future
+                $tomorrow = new DateTime('tomorrow');
+                $stockArrivalDate = $this->getLatestStockArrivalDate();
+                //dd($tomorrow, $stockArrivalDate);
+                return ($tomorrow > $stockArrivalDate) ? '06' : '04';
+            }
+
+            // Other statuses
+            switch ($this->product->listingCode->name) {
+                case 'Sold out':
+                    return '07';
+                case 'Cancelled':
+                    return '01';
+                case 'Development':
+                    return '02';
+                case 'Exclusive Sales':
+                case 'Delivery block':
+                    return '04';
+                default:
+                    throw new Exception('Could not map product governing code ' . $this->product->listingCode->name . ' to publishing status');
+            }
+        }
+
+        if ($provider == 'Porvoon Kirjakeskus') {
+            switch ($this->product->listingCode->name) {
+                case 'Published':
+                case 'Exclusive Sales':
+                case 'Short run':
+                    return '04';
+                case 'Development':
+                    return '02';
+                case 'Sold out':
+                    return '07';
+                case 'Development-Confidential':
+                case 'Cancelled-Confidential':
+                case 'Exclusive - Direct Delivery':
+                    return '00';
+                case 'Cancelled':
+                    return '01';
+                case 'Delivery block':
+                    return '16';
+                default:
+                    throw new Exception('Could not map product governing code to publishing status');
+            }
         }
     }
 
@@ -2726,63 +2767,105 @@ class Groschen implements ProductInterface
      * Get products availability code
      * @return string|null
      */
-    public function getProductAvailability()
+    public function getProductAvailability($provider = 'Porvoon Kirjakeskus')
     {
-        // Digital products
-        if ($this->isImmaterial()) {
-            // Only statuses Published and Development are affected by the publication date
-            if ($this->product->listingCode->name === 'Development' || $this->product->listingCode->name === 'Published') {
-                // Either "In stock" or "Not yet available"
-                return $this->isPublicationDatePassed() ? '21' : '10';
+        if ($provider === 'Kirjavälitys') {
+            // Governing codes where the available stock affects
+            if (in_array($this->product->listingCode->name, ['Published', 'Short run'])) {
+                // Check if the product has free stock
+                $onHand = $this->getSuppliers()->pluck('OnHand')->first();
+                $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
+
+                if ($hasStock) {
+                    return '21';
+                }
+
+                // If product has no stock, check if we have stock arrival date in the future
+                $tomorrow = new DateTime('tomorrow');
+                $stockArrivalDate = $this->getLatestStockArrivalDate();
+
+                return ($tomorrow > $stockArrivalDate) ? '31' : '32';
             }
 
-            // All other governing codes
+            // Governing codes which are mapped directly where available stock does not affect
             switch ($this->product->listingCode->name) {
                 case 'Sold out':
-                case 'Short Run':
                     return '40';
+                    break;
+                case 'Cancelled':
+                    return '01';
+                    break;
+                case 'Development':
+                    return '10';
+                    break;
+                case 'Exclusive Sales':
+                    return '30';
+                    break;
+                case 'Delivery block':
+                    return '34';
+                    break;
             }
+
+            return null;
         }
 
-        // Governing codes which are mapped directly where available stock or publishing date do not affect
-        switch ($this->product->listingCode->name) {
-            case 'Development':
-                return '10';
-            case 'Cancelled':
-                return '01';
-            case 'Exclusive Sales':
-                return '22';
-            case 'Development-Confidential':
-            case 'Cancelled-Confidential':
-            case 'Exclusive - Direct Delivery':
-            case 'Delivery block':
-                return '40';
-            case 'Sold out':
-                return '43';
-        }
+        if ($provider === 'Porvoon Kirjakeskus') {
+            // Digital products
+            if ($this->isImmaterial()) {
+                // Only statuses Published and Development are affected by the publication date
+                if ($this->product->listingCode->name === 'Development' || $this->product->listingCode->name === 'Published') {
+                    // Either "In stock" or "Not yet available"
+                    return $this->isPublicationDatePassed() ? '21' : '10';
+                }
 
-        // Already published product
-        if ($this->product->listingCode->name === 'Published') {
-            // Check if the product has free stock
-            $onHand = $this->getSuppliers()->pluck('OnHand')->first();
-            $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
+                // All other governing codes
+                switch ($this->product->listingCode->name) {
+                    case 'Sold out':
+                    case 'Short Run':
+                        return '40';
+                }
+            }
 
-            if ($hasStock) {
+            // Governing codes which are mapped directly where available stock or publishing date do not affect
+            switch ($this->product->listingCode->name) {
+                case 'Development':
+                    return '10';
+                case 'Cancelled':
+                    return '01';
+                case 'Exclusive Sales':
+                    return '22';
+                case 'Development-Confidential':
+                case 'Cancelled-Confidential':
+                case 'Exclusive - Direct Delivery':
+                case 'Delivery block':
+                    return '40';
+                case 'Sold out':
+                    return '43';
+            }
+
+            // Already published product
+            if ($this->product->listingCode->name === 'Published') {
+                // Check if the product has free stock
+                $onHand = $this->getSuppliers()->pluck('OnHand')->first();
+                $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
+
+                if ($hasStock) {
+                    return '21';
+                }
+
+                $tomorrow = new DateTime('tomorrow');
+                $stockArrivalDate = $this->getLatestStockArrivalDate();
+
+                return ($tomorrow > $stockArrivalDate) ? '31' : '30';
+            }
+
+            // Short-run is always available
+            if ($this->product->listingCode->name === 'Short run') {
                 return '21';
             }
 
-            $tomorrow = new DateTime('tomorrow');
-            $stockArrivalDate = $this->getLatestStockArrivalDate();
-
-            return ($tomorrow > $stockArrivalDate) ? '31' : '30';
+            return null;
         }
-
-        // Short-run is always available
-        if ($this->product->listingCode->name === 'Short run') {
-            return '21';
-        }
-
-        return null;
     }
 
     /**
