@@ -693,7 +693,6 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['ExtentType' => '08', 'ExtentValue' => '48', 'ExtentUnit' => '03'], $extents);
         $this->assertContains(['ExtentType' => '10', 'ExtentValue' => '86', 'ExtentUnit' => '02'], $extents);
         $this->assertContains(['ExtentType' => '10', 'ExtentValue' => '1', 'ExtentUnit' => '03'], $extents);
-
     }
 
     /**
@@ -2226,7 +2225,7 @@ class GroschenIntegrationTest extends TestCase
      * Test getting publishing status and product availability for Kirjavälitys
      * @return void
      */
-    public function testGettingPublishingStatusAndProductAvailabilityForKirjavälitys()
+    public function testGettingPublishingStatusAndProductAvailabilityForKirjavalitys()
     {
         $provider = 'Kirjavälitys';
 
