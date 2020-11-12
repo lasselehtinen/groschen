@@ -3391,4 +3391,42 @@ class Groschen implements ProductInterface
 
         return $editionTypes;
     }
+
+    /**
+     * Get the activities for the work
+     * @return mixed
+     */
+    public function getActivities()
+    {
+        // Get the activities from Mockingbird
+        try {
+            $response = $this->client->get('/v1/works/' . $this->workId . '/activities');
+        } catch (ServerException $e) {
+            throw new Exception('Server exception: ' . $e->getResponse()->getBody());
+        }
+
+        return json_decode($response->getBody()->getContents());
+    }
+
+    /**
+     * Get all Events
+     * @return Collection
+     */
+    public function getEvents() {
+        $events = new Collection;
+
+        $activities = $this->getActivities();
+
+        foreach ($activities->activities as $activity) {
+            if($activity->sharingLevel->name === 'Public') {
+                $events->push([
+                    'EventRole' => '31',
+                    'EventName' => $activity->name,
+                    'EventDate' => DateTime::createFromFormat('Y-m-d*H:i:s', $activity->activityStartDate)->format('Ymd'),
+                ]);
+            }
+        }
+
+        return $events;
+    }
 }

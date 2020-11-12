@@ -475,4 +475,10 @@ interface ProductInterface
      * @return Collection
      */
     public function getEditionTypes();
+
+    /**
+     * Get all Events
+     * @return Collection
+     */
+    public function getEvents();
 }

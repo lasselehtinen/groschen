@@ -2622,4 +2622,22 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510384794');
         $this->assertContains(['EditionType' => 'DGO'], $groschen->getEditionTypes());
     }
+
+    /**
+     * Test getting events
+     * @return void
+     */
+    public function testGettingEvents() {
+        // Edition that has no public events
+        $groschen = new Groschen('9789510410738');
+        $this->assertCount(0, $groschen->getEvents());
+
+        // Edition that has public event
+        $groschen = new Groschen('9789510442067');
+        $this->assertContains([
+            'EventRole' => '31',
+            'EventName' => 'Vierailu Pieksämäen kirjakaupassa',
+            'EventDate' => '20191112'
+        ], $groschen->getEvents());
+    }
 }
