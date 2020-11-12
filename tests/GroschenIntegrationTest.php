@@ -2603,4 +2603,23 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510466506');
         $this->assertNull($groschen->getThemaSubjectCode());
     }
+
+    /**
+     * Test getting edition types
+     * @return void
+     */
+    public function testGettingEditionTypes()
+    {
+        // Work that has both physical and digital formats
+        $groschen = new Groschen('9789510410738');
+        $this->assertCount(0, $groschen->getEditionTypes());
+
+        // Work with only ePub and audio book version
+        $groschen = new Groschen('9789520406691');
+        $this->assertContains(['EditionType' => 'DGO'], $groschen->getEditionTypes());
+
+        // Work where ePub only product
+        $groschen = new Groschen('9789510384794');
+        $this->assertContains(['EditionType' => 'DGO'], $groschen->getEditionTypes());
+    }
 }

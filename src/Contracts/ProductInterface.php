@@ -469,4 +469,10 @@ interface ProductInterface
      * @return boolean
      */
     public function isTranslated();
+
+    /**
+     * Get all EditionTypes
+     * @return Collection
+     */
+    public function getEditionTypes();
 }

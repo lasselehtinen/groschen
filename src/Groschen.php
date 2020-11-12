@@ -3356,4 +3356,39 @@ class Groschen implements ProductInterface
 
         return $themaCodes;
     }
+
+    /**
+     * Get all EditionTypes
+     * @return Collection
+     */
+    public function getEditionTypes() {
+        $editionTypes = new Collection;
+
+        $relatedProducts = $this->getRelatedProducts();
+
+        // If we don't have any other formats, is the current one digital
+        if ($relatedProducts->count() === 0 && $this->isImmaterial()) {
+            $editionTypes->push(['EditionType' => 'DGO']);
+        }
+
+        // Check if all editions from work are digital
+        $physicalProducts = $relatedProducts->filter(function ($relatedProduct, $key) {
+            // Only check ISBNs
+            foreach ($relatedProduct['ProductIdentifiers'] as $productIdentifier) {
+                if ($productIdentifier['ProductIDType'] === '03') {
+                    $groschen = new Groschen($productIdentifier['IDValue']);
+                    return $groschen->isImmaterial() === false;
+                }
+            }
+
+            return true;
+        });
+
+        // If none of the related products are physical and current one is digital
+        if ($physicalProducts->count() === 0 && $this->isImmaterial()) {
+            $editionTypes->push(['EditionType' => 'DGO']);
+        }
+
+        return $editionTypes;
+    }
 }
