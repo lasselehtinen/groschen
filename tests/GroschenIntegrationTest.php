@@ -1175,13 +1175,13 @@ class GroschenIntegrationTest extends TestCase
         // Suppliers net price including tax
         $suppliersNetPriceIncludingTax = [
             'PriceType' => '07',
-            'PriceAmount' => 17.9,
+            'PriceAmount' => 17.88,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 10.0,
                 'TaxableAmount' => 16.25,
-                'TaxAmount' => 1.65,
+                'TaxAmount' => 1.63,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -1191,6 +1191,34 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($suppliersNetPriceExcludingTax, $this->groschen->getPrices());
         $this->assertContains($suppliersNetPriceIncludingTax, $this->groschen->getPrices());
+    }
+
+    /**
+     * Test net price including taxes is rounded correctly
+     * @return void
+     */
+    public function testNetPriceIncludingTaxesIsRecalculated()
+    {
+        $groschen = new Groschen('9789513191801');
+
+        // Suppliers net price including tax
+        $suppliersNetPriceIncludingTax = [
+            'PriceType' => '07',
+            'PriceAmount' => 6.12,
+            'Tax' => [
+                'TaxType' => '01',
+                'TaxRateCode' => 'S',
+                'TaxRatePercent' => 10.0,
+                'TaxableAmount' => 5.56,
+                'TaxAmount' => 0.56,
+            ],
+            'CurrencyCode' => 'EUR',
+            'Territory' => [
+                'RegionsIncluded' => 'WORLD',
+            ],
+        ];
+
+        $this->assertContains($suppliersNetPriceIncludingTax, $groschen->getPrices());
     }
 
     /**
