@@ -240,7 +240,7 @@ class Groschen implements ProductInterface
         // Propietary internal product number
         $productIdentifiers->push([
             'ProductIDType' => '01',
-            'id_type_name' => 'Bonnier Books Finland - Internal product number',
+            'id_type_name' => 'Werner Söderström Ltd - Internal product number',
             'id_value' => $this->product->isbn,
         ]);
 
@@ -857,7 +857,7 @@ class Groschen implements ProductInterface
         if (isset($this->product->mainGroup)) {
             $subjects->push([
                 'SubjectSchemeIdentifier' => '23',
-                'SubjectSchemeName' => 'Bonnier Books Finland - Main product group',
+                'SubjectSchemeName' => 'Werner Söderström Ltd - Main product group',
                 'SubjectCode' => $this->product->mainGroup->id,
                 'SubjectHeadingText' => $this->product->mainGroup->name,
             ]);
@@ -867,7 +867,7 @@ class Groschen implements ProductInterface
         if (isset($this->product->subGroup)) {
             $subjects->push([
                 'SubjectSchemeIdentifier' => '23',
-                'SubjectSchemeName' => 'Bonnier Books Finland - Product sub-group',
+                'SubjectSchemeName' => 'Werner Söderström Ltd - Product sub-group',
                 'SubjectCode' => $this->product->subGroup->id,
                 'SubjectHeadingText' => trim($this->product->subGroup->name),
             ]);
@@ -877,7 +877,16 @@ class Groschen implements ProductInterface
 
             // BIC subject category
             $subjects->push(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => $this->getBicCode()]);
+        }
 
+        // Cost center number
+        if (!empty($this->getCostCenter())) {
+            $subjects->push([
+                'SubjectSchemeIdentifier' => '23',
+                'SubjectSchemeName' => 'Werner Söderström Ltd - Cost center',
+                'SubjectCode' => $this->getCostCenter(),
+                'SubjectHeadingText' => $this->getCostCenterName(),
+            ]);
         }
 
         // This is disabled until the Thema project has completed
@@ -3294,7 +3303,7 @@ class Groschen implements ProductInterface
      */
     public function isTranslated() {
         // Check if main group contains "Käännetty" / "Translated" or contains contributor with translator role
-        $mainGroup = $this->getSubjects()->where('SubjectSchemeIdentifier', '23')->where('SubjectSchemeName', 'Bonnier Books Finland - Main product group')->pluck('SubjectHeadingText')->first();
+        $mainGroup = $this->getSubjects()->where('SubjectSchemeIdentifier', '23')->where('SubjectSchemeName', 'Werner Söderström Ltd - Main product group')->pluck('SubjectHeadingText')->first();
 
         if(Str::contains($mainGroup, 'Käännetty') || $this->getContributors()->contains('ContributorRole', 'B06')) {
             return true;
