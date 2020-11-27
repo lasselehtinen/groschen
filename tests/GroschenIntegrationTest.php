@@ -2632,7 +2632,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting events
      * @return void
      */
-    public function testGettingEvents() {
+    public function testGettingEvents()
+    {
         // Edition that has no public events
         $groschen = new Groschen('9789510410738');
         $this->assertCount(0, $groschen->getEvents());
