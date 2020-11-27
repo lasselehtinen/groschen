@@ -1168,11 +1168,13 @@ class Groschen implements ProductInterface
             }
         }
 
-        // Latest reprint date
+        // Get latest reprint date and check if the date as passed
         $latestStockArrivalDate = $this->getLatestStockArrivalDate();
 
         if (!is_null($latestStockArrivalDate)) {
-            $publishingDates->push(['PublishingDateRole' => '12', 'Date' => $latestStockArrivalDate->format('Ymd')]);
+            $now = new DateTime();
+            $publishingDateRole = ($latestStockArrivalDate < $now) ? '12' : '26';
+            $publishingDates->push(['PublishingDateRole' => $publishingDateRole, 'Date' => $latestStockArrivalDate->format('Ymd')]);
         }
 
         return $publishingDates;
@@ -2261,19 +2263,22 @@ class Groschen implements ProductInterface
      */
     public function getLatestStockArrivalDate()
     {
-        foreach ($this->product->activePrint->timePlan->entries as $timeplan) {
-            if (isset($timeplan->type->name) && $timeplan->type->name === 'Delivery to warehouse') {
-                if (isset($timeplan->actual)) {
-                    return DateTime::createFromFormat('Y-m-d*H:i:s', $timeplan->actual);
-                }
+        // Get the production print orders from Opus
+        $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
+        $printOrders = json_decode($response->getBody()->getContents());
 
-                if (isset($timeplan->planned)) {
-                    return DateTime::createFromFormat('Y-m-d*H:i:s', $timeplan->planned);
+        // Collection for dates
+        $printDates = collect([]);
+
+        foreach ($printOrders->prints as $print) {
+            foreach ($print->timePlanEntries as $timePlanEntry) {
+                if ($timePlanEntry->type->name === 'Delivery to warehouse') {
+                    $printDates->push(['date' => DateTime::createFromFormat('Y-m-d*H:i:s', $timePlanEntry->planned)]);
                 }
             }
         }
 
-        return null;
+        return $printDates->max('date');
     }
 
     /**

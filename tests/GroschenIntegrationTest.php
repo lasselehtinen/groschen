@@ -1091,6 +1091,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPublishingDates()
     {
+        /*
         // Publishing date
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20100601'], $this->groschen->getPublishingDates());
 
@@ -1103,6 +1104,10 @@ class GroschenIntegrationTest extends TestCase
 
         // Latest reprint
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());
+*/
+        // Reprint in the future
+        $groschen = new Groschen('9789510386033');
+        $this->assertContains(['PublishingDateRole' => '26', 'Date' => '20210927'], $groschen->getPublishingDates());
 
         // Products with sales embargo
         $groschen = new Groschen('9789520407230');
