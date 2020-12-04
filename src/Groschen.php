@@ -2289,7 +2289,13 @@ class Groschen implements ProductInterface
         foreach ($printOrders->prints as $print) {
             foreach ($print->timePlanEntries as $timePlanEntry) {
                 if ($timePlanEntry->type->name === 'Delivery to warehouse') {
-                    $printDates->push(['date' => DateTime::createFromFormat('Y-m-d*H:i:s', $timePlanEntry->planned)]);
+                    if(isset($timePlanEntry->planned)) {
+                        $printDates->push(['date' => DateTime::createFromFormat('Y-m-d*H:i:s', $timePlanEntry->planned)]);
+                    }
+
+                    if(isset($timePlanEntry->actual)) {
+                        $printDates->push(['date' => DateTime::createFromFormat('Y-m-d*H:i:s', $timePlanEntry->actual)]);
+                    }
                 }
             }
         }
