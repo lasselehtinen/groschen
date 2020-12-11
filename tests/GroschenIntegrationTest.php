@@ -861,6 +861,29 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that we get correct "Suomalainen kirja-alan luokitus" based on binding code / age group
+     * @return void
+     */
+    public function testGettingCorrectSuomalainenKirjastoalanLuokitus()
+    {
+        // Pocket book
+        $groschen = new Groschen('9789513151027');
+        $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'T'], $groschen->getSubjects());
+
+        // Young adults pocket book should return only T
+        $groschen = new Groschen('9789510396100');
+        $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'T'], $groschen->getSubjects());
+
+        // Childrens book
+        $groschen = new Groschen('9789520412722');
+        $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'L'], $groschen->getSubjects());
+
+        // Young adults book
+        $groschen = new Groschen('9789513189075');
+        $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'N'], $groschen->getSubjects());
+    }
+
+    /**
      * Test getting the products internal category
      * @return void
      */
