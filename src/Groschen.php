@@ -1875,8 +1875,9 @@ class Groschen implements ProductInterface
                 case '5AU':
                     return 'N';
                     break;
+                // Return null for other non-age related codes like 5X and 5HPD
                 default:
-                    throw new Exception('No mapping for interest age ' . $interestAge);
+                    return null;
                     break;
             }
         }
