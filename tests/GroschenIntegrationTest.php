@@ -2700,4 +2700,34 @@ class GroschenIntegrationTest extends TestCase
             'EventDate' => '20191112'
         ], $groschen->getEvents());
     }
+
+    /**
+     * Test getting the retailer price multiplier, see https://intranet.bonnierbooks.fi/pages/viewpage.action?pageId=16745509
+     * @return void
+     */
+    public function testGettingRetailerPriceMultiplier()
+    {
+        // Manga
+        $groschen = new Groschen('9789521616068');
+        $this->assertSame(1.64, $groschen->getRetailPriceMultiplier());
+
+        // Pocket book
+        $groschen = new Groschen('9789513199401');
+        $this->assertSame(1.64, $groschen->getRetailPriceMultiplier());
+
+        // ePub2
+        $groschen = new Groschen('9789510425121');
+        $this->assertSame(1.25, $groschen->getRetailPriceMultiplier());
+
+        // ePub3
+        $groschen = new Groschen('9789520405670');
+        $this->assertSame(1.25, $groschen->getRetailPriceMultiplier());
+
+        // Audio book
+        $groschen = new Groschen('9789510430415');
+        $this->assertSame(1.25, $groschen->getRetailPriceMultiplier());
+
+        // Others
+        $this->assertSame(1.4, $this->groschen->getRetailPriceMultiplier());
+    }
 }

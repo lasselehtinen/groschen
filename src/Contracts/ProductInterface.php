@@ -481,4 +481,10 @@ interface ProductInterface
      * @return Collection
      */
     public function getEvents();
+
+    /**
+     * Get the retail price multipler
+     * @return float
+     */
+    public function getRetailPriceMultiplier();
 }

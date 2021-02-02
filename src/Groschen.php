@@ -3489,4 +3489,22 @@ class Groschen implements ProductInterface
 
         return $events;
     }
+
+    /**
+     * Get the retail price multipler
+     * @return float
+     */
+    public function getRetailPriceMultiplier() {
+        // Manga and pocket books
+        if ($this->getCostCenter() === 965 || $this->getProductType() === 'Pocket book') {
+            return 1.64;
+        }
+
+        // Immaterial
+        if ($this->isImmaterial()) {
+            return 1.25;
+        }
+
+        return 1.4;
+    }
 }
