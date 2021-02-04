@@ -2376,22 +2376,22 @@ class GroschenIntegrationTest extends TestCase
                 [
                     'SupplierIDType' => '01',
                     'IDTypeName' => 'BR-ID',
-                    'IDValue' => 10002,
+                    'IDValue' => 10012,
                 ],
                 [
                     'SupplierIDType' => '06',
                     'IDTypeName' => 'GLN',
-                    'IDValue' => 6430049920009,
+                    'IDValue' => 6418616999993,
                 ],
                 [
                     'SupplierIDType' => '23',
                     'IDTypeName' => 'VAT Identity Number',
-                    'IDValue' => 'FI24059226',
+                    'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Porvoon Kirjakeskus',
-            'TelephoneNumber' => '+358 2016 620',
-            'EmailAddress' => 'tilaukset@kirjakeskus.fi',
+            'SupplierName' => 'Kirjavälitys',
+            'TelephoneNumber' => '+358 10 345 1520',
+            'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 100,
             'Proximity' => '07',
         ];
@@ -2412,27 +2412,27 @@ class GroschenIntegrationTest extends TestCase
                 [
                     'SupplierIDType' => '01',
                     'IDTypeName' => 'BR-ID',
-                    'IDValue' => 10002,
+                    'IDValue' => 10012,
                 ],
                 [
                     'SupplierIDType' => '06',
                     'IDTypeName' => 'GLN',
-                    'IDValue' => 6430049920009,
+                    'IDValue' => 6418616999993,
                 ],
                 [
                     'SupplierIDType' => '23',
                     'IDTypeName' => 'VAT Identity Number',
-                    'IDValue' => 'FI24059226',
+                    'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Porvoon Kirjakeskus',
-            'TelephoneNumber' => '+358 2016 620',
-            'EmailAddress' => 'tilaukset@kirjakeskus.fi',
+            'SupplierName' => 'Kirjavälitys',
+            'TelephoneNumber' => '+358 10 345 1520',
+            'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 100,
             'Proximity' => '07',
         ];
 
-        // Digital product should return fake PKK supplier
+        // Digital product should return fake Kirjavälitys supplier
         $groschen = new Groschen('9789510420157');
         $this->assertContains($supplier, $groschen->getSuppliers());
     }
@@ -2486,27 +2486,27 @@ class GroschenIntegrationTest extends TestCase
                 [
                     'SupplierIDType' => '01',
                     'IDTypeName' => 'BR-ID',
-                    'IDValue' => 10002,
+                    'IDValue' => 10012,
                 ],
                 [
                     'SupplierIDType' => '06',
                     'IDTypeName' => 'GLN',
-                    'IDValue' => 6430049920009,
+                    'IDValue' => 6418616999993,
                 ],
                 [
                     'SupplierIDType' => '23',
                     'IDTypeName' => 'VAT Identity Number',
-                    'IDValue' => 'FI24059226',
+                    'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Porvoon Kirjakeskus',
-            'TelephoneNumber' => '+358 2016 620',
-            'EmailAddress' => 'tilaukset@kirjakeskus.fi',
+            'SupplierName' => 'Kirjavälitys',
+            'TelephoneNumber' => '+358 10 345 1520',
+            'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 100,
             'Proximity' => '07',
         ];
 
-        // Digital product should return Porvoon kirjakeskus as supplier
+        // Digital product should return Kirjavälitys as supplier
         $groschen = new Groschen('9789522794987');
         $this->assertContains($supplier, $groschen->getSuppliers());
     }
