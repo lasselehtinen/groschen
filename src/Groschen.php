@@ -2545,7 +2545,7 @@ class Groschen implements ProductInterface
 
         foreach ($this->product->exportRules as $exportRule) {
             $distributionChannels->push([
-                'channel' => $exportRule->salesChannel->name,
+                'channel' => trim($exportRule->salesChannel->name),
                 'channelType' => $exportRule->salesType->name,
                 'hasRights' => $exportRule->hasRights,
                 'distributionAllowed' => $exportRule->hasDistribution,
