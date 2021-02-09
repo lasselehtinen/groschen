@@ -2304,12 +2304,12 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('10', $groschen->getProductAvailability($provider));
 
         // Exclusive sales
-        $groschen = new Groschen('9789510446737');
+        $groschen = new Groschen('9789510471425');
         $this->assertSame('04', $groschen->getPublishingStatus($provider));
         $this->assertSame('30', $groschen->getProductAvailability($provider));
 
         // Delivery block
-        $groschen = new Groschen('9789513191801');
+        $groschen = new Groschen('9789510365311');
         $this->assertSame('04', $groschen->getPublishingStatus($provider));
         $this->assertSame('34', $groschen->getProductAvailability($provider));
 
@@ -2324,7 +2324,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('21', $groschen->getProductAvailability($provider));
 
         // Published product with 0 stock and no planned reprint in the future
-        $groschen = new Groschen('9789521610301');
+        $groschen = new Groschen('9789513194659');
         $this->assertSame('06', $groschen->getPublishingStatus($provider));
         $this->assertSame('31', $groschen->getProductAvailability($provider));
 
@@ -2333,15 +2333,17 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('04', $groschen->getPublishingStatus($provider));
         $this->assertSame('32', $groschen->getProductAvailability($provider));
 
-        // Short-run product with 0 stock and planned reprint date in the future
-        $groschen = new Groschen('9789510407301');
-        $this->assertSame('04', $groschen->getPublishingStatus($provider));
-        $this->assertSame('32', $groschen->getProductAvailability($provider));
-
         // Short-run product that has stock
         $groschen = new Groschen('9789510414378');
         $this->assertSame('04', $groschen->getPublishingStatus($provider));
         $this->assertSame('21', $groschen->getProductAvailability($provider));
+
+        // Short-run product with 0 stock and planned reprint date in the future
+        /*
+        $groschen = new Groschen('9789510407301');
+        $this->assertSame('04', $groschen->getPublishingStatus($provider));
+        $this->assertSame('32', $groschen->getProductAvailability($provider));
+        */
 
         // Published product with 0 stock and no planned reprint - Such combination does not exist at this time
         /*
