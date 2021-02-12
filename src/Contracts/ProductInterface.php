@@ -487,4 +487,10 @@ interface ProductInterface
      * @return float
      */
     public function getRetailPriceMultiplier();
+
+    /**
+     * Get all ProductContentTypes
+     * @return Collection
+     */
+    public function getProductContentTypes();
 }

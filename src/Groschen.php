@@ -3477,4 +3477,65 @@ class Groschen implements ProductInterface
 
         return 1.4;
     }
+
+    /**
+     * Get all ProductContentTypes
+     * @return Collection
+     */
+    public function getProductContentTypes() {
+        $contentTypes = new Collection;
+
+        // Audio-only binding codes
+        $audioOnly = [
+            'Pre-recorded digital - No test case exists',
+            'Downloadable audio file',
+            'CD',
+            'MP3-CD',
+            'Other audio format',
+        ];
+
+        if (in_array($this->getProductType(), $audioOnly)) {
+            $contentTypes->push([
+                'ContentType' => '01',
+                'Primary' => true,
+            ]);
+
+            return $contentTypes;
+        }
+
+        // Picture-and-audio book
+        if ($this->getProductType() === 'Picture-and-audio book') {
+            $contentTypes->push([
+                'ContentType' => '10',
+                'Primary' => true,
+            ]);
+
+            $contentTypes->push([
+                'ContentType' => '01',
+                'Primary' => false,
+            ]);
+
+            return $contentTypes;
+        }
+
+        // Kit, Miscellaneous and Application should not return anything
+        $undetermined = [
+            'Kit',
+            'Miscellaneous',
+            'Application',
+        ];
+
+        if (in_array($this->getProductType(), $undetermined)) {
+            return $contentTypes;
+        }
+
+        // For everything else add "Text"
+        $contentTypes->push([
+            'ContentType' => '10',
+            'Primary' => true,
+        ]);
+
+        return $contentTypes;
+    }
+
 }

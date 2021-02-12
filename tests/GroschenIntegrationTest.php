@@ -2732,4 +2732,69 @@ class GroschenIntegrationTest extends TestCase
         // Others
         $this->assertSame(1.4, $this->groschen->getRetailPriceMultiplier());
     }
+
+    /**
+     * Test getting ProductContentTypes
+     * @return void
+     */
+    public function testGettingProductContentTypes()
+    {
+        $textBasedBindingCodes = [
+            9789510436134, // Hardback
+            9789510419915, // ePub2
+            9789510408414, // ePub3 (without audio)
+            9789513192648, // PDF
+        ];
+
+        foreach ($textBasedBindingCodes as $gtin) {
+            $groschen = new Groschen($gtin);
+
+            $this->assertContains([
+                'ContentType' => '10',
+                'Primary' => true,
+            ], $groschen->getProductContentTypes());
+        }
+
+        $audioBasedBindingCodes = [
+            // Pre-recorded digital - No test case exists
+            9789510436233, // Downloadable audio file
+            9789510321799, // CD
+            9789513185787, // MP3-CD
+            9789510232644, // Other audio format
+        ];
+
+        foreach ($audioBasedBindingCodes as $gtin) {
+            $groschen = new Groschen($gtin);
+
+            $this->assertContains([
+                'ContentType' => '01',
+                'Primary' => true,
+            ], $groschen->getProductContentTypes(), $gtin);
+        }
+
+        // Picture-and-audio book
+        $groschen = new Groschen(9789510429914);
+
+        $this->assertContains([
+            'ContentType' => '10',
+            'Primary' => true,
+        ], $groschen->getProductContentTypes());
+
+        $this->assertContains([
+            'ContentType' => '01',
+            'Primary' => false,
+        ], $groschen->getProductContentTypes());
+
+        // Kit
+        $groschen = new Groschen(9789513141622);
+        $this->assertCount(0, $groschen->getProductContentTypes());
+
+        // Miscellaneous
+        $groschen = new Groschen(6430060032064);
+        $this->assertCount(0, $groschen->getProductContentTypes());
+
+        // Application
+        $groschen = new Groschen(9789510392263);
+        $this->assertCount(0, $groschen->getProductContentTypes());
+    }
 }
