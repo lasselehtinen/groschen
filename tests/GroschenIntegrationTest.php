@@ -388,6 +388,8 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Kyrö, Tuomas',
             'NamesBeforeKey' => 'Tuomas',
             'KeyNames' => 'Kyrö',
+            'BiographicalNote' => null,
+            'WebSites' => [],
         ];
 
         $this->assertContains($author, $this->groschen->getContributors());
@@ -399,6 +401,8 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Tuominen, Mika',
             'NamesBeforeKey' => 'Mika',
             'KeyNames' => 'Tuominen',
+            'BiographicalNote' => null,
+            'WebSites' => [],
         ];
 
         $this->assertContains($graphicDesigner, $this->groschen->getContributors());
@@ -426,6 +430,8 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Sunaakugan',
             'NamesBeforeKey' => 'Sunaakugan',
             'KeyNames' => 'Sunaakugan',
+            'BiographicalNote' => null,
+            'WebSites' => [],
         ];
 
         $this->assertContains($author, $groschen->getContributors());
@@ -447,6 +453,8 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Govindji, Azmina',
             'NamesBeforeKey' => 'Azmina',
             'KeyNames' => 'Govindji',
+            'BiographicalNote' => null,
+            'WebSites' => [],
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -458,6 +466,8 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Worrall Thompson, Anthony',
             'NamesBeforeKey' => 'Anthony',
             'KeyNames' => 'Worrall Thompson',
+            'BiographicalNote' => null,
+            'WebSites' => [],
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -479,6 +489,8 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Aarnio, Jari',
             'NamesBeforeKey' => 'Jari',
             'KeyNames' => 'Aarnio',
+            'BiographicalNote' => null,
+            'WebSites' => [],
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -490,6 +502,8 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Hänninen, Vepe',
             'NamesBeforeKey' => 'Vepe',
             'KeyNames' => 'Hänninen',
+            'BiographicalNote' => null,
+            'WebSites' => [],
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -510,6 +524,8 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Fredman, Virve',
             'NamesBeforeKey' => 'Virve',
             'KeyNames' => 'Fredman',
+            'BiographicalNote' => null,
+            'WebSites' => [],
         ];
 
         $this->assertContains($author, $groschen->getContributors(false));
@@ -529,6 +545,8 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Rouhiainen, Mikko',
             'NamesBeforeKey' => 'Mikko',
             'KeyNames' => 'Rouhiainen',
+            'BiographicalNote' => null,
+            'WebSites' => [],
         ];
 
         $this->assertNotContains($editor, $groschen->getContributors(false));
@@ -2324,7 +2342,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('21', $groschen->getProductAvailability($provider));
 
         // Published product with 0 stock and no planned reprint in the future
-        $groschen = new Groschen('9789513194659');
+        $groschen = new Groschen('9789521618321');
         $this->assertSame('06', $groschen->getPublishingStatus($provider));
         $this->assertSame('31', $groschen->getProductAvailability($provider));
 
@@ -2796,5 +2814,44 @@ class GroschenIntegrationTest extends TestCase
         // Application
         $groschen = new Groschen(9789510392263);
         $this->assertCount(0, $groschen->getProductContentTypes());
+
+        // ePub3 with audio
+        $groschen = new Groschen(9789510439920);
+
+        $this->assertContains([
+            'ContentType' => '10',
+            'Primary' => true,
+        ], $groschen->getProductContentTypes());
+
+        $this->assertContains([
+            'ContentType' => '01',
+            'Primary' => false,
+        ], $groschen->getProductContentTypes());
+
+    }
+
+    /**
+     * Test getting contributor biography and links
+     * @return void
+     */
+    public function testGettingContributorBiographyAndLinks() {
+        // Author
+        $author = [
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'A01',
+            'PersonNameInverted' => 'Manner, Max',
+            'NamesBeforeKey' => 'Max',
+            'KeyNames' => 'Manner',
+            'BiographicalNote' => '<p><strong>Max Manner</strong> (s. 1965) on turkulainen, Luxemburgissa pitkään asunut kirjailija. Häneltä on ilmestynyt tähän mennessä kolmetoista romaania, viimeisimpänä <em>Kadotettujen kahvila</em> (2018). Manner on International Thriller Writersin jäsen. Hän viettää vapaa-aikansa moottoripyörien, ruskean labradorin ulkoiluttamisen, matkustelun ja suuhun sopivimman punaviinin etsinnän parissa.</p>',
+            'WebSites' => [
+                [
+                    "WebsiteRole" => "06",
+                    "Website" => "http://maxmanner.com",
+                ]
+            ]
+        ];
+
+        $groschen = new Groschen('9789522796844');
+        $this->assertContains($author, $groschen->getContributors());
     }
 }

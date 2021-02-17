@@ -506,7 +506,6 @@ class Groschen implements ProductInterface
             $sortOrderPriority = $teamMember->sortOrder;
             $rolePriority = $this->getRolePriority($teamMember->role->name);
             $lastNamePriority = (!empty($teamMember->contact->lastName)) ? ord($teamMember->contact->lastName) : 0;
-
             $sortOrder = $priorityLevel . '-' . $sortOrderPriority . '-' . $rolePriority . '-' . $lastNamePriority;
 
             return $sortOrder;
@@ -538,6 +537,32 @@ class Groschen implements ProductInterface
                 $contributorData['PersonNameInverted'] = trim($contributor->contact->lastName) . ', ' . trim($contributor->contact->firstName);
                 $contributorData['KeyNames'] = trim($contributor->contact->lastName);
             }
+
+            // Check if contact has biography an links
+            $response = $this->searchClient->get('v2/contacts/' . $contributor->contact->id);
+            $contact = json_decode($response->getBody()->getContents());
+            $contributorData['BiographicalNote'] = collect($contact->texts)->filter(function ($text, $key) {
+                return $text->textType->name === 'Contact presentation';
+            })->pluck('text')->first();
+
+            // Add links
+            $contributorData['WebSites'] = collect($contact->urls)->map(function ($url, $key) {
+                // Mapping Mockingbird link types to Onix codelist 73 values
+                $linkTypeMapping = [
+                    'webSite' => '06',
+                    'blog' => '23',
+                    'wiki' => '00',
+                    'facebook' => '42',
+                    'youtube' => '42',
+                    'trailer' => '42',
+                    'twitter' => '42',
+                ];
+
+                return [
+                    'WebsiteRole' => $linkTypeMapping[$url->type],
+                    'Website' => $url->value,
+                ];
+            })->toArray();
 
             // Add to collection
             $contributors->push($contributorData);
@@ -3503,8 +3528,8 @@ class Groschen implements ProductInterface
             return $contentTypes;
         }
 
-        // Picture-and-audio book
-        if ($this->getProductType() === 'Picture-and-audio book') {
+        // Picture-and-audio book or ePub 3 with audio (has reader)
+        if ($this->getProductType() === 'Picture-and-audio book' || ($this->getProductType() === 'ePub3' && $this->getContributors()->contains('ContributorRole', 'E07'))) {
             $contentTypes->push([
                 'ContentType' => '10',
                 'Primary' => true,
