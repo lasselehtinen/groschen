@@ -2827,14 +2827,14 @@ class GroschenIntegrationTest extends TestCase
             'ContentType' => '01',
             'Primary' => false,
         ], $groschen->getProductContentTypes());
-
     }
 
     /**
      * Test getting contributor biography and links
      * @return void
      */
-    public function testGettingContributorBiographyAndLinks() {
+    public function testGettingContributorBiographyAndLinks()
+    {
         // Author
         $author = [
             'SequenceNumber' => 1,
