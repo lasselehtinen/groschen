@@ -524,6 +524,7 @@ class Groschen implements ProductInterface
         foreach ($teamMembers as $contributor) {
             // Form contributor data
             $contributorData = [
+                'Identifier' => $contributor->contact->id,
                 'SequenceNumber' => $sequenceNumber,
                 'ContributorRole' => $this->getContributorRole($contributor->role->id),
                 'NamesBeforeKey' => trim($contributor->contact->firstName),
@@ -1134,7 +1135,7 @@ class Groschen implements ProductInterface
                 // If product has no stock, check if we have stock arrival date in the future
                 $tomorrow = new DateTime('tomorrow');
                 $stockArrivalDate = $this->getLatestStockArrivalDate();
-                //dd($tomorrow, $stockArrivalDate);
+
                 return ($tomorrow > $stockArrivalDate) ? '06' : '04';
             }
 
@@ -1427,6 +1428,71 @@ class Groschen implements ProductInterface
                     'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl),
                 ],
             ]);
+        }
+
+        // Search for contributor image(s) in Elvis
+        foreach ($this->getContributors() as $contributor) {
+            $response = $client->request('POST', 'search', [
+                'query' => [
+                    'q' => 'cf_creditorNumber:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true',
+                    'metadataToReturn' => 'height, width, mimeType, fileSize',
+                ],
+            ]);
+
+            $searchResults = json_decode($response->getBody());
+
+            foreach ($searchResults->hits as $hit) {
+                // Check that we have all the required metadata fields
+                $requiredMetadataFields = [
+                    'mimeType',
+                    'height',
+                    'width',
+                    'filename',
+                    'fileSize',
+                ];
+
+                foreach ($requiredMetadataFields as $requiredMetadataField) {
+                    if (property_exists($hit->metadata, $requiredMetadataField) === false) {
+                        throw new Exception('The required metadata field '. $requiredMetadataField . ' does not exist in Elvis.');
+                    }
+                }
+
+                $supportingResources->push([
+                    'ResourceContentType' => '04',
+                    'ContentAudience' => '00',
+                    'ResourceMode' => '03',
+                    'ResourceVersion' => [
+                        'ResourceForm' => '02',
+                        'ResourceVersionFeatures' => [
+                            [
+                                'ResourceVersionFeatureType' => '01',
+                                'FeatureValue' => $mimeTypeToCodelistMapping[$hit->metadata->mimeType],
+                            ],
+                            [
+                                'ResourceVersionFeatureType' => '02',
+                                'FeatureValue' => $hit->metadata->height,
+                            ],
+                            [
+                                'ResourceVersionFeatureType' => '03',
+                                'FeatureValue' => $hit->metadata->width,
+                            ],
+                            [
+                                'ResourceVersionFeatureType' => '04',
+                                'FeatureValue' => $hit->metadata->filename,
+                            ],
+                            [
+                                'ResourceVersionFeatureType' => '05',
+                                'FeatureValue' => number_format($hit->metadata->fileSize->value / 1048576, 1),
+                            ],
+                            [
+                                'ResourceVersionFeatureType' => '07',
+                                'FeatureValue' => $hit->metadata->fileSize->value,
+                            ],
+                        ],
+                        'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl),
+                    ],
+                ]);
+            }
         }
 
         // Logout from Elvis

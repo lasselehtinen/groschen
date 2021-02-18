@@ -1363,6 +1363,52 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting author image in supporting resources
+     * @return void
+     */
+    public function testGettingAuthorImageInSupportingResources()
+    {
+        $supportingResource = [
+            'ResourceContentType' => '04',
+            'ContentAudience' => '00',
+            'ResourceMode' => '03',
+            'ResourceVersion' => [
+                'ResourceForm' => '02',
+                'ResourceVersionFeatures' => [
+                    [
+                        'ResourceVersionFeatureType' => '01',
+                        'FeatureValue' => 'D502',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '02',
+                        'FeatureValue' => 5616,
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '03',
+                        'FeatureValue' => 3744,
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '04',
+                        'FeatureValue' => 'Max_Manner_c_Nauska_5858x.jpg',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '05',
+                        'FeatureValue' => '11.8',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '07',
+                        'FeatureValue' => 12343759,
+                    ],
+                ],
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/4ZCPoVlWK99APdTb5AGQAG/*/Max_Manner_c_Nauska_5858x.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+            ],
+        ];
+
+        $groschen = new Groschen('9789522796844');
+        $this->assertContains($supportingResource, $groschen->getSupportingResources());
+    }
+
+    /**
      * Test getting Bazar 3D cover image
      * @return void
      */
