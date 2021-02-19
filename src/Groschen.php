@@ -843,7 +843,7 @@ class Groschen implements ProductInterface
             return null;
         }
 
-        return DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->OriginalPublishingDate);
+        return DateTime::createFromFormat('Y-m-d', substr($this->product->OriginalPublishingDate, 0, 10));
     }
 
     /**
@@ -856,7 +856,7 @@ class Groschen implements ProductInterface
             return null;
         }
 
-        return DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->publishingDate);
+        return DateTime::createFromFormat('Y-m-d', substr($this->product->publishingDate, 0, 10));
     }
 
     /**
@@ -1189,13 +1189,13 @@ class Groschen implements ProductInterface
 
         // Add original publishing date
         if (!empty($this->product->publishingDate)) {
-            $publishingDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->publishingDate);
+            $publishingDate = DateTime::createFromFormat('Y-m-d', substr($this->product->publishingDate, 0, 10));
             $publishingDates->push(['PublishingDateRole' => '01', 'Date' => $publishingDate->format('Ymd')]);
         }
 
         // Add Embargo / First permitted day of sale
         if (!empty($this->product->firstSellingDay)) {
-            $embargoDate = DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->firstSellingDay);
+            $embargoDate = DateTime::createFromFormat('Y-m-d', substr($this->product->firstSellingDay, 0, 10));
             $publishingDates->push(['PublishingDateRole' => '02', 'Date' => $embargoDate->format('Ymd')]);
         }
 
@@ -2414,11 +2414,11 @@ class Groschen implements ProductInterface
             foreach ($print->timePlanEntries as $timePlanEntry) {
                 if ($timePlanEntry->type->name === 'Delivery to warehouse') {
                     if(isset($timePlanEntry->planned)) {
-                        $printDates->push(['date' => DateTime::createFromFormat('Y-m-d*H:i:s', $timePlanEntry->planned)]);
+                        $printDates->push(['date' => DateTime::createFromFormat('Y-m-d', substr($timePlanEntry->planned, 0, 10))]);
                     }
 
                     if(isset($timePlanEntry->actual)) {
-                        $printDates->push(['date' => DateTime::createFromFormat('Y-m-d*H:i:s', $timePlanEntry->actual)]);
+                        $printDates->push(['date' => DateTime::createFromFormat('Y-m-d', substr($timePlanEntry->actual, 0, 10))]);
                     }
                 }
             }
@@ -2742,8 +2742,8 @@ class Groschen implements ProductInterface
                     'print' => $productionPlanEntry->print,
                     'id' => $timePlanEntry->type->id,
                     'name' => $timePlanEntry->type->name,
-                    'planned_date' => isset($timePlanEntry->planned) ? DateTime::createFromFormat('Y-m-d\TH:i:s', $timePlanEntry->planned) : null,
-                    'actual_date' => isset($timePlanEntry->actual) ? DateTime::createFromFormat('Y-m-d\TH:i:s', $timePlanEntry->actual) : null,
+                    'planned_date' => isset($timePlanEntry->planned) ? DateTime::createFromFormat('Y-m-d', substr($timePlanEntry->planned, 0, 10)) : null,
+                    'actual_date' => isset($timePlanEntry->actual) ? DateTime::createFromFormat('Y-m-d', substr($timePlanEntry->actual, 0, 10)) : null,
                 ]);
             }
         }
@@ -3315,7 +3315,7 @@ class Groschen implements ProductInterface
             return null;
         }
 
-        return DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->activeWebPeriod->startDate);
+        return DateTime::createFromFormat('Y-m-d', substr($this->product->activeWebPeriod->startDate, 0, 10));
     }
 
     /**
@@ -3328,7 +3328,7 @@ class Groschen implements ProductInterface
             return null;
         }
 
-        return DateTime::createFromFormat('Y-m-d*H:i:s', $this->product->activeWebPeriod->endDate);
+        return DateTime::createFromFormat('Y-m-d', substr($this->product->activeWebPeriod->endDate, 0, 10));
     }
 
     /**
@@ -3543,7 +3543,7 @@ class Groschen implements ProductInterface
                 $events->push([
                     'EventRole' => '31',
                     'EventName' => $activity->name,
-                    'EventDate' => DateTime::createFromFormat('Y-m-d*H:i:s', $activity->activityStartDate)->format('Ymd'),
+                    'EventDate' => DateTime::createFromFormat('Y-m-d', substr($activity->activityStartDate, 0, 10))->format('Ymd'),
                 ]);
             }
         }

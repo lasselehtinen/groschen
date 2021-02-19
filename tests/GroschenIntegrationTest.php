@@ -2091,6 +2091,19 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * During the migration the datestamps were changed, some had milliseconds and some not
+     * @return void
+     */
+    public function testGettingProductionPlanWhereDateIsInDifferentFormat() {
+        $groschen = new Groschen('9789510471425');
+        $productionPlan = $groschen->getProductionPlan();
+        $actualDate = $productionPlan->where('print', 1)->where('name', 'Definitive print run')->pluck('actual_date')->first();
+        $expectedDate = new DateTime('2021-02-12');
+
+        $this->assertSame($actualDate->format('Y-m-d'), $expectedDate->format('Y-m-d'));
+    }
+
+    /**
      * Test getting comments
      * @return void
      */
