@@ -843,7 +843,7 @@ class Groschen implements ProductInterface
             return null;
         }
 
-        return DateTime::createFromFormat('Y-m-d', substr($this->product->OriginalPublishingDate, 0, 10));
+        return DateTime::createFromFormat('!Y-m-d', substr($this->product->OriginalPublishingDate, 0, 10));
     }
 
     /**
@@ -856,7 +856,7 @@ class Groschen implements ProductInterface
             return null;
         }
 
-        return DateTime::createFromFormat('Y-m-d', substr($this->product->publishingDate, 0, 10));
+        return DateTime::createFromFormat('!Y-m-d', substr($this->product->publishingDate, 0, 10));
     }
 
     /**
@@ -1114,68 +1114,45 @@ class Groschen implements ProductInterface
      * Get the products publishing status (Onix codelist 64)
      * @return string
      */
-    public function getPublishingStatus($provider = 'Porvoon Kirjakeskus')
+    public function getPublishingStatus()
     {
-        if ($provider == 'Kirjavälitys') {
-            // For published and short run books, the books stocks affect the publishing status.
-            if (in_array($this->product->listingCode->name, ['Published', 'Short run'])) {
-                // For digital/immaterial products, we don't need to check the stock balances
-                if($this->isImmaterial()) {
-                    return '04';
-                }
-
-                // Check if the product has free stock
-                $onHand = $this->getSuppliers()->pluck('OnHand')->first();
-                $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
-
-                if ($hasStock) {
-                    return '04';
-                }
-
-                // If product has no stock, check if we have stock arrival date in the future
-                $tomorrow = new DateTime('tomorrow');
-                $stockArrivalDate = $this->getLatestStockArrivalDate();
-
-                return ($tomorrow > $stockArrivalDate) ? '06' : '04';
+        // For published and short run books, the books stocks affect the publishing status.
+        if (in_array($this->product->listingCode->name, ['Published', 'Short run'])) {
+            // For digital/immaterial products, we don't need to check the stock balances
+            if($this->isImmaterial()) {
+                return '04';
             }
 
-            // Other statuses
-            switch ($this->product->listingCode->name) {
-                case 'Sold out':
-                    return '07';
-                case 'Cancelled':
-                    return '01';
-                case 'Development':
-                    return '02';
-                case 'Exclusive Sales':
-                case 'Delivery block':
-                    return '04';
-                default:
-                    throw new Exception('Could not map product governing code ' . $this->product->listingCode->name . ' to publishing status');
+            // Check if the product has free stock
+            $onHand = $this->getSuppliers()->pluck('OnHand')->first();
+            $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
+
+            if ($hasStock) {
+                return '04';
             }
+
+            // If product has no stock, check if we have stock arrival date in the future
+            $tomorrow = new DateTime('tomorrow');
+            $stockArrivalDate = $this->getLatestStockArrivalDate();
+
+            return ($tomorrow > $stockArrivalDate) ? '06' : '04';
         }
 
-        if ($provider == 'Porvoon Kirjakeskus') {
-            switch ($this->product->listingCode->name) {
-                case 'Published':
-                case 'Exclusive Sales':
-                case 'Short run':
-                    return '04';
-                case 'Development':
-                    return '02';
-                case 'Sold out':
-                    return '07';
-                case 'Development-Confidential':
-                case 'Cancelled-Confidential':
-                case 'Exclusive - Direct Delivery':
-                    return '00';
-                case 'Cancelled':
-                    return '01';
-                case 'Delivery block':
-                    return '16';
-                default:
-                    throw new Exception('Could not map product governing code to publishing status');
-            }
+        // Other statuses
+        switch ($this->product->listingCode->name) {
+            case 'Sold out':
+                return '07';
+            case 'Cancelled':
+                return '01';
+            case 'Development':
+                return '02';
+            case 'Exclusive Sales':
+            case 'Delivery block':
+                return '04';
+            case 'Development-Confidential':
+                return '00';
+            default:
+                throw new Exception('Could not map product governing code ' . $this->product->listingCode->name . ' to publishing status');
         }
     }
 
@@ -1189,13 +1166,13 @@ class Groschen implements ProductInterface
 
         // Add original publishing date
         if (!empty($this->product->publishingDate)) {
-            $publishingDate = DateTime::createFromFormat('Y-m-d', substr($this->product->publishingDate, 0, 10));
+            $publishingDate = DateTime::createFromFormat('!Y-m-d', substr($this->product->publishingDate, 0, 10));
             $publishingDates->push(['PublishingDateRole' => '01', 'Date' => $publishingDate->format('Ymd')]);
         }
 
         // Add Embargo / First permitted day of sale
         if (!empty($this->product->firstSellingDay)) {
-            $embargoDate = DateTime::createFromFormat('Y-m-d', substr($this->product->firstSellingDay, 0, 10));
+            $embargoDate = DateTime::createFromFormat('!Y-m-d', substr($this->product->firstSellingDay, 0, 10));
             $publishingDates->push(['PublishingDateRole' => '02', 'Date' => $embargoDate->format('Ymd')]);
         }
 
@@ -1944,36 +1921,29 @@ class Groschen implements ProductInterface
         // Check if we have Thema interest age so we can divide to children / young adults
         $interestAge = $this->getThemaCodes()->where('subjectSchemeIdentifier', '98')->pluck('codeValue')->first();
 
-        if (!empty($interestAge)) {
-            switch ($interestAge) {
-                case '5AB':
-                case '5AC':
-                case '5AD':
-                case '5AF':
-                case '5AG':
-                case '5AH':
-                case '5AJ':
-                case '5AK':
-                case '5AL':
-                    return 'L';
-                    break;
-                case '5AM':
-                case '5AN':
-                case '5AP':
-                case '5AQ':
-                case '5AS':
-                case '5AT':
-                case '5AU':
-                    return 'N';
-                    break;
-                // Return null for other non-age related codes like 5X and 5HPD
-                default:
-                    return null;
-                    break;
-            }
+        switch ($interestAge) {
+            case '5AB':
+            case '5AC':
+            case '5AD':
+            case '5AF':
+            case '5AG':
+            case '5AH':
+            case '5AJ':
+            case '5AK':
+            case '5AL':
+                return 'L';
+            case '5AM':
+            case '5AN':
+            case '5AP':
+            case '5AQ':
+            case '5AS':
+            case '5AT':
+            case '5AU':
+                return 'N';
+            // Return null for other non-age related codes like 5X and 5HPD
+            default:
+                return null;
         }
-
-        return null;
     }
 
     /**
@@ -2414,11 +2384,11 @@ class Groschen implements ProductInterface
             foreach ($print->timePlanEntries as $timePlanEntry) {
                 if ($timePlanEntry->type->name === 'Delivery to warehouse') {
                     if(isset($timePlanEntry->planned)) {
-                        $printDates->push(['date' => DateTime::createFromFormat('Y-m-d', substr($timePlanEntry->planned, 0, 10))]);
+                        $printDates->push(['date' => DateTime::createFromFormat('!Y-m-d', substr($timePlanEntry->planned, 0, 10))]);
                     }
 
                     if(isset($timePlanEntry->actual)) {
-                        $printDates->push(['date' => DateTime::createFromFormat('Y-m-d', substr($timePlanEntry->actual, 0, 10))]);
+                        $printDates->push(['date' => DateTime::createFromFormat('!Y-m-d', substr($timePlanEntry->actual, 0, 10))]);
                     }
                 }
             }
@@ -2482,7 +2452,7 @@ class Groschen implements ProductInterface
         }
 
         // Add SalesOutlets where we have rights as "Retailer exclusive"
-        if ($distributionChannels->contains('hasRights', true)) {
+        if ($distributionChannels->containsStrict('hasRights', true)) {
             $retailerExclusiveSalesOutlets = $distributionChannels->where('hasRights', true)->map(function ($distributionChannel, $key) {
                 // Get IDValue
                 $salesOutletIdentifierIdValue = $this->getSalesOutletIdValue($distributionChannel['channel']);
@@ -2515,7 +2485,7 @@ class Groschen implements ProductInterface
         }
 
         // Add SalesOutlets where we don't have rights as "Retailer exception"
-        if ($distributionChannels->contains('hasRights', false)) {
+        if ($distributionChannels->containsStrict('hasRights', false)) {
             $retailerExceptionSalesOutlets = $distributionChannels->where('hasRights', false)->map(function ($distributionChannel, $key) {
                 // Get IDValue
                 $salesOutletIdentifierIdValue = $this->getSalesOutletIdValue($distributionChannel['channel']);
@@ -2742,8 +2712,8 @@ class Groschen implements ProductInterface
                     'print' => $productionPlanEntry->print,
                     'id' => $timePlanEntry->type->id,
                     'name' => $timePlanEntry->type->name,
-                    'planned_date' => isset($timePlanEntry->planned) ? DateTime::createFromFormat('Y-m-d', substr($timePlanEntry->planned, 0, 10)) : null,
-                    'actual_date' => isset($timePlanEntry->actual) ? DateTime::createFromFormat('Y-m-d', substr($timePlanEntry->actual, 0, 10)) : null,
+                    'planned_date' => isset($timePlanEntry->planned) ? DateTime::createFromFormat('!Y-m-d', substr($timePlanEntry->planned, 0, 10)) : null,
+                    'actual_date' => isset($timePlanEntry->actual) ? DateTime::createFromFormat('!Y-m-d', substr($timePlanEntry->actual, 0, 10)) : null,
                 ]);
             }
         }
@@ -2918,105 +2888,41 @@ class Groschen implements ProductInterface
      * Get products availability code
      * @return string|null
      */
-    public function getProductAvailability($provider = 'Porvoon Kirjakeskus')
+    public function getProductAvailability()
     {
-        if ($provider === 'Kirjavälitys') {
-            // Governing codes where the available stock affects
-            if (in_array($this->product->listingCode->name, ['Published', 'Short run'])) {
-                // Check if the product has free stock
-                $onHand = $this->getSuppliers()->pluck('OnHand')->first();
-                $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
+        // Governing codes where the available stock affects
+        if (in_array($this->product->listingCode->name, ['Published', 'Short run'])) {
+            // Check if the product has free stock
+            $onHand = $this->getSuppliers()->pluck('OnHand')->first();
+            $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
 
-                if ($hasStock) {
-                    return '21';
-                }
-
-                // If product has no stock, check if we have stock arrival date in the future
-                $tomorrow = new DateTime('tomorrow');
-                $stockArrivalDate = $this->getLatestStockArrivalDate();
-
-                return ($tomorrow > $stockArrivalDate) ? '31' : '32';
-            }
-
-            // Governing codes which are mapped directly where available stock does not affect
-            switch ($this->product->listingCode->name) {
-                case 'Sold out':
-                    return '40';
-                    break;
-                case 'Cancelled':
-                    return '01';
-                    break;
-                case 'Development':
-                    return '10';
-                    break;
-                case 'Exclusive Sales':
-                    return '30';
-                    break;
-                case 'Delivery block':
-                    return '34';
-                    break;
-            }
-
-            return null;
-        }
-
-        if ($provider === 'Porvoon Kirjakeskus') {
-            // Digital products
-            if ($this->isImmaterial()) {
-                // Only statuses Published and Development are affected by the publication date
-                if ($this->product->listingCode->name === 'Development' || $this->product->listingCode->name === 'Published') {
-                    // Either "In stock" or "Not yet available"
-                    return $this->isPublicationDatePassed() ? '21' : '10';
-                }
-
-                // All other governing codes
-                switch ($this->product->listingCode->name) {
-                    case 'Sold out':
-                    case 'Short Run':
-                        return '40';
-                }
-            }
-
-            // Governing codes which are mapped directly where available stock or publishing date do not affect
-            switch ($this->product->listingCode->name) {
-                case 'Development':
-                    return '10';
-                case 'Cancelled':
-                    return '01';
-                case 'Exclusive Sales':
-                    return '22';
-                case 'Development-Confidential':
-                case 'Cancelled-Confidential':
-                case 'Exclusive - Direct Delivery':
-                case 'Delivery block':
-                    return '40';
-                case 'Sold out':
-                    return '43';
-            }
-
-            // Already published product
-            if ($this->product->listingCode->name === 'Published') {
-                // Check if the product has free stock
-                $onHand = $this->getSuppliers()->pluck('OnHand')->first();
-                $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
-
-                if ($hasStock) {
-                    return '21';
-                }
-
-                $tomorrow = new DateTime('tomorrow');
-                $stockArrivalDate = $this->getLatestStockArrivalDate();
-
-                return ($tomorrow > $stockArrivalDate) ? '31' : '30';
-            }
-
-            // Short-run is always available
-            if ($this->product->listingCode->name === 'Short run') {
+            if ($hasStock) {
                 return '21';
             }
 
-            return null;
+            // If product has no stock, check if we have stock arrival date in the future
+            $tomorrow = new DateTime('tomorrow');
+            $stockArrivalDate = $this->getLatestStockArrivalDate();
+
+            return ($tomorrow > $stockArrivalDate) ? '31' : '32';
         }
+
+        // Governing codes which are mapped directly where available stock does not affect
+        switch ($this->product->listingCode->name) {
+            case 'Sold out':
+                return '40';
+            case 'Cancelled':
+                return '01';
+            case 'Development':
+                return '10';
+            case 'Exclusive Sales':
+                return '30';
+            case 'Delivery block':
+                return '34';
+        }
+
+        return null;
+
     }
 
     /**
@@ -3315,7 +3221,7 @@ class Groschen implements ProductInterface
             return null;
         }
 
-        return DateTime::createFromFormat('Y-m-d', substr($this->product->activeWebPeriod->startDate, 0, 10));
+        return DateTime::createFromFormat('!Y-m-d', substr($this->product->activeWebPeriod->startDate, 0, 10));
     }
 
     /**
@@ -3328,7 +3234,7 @@ class Groschen implements ProductInterface
             return null;
         }
 
-        return DateTime::createFromFormat('Y-m-d', substr($this->product->activeWebPeriod->endDate, 0, 10));
+        return DateTime::createFromFormat('!Y-m-d', substr($this->product->activeWebPeriod->endDate, 0, 10));
     }
 
     /**
@@ -3543,7 +3449,7 @@ class Groschen implements ProductInterface
                 $events->push([
                     'EventRole' => '31',
                     'EventName' => $activity->name,
-                    'EventDate' => DateTime::createFromFormat('Y-m-d', substr($activity->activityStartDate, 0, 10))->format('Ymd'),
+                    'EventDate' => DateTime::createFromFormat('!Y-m-d', substr($activity->activityStartDate, 0, 10))->format('Ymd'),
                 ]);
             }
         }

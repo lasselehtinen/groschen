@@ -383,6 +383,7 @@ class GroschenIntegrationTest extends TestCase
     {
         // Author
         $author = [
+            'Identifier' => 55133,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
             'PersonNameInverted' => 'Kyrö, Tuomas',
@@ -396,6 +397,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Graphic designer
         $graphicDesigner = [
+            'Identifier' => 58381,
             'SequenceNumber' => 2,
             'ContributorRole' => 'A11',
             'PersonNameInverted' => 'Tuominen, Mika',
@@ -425,6 +427,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Author
         $author = [
+            'Identifier' => 58898,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
             'PersonNameInverted' => 'Sunaakugan',
@@ -448,6 +451,7 @@ class GroschenIntegrationTest extends TestCase
 
         // First author
         $firstAuthor = [
+            'Identifier' => 57561,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
             'PersonNameInverted' => 'Govindji, Azmina',
@@ -461,6 +465,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Second author
         $secondAuthor = [
+            'Identifier' => 57560,
             'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
             'PersonNameInverted' => 'Worrall Thompson, Anthony',
@@ -484,6 +489,7 @@ class GroschenIntegrationTest extends TestCase
 
         // First author
         $firstAuthor = [
+            'Identifier' => 58980,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
             'PersonNameInverted' => 'Aarnio, Jari',
@@ -497,6 +503,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Second author
         $secondAuthor = [
+            'Identifier' => 54752,
             'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
             'PersonNameInverted' => 'Hänninen, Vepe',
@@ -519,6 +526,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Author should be first
         $author = [
+            'Identifier' => 59412,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
             'PersonNameInverted' => 'Fredman, Virve',
@@ -540,6 +548,7 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510415344');
 
         $editor = [
+            'Identifier' => 47964,
             'SequenceNumber' => 2,
             'ContributorRole' => 'B01',
             'PersonNameInverted' => 'Rouhiainen, Mikko',
@@ -770,7 +779,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPrice()
     {
-        $this->assertSame(17.90, $this->groschen->getPrice());
+        $this->assertSame(17.88, $this->groschen->getPrice());
     }
 
     /**
@@ -779,10 +788,10 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingMeasures()
     {
-        $this->assertContains(['MeasureType' => '01', 'Measurement' => 204, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
+        $this->assertContains(['MeasureType' => '01', 'Measurement' => 202, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
         $this->assertContains(['MeasureType' => '02', 'Measurement' => 136, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
-        $this->assertContains(['MeasureType' => '03', 'Measurement' => 14, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
-        $this->assertContains(['MeasureType' => '08', 'Measurement' => 240, 'MeasureUnitCode' => 'gr'], $this->groschen->getMeasures());
+        $this->assertContains(['MeasureType' => '03', 'Measurement' => 16, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
+        $this->assertContains(['MeasureType' => '08', 'Measurement' => 218, 'MeasureUnitCode' => 'gr'], $this->groschen->getMeasures());
 
         // eBook should not have any measures
         $groschen = new Groschen('9789510416860');
@@ -844,16 +853,6 @@ class GroschenIntegrationTest extends TestCase
         // Check that "Ellibs" is not added as a keyword
         $groschen = new Groschen('9789513170424');
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'Ellibs'], $groschen->getSubjects());
-    }
-
-    /**
-     * Test getting main edition if it does not have ISBN
-     * @return void
-     */
-    public function testGettingMainEditionIfDoesNotHaveIsbn()
-    {
-        $groschen = new Groschen('9789520422813');
-        $this->assertNull($groschen->getMainEditionIsbn());
     }
 
     /**
@@ -1123,7 +1122,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Delivery block
         $groschen = new Groschen('9789510359686');
-        $this->assertSame('16', $groschen->getPublishingStatus());
+        $this->assertSame('07', $groschen->getPublishingStatus());
     }
 
     /**
@@ -2094,7 +2093,8 @@ class GroschenIntegrationTest extends TestCase
      * During the migration the datestamps were changed, some had milliseconds and some not
      * @return void
      */
-    public function testGettingProductionPlanWhereDateIsInDifferentFormat() {
+    public function testGettingProductionPlanWhereDateIsInDifferentFormat()
+    {
         $groschen = new Groschen('9789510471425');
         $productionPlan = $groschen->getProductionPlan();
         $actualDate = $productionPlan->where('print', 1)->where('name', 'Definitive print run')->pluck('actual_date')->first();
@@ -2303,65 +2303,10 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting product availability
-     * @return void
-     */
-    public function testGettingProductAvailability()
-    {
-        // Development, digital and publishing date is in the future
-        $groschen = new Groschen('9789510438343');
-        $this->assertSame('10', $groschen->getProductAvailability());
-
-        // Published, digital and publishing date is in the future
-        $groschen = new Groschen('9789520429669');
-        $this->assertSame('10', $groschen->getProductAvailability());
-
-        // Published, digital and publishing date is in the past
-        $groschen = new Groschen('9789513151409');
-        $this->assertSame('21', $groschen->getProductAvailability());
-
-        // Cancelled digital product
-        $groschen = new Groschen('9789510384763');
-        $this->assertSame('01', $groschen->getProductAvailability());
-
-        // Published physical product that has stock
-        $groschen = new Groschen('9789513140045');
-        $this->assertSame('21', $groschen->getProductAvailability());
-
-        // Published physical product that does not have stock and no planned reprint date
-        $groschen = new Groschen('9789521610509');
-        $this->assertSame('31', $groschen->getProductAvailability());
-
-        // Published physical product that does not have stock but reprint is coming
-        $groschen = new Groschen('9789521613982');
-        $this->assertSame('30', $groschen->getProductAvailability());
-
-        // Short-run product with stock
-        $groschen = new Groschen('9789510407356');
-        $this->assertSame('21', $groschen->getProductAvailability());
-
-        // Short-run product without any stock
-        $groschen = new Groschen('9789510409701');
-        $this->assertSame('21', $groschen->getProductAvailability());
-
-        // Development-confidential should return 40
-        $groschen = new Groschen('9789510369401');
-        $this->assertSame('40', $groschen->getProductAvailability());
-
-        // Development, publishing date in the future
-        $groschen = new Groschen('9789510412626');
-        $this->assertSame('10', $groschen->getProductAvailability());
-
-        // Exclusive sales
-        $groschen = new Groschen('9789510408513');
-        $this->assertSame('22', $groschen->getProductAvailability());
-    }
-
-    /**
      * Test getting publishing status and product availability for Kirjavälitys
      * @return void
      */
-    public function testGettingPublishingStatusAndProductAvailabilityForKirjavalitys()
+    public function testGettingProductAvailability()
     {
         $provider = 'Kirjavälitys';
 
@@ -2896,6 +2841,7 @@ class GroschenIntegrationTest extends TestCase
     {
         // Author
         $author = [
+            'Identifier' => 62281,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
             'PersonNameInverted' => 'Manner, Max',
