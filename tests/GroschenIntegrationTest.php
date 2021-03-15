@@ -2045,6 +2045,16 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting print orders for digital products
+     * @return void
+     */
+    public function testGettingPrintOrdersForDigitalProduct()
+    {
+        $groschen = new Groschen('9789510433805');
+        $this->assertCount(0, $groschen->getPrintOrders());
+    }
+
+    /**
      * Test if product is main edition
      * @return void
      */
@@ -2424,6 +2434,10 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains($supplier, $this->groschen->getSuppliers());
     }
 
+    public function testGettingSupplierWithoutName() {
+        $groschen = new Groschen('9789510477137');
+        dd($groschen->getSuppliers());
+    }
     /**
      * Test getting fake supplier for digital product
      * @return void

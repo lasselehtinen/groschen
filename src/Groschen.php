@@ -2631,16 +2631,21 @@ class Groschen implements ProductInterface
      */
     public function getPrintOrders()
     {
+        // Collection for print orders
+        $printOrders = new Collection;
+
+        // For non-physical products return empty collection
+        if($this->isImmaterial()) {
+            return $printOrders;
+        }
+
         // Get the production print orders from Opus
         $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
         $opusPrintOrders = json_decode($response->getBody()->getContents());
 
-        // Collection for print orders
-        $printOrders = new Collection;
-
         foreach ($opusPrintOrders->prints as $print) {
             // Get deliveries
-            $response = $this->client->get('/v2/works/' . $this->workId . '/productions/' . $this->productionId . '/prints/' . $print->print . '/deliveryspecifications');
+            $response = $this->client->get('/v2/works/' . $this->workId . '/productions/' . $this->productionId . '/printnumbers/' . $print->print . '/deliveryspecifications');
             $opusDeliviries = json_decode($response->getBody()->getContents());
 
             // Store all delivieries to array for later use
@@ -3075,6 +3080,8 @@ class Groschen implements ProductInterface
                 ];
             }
         }
+
+        dd($json->data->stock_location);
 
         $suppliers->push([
             'SupplierRole' => '03',
