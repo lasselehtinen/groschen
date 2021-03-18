@@ -2833,8 +2833,21 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen(9789510392263);
         $this->assertCount(0, $groschen->getProductContentTypes());
 
-        // ePub3 with audio
-        $groschen = new Groschen(9789510439920);
+        // ePub3 without audio
+        $groschen = new Groschen(9789510477724);
+
+        $this->assertContains([
+            'ContentType' => '10',
+            'Primary' => true,
+        ], $groschen->getProductContentTypes());
+
+        $this->assertNotContains([
+            'ContentType' => '01',
+            'Primary' => false,
+        ], $groschen->getProductContentTypes());
+
+        // ePub 3 with audio
+        $groschen = new Groschen(9789510437940);
 
         $this->assertContains([
             'ContentType' => '10',
@@ -2845,6 +2858,7 @@ class GroschenIntegrationTest extends TestCase
             'ContentType' => '01',
             'Primary' => false,
         ], $groschen->getProductContentTypes());
+
     }
 
     /**

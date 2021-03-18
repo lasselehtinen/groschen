@@ -3081,8 +3081,6 @@ class Groschen implements ProductInterface
             }
         }
 
-        dd($json->data->stock_location);
-
         $suppliers->push([
             'SupplierRole' => '03',
             'SupplierIdentifiers' => $supplierIdentifiers,
@@ -3507,8 +3505,8 @@ class Groschen implements ProductInterface
             return $contentTypes;
         }
 
-        // Picture-and-audio book or ePub 3 with audio (has reader)
-        if ($this->getProductType() === 'Picture-and-audio book' || ($this->getProductType() === 'ePub3' && $this->getContributors()->contains('ContributorRole', 'E07'))) {
+        // Picture-and-audio book or ePub 3 with or without audio (technical binding type == ePub3 and "Contains audio" is checked)
+        if ($this->getProductType() === 'Picture-and-audio book') {
             $contentTypes->push([
                 'ContentType' => '10',
                 'Primary' => true,
@@ -3518,6 +3516,24 @@ class Groschen implements ProductInterface
                 'ContentType' => '01',
                 'Primary' => false,
             ]);
+
+            return $contentTypes;
+        }
+
+        // eBook 3s with or without audio
+        if ($this->getProductType() === 'ePub3') {
+            $contentTypes->push([
+                'ContentType' => '10',
+                'Primary' => true,
+            ]);
+
+            // Add audio book as a secondary content type if ePub 3 contains audio
+            if ($this->getTechnicalBindingType() === 'EPUB3' && (bool) $this->product->activePrint->ebookHasAudioFile === true) {
+                $contentTypes->push([
+                    'ContentType' => '01',
+                    'Primary' => false,
+                ]);
+            }
 
             return $contentTypes;
         }
