@@ -539,29 +539,34 @@ class Groschen implements ProductInterface
                 $contributorData['KeyNames'] = trim($contributor->contact->lastName);
             }
 
-            // Check if contact has biography an links
+            // Get biography and links
             $response = $this->searchClient->get('v2/contacts/' . $contributor->contact->id);
             $contact = json_decode($response->getBody()->getContents());
+
+            $response = $this->searchClient->get('v2/contacts/' . $contributor->contact->id . '/links');
+            $links = json_decode($response->getBody()->getContents());
+
+            // Add BiographicalNote
             $contributorData['BiographicalNote'] = collect($contact->texts)->filter(function ($text, $key) {
                 return $text->textType->name === 'Contact presentation';
             })->pluck('text')->first();
 
             // Add links
-            $contributorData['WebSites'] = collect($contact->urls)->map(function ($url, $key) {
+            $contributorData['WebSites'] = collect($links->contactLinks)->map(function ($link, $key) {
                 // Mapping Mockingbird link types to Onix codelist 73 values
                 $linkTypeMapping = [
-                    'webSite' => '06',
-                    'blog' => '23',
-                    'wiki' => '00',
-                    'facebook' => '42',
-                    'youtube' => '42',
-                    'trailer' => '42',
-                    'twitter' => '42',
+                    'Webpage' => '06',
+                    'Blog' => '23',
+                    'Wiki' => '00',
+                    'Facebook' => '42',
+                    'YouTube' => '42',
+                    'Trailer' => '42',
+                    'Twitter' => '42',
                 ];
 
                 return [
-                    'WebsiteRole' => $linkTypeMapping[$url->type],
-                    'Website' => $url->value,
+                    'WebsiteRole' => $linkTypeMapping[(string) $link->linkType->name],
+                    'Website' => (string) $link->value,
                 ];
             })->toArray();
 
