@@ -2434,7 +2434,8 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains($supplier, $this->groschen->getSuppliers());
     }
 
-    public function testGettingSupplierWithoutName() {
+    public function testGettingSupplierWithoutName()
+    {
         $groschen = new Groschen('9789510477137');
         dd($groschen->getSuppliers());
     }
@@ -2858,7 +2859,6 @@ class GroschenIntegrationTest extends TestCase
             'ContentType' => '01',
             'Primary' => false,
         ], $groschen->getProductContentTypes());
-
     }
 
     /**
