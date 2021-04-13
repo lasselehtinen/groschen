@@ -277,28 +277,16 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Get the products from (Onix codelist 150) - TODO
+     * Get the products from (Onix codelist 150)
      * @return string|null
      */
     public function getProductForm()
     {
-        switch ($this->product->bindingCode->id) {
-            // ePub2
-            case 'EPUB2':
-                return 'ED';
-            // ePub3
-            case 'EPUB3':
-                return 'ED';
-            // PDF
-            case 'PDF':
-                return 'EA';
-            // Miscellaneous
-            case 'MISC':
-                return 'ZZ';
-            // For all others we can just pick the two first letters
-            default:
-                return substr($this->product->bindingCode->id, 0, 2);
+        if (property_exists($this->product->bindingCode->customProperties, 'productForm') === false) {
+            throw new Exception('Binding code ' . $this->product->bindingCode->name . ' does not have ProductForm in custom properties. Contact support to add.');
         }
+
+        return $this->product->bindingCode->customProperties->productForm;
     }
 
     /**
@@ -307,20 +295,11 @@ class Groschen implements ProductInterface
      */
     public function getProductFormDetail()
     {
-        switch ($this->product->bindingCode->id) {
-            // ePub2
-            case 'EPUB2':
-                return 'E101';
-            // ePub3
-            case 'EPUB3':
-                return 'W993';
-            // PDF
-            case 'PDF':
-                return 'E107';
-            // Return last three characters if they are 2+4 combo
-            default:
-                return (strlen($this->product->bindingCode->id) === 6) ? substr($this->product->bindingCode->id, 2, 4) : null;
+        if (property_exists($this->product->bindingCode->customProperties, 'productFormDetail') === false) {
+            return null;
         }
+
+        return $this->product->bindingCode->customProperties->productFormDetail;
     }
 
     /**
