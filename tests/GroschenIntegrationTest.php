@@ -279,6 +279,23 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $this->assertContains($collection, $groschen->getCollections());
+
+        // Product with empty marketing series
+        $groschen = new Groschen('9789520409432');
+
+        $collection = [
+            'CollectionType' => '11', [
+                'TitleDetail' => [
+                    'TitleType' => '01',
+                    'TitleElement' => [
+                        'TitleElementLevel' => '02',
+                        'TitleText' => '',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertNotContains($collection, $groschen->getCollections());
     }
 
     /**
@@ -2434,11 +2451,6 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains($supplier, $this->groschen->getSuppliers());
     }
 
-    public function testGettingSupplierWithoutName()
-    {
-        $groschen = new Groschen('9789510477137');
-        dd($groschen->getSuppliers());
-    }
     /**
      * Test getting fake supplier for digital product
      * @return void

@@ -394,7 +394,7 @@ class Groschen implements ProductInterface
         }
 
         // Add products marketing serie
-        if (isset($this->product->marketingSerie)) {
+        if (!empty($this->product->marketingSerie)) {
             $collections->push([
                 'CollectionType' => '11', [
                     'TitleDetail' => [
