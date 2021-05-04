@@ -1897,37 +1897,11 @@ class Groschen implements ProductInterface
      */
     public function getFinnishBookTradeCategorisation()
     {
-        // Pocket books should always return 'T'
-        if ($this->getProductForm() === 'BC' && $this->getProductFormDetail() === 'B104') {
-            return 'T';
+        if (isset($this->product->libraryCodePrefix) === false) {
+            return null;
         }
 
-        // Check if we have Thema interest age so we can divide to children / young adults
-        $interestAge = $this->getThemaCodes()->where('subjectSchemeIdentifier', '98')->pluck('codeValue')->first();
-
-        switch ($interestAge) {
-            case '5AB':
-            case '5AC':
-            case '5AD':
-            case '5AF':
-            case '5AG':
-            case '5AH':
-            case '5AJ':
-            case '5AK':
-            case '5AL':
-                return 'L';
-            case '5AM':
-            case '5AN':
-            case '5AP':
-            case '5AQ':
-            case '5AS':
-            case '5AT':
-            case '5AU':
-                return 'N';
-            // Return null for other non-age related codes like 5X and 5HPD
-            default:
-                return null;
-        }
+        return $this->product->libraryCodePrefix->id;
     }
 
     /**
