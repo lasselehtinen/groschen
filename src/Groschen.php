@@ -478,7 +478,7 @@ class Groschen implements ProductInterface
 
         // Filter those team members that we don't have the Onix role mapping
         $teamMembers = collect($this->product->members)->filter(function ($teamMember) {
-            return !is_null($this->getContributorRole($teamMember->role->id));
+            return property_exists($teamMember->role->customProperties, 'onixCode');
         })->sortBy(function ($teamMember) {
             // We sort by priority level, sort order and then by the lastname
             $priorityLevel = (isset($teamMember->prioLevel)) ? $teamMember->prioLevel->id : 0;
@@ -505,7 +505,7 @@ class Groschen implements ProductInterface
             $contributorData = [
                 'Identifier' => $contributor->contact->id,
                 'SequenceNumber' => $sequenceNumber,
-                'ContributorRole' => $this->getContributorRole($contributor->role->id),
+                'ContributorRole' => $contributor->role->customProperties->onixCode,
                 'NamesBeforeKey' => trim($contributor->contact->firstName),
             ];
 
@@ -1962,62 +1962,6 @@ class Groschen implements ProductInterface
         } else {
             return null;
         }
-    }
-
-    /**
-     * Convert Schilling role to an Onix codelist 17: Contributor role code
-     * @param  string $role
-     * @return string|null
-     */
-    public function getContributorRole($role)
-    {
-        // Mapping Opus roles to Onix roles
-        $roleMappings = [
-            '301' => 'A19', // Afterword
-            '302' => 'B25', // Arranged by
-            '303' => 'Z01', // Assistant
-            '304' => 'A01', // Author
-            '305' => 'A06', // Composer
-            //'306' => '', // Coordinator
-            //'307' => '', // Copy Writer
-            '308' => 'A36', // Cover design or artwork by
-            '309' => 'B11', // Editor-in-chief
-            '310' => 'B01', // Editor
-            '311' => 'B11', // Editor in Chief
-            '312' => 'A22', // Epilogue
-            '313' => 'A23', // Foreword
-            //'314' => '', // Freelancer
-            '315' => 'A11', // Graphic Designer
-            '316' => 'A12', // Illustrator
-            '317' => 'A34', // Index
-            '318' => 'A24', // Introduction
-            //'319' => '', // Layout
-            '320' => 'A39', // Maps
-            '321' => 'E08', // Performed by
-            //'322' => '', // Photo editor
-            '323' => 'A13', // Photographer
-            '324' => 'A15', // Preface
-            //'325' => '', // Production Planner
-            //'326' => '', // Project Manager
-            '327' => 'A16', // Prologue
-            //'328' => '', // Proof reader
-            '329' => 'E07', // Reader
-            //'330' => '', // Responsible person
-            //'331' => '', // Senior Editor
-            '332' => 'E05', // Singer
-            //'333' => '', // Specialist
-            '334' => 'B06', // Translator
-            //'335' => '', // Studio
-            //'336' => '', // Printer
-            '337' => 'A36', // Cover design or artwork by
-            '338' => 'A11', // Designed by
-            '340' => 'A36', // Cover design or artwork by
-            '341' => 'A12', // Illustrator
-            '342' => 'A36', // Cover design or artwork by
-            '343' => 'A13', // Photographs by
-        ];
-
-        return (isset($roleMappings[$role])) ? $roleMappings[$role] : null;
     }
 
     /**
