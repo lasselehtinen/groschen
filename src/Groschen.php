@@ -3182,11 +3182,11 @@ class Groschen implements ProductInterface
      * @return string|null
      */
     public function getSalesStatus() {
-        if(!isset($this->product->effortType)) {
+        if(!isset($this->product->salesStatus)) {
             return null;
         }
 
-        return $this->product->effortType->name;
+        return $this->product->salesStatus->name;
     }
 
     /**

@@ -2658,8 +2658,8 @@ class GroschenIntegrationTest extends TestCase
     {
         $this->assertNull($this->groschen->getSalesStatus());
 
-        $groschen = new Groschen('9789510433058');
-        $this->assertSame('Star', $groschen->getSalesStatus());
+        $groschen = new Groschen('9789510381380');
+        $this->assertSame('Passive', $groschen->getSalesStatus());
     }
 
     /**
