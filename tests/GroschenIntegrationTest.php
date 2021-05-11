@@ -392,6 +392,27 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting contributors for edition that has unmapped team roles
+     * @return void
+     */
+    public function testGettingContributorsForEditionWithUnmappedRoles() {
+        // Author
+        $author = [
+            'Identifier' => 62256,
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'A01',
+            'PersonNameInverted' => 'Mercer, Leah',
+            'NamesBeforeKey' => 'Leah',
+            'KeyNames' => 'Mercer',
+            'BiographicalNote' => null,
+            'WebSites' => [],
+        ];
+
+        $groschen = new Groschen('9789523762091');
+        $this->assertContains($author, $groschen->getContributors());
+    }
+
+    /**
      * Test getting products contributors
      * @group contributors
      * @return void

@@ -478,7 +478,7 @@ class Groschen implements ProductInterface
 
         // Filter those team members that we don't have the Onix role mapping
         $teamMembers = collect($this->product->members)->filter(function ($teamMember) {
-            return property_exists($teamMember->role->customProperties, 'onixCode');
+            return property_exists($teamMember->role, 'customProperties') && property_exists($teamMember->role->customProperties, 'onixCode');
         })->sortBy(function ($teamMember) {
             // We sort by priority level, sort order and then by the lastname
             $priorityLevel = (isset($teamMember->prioLevel)) ? $teamMember->prioLevel->id : 0;
