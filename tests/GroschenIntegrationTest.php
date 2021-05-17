@@ -395,7 +395,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting contributors for edition that has unmapped team roles
      * @return void
      */
-    public function testGettingContributorsForEditionWithUnmappedRoles() {
+    public function testGettingContributorsForEditionWithUnmappedRoles()
+    {
         // Author
         $author = [
             'Identifier' => 62256,
