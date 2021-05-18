@@ -31,13 +31,13 @@ class Groschen implements ProductInterface
     private $productNumber;
 
     /**
-     * Opus work ID
+     * Mockingbird work ID
      * @var string
      */
     private $workId;
 
     /**
-     * Opus production ID
+     * Mockingbird production ID
      * @var string
      */
     private $productionId;
@@ -77,21 +77,21 @@ class Groschen implements ProductInterface
      */
     public function __construct($productNumber)
     {
-        // Get access token for Opus
+        // Get access token for Mockingbird
         $accessToken = Cache::remember('accessToken', 59, function () {
             $provider = new GenericProvider([
-                'clientId' => config('groschen.opus.clientId'),
-                'clientSecret' => config('groschen.opus.clientSecret'),
+                'clientId' => config('groschen.mockingbird.clientId'),
+                'clientSecret' => config('groschen.mockingbird.clientSecret'),
                 'redirectUri' => url('oauth2/callback'),
-                'urlAuthorize' => config('groschen.opus.urlAuthorize'),
-                'urlAccessToken' => config('groschen.opus.urlAccessToken'),
-                'urlResourceOwnerDetails' => config('groschen.opus.urlResourceOwnerDetails'),
+                'urlAuthorize' => config('groschen.mockingbird.urlAuthorize'),
+                'urlAccessToken' => config('groschen.mockingbird.urlAccessToken'),
+                'urlResourceOwnerDetails' => config('groschen.mockingbird.urlResourceOwnerDetails'),
             ]);
 
             // Try to get an access token using the resource owner password credentials grant
             return $provider->getAccessToken('password', [
-                'username' => config('groschen.opus.username'),
-                'password' => config('groschen.opus.password'),
+                'username' => config('groschen.mockingbird.username'),
+                'password' => config('groschen.mockingbird.password'),
                 'scope' => 'opus',
             ]);
         });
@@ -108,7 +108,7 @@ class Groschen implements ProductInterface
 
         // Create Guzzle and push the OAuth middleware to the handler stack
         $this->client = new Client([
-            'base_uri' => config('groschen.opus.hostname'),
+            'base_uri' => config('groschen.mockingbird.work_api_hostname'),
             'handler' => $stack,
             'auth' => 'oauth',
             'headers' => [
@@ -118,7 +118,7 @@ class Groschen implements ProductInterface
 
         // Create Guzzle and push the OAuth middleware to the handler stack
         $this->searchClient = new Client([
-            'base_uri' => config('groschen.opus.search_hostname'),
+            'base_uri' => config('groschen.mockingbird.contact_api_hostname'),
             'handler' => $stack,
             'auth' => 'oauth',
             'headers' => [
@@ -138,7 +138,7 @@ class Groschen implements ProductInterface
      */
     public function getEditionAndWorkId()
     {
-        // Search for the ISBN in Opus
+        // Search for the ISBN in Mockingbird
         $response = $this->client->get('v2/search/productions', [
             'query' => [
                 'q' => $this->productNumber,
@@ -152,11 +152,11 @@ class Groschen implements ProductInterface
         $json = json_decode($response->getBody()->getContents());
 
         if (count($json->results) == 0) {
-            throw new Exception('Could not find product in Opus.');
+            throw new Exception('Could not find product in Mockingbird.');
         }
 
         if (count($json->results) > 1) {
-            throw new Exception('Too many results found in Opus.');
+            throw new Exception('Too many results found in Mockingbird.');
         }
 
         return [
@@ -187,7 +187,7 @@ class Groschen implements ProductInterface
      */
     public function getProduct()
     {
-        // Get the production from Opus
+        // Get the production from Mockingbird
         try {
             $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId);
         } catch (ServerException $e) {
@@ -203,7 +203,7 @@ class Groschen implements ProductInterface
      */
     public function getPrintProductionPlan()
     {
-        // Get the production from Opus
+        // Get the production plan from Mockingbird
         try {
             $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
         } catch (ServerException $e) {
@@ -220,7 +220,7 @@ class Groschen implements ProductInterface
     public function getWorkLevel()
     {
         if($this->workLevelFetched === false) {
-            // Get the production from Opus
+            // Get the production from Mockingbird
             $response = $this->client->get('/v1/works/' . $this->workId);
             $this->workLevel = json_decode($response->getBody()->getContents());
             $this->workLevelFetched = true;
@@ -241,7 +241,7 @@ class Groschen implements ProductInterface
         $productIdentifiers->push([
             'ProductIDType' => '01',
             'id_type_name' => 'Werner Söderström Ltd - Internal product number',
-            'id_value' => $this->product->isbn,
+            'id_value' => intval($this->product->isbn),
         ]);
 
         // GTIN-13 and ISBN-13
@@ -249,7 +249,7 @@ class Groschen implements ProductInterface
             foreach (['03', '15'] as $id_value) {
                 $productIdentifiers->push([
                     'ProductIDType' => $id_value,
-                    'id_value' => $this->product->isbn,
+                    'id_value' => intval($this->product->isbn),
                 ]);
             }
         }
@@ -268,7 +268,7 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Get the products type AKA Opus binding code
+     * Get the products type
      * @return string
      */
     public function getProductType()
@@ -623,7 +623,7 @@ class Groschen implements ProductInterface
         if (isset($this->product->pages) && $this->product->pages > 0 && $this->isImmaterial() === false) {
             $extents->push([
                 'ExtentType' => '00',
-                'ExtentValue' => $this->product->pages,
+                'ExtentValue' => strval($this->product->pages),
                 'ExtentUnit' => '03',
             ]);
         }
@@ -641,14 +641,14 @@ class Groschen implements ProductInterface
                 // Hours and minutes HHHMM
                 $extents->push([
                     'ExtentType' => '09',
-                    'ExtentValue' => $extentValue,
+                    'ExtentValue' => strval($extentValue),
                     'ExtentUnit' => '15',
                 ]);
 
                 // Seconds
                 $extents->push([
                     'ExtentType' => '09',
-                    'ExtentValue' => (intval($audioPlaytimeHours) * 3600) + (intval($audioPlaytimeMinutes) * 60),
+                    'ExtentValue' => strval((intval($audioPlaytimeHours) * 3600) + (intval($audioPlaytimeMinutes) * 60)),
                     'ExtentUnit' => '06',
                 ]);
             }
@@ -658,19 +658,19 @@ class Groschen implements ProductInterface
         if (isset($this->product->numberOfCharacters)) {
             $extents->push([
                 'ExtentType' => '02',
-                'ExtentValue' => intval($this->product->numberOfCharacters),
+                'ExtentValue' => strval($this->product->numberOfCharacters),
                 'ExtentUnit' => '01',
             ]);
 
             $extents->push([
                 'ExtentType' => '10',
-                'ExtentValue' => intval(round($this->product->numberOfCharacters / 8.5)),
+                'ExtentValue' => strval(round($this->product->numberOfCharacters / 8.5)),
                 'ExtentUnit' => '02',
             ]);
 
             $extents->push([
                 'ExtentType' => '10',
-                'ExtentValue' => intval(max(1, round($this->product->numberOfCharacters / 1500))),
+                'ExtentValue' => strval(max(1, round($this->product->numberOfCharacters / 1500))),
                 'ExtentUnit' => '03',
             ]);
         }
@@ -679,7 +679,7 @@ class Groschen implements ProductInterface
         if($this->isImmaterial() && isset($this->product->pages) && $this->product->pages > 0) {
             $extents->push([
                 'ExtentType' => '08',
-                'ExtentValue' => $this->product->pages,
+                'ExtentValue' => strval($this->product->pages),
                 'ExtentUnit' => '03',
             ]);
         }
@@ -894,7 +894,7 @@ class Groschen implements ProductInterface
             $subjects->push([
                 'SubjectSchemeIdentifier' => '23',
                 'SubjectSchemeName' => 'Werner Söderström Ltd - Cost center',
-                'SubjectCode' => $this->getCostCenter(),
+                'SubjectCode' => strval($this->getCostCenter()),
                 'SubjectHeadingText' => $this->getCostCenterName(),
             ]);
         }
@@ -1512,7 +1512,7 @@ class Groschen implements ProductInterface
                     'ProductIdentifiers' => [
                         [
                             'ProductIDType' => '03',
-                            'IDValue' => $production->isbn,
+                            'IDValue' => intval($production->isbn),
                         ],
                     ],
                 ]);
@@ -1550,7 +1550,7 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Returns the BISAC code equivalent for Schilling sub-group
+     * Returns the BISAC code equivalent for Mockingbird sub-group
      * @return string|null
      */
     public function getBisacCode()
@@ -1613,7 +1613,7 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Returns the BIC code equivalent for Schilling sub-group
+     * Returns the BIC code equivalent for Mockingbird sub-group
      * @return string|null
      */
     public function getBicCode()
@@ -1690,7 +1690,7 @@ class Groschen implements ProductInterface
             return null;
         }
 
-        // Mapping from Schilling subgroup to Thema for adults
+        // Mapping from Mockingbird subgroup to Thema for adults
         $themaMappingTableAdults = [
             '1' => 'DNL',
             '2' => 'FM',
@@ -1744,7 +1744,7 @@ class Groschen implements ProductInterface
             '51' => 'XAM',
         ];
 
-        // Mapping from Schilling subgroup to Thema for children and young adults
+        // Mapping from Mockingbird subgroup to Thema for children and young adults
         $themaMappingTableChildren = [
             '1' => 'YNL',
             '2' => 'YFH',
@@ -1905,7 +1905,7 @@ class Groschen implements ProductInterface
      */
     public function getFiktiivisenAineistonLisaluokitus()
     {
-        // Mapping table from Schilling sub group to Fiktiivisen aineiston lisäluokitus
+        // Mapping table from Mockingbird sub group to Fiktiivisen aineiston lisäluokitus
         $mappingTable = [
             '2' => 'Fantasia',
             '4' => 'Historia',
@@ -1931,7 +1931,7 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Return Thema interest age / special interest qualifier based on the Schilling age group
+     * Return Thema interest age / special interest qualifier based on the Mockingbird age group
      * @return string|null
      */
     public function getThemaInterestAge()
@@ -2052,11 +2052,6 @@ class Groschen implements ProductInterface
      */
     public function getStatusCode()
     {
-        /*
-        if(!isset($this->product->listingCode->customProperties->schillingId_1001)) {
-            throw new Exception('Status is not mapped between Opus and Schilling');
-        }*/
-
         return intval($this->product->listingCode->customProperties->schillingId_1001);
     }
 
@@ -2270,7 +2265,7 @@ class Groschen implements ProductInterface
      */
     public function getLatestStockArrivalDate()
     {
-        // Get the production print orders from Opus
+        // Get the production print orders from Mockingbird
         $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
         $printOrders = json_decode($response->getBody()->getContents());
 
@@ -2424,7 +2419,7 @@ class Groschen implements ProductInterface
      */
     public function getSalesOutletIdValue($salesOutletName)
     {
-        // Mapping table for Opus
+        // Mapping table for Mockingbird
         $salesOutlets = [
             'Adlibris.com' => 'ADL',
             'Alma Talent' => 'ALT',
@@ -2536,19 +2531,19 @@ class Groschen implements ProductInterface
             return $printOrders;
         }
 
-        // Get the production print orders from Opus
+        // Get the production print orders from Mockingbird
         $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
-        $opusPrintOrders = json_decode($response->getBody()->getContents());
+        $prints = json_decode($response->getBody()->getContents());
 
-        foreach ($opusPrintOrders->prints as $print) {
+        foreach ($prints->prints as $print) {
             // Get deliveries
             $response = $this->client->get('/v2/works/' . $this->workId . '/productions/' . $this->productionId . '/printnumbers/' . $print->print . '/deliveryspecifications');
-            $opusDeliviries = json_decode($response->getBody()->getContents());
+            $mockingbirdDeliviries = json_decode($response->getBody()->getContents());
 
             // Store all delivieries to array for later use
             $deliveries = [];
 
-            foreach ($opusDeliviries->deliverySpecifications as $delivery) {
+            foreach ($mockingbirdDeliviries->deliverySpecifications as $delivery) {
                 $deliveries[] = [
                     'recipient' => $delivery->deliveryType->name,
                     'supplier' => $delivery->printerContact->name,
@@ -2603,14 +2598,14 @@ class Groschen implements ProductInterface
      */
     public function getProductionPlan()
     {
-        $productionPlan = new Collection;
+        $productionPlans = new Collection;
 
-        $opusProductionPlan = $this->getPrintProductionPlan();
+        $mockingbirdProductionPlan = $this->getPrintProductionPlan();
 
-        foreach ($opusProductionPlan->prints as $productionPlanEntry) {
+        foreach ($mockingbirdProductionPlan->prints as $productionPlanEntry) {
              // Add all time plan entries
             foreach ($productionPlanEntry->timePlanEntries as $timePlanEntry) {
-                $productionPlan->push([
+                $productionPlans->push([
                     'print' => $productionPlanEntry->print,
                     'id' => $timePlanEntry->type->id,
                     'name' => $timePlanEntry->type->name,
@@ -2620,7 +2615,7 @@ class Groschen implements ProductInterface
             }
         }
 
-        return $productionPlan;
+        return $productionPlans;
     }
 
     /**

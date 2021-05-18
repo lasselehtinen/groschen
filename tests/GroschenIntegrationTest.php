@@ -58,6 +58,7 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingProductIdentifiers()
     {
         // Product with valid GTIN/EAN/ISBN13
+
         $this->assertContains(['ProductIDType' => '01', 'id_type_name' => 'Werner Söderström Ltd - Internal product number', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
         $this->assertContains(['ProductIDType' => '03', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
         $this->assertContains(['ProductIDType' => '15', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
@@ -402,8 +403,8 @@ class GroschenIntegrationTest extends TestCase
             'Identifier' => 62256,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Mercer, Leah',
             'NamesBeforeKey' => 'Leah',
+            'PersonNameInverted' => 'Mercer, Leah',
             'KeyNames' => 'Mercer',
             'BiographicalNote' => null,
             'WebSites' => [],
@@ -425,8 +426,8 @@ class GroschenIntegrationTest extends TestCase
             'Identifier' => 55133,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Kyrö, Tuomas',
             'NamesBeforeKey' => 'Tuomas',
+            'PersonNameInverted' => 'Kyrö, Tuomas',
             'KeyNames' => 'Kyrö',
             'BiographicalNote' => null,
             'WebSites' => [],
@@ -439,8 +440,8 @@ class GroschenIntegrationTest extends TestCase
             'Identifier' => 58381,
             'SequenceNumber' => 2,
             'ContributorRole' => 'A11',
-            'PersonNameInverted' => 'Tuominen, Mika',
             'NamesBeforeKey' => 'Mika',
+            'PersonNameInverted' => 'Tuominen, Mika',
             'KeyNames' => 'Tuominen',
             'BiographicalNote' => null,
             'WebSites' => [],
@@ -467,10 +468,10 @@ class GroschenIntegrationTest extends TestCase
         // Author
         $author = [
             'Identifier' => 58898,
-            'SequenceNumber' => 1,
+            'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Sunaakugan',
             'NamesBeforeKey' => 'Sunaakugan',
+            'PersonNameInverted' => 'Sunaakugan',
             'KeyNames' => 'Sunaakugan',
             'BiographicalNote' => null,
             'WebSites' => [],
@@ -493,8 +494,8 @@ class GroschenIntegrationTest extends TestCase
             'Identifier' => 57561,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Govindji, Azmina',
             'NamesBeforeKey' => 'Azmina',
+            'PersonNameInverted' => 'Govindji, Azmina',
             'KeyNames' => 'Govindji',
             'BiographicalNote' => null,
             'WebSites' => [],
@@ -507,8 +508,8 @@ class GroschenIntegrationTest extends TestCase
             'Identifier' => 57560,
             'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Worrall Thompson, Anthony',
             'NamesBeforeKey' => 'Anthony',
+            'PersonNameInverted' => 'Worrall Thompson, Anthony',
             'KeyNames' => 'Worrall Thompson',
             'BiographicalNote' => null,
             'WebSites' => [],
@@ -531,8 +532,8 @@ class GroschenIntegrationTest extends TestCase
             'Identifier' => 58980,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Aarnio, Jari',
             'NamesBeforeKey' => 'Jari',
+            'PersonNameInverted' => 'Aarnio, Jari',
             'KeyNames' => 'Aarnio',
             'BiographicalNote' => null,
             'WebSites' => [],
@@ -545,8 +546,8 @@ class GroschenIntegrationTest extends TestCase
             'Identifier' => 54752,
             'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Hänninen, Vepe',
             'NamesBeforeKey' => 'Vepe',
+            'PersonNameInverted' => 'Hänninen, Vepe',
             'KeyNames' => 'Hänninen',
             'BiographicalNote' => null,
             'WebSites' => [],
@@ -568,8 +569,8 @@ class GroschenIntegrationTest extends TestCase
             'Identifier' => 59412,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Fredman, Virve',
             'NamesBeforeKey' => 'Virve',
+            'PersonNameInverted' => 'Fredman, Virve',
             'KeyNames' => 'Fredman',
             'BiographicalNote' => null,
             'WebSites' => [],
@@ -590,8 +591,8 @@ class GroschenIntegrationTest extends TestCase
             'Identifier' => 47964,
             'SequenceNumber' => 2,
             'ContributorRole' => 'B01',
-            'PersonNameInverted' => 'Rouhiainen, Mikko',
             'NamesBeforeKey' => 'Mikko',
+            'PersonNameInverted' => 'Rouhiainen, Mikko',
             'KeyNames' => 'Rouhiainen',
             'BiographicalNote' => null,
             'WebSites' => [],
@@ -847,6 +848,7 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingSubjects()
     {
         $subjects = $this->groschen->getSubjects();
+
         $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Main product group', 'SubjectCode' => '1', 'SubjectHeadingText' => 'Kotimainen kauno'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Product sub-group', 'SubjectCode' => '24', 'SubjectHeadingText' => 'Nykyromaanit'], $subjects);
@@ -1124,7 +1126,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('04', $this->groschen->getPublishingStatus());
 
         // Development
-        $groschen = new Groschen('9789510397374');
+        $groschen = new Groschen('9789510448380');
         $this->assertSame('02', $groschen->getPublishingStatus());
 
         // Exclusive sales
@@ -1234,7 +1236,7 @@ class GroschenIntegrationTest extends TestCase
                 'TaxRateCode' => 'Z',
                 'TaxRatePercent' => 10.0,
                 'TaxableAmount' => 16.25,
-                'TaxAmount' => 0,
+                'TaxAmount' => 0.0,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -1318,8 +1320,8 @@ class GroschenIntegrationTest extends TestCase
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 10.0,
-                'TaxableAmount' => 22.73,
-                'TaxAmount' => 2.27,
+                'TaxableAmount' => 22.7,
+                'TaxAmount' => 2.3,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -2011,7 +2013,7 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Get the distribution channels in Opus
+     * Get the distribution channels in Mockingbird
      * @return void
      */
     public function testGettingDistributionChannels()
@@ -2383,7 +2385,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('21', $groschen->getProductAvailability($provider));
 
         // Published product with 0 stock and no planned reprint in the future
-        $groschen = new Groschen('9789521618321');
+        $groschen = new Groschen('9789522790828');
         $this->assertSame('06', $groschen->getPublishingStatus($provider));
         $this->assertSame('31', $groschen->getProductAvailability($provider));
 
@@ -2894,8 +2896,8 @@ class GroschenIntegrationTest extends TestCase
             'Identifier' => 62281,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'PersonNameInverted' => 'Manner, Max',
             'NamesBeforeKey' => 'Max',
+            'PersonNameInverted' => 'Manner, Max',
             'KeyNames' => 'Manner',
             'BiographicalNote' => '<p><strong>Max Manner</strong> (s. 1965) on turkulainen, Luxemburgissa pitkään asunut kirjailija. Häneltä on ilmestynyt tähän mennessä kolmetoista romaania, viimeisimpänä <em>Kadotettujen kahvila</em> (2018). Manner on International Thriller Writersin jäsen. Hän viettää vapaa-aikansa moottoripyörien, ruskean labradorin ulkoiluttamisen, matkustelun ja suuhun sopivimman punaviinin etsinnän parissa.</p>',
             'WebSites' => [

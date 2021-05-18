@@ -24,28 +24,28 @@ class TestCase extends OrchestraTestCase
         $dotenv->required('ELVIS_PASSWORD');
         $dotenv->required('SOUNDCLOUD_CLIENTID');
         $dotenv->required('SOUNDCLOUD_CLIENTSECRET');
-        $dotenv->required('OPUS_HOSTNAME');
-        $dotenv->required('OPUS_SEARCH_HOSTNAME');
-        $dotenv->required('OPUS_CLIENT_ID');
-        $dotenv->required('OPUS_CLIENT_SECRET');
-        $dotenv->required('OPUS_OAUTH_BASE_URL');
-        $dotenv->required('OPUS_USERNAME');
-        $dotenv->required('OPUS_PASSWORD');
+        $dotenv->required('MOCKINGBIRD_WORK_API_HOSTNAME');
+        $dotenv->required('MOCKINGBIRD_CONTACT_API_HOSTNAME');
+        $dotenv->required('MOCKINGBIRD_CLIENT_ID');
+        $dotenv->required('MOCKINGBIRD_CLIENT_SECRET');
+        $dotenv->required('MOCKINGBIRD_OAUTH_BASE_URL');
+        $dotenv->required('MOCKINGBIRD_USERNAME');
+        $dotenv->required('MOCKINGBIRD_PASSWORD');
 
         $app['config']->set('groschen.elvis.hostname', $_ENV['ELVIS_HOSTNAME']);
         $app['config']->set('groschen.elvis.username', $_ENV['ELVIS_USERNAME']);
         $app['config']->set('groschen.elvis.password', $_ENV['ELVIS_PASSWORD']);
         $app['config']->set('groschen.soundcloud.clientId', $_ENV['SOUNDCLOUD_CLIENTID']);
         $app['config']->set('groschen.soundcloud.clientSecret', $_ENV['SOUNDCLOUD_CLIENTSECRET']);
-        $app['config']->set('groschen.opus.hostname', $_ENV['OPUS_HOSTNAME']);
-        $app['config']->set('groschen.opus.search_hostname', $_ENV['OPUS_SEARCH_HOSTNAME']);
-        $app['config']->set('groschen.opus.clientId', $_ENV['OPUS_CLIENT_ID']);
-        $app['config']->set('groschen.opus.clientSecret', $_ENV['OPUS_CLIENT_SECRET']);
-        $app['config']->set('groschen.opus.urlAuthorize', $_ENV['OPUS_OAUTH_BASE_URL'] . '/core/connect/authorize');
-        $app['config']->set('groschen.opus.urlAccessToken', $_ENV['OPUS_OAUTH_BASE_URL'] . '/core/connect/token');
-        $app['config']->set('groschen.opus.urlResourceOwnerDetails', $_ENV['OPUS_OAUTH_BASE_URL'] . '/core/connect/resource');
-        $app['config']->set('groschen.opus.username', $_ENV['OPUS_USERNAME']);
-        $app['config']->set('groschen.opus.password', $_ENV['OPUS_PASSWORD']);
+        $app['config']->set('groschen.mockingbird.work_api_hostname', $_ENV['MOCKINGBIRD_WORK_API_HOSTNAME']);
+        $app['config']->set('groschen.mockingbird.contact_api_hostname', $_ENV['MOCKINGBIRD_CONTACT_API_HOSTNAME']);
+        $app['config']->set('groschen.mockingbird.clientId', $_ENV['MOCKINGBIRD_CLIENT_ID']);
+        $app['config']->set('groschen.mockingbird.clientSecret', $_ENV['MOCKINGBIRD_CLIENT_SECRET']);
+        $app['config']->set('groschen.mockingbird.urlAuthorize', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'] . '/core/connect/authorize');
+        $app['config']->set('groschen.mockingbird.urlAccessToken', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'] . '/core/connect/token');
+        $app['config']->set('groschen.mockingbird.urlResourceOwnerDetails', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'] . '/core/connect/resource');
+        $app['config']->set('groschen.mockingbird.username', $_ENV['MOCKINGBIRD_USERNAME']);
+        $app['config']->set('groschen.mockingbird.password', $_ENV['MOCKINGBIRD_PASSWORD']);
     }
 
     /**

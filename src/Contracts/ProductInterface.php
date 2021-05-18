@@ -33,7 +33,7 @@ interface ProductInterface
     public function getProductComposition();
 
     /**
-     * Get the products type AKA Opus binding code
+     * Get the products type aka Mockingbird binding code
      * @return string
      */
     public function getProductType();

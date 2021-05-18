@@ -1,6 +1,6 @@
 {
     "name": "lasselehtinen/groschen",
-    "description": "Wrapper for Schilling Web Services",
+    "description": "Wrapper for Mockingbird",
     "type": "library",
     "license": "GPL-3.0-or-later",
     "authors": [

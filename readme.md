@@ -3,7 +3,7 @@
 
 ## Basics
 ### Purpose
-Groschen is an API wrapper for the Schilling Web Services. Purpose is to provide a general library, that will return basic information for the product like title, stakeholders, media type and so on. Elements that can return multiple values usually return a Laravel Collection and the structure is usually copied from the Onix standard. For example the getProductIdentifiers method returns the following Collection:
+Groschen is an API wrapper for Mockingbird. Purpose is to provide a general library, that will return basic information for the product like title, stakeholders, media type and so on. Elements that can return multiple values usually return a Laravel Collection and the structure is usually copied from the Onix standard. For example the getProductIdentifiers method returns the following Collection:
 
     Illuminate\Support\Collection {#224
       #items: array:3 [
