@@ -2441,6 +2441,7 @@ class Groschen implements ProductInterface
             'Prisma.fi' => 'SGR',
             'Supla' => 'SUP',
             'Elisa Kirja Kuukausitilaus' => 'ELK',
+            'Podit' => 'POY',
         ];
 
         if(!array_key_exists($salesOutletName, $salesOutlets)) {
