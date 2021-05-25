@@ -967,7 +967,6 @@ class GroschenIntegrationTest extends TestCase
         // 50 Kartat
         // 82 Pelit
         // 63 Musiikkiäänitteet
-
     }
 
 
