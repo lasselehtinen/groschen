@@ -899,6 +899,13 @@ class Groschen implements ProductInterface
             ]);
         }
 
+        // Kirjavälitys product group
+        $kirjavälitysProductGroup = $this->getKirjavälitysProductGroup();
+
+        if (is_array($kirjavälitysProductGroup)) {
+            $subjects->push($kirjavälitysProductGroup);
+        }
+
         // This is disabled until the Thema project has completed
         $themaCodes = collect([]);
 
@@ -1806,6 +1813,89 @@ class Groschen implements ProductInterface
         // Adults Thema mapping
         if (isset($this->product->subGroup->id) && array_key_exists($this->product->subGroup->id, $themaMappingTableAdults)) {
             return $themaMappingTableAdults[$this->product->subGroup->id];
+        }
+
+        return null;
+    }
+
+    /**
+     * Return the Kirjavälitys product group
+     * @return array|null
+     */
+    public function getKirjavälitysProductGroup()
+    {
+        // Product group mapping
+        $kirjavälitysProductGroups = [
+            '00' => 'Kotimainen Kaunokirjallisuus',
+            '01' => 'Käännetty Kaunokirjallisuus',
+            '03' => 'Tietokirjallisuus',
+            '04' => 'Lasten ja nuorten kirjat',
+            '06' => 'Pokkarit',
+            '64' => 'Äänikirjat',
+            '10' => 'Peruskoulun oppikirjat',
+            '20' => 'Oppikirjat',
+            '40' => 'Kalenterit',
+            '50' => 'Kartat',
+            '05' => 'Nuotit',
+            '63' => 'Musiikkiäänitteet',
+            '82' => 'Pelit',
+            '86' => 'Puuha- ja värityskirjat',
+            '80' => 'Myymälämateriaalit (telineet ym.)',
+        ];
+
+        switch ($this->product->mainGroup->name) {
+            case 'Kotimainen kauno':
+                $productGroup = '00';
+                break;
+            case 'Käännetty kauno':
+                $productGroup = '01';
+                break;
+            case 'Tietokirjallisuus':
+            case 'Kotimainen asiaproosa':
+            case 'Käännetty asiaproosa':
+                $productGroup = '03';
+                break;
+            case 'Kotimainen L&N':
+            case 'Käännetty L&N':
+                $productGroup = '04';
+                break;
+            default:
+                $productGroup = null;
+                break;
+        }
+
+        // Binding code overrides main group based mapping
+        switch ($this->getProductType()) {
+            case 'Pocket book':
+                $productGroup = '06';
+                break;
+            case 'CD':
+                $productGroup = '64';
+                break;
+        }
+
+        // For special cases like calendars, coloring books try to check if title contains a hint
+        if(Str::contains($this->product->title, 'kalenteri')) {
+            $productGroup = '40';
+        }
+
+        if(Str::contains($this->product->title, ['värityskirja', 'puuhakirja'])) {
+            $productGroup = '86';
+        }
+
+        // Marketing materials
+
+        if(Str::startsWith($this->getInternalProdNo(), '978') === false && Str::contains($this->product->title, ['lava', 'pöytäteline', 'kassi'])) {
+            $productGroup = '80';
+        }
+
+        if (array_key_exists($productGroup, $kirjavälitysProductGroups)) {
+            return [
+                'SubjectSchemeIdentifier' => '23',
+                'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä',
+                'SubjectCode' => $productGroup,
+                'SubjectHeadingText' => $kirjavälitysProductGroups[$productGroup],
+            ];
         }
 
         return null;
