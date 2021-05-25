@@ -1884,7 +1884,6 @@ class Groschen implements ProductInterface
         }
 
         // Marketing materials
-
         if(Str::startsWith($this->getInternalProdNo(), '978') === false && Str::contains($this->product->title, ['lava', 'pöytäteline', 'kassi'])) {
             $productGroup = '80';
         }
