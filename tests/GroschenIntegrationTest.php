@@ -2985,4 +2985,34 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789522796844');
         $this->assertContains($author, $groschen->getContributors());
     }
+
+    /**
+     * Test getting contributor dates (birth year)
+     * @return void
+     */
+    public function testGettingContributorDates()
+    {
+        // Author
+        $author = [
+            'Identifier' => 54801,
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'A01',
+            'NamesBeforeKey' => 'Tove',
+            'PersonNameInverted' => 'Jansson, Tove',
+            'KeyNames' => 'Jansson',
+            'BiographicalNote' => null,
+            'WebSites' => [],
+            'ContributorDates' => [
+                [
+                    'ContributorDateRole' => '50',
+                    'Date' => '1914',
+                    'DateFormat' => '05',
+                ],
+            ]
+        ];
+
+
+        $groschen = new Groschen('9789510469989');
+        $this->assertContains($author, $groschen->getContributors());
+    }
 }
