@@ -3045,5 +3045,18 @@ class GroschenIntegrationTest extends TestCase
 
             $this->assertContains($relation, $relatedProducts);
         }
+
+        // Check that the current product is filtered out
+        $relation = [
+            'ProductRelationCode' => '22',
+            'ProductIdentifiers' => [
+                [
+                    'ProductIDType' => '03',
+                    'IDValue' => '9789510469989',
+                ],
+            ],
+        ];
+
+        $this->assertNotContains($relation, $relatedProducts);
     }
 }

@@ -1554,7 +1554,8 @@ class Groschen implements ProductInterface
             $json = json_decode($response->getBody()->getContents());
 
             foreach ($json->results as $result) {
-                if(property_exists($result->document, 'isbn')) {
+                // Do not add current products
+                if(property_exists($result->document, 'isbn') && $this->productNumber !== $result->document->isbn) {
                     $relatedProducts->push([
                         'ProductRelationCode' => '22',
                         'ProductIdentifiers' => [
