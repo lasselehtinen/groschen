@@ -1547,7 +1547,7 @@ class Groschen implements ProductInterface
                     'q' => null,
                     'limit' => 999,
                     '$select' => 'id,workId,isbn',
-                    '$filter' => "(contactIds/any(t: t eq '" . $author['Identifier'] . "'))",
+                    '$filter' => "(contactRoles/any(t: t eq '" . $author['Identifier'] . "|304'))"
                 ],
             ]);
 
