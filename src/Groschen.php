@@ -2254,8 +2254,6 @@ class Groschen implements ProductInterface
             '5AU' => 17,
         ];
 
-
-
         if (!empty($interestAge) && array_key_exists($interestAge, $interestAges)) {
             $audienceRanges->push([
                 'AudienceRangeQualifier' => 17,
