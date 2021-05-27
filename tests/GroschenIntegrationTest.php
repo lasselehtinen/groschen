@@ -3059,4 +3059,24 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertNotContains($relation, $relatedProducts);
     }
+
+    /**
+     * Test getting work relation code
+     * @return void
+     */
+    public function testGettingRelatedWorks()
+    {
+        $workRelation = [
+            'WorkRelationCode' => '01',
+            'WorkIdentifier' => [
+                [
+                    'WorkIDType' => '01',
+                    'IDTypeName' => 'Werner Söderström teostunniste',
+                    'IDValue' => 243763,
+                ],
+            ],
+        ];
+
+        $this->assertContains($workRelation, $this->groschen->getRelatedWorks());
+    }
 }

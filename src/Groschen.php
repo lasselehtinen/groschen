@@ -1563,6 +1563,28 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get related works
+     * @return Collection
+     */
+    public function getRelatedWorks()
+    {
+        $relatedWorks = new Collection;
+
+        $relatedWorks->push([
+            'WorkRelationCode' => '01',
+            'WorkIdentifier' => [
+                [
+                    'WorkIDType' => '01',
+                    'IDTypeName' => 'Werner Söderström teostunniste',
+                    'IDValue' => intval($this->workId),
+                ],
+            ],
+        ]);
+
+        return $relatedWorks;
+    }
+
+    /**
      * Get the products tax rate
      * @return float
      */

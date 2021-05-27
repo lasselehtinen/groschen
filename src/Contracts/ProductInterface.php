@@ -213,6 +213,12 @@ interface ProductInterface
     public function getRelatedProducts();
 
     /**
+     * Get the related works
+     * @return Collection
+     */
+    public function getRelatedWorks();
+
+    /**
      * Is the product confidential?
      * @return boolean
      */
