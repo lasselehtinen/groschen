@@ -3068,7 +3068,7 @@ class GroschenIntegrationTest extends TestCase
     {
         $workRelation = [
             'WorkRelationCode' => '01',
-            'WorkIdentifier' => [
+            'WorkIdentifiers' => [
                 [
                     'WorkIDType' => '01',
                     'IDTypeName' => 'Werner Söderström teostunniste',

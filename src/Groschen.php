@@ -1572,7 +1572,7 @@ class Groschen implements ProductInterface
 
         $relatedWorks->push([
             'WorkRelationCode' => '01',
-            'WorkIdentifier' => [
+            'WorkIdentifiers' => [
                 [
                     'WorkIDType' => '01',
                     'IDTypeName' => 'Werner Söderström teostunniste',
