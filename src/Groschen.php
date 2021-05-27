@@ -922,7 +922,6 @@ class Groschen implements ProductInterface
         // This is disabled until the Thema project has completed
         $themaCodes = collect([]);
 
-        /*
         // Get Thema codes
         $themaCodes = $this->getThemaCodes();
 
@@ -932,15 +931,6 @@ class Groschen implements ProductInterface
                 'SubjectSchemeName' => $themaCode['subjectSchemeName'],
                 'SubjectCode' => $themaCode['codeValue'],
             ]);
-        }*/
-
-        // Add old sub-group and age groups as a backup if Thema is missing
-        if ($themaCodes->contains('subjectSchemeIdentifier', '93') === false) {
-            $subjects->push(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => $this->getThemaSubjectCode()]);
-        }
-
-        if ($themaCodes->contains('subjectSchemeIdentifier', '98') === false) {
-            $subjects->push(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age', 'SubjectCode' => $this->getThemaInterestAge()]);
         }
 
         // Fiktiivisen aineiston lisäluokitus
@@ -1731,137 +1721,6 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Return the Thema subject class
-     * @return string|null
-     */
-    public function getThemaSubjectCode()
-    {
-        if (empty($this->product->subGroup)) {
-            return null;
-        }
-
-        // Mapping from Mockingbird subgroup to Thema for adults
-        $themaMappingTableAdults = [
-            '1' => 'DNL',
-            '2' => 'FM',
-            '3' => 'DN',
-            '4' => 'NH',
-            '5' => 'FU',
-            '6' => 'VF',
-            '8' => 'FH',
-            '9' => 'WF',
-            '10' => 'JMC',
-            '11' => 'FBC',
-            '12' => 'WK',
-            '13' => 'WZS',
-            '14' => 'YBC',
-            '15' => 'YFB',
-            '16' => 'YN',
-            '17' => 'WN',
-            '18' => 'WZS',
-            '19' => 'WT',
-            '20' => 'AV',
-            '21' => 'DD',
-            '22' => 'FBA',
-            '23' => 'YFB',
-            '24' => 'FBA',
-            '25' => 'WZS',
-            '26' => 'WM',
-            '27' => 'DC',
-            '28' => 'WB',
-            '29' => 'YF',
-            '30' => 'X',
-            '31' => 'FL',
-            '32' => 'AK',
-            '33' => 'K',
-            '34' => 'QR',
-            '35' => 'FQ',
-            '36' => 'J',
-            '37' => 'W',
-            '38' => 'P',
-            '39' => 'WK',
-            '40' => 'YBG',
-            '41' => 'YB',
-            '42' => 'WJ',
-            '43' => 'S',
-            '44' => 'YD',
-            '45' => 'YNC',
-            '46' => 'VS',
-            '47' => 'FK',
-            '48' => 'S',
-            '49' => 'JW',
-            '50' => 'QD',
-            '51' => 'XAM',
-        ];
-
-        // Mapping from Mockingbird subgroup to Thema for children and young adults
-        $themaMappingTableChildren = [
-            '1' => 'YNL',
-            '2' => 'YFH',
-            '3' => 'YNB',
-            '4' => 'YNH',
-            '5' => 'YFQ',
-            //'6' => '', Family & health
-            '8' => 'YFCB',
-            // '9' => '', Handicrafts, decorative arts & crafts
-            //'10' => '', Child, developmental & lifespan psychology
-            '11' => 'YFA',
-            //'12' => '', Home & house maintenance
-            '13' => 'YZG',
-            '14' => 'YBC',
-            '15' => 'YFB',
-            '16' => 'YN',
-            '17' => 'YNN',
-            '18' => 'YZ',
-            //'19' => '', Travel & holiday
-            '20' => 'YNC',
-            '21' => 'YNDS',
-            //'22' => '', Modern & contemporary fiction
-            '23' => 'YFB',
-            //'24' => '', Modern & contemporary fiction
-            '25' => 'YZ',
-            '26' => 'YNPG',
-            '27' => 'YDP',
-            '28' => 'YNPC',
-            '29' => 'YF',
-            '30' => 'X',
-            '31' => 'YFG',
-            //'32' => '', Industrial / commercial art & design
-            //'33' => '', Economics, Finance, Business & Management
-            '34' => 'YNR',
-            '35' => 'YFQ',
-            '36' => 'YNK',
-            '37' => 'YNV',
-            //'38' => '', Mathematics & Science
-            //'39' => '', Home & house maintenance
-            '40' => 'YBG',
-            '41' => 'YB',
-            //'42' => '', Lifestyle & personal style guides
-            '43' => 'YNW',
-            '44' => 'YD',
-            '45' => 'YNC',
-            //'46' => '', Self-help & personal development
-            '47' => 'YFD',
-            '48' => 'YNW',
-            '49' => 'YNJ',
-            //'50' => '', Philosophy
-            '51' => 'XAM',
-        ];
-
-        // Use different mapping for children and young adults
-        if (isset($this->product->mainGroup) && ($this->product->mainGroup->id === '3' || $this->product->mainGroup->id === '4') && array_key_exists($this->product->subGroup->id, $themaMappingTableChildren)) {
-            return $themaMappingTableChildren[$this->product->subGroup->id];
-        }
-
-        // Adults Thema mapping
-        if (isset($this->product->subGroup->id) && array_key_exists($this->product->subGroup->id, $themaMappingTableAdults)) {
-            return $themaMappingTableAdults[$this->product->subGroup->id];
-        }
-
-        return null;
-    }
-
-    /**
      * Return the Kirjavälitys product group
      * @return array|null
      */
@@ -2327,28 +2186,37 @@ class Groschen implements ProductInterface
         // Collection for audiences
         $audiences = new Collection;
 
-        // If no age group defined, General/trade
-        if (!isset($this->product->interestAge)) {
-            $audienceCodeValue = '01'; // General/trade
-        } else {
-            // Map the age group to Audience
-            switch ($this->product->interestAge->name) {
-                case '0+':
-                case '3+':
-                case '5+':
-                case '7+':
-                case '9+':
-                case '10+':
-                case '12+':
-                    $audienceCodeValue = '02'; // Children/juvenile
-                    break;
-                case '15+':
-                    $audienceCodeValue = '03'; // Young adult
-                    break;
-                default:
-                    $audienceCodeValue = '01'; // General/trade
-                    break;
-            }
+        // Get Thema interest age
+        $interestAge = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->pluck('SubjectCode')->first();
+
+        // Map the Thema interest age to Audience
+        switch ($interestAge) {
+            // Children/juvenile
+            case '5AB':
+            case '5AC':
+            case '5AD':
+            case '5AF':
+            case '5AG':
+            case '5AH':
+            case '5AJ':
+            case '5AK':
+            case '5AL':
+            case '5AM':
+            case '5AN':
+            case '5AP':
+            case '5AQ':
+                $audienceCodeValue = '02';
+                break;
+            // Young adult
+            case '5AS':
+            case '5AT':
+            case '5AU':
+                $audienceCodeValue = '03';
+                break;
+            // General/trade as fallback
+            default:
+                $audienceCodeValue = '01';
+                break;
         }
 
         $audiences->push(['AudienceCodeType' => '01', 'AudienceCodeValue' => $audienceCodeValue]);
@@ -2365,24 +2233,36 @@ class Groschen implements ProductInterface
         // Collection for audience ranges
         $audienceRanges = new Collection;
 
+        $interestAge = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->pluck('SubjectCode')->first();
+
         $interestAges = [
-            '0+' => 0,
-            '3+' => 3,
-            '5+' => 6,
-            '7+' => 6,
-            '9+' => 9,
-            '10+' => 9,
-            '12+' => 12,
-            '15+' => 15,
+            '5AB' => 0,
+            '5AC' => 3,
+            '5AD' => 4,
+            '5AF' => 5,
+            '5AG' => 6,
+            '5AH' => 7,
+            '5AJ' => 8,
+            '5AK' => 9,
+            '5AL' => 10,
+            '5AM' => 11,
+            '5AN' => 12,
+            '5AP' => 13,
+            '5AQ' => 14,
+            '5AS' => 15,
+            '5AT' => 16,
+            '5AU' => 17,
         ];
 
-        if (!empty($this->product->interestAge) && array_key_exists($this->product->interestAge->name, $interestAges)) {
+
+
+        if (!empty($interestAge) && array_key_exists($interestAge, $interestAges)) {
             $audienceRanges->push([
                 'AudienceRangeQualifier' => 17,
                 'AudienceRangeScopes' => [
                     [
                         'AudienceRangePrecision' => '03', // From
-                        'AudienceRangeValue' => $interestAges[$this->product->interestAge->name],
+                        'AudienceRangeValue' => $interestAges[$interestAge],
                     ],
                 ],
             ]);

@@ -1042,7 +1042,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(1, $groschen->getAudiences());
 
         // Young adult
-        $groschen = new Groschen('9789510434444');
+        $groschen = new Groschen('9789510479957');
         $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '03'], $groschen->getAudiences());
         $this->assertCount(1, $groschen->getAudiences());
     }
@@ -1068,11 +1068,11 @@ class GroschenIntegrationTest extends TestCase
             ],
             '5+' => [
                 'gtin' => 9789513176730,
-                'expectedAudienceRange' => 6,
+                'expectedAudienceRange' => 5,
             ],
             '7+' => [
                 'gtin' => 9789510426319,
-                'expectedAudienceRange' => 6,
+                'expectedAudienceRange' => 7,
             ],
             '9+' => [
                 'gtin' => 9789510411735,
@@ -1080,15 +1080,15 @@ class GroschenIntegrationTest extends TestCase
             ],
             '10+' => [
                 'gtin' => 9789520412050,
-                'expectedAudienceRange' => 9,
+                'expectedAudienceRange' => 10,
             ],
             '12+' => [
                 'gtin' => 9789521619571,
                 'expectedAudienceRange' => 12,
             ],
-            '15+' => [
+            '14+' => [
                 'gtin' => 9789510401521,
-                'expectedAudienceRange' => 15,
+                'expectedAudienceRange' => 14,
             ],
         ];
 
