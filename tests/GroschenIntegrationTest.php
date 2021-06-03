@@ -1676,9 +1676,9 @@ class GroschenIntegrationTest extends TestCase
             $this->assertContains($relation, $this->groschen->getRelatedProducts());
         }
 
-        // Product without any relations
+        // Product without any product relations
         $groschen = new Groschen('9789513160753');
-        $this->assertCount(0, $groschen->getRelatedProducts());
+        $this->assertCount(0, $groschen->getRelatedProducts()->where('ProductRelationCode', '06'));
     }
 
     /**
