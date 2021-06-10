@@ -933,11 +933,6 @@ class Groschen implements ProductInterface
             ]);
         }
 
-        // Fiktiivisen aineiston lisäluokitus
-        if (isset($this->product->mainGroup, $this->product->subGroup)) {
-            $subjects->push(['SubjectSchemeIdentifier' => '80', 'SubjectSchemeName' => 'Fiktiivisen aineiston lisäluokitus', 'SubjectCode' => $this->getFiktiivisenAineistonLisaluokitus()]);
-        }
-
         // Suomalainen kirja-alan luokitus
         $subjects->push(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => $this->getFinnishBookTradeCategorisation()]);
 
@@ -1910,37 +1905,6 @@ class Groschen implements ProductInterface
         }
 
         return $this->product->libraryCodePrefix->id;
-    }
-
-    /**
-     * Return the Fiktiivisen aineiston lisäluokitus if applicable
-     * @return string|null
-     */
-    public function getFiktiivisenAineistonLisaluokitus()
-    {
-        // Mapping table from Mockingbird sub group to Fiktiivisen aineiston lisäluokitus
-        $mappingTable = [
-            '2' => 'Fantasia',
-            '4' => 'Historia',
-            '5' => 'Huumori',
-            '8' => 'Jännitys',
-            '17' => 'Eläimet',
-            '22' => 'Novellit',
-            '31' => 'Scifi',
-            '34' => 'Uskonto',
-            '35' => 'Romantiikka',
-            '43' => 'Urheilu',
-            '47' => 'Kauhu',
-            '48' => 'Erä',
-            '49' => 'Sota',
-        ];
-
-        // Return "Fiktiivisen aineiston lisäluokitus" if mapping exist and main group is not "Tietokirjallisuus" aka Non-fiction
-        if ($this->product->mainGroup->name !== 'Tietokirjallisuus' && isset($this->product->subGroup->id) && array_key_exists($this->product->subGroup->id, $mappingTable)) {
-            return $mappingTable[$this->product->subGroup->id];
-        } else {
-            return null;
-        }
     }
 
     /**
