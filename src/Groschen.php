@@ -1762,25 +1762,27 @@ class Groschen implements ProductInterface
             '80' => 'Myymälämateriaalit (telineet ym.)',
         ];
 
-        switch ($this->product->mainGroup->name) {
-            case 'Kotimainen kauno':
-                $productGroup = '00';
-                break;
-            case 'Käännetty kauno':
-                $productGroup = '01';
-                break;
-            case 'Tietokirjallisuus':
-            case 'Kotimainen asiaproosa':
-            case 'Käännetty asiaproosa':
-                $productGroup = '03';
-                break;
-            case 'Kotimainen L&N':
-            case 'Käännetty L&N':
-                $productGroup = '04';
-                break;
-            default:
-                $productGroup = null;
-                break;
+        if (isset($this->product->mainGroup)) {
+            switch ($this->product->mainGroup->name) {
+                case 'Kotimainen kauno':
+                    $productGroup = '00';
+                    break;
+                case 'Käännetty kauno':
+                    $productGroup = '01';
+                    break;
+                case 'Tietokirjallisuus':
+                case 'Kotimainen asiaproosa':
+                case 'Käännetty asiaproosa':
+                    $productGroup = '03';
+                    break;
+                case 'Kotimainen L&N':
+                case 'Käännetty L&N':
+                    $productGroup = '04';
+                    break;
+                default:
+                    $productGroup = null;
+                    break;
+            }
         }
 
         // Binding code overrides main group based mapping
@@ -1807,7 +1809,7 @@ class Groschen implements ProductInterface
             $productGroup = '80';
         }
 
-        if (array_key_exists($productGroup, $kirjavälitysProductGroups)) {
+        if (isset($productGroup) && array_key_exists($productGroup, $kirjavälitysProductGroups)) {
             return [
                 'SubjectSchemeIdentifier' => '23',
                 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä',
