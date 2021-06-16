@@ -499,4 +499,10 @@ interface ProductInterface
      * @return Collection
      */
     public function getProductContentTypes();
+
+    /**
+     * Get the NotificationType
+     * @return string
+     */
+    public function getNotificationType();
 }

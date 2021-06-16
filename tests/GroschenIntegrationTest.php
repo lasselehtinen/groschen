@@ -3078,4 +3078,21 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($workRelation, $this->groschen->getRelatedWorks());
     }
+
+    /**
+     * Test getting the Onix notification type
+     * @return void
+     */
+    public function testGettingNotificationType() {
+        // Already published product
+        $this->assertSame('03', $this->groschen->getNotificationType());
+
+        // Publishing date in the future
+        $groschen = new Groschen('9789510453469');
+        $this->assertSame('02', $groschen->getNotificationType());
+
+        // Exclusive sales
+        $groschen = new Groschen('9789513181611');
+        $this->assertSame('01', $groschen->getNotificationType());
+    }
 }

@@ -3449,4 +3449,34 @@ class Groschen implements ProductInterface
         return $contentTypes;
     }
 
+    /**
+     * Get the NotificationType
+     * @return string
+     */
+    public function getNotificationType()
+    {
+        // Use OriginalPublishingDate if given, other fallback to PublishingDate
+        $dateRole = ($this->getPublishingDates()->contains('PublishingDateRole', '01')) ? '01' : '12';
+
+        // Convert to DateTime
+        $publicationDate = DateTime::createFromFormat('Ymd', $this->getPublishingDates()->where('PublishingDateRole', $dateRole)->pluck('Date')->first());
+
+        // Create new current date
+        $currentDate = new DateTime();
+
+        // If publication date is in the future, use Advance notification (before publication)
+        // Otherwise use 'Notification confirmed on publication'
+        if ($publicationDate > $currentDate) {
+            $value = '02';
+        } else {
+            $value = '03';
+        }
+
+        // Product that has the status "Exclusive sales" should return 01 - Early notification from Codelist 1
+        if ($this->getStatusCode() === 3) {
+            $value = '01';
+        }
+
+        return $value;
+    }
 }
