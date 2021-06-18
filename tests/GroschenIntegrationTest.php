@@ -1138,23 +1138,98 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingPublishers()
     {
         // Normal WSOY product
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'WSOY'], $this->groschen->getPublishers());
+        $this->assertContains([
+            'PublishingRole' => '01',
+            'PublisherIdentifiers' => [
+                [
+                    'PublisherIDType' => '01',
+                    'IDTypeName' => 'BR-ID',
+                    'IDValue' => '10001',
+                ],
+                [
+                    'PublisherIDType' => '15',
+                    'IDTypeName' => 'Y-tunnus',
+                    'IDValue' => '1522079-4',
+                ],
+            ],
+            'PublisherName' => 'WSOY'
+        ], $this->groschen->getPublishers());
 
         // Johnny Kniga product
         $groschen = new Groschen('9789510405314');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'WSOY'], $groschen->getPublishers());
+        $this->assertContains([
+            'PublishingRole' => '01',
+            'PublisherIdentifiers' => [
+                [
+                    'PublisherIDType' => '01',
+                    'IDTypeName' => 'BR-ID',
+                    'IDValue' => '10001',
+                ],
+                [
+                    'PublisherIDType' => '15',
+                    'IDTypeName' => 'Y-tunnus',
+                    'IDValue' => '1522079-4',
+                ],
+            ],
+            'PublisherName' => 'WSOY'
+        ], $groschen->getPublishers());
 
         // Normal Tammi product
         $groschen = new Groschen('9789513179564');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Tammi'], $groschen->getPublishers());
+        $this->assertContains([
+            'PublishingRole' => '01',
+            'PublisherIdentifiers' => [
+                [
+                    'PublisherIDType' => '01',
+                    'IDTypeName' => 'BR-ID',
+                    'IDValue' => '10004',
+                ],
+                [
+                    'PublisherIDType' => '15',
+                    'IDTypeName' => 'Y-tunnus',
+                    'IDValue' => '2628236-8',
+                ],
+            ],
+            'PublisherName' => 'Tammi'
+        ], $groschen->getPublishers());
 
         // Manga product
         $groschen = new Groschen('9789521619779');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Tammi'], $groschen->getPublishers());
+        $this->assertContains([
+            'PublishingRole' => '01',
+            'PublisherIdentifiers' => [
+                [
+                    'PublisherIDType' => '01',
+                    'IDTypeName' => 'BR-ID',
+                    'IDValue' => '10004',
+                ],
+                [
+                    'PublisherIDType' => '15',
+                    'IDTypeName' => 'Y-tunnus',
+                    'IDValue' => '2628236-8',
+                ],
+            ],
+            'PublisherName' => 'Tammi'
+        ], $groschen->getPublishers());
 
         // Kosmos product
         $groschen = new Groschen('9789523520189');
-        $this->assertContains(['PublishingRole' => '01', 'PublisherName' => 'Kosmos'], $groschen->getPublishers());
+        $this->assertContains([
+            'PublishingRole' => '01',
+            'PublisherIdentifiers' => [
+                [
+                    'PublisherIDType' => '01',
+                    'IDTypeName' => 'BR-ID',
+                    'IDValue' => '10020',
+                ],
+                [
+                    'PublisherIDType' => '15',
+                    'IDTypeName' => 'Y-tunnus',
+                    'IDValue' => '2675233-1',
+                ],
+            ],
+            'PublisherName' => 'Kosmos'
+        ], $groschen->getPublishers());
     }
 
     /**
