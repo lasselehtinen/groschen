@@ -141,7 +141,7 @@ class GroschenIntegrationTest extends TestCase
         // ePub3
         $groschen = new Groschen('9789510428788');
         $this->assertSame('ED', $groschen->getProductForm());
-        $this->assertSame('W993', $groschen->getProductFormDetail());
+        $this->assertSame('E101', $groschen->getProductFormDetail());
 
         // Application
         $groschen = new Groschen('9789510392263');
@@ -171,7 +171,7 @@ class GroschenIntegrationTest extends TestCase
         // Picture-and-audio book
         $groschen = new Groschen('9789510429945');
         $this->assertSame('ED', $groschen->getProductForm());
-        $this->assertSame('W994', $groschen->getProductFormDetail());
+        $this->assertSame('A305', $groschen->getProductFormDetail());
 
         // PDF e-book
         $groschen = new Groschen('9789510422281');

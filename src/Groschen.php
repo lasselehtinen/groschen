@@ -299,6 +299,16 @@ class Groschen implements ProductInterface
             return null;
         }
 
+        // Picture and audio books
+        if ($this->getProductType() === 'Picture-and-audio book') {
+            return 'A305';
+        }
+
+        // Replace W994 and W993 with E101
+        if (in_array($this->product->bindingCode->customProperties->productFormDetail, ['W993', 'W994'])) {
+            return 'E101';
+        }
+
         return $this->product->bindingCode->customProperties->productFormDetail;
     }
 
