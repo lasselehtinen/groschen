@@ -1310,6 +1310,7 @@ class GroschenIntegrationTest extends TestCase
     {
         // Publishing date
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20100601'], $this->groschen->getPublishingDates());
+        $this->assertNotContains(['PublishingDateRole' => '02', 'Date' => '20100601'], $this->groschen->getPublishingDates());
 
         // Public announcement date / Season
         $this->assertContains(['PublishingDateRole' => '09', 'Date' => '2010 Spring', 'Format' => 12], $this->groschen->getPublishingDates());
@@ -1332,6 +1333,12 @@ class GroschenIntegrationTest extends TestCase
         // Product with only "actual date"
         $groschen = new Groschen('9789510437605');
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20181106'], $groschen->getPublishingDates());
+        $this->assertNotContains(['PublishingDateRole' => '02', 'Date' => '20181106'], $groschen->getPublishingDates());
+
+        // Digital product should return 02 - Sales embargo date with same value as publishing date
+        $groschen = new Groschen('9789510464946');
+        $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20210701'], $groschen->getPublishingDates());
+        $this->assertContains(['PublishingDateRole' => '02', 'Date' => '20210701'], $groschen->getPublishingDates());
     }
 
     /**
