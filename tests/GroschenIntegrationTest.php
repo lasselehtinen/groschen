@@ -2755,11 +2755,8 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingContacts()
     {
-        $this->markTestIncomplete(
-            'The access rights to contacts have been removed from the test user'
-        );
-
         $contact = [
+            'id' => 57313,
             'firstName' => 'Veikko',
             'lastName' => 'Neuvonen',
             'supplierId' => 20004662,

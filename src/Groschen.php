@@ -3107,13 +3107,12 @@ class Groschen implements ProductInterface
             $json = json_decode($response->getBody()->getContents());
 
             foreach ($json->results as $result) {
-                if(isset($result->document->erpSupplierId)) {
-                    $contacts->push([
-                        'firstName' => optional($result->document)->firstName,
-                        'lastName' => optional($result->document)->lastName,
-                        'supplierId' => intval($result->document->erpSupplierId),
-                    ]);
-                }
+                $contacts->push([
+                    'id' => intval($result->document->id),
+                    'firstName' => optional($result->document)->firstName,
+                    'lastName' => optional($result->document)->lastName,
+                    'supplierId' => (property_exists($result->document, 'erpSupplierId')) ? intval($result->document->erpSupplierId) : null,
+                ]);
             }
 
             // Increase offset
