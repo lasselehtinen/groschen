@@ -3335,7 +3335,7 @@ class Groschen implements ProductInterface
 
             $themaCodes->push([
                 'codeValue' => $themaCode->themaCodeValue,
-                'subjectSchemeIdentifier' => $subjectSchemeIdentifier,
+                'subjectSchemeIdentifier' => strval($subjectSchemeIdentifier),
                 'subjectSchemeName' => $subjectSchemeName,
                 'sortOrder' => $themaCode->sortOrder,
 
