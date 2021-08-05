@@ -1923,10 +1923,12 @@ class Groschen implements ProductInterface
                                 $subjectSchemeName = 'KAUNO - ontology for fiction';
                                 break;
                             case 'yso':
+                            case 'yso/fin':
                                 $subjectSchemeIdentifier = '71';
                                 $subjectSchemeName = 'YSO - General Finnish ontology';
                                 break;
                             case 'ysa':
+                            case 'ysa/fin':
                                 $subjectSchemeIdentifier = '64';
                                 $subjectSchemeName = 'YSA - General Finnish thesaurus';
                                 break;
