@@ -1945,7 +1945,7 @@ class Groschen implements ProductInterface
                         // Go through all the headings/subjects
                         if(isset($subject->heading) && is_array($subject->heading)) {
                             foreach ($subject->heading as $heading) {
-                                if ($heading !== 'Ellibs') {
+                                if ($heading !== 'Ellibs' && substr($heading, -1) !== '.') {
                                     $keywords[] = [
                                         'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
                                         'SubjectSchemeName' => $subjectSchemeName,

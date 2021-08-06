@@ -3164,4 +3164,16 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789513181611');
         $this->assertSame('01', $groschen->getNotificationType());
     }
+
+    /**
+     * Test that duplicate Finna keywords are filtered out
+     * @return void
+     */
+    public function testDuplicateFinnaKeywordsAreFilteredOut() {
+        $groschen = new Groschen('9789520408657');
+        $subjects = $groschen->getSubjects();
+
+        $this->assertContains(['SubjectSchemeIdentifier' => '71', 'SubjectSchemeName' => 'YSO - General Finnish ontology', 'SubjectCode' => 'käsityöt'], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '71', 'SubjectSchemeName' => 'YSO - General Finnish ontology', 'SubjectCode' => 'käsityöt.'], $subjects);
+    }
 }
