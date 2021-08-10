@@ -415,6 +415,7 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Mercer',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'ContributorDates' => [],
         ];
 
         $groschen = new Groschen('9789523762091');
@@ -438,6 +439,13 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Kyrö',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'ContributorDates' => [
+                [
+                    'ContributorDateRole' => '50',
+                    'Date' => '1974',
+                    'DateFormat' => '05',
+                ],
+            ],
         ];
 
         $this->assertContains($author, $this->groschen->getContributors());
@@ -452,6 +460,7 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Tuominen',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'ContributorDates' => [],
         ];
 
         $this->assertContains($graphicDesigner, $this->groschen->getContributors());
@@ -482,6 +491,7 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Sunaakugan',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'ContributorDates' => [],
         ];
 
         $this->assertContains($author, $groschen->getContributors());
@@ -506,6 +516,7 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Govindji',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'ContributorDates' => [],
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -520,6 +531,7 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Worrall Thompson',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'ContributorDates' => [],
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -544,6 +556,7 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Aarnio',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'ContributorDates' => [],
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -558,6 +571,13 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Hänninen',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'ContributorDates' => [
+                [
+                    'ContributorDateRole' => '50',
+                    'Date' => '1959',
+                    'DateFormat' => '05',
+                ],
+            ],
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -581,6 +601,7 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Fredman',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'ContributorDates' => [],
         ];
 
         $this->assertContains($author, $groschen->getContributors(false));
@@ -603,6 +624,7 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Rouhiainen',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'ContributorDates' => [],
         ];
 
         $this->assertNotContains($editor, $groschen->getContributors(false));
@@ -864,7 +886,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'suomenkielinen kirjallisuus.;romaanit.;novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
@@ -872,7 +894,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;sodankäynti;sotarintama.;sodat.;kokemukset.;mielenterveyshäiriöt.;traumat.;psykiatrinen hoito.;sotilaat.;mielenterveys.;sotahistoria.;traumaperäinen stressireaktio.;psykiatria.;sotilaspsykiatria.;psykohistoria.;talvisota.;jatkosota.;Lapin sota.;sotarintama;kirjallisuuspalkinnot;sota;Suomi;1939-1945'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;sodankäynti;sotarintama;kirjallisuuspalkinnot;sota;Suomi;1939-1945'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
@@ -973,29 +995,6 @@ class GroschenIntegrationTest extends TestCase
         // 50 Kartat
         // 82 Pelit
         // 63 Musiikkiäänitteet
-    }
-
-
-    /**
-     * Test that manually given Thema subjects do not override the default mapping from sub-group
-     * @return void
-     */
-    public function testManuallyGivenThemaSubjectsDoesNotOverrideMapping()
-    {
-        $groschen = new Groschen('9789520426538');
-        $subjects = $groschen->getSubjects();
-
-        // Default mapping from "Lasten kuvakirjat" to YBC
-        $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YBC'], $subjects);
-
-        // Given Thema codes
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'YB'], $subjects);
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '94', 'SubjectSchemeName' => 'Thema place qualifier', 'SubjectCode' => '1F'], $subjects);
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '95', 'SubjectSchemeName' => 'Thema language qualifier', 'SubjectCode' => '2A'], $subjects);
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '96', 'SubjectSchemeName' => 'Thema time period qualifier', 'SubjectCode' => '3MP'], $subjects);
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '97', 'SubjectSchemeName' => 'Thema educational purpose qualifier', 'SubjectCode' => '4C'], $subjects);
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age / special interest qualifier', 'SubjectCode' => '5AC'], $subjects);
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '99'], $subjects);
     }
 
     /**
@@ -1571,26 +1570,26 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '02',
-                        'FeatureValue' => 5616,
+                        'FeatureValue' => 3658,
                     ],
                     [
                         'ResourceVersionFeatureType' => '03',
-                        'FeatureValue' => 3744,
+                        'FeatureValue' => 5616,
                     ],
                     [
                         'ResourceVersionFeatureType' => '04',
-                        'FeatureValue' => 'Max_Manner_c_Nauska_5858x.jpg',
+                        'FeatureValue' => 'Max_Manner_c_Nauska_5637x.jpg',
                     ],
                     [
                         'ResourceVersionFeatureType' => '05',
-                        'FeatureValue' => '11.8',
+                        'FeatureValue' => '9.8',
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 12343759,
+                        'FeatureValue' => 10325923,
                     ],
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/4ZCPoVlWK99APdTb5AGQAG/*/Max_Manner_c_Nauska_5858x.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/58orYt5TqjnAyBVgE454q3/*/Max_Manner_c_Nauska_5637x.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
         ];
 
