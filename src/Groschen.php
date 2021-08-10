@@ -290,16 +290,23 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Get the products form detail (Onix codelist 175) - TODO
+     * Get the products form details (Onix codelist 175)
      * @return string|null
      */
-    public function getProductFormDetail()
+    public function getProductFormDetails()
     {
-        if (property_exists($this->product->bindingCode->customProperties, 'productFormDetail') === false) {
-            return null;
+        $productFormDetails = new Collection;
+
+        if (property_exists($this->product->bindingCode->customProperties, 'productFormDetail') === true) {
+            $productFormDetails->push($this->product->bindingCode->customProperties->productFormDetail);
         }
 
-        return $this->product->bindingCode->customProperties->productFormDetail;
+        // Add additional entry for ePub 3's that contain audio
+        if (isset($this->product->technicalProductionType->customProperties->canContainAudioFile) && $this->product->technicalProductionType->customProperties->canContainAudioFile === true) {
+            $productFormDetails->push('A305');
+        }
+
+        return $productFormDetails;
     }
 
     /**
@@ -1969,7 +1976,7 @@ class Groschen implements ProductInterface
     public function getFinnishBookTradeCategorisation()
     {
         // Pocket books should always return 'T'
-        if ($this->getProductForm() === 'BC' && $this->getProductFormDetail() === 'B104') {
+        if ($this->getProductForm() === 'BC' && $this->getProductFormDetails()->contains('B104')) {
             return 'T';
         }
 
@@ -2075,7 +2082,11 @@ class Groschen implements ProductInterface
      */
     public function getBindingCode()
     {
-        return $this->getProductFormDetail();
+        if (property_exists($this->product->bindingCode->customProperties, 'productFormDetail') === false) {
+            return null;
+        }
+
+        return $this->product->bindingCode->customProperties->productFormDetail;
     }
 
     /**

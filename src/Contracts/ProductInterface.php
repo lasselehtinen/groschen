@@ -46,9 +46,9 @@ interface ProductInterface
 
     /**
      * Get the products form detail (Onix codelist 175)
-     * @return string|null
+     * @return Collection
      */
-    public function getProductFormDetail();
+    public function getProductFormDetails();
 
     /**
      * Get the products technical binding type

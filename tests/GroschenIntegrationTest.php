@@ -96,97 +96,104 @@ class GroschenIntegrationTest extends TestCase
      * Test getting products form and product form detail
      * @return void
      */
-    public function testGettingProductFormAndProductFormDetail()
+    public function testGettingProductFormAndProductFormDetails()
     {
         // Hardback
         $groschen = new Groschen('9789510405314');
         $this->assertSame('BB', $groschen->getProductForm());
-        $this->assertNull($groschen->getProductFormDetail());
+        $this->assertEmpty($groschen->getProductFormDetails());
 
         // Saddle-stitched
         $groschen = new Groschen('9789513173968');
         $this->assertSame('BF', $groschen->getProductForm());
-        $this->assertNull($groschen->getProductFormDetail());
+        $this->assertEmpty($groschen->getProductFormDetails());
 
         // Pocket book
         $groschen = new Groschen('9789510362938');
         $this->assertSame('BC', $groschen->getProductForm());
-        $this->assertSame('B104', $groschen->getProductFormDetail());
+        $this->assertContains('B104', $groschen->getProductFormDetails());
 
         // Spiral bound
         $groschen = new Groschen('9789513147013');
         $this->assertSame('BE', $groschen->getProductForm());
-        $this->assertNull($groschen->getProductFormDetail());
+        $this->assertEmpty($groschen->getProductFormDetails());
 
         // Flex
         $groschen = new Groschen('9789510425855');
         $this->assertSame('BC', $groschen->getProductForm());
-        $this->assertSame('B116', $groschen->getProductFormDetail());
+        $this->assertContains('B116', $groschen->getProductFormDetails());
 
         // Trade paperback or "Jättipokkari"
         $groschen = new Groschen('9789520403072');
         $this->assertSame('BC', $groschen->getProductForm());
-        $this->assertSame('B106', $groschen->getProductFormDetail());
+        $this->assertContains('B106', $groschen->getProductFormDetails());
 
         // Board book
         $groschen = new Groschen('9789521609336');
         $this->assertSame('BH', $groschen->getProductForm());
-        $this->assertNull($groschen->getProductFormDetail());
+        $this->assertEmpty($groschen->getProductFormDetails());
 
         // ePub2
         $groschen = new Groschen('9789513199388');
         $this->assertSame('ED', $groschen->getProductForm());
-        $this->assertSame('E101', $groschen->getProductFormDetail());
+        $this->assertContains('E101', $groschen->getProductFormDetails());
 
         // ePub3
         $groschen = new Groschen('9789510428788');
         $this->assertSame('ED', $groschen->getProductForm());
-        $this->assertSame('E101', $groschen->getProductFormDetail());
+        $this->assertContains('E101', $groschen->getProductFormDetails());
+        $this->assertNotContains('A305', $groschen->getProductFormDetails());
+
+        // ePub3 with additional audio
+        $groschen = new Groschen('9789520432850');
+        $this->assertSame('ED', $groschen->getProductForm());
+        $this->assertContains('E101', $groschen->getProductFormDetails());
+        $this->assertContains('A305', $groschen->getProductFormDetails());
 
         // Application
         $groschen = new Groschen('9789510392263');
         $this->assertSame('ED', $groschen->getProductForm());
-        $this->assertNull($groschen->getProductFormDetail());
+        $this->assertEmpty($groschen->getProductFormDetails());
 
         // Downloadable audio file
         $groschen = new Groschen('9789510428412');
         $this->assertSame('AJ', $groschen->getProductForm());
-        $this->assertSame('A103', $groschen->getProductFormDetail());
+        $this->assertContains('A103', $groschen->getProductFormDetails());
 
         // CD
         $groschen = new Groschen('9789510379110');
         $this->assertSame('AC', $groschen->getProductForm());
-        $this->assertSame('A101', $groschen->getProductFormDetail());
+        $this->assertContains('A101', $groschen->getProductFormDetails());
 
         // MP3-CD
         $groschen = new Groschen('9789520402983');
         $this->assertSame('AE', $groschen->getProductForm());
-        $this->assertSame('A103', $groschen->getProductFormDetail());
+        $this->assertContains('A103', $groschen->getProductFormDetails());
 
         // Paperback
         $groschen = new Groschen('9789510382745');
         $this->assertSame('BC', $groschen->getProductForm());
-        $this->assertNull($groschen->getProductFormDetail());
+        $this->assertEmpty($groschen->getProductFormDetails());
 
         // Picture-and-audio book
         $groschen = new Groschen('9789510429945');
         $this->assertSame('ED', $groschen->getProductForm());
-        $this->assertSame('A305', $groschen->getProductFormDetail());
+        $this->assertContains('A305', $groschen->getProductFormDetails());
 
         // PDF e-book
         $groschen = new Groschen('9789510422281');
         $this->assertSame('EA', $groschen->getProductForm());
-        $this->assertSame('E107', $groschen->getProductFormDetail());
+        $this->assertContains('E107', $groschen->getProductFormDetails());
 
         // Other audio format
         $groschen = new Groschen('9789510232644');
         $this->assertSame('AZ', $groschen->getProductForm());
-        $this->assertNull($groschen->getProductFormDetail());
+        $this->assertEmpty($groschen->getProductFormDetails());
 
         // Miscellaneous
         $groschen = new Groschen('6430060034020');
         $this->assertSame('ZZ', $groschen->getProductForm());
-        $this->assertNull($groschen->getProductFormDetail());
+        $this->assertEmpty($groschen->getProductFormDetails());
     }
 
      /**
@@ -2003,6 +2010,10 @@ class GroschenIntegrationTest extends TestCase
         // Product with library class with a prefix
         $groschen = new Groschen('9789513158699');
         $this->assertSame('L', $groschen->getFinnishBookTradeCategorisation());
+
+        // Pocket books should be always T
+        $groschen = new Groschen('9789520427467');
+        $this->assertSame('T', $groschen->getFinnishBookTradeCategorisation());
 
         // Product where product does not have library class
         $groschen = new Groschen('9789521606700');
