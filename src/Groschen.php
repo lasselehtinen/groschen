@@ -1248,7 +1248,16 @@ class Groschen implements ProductInterface
         if (!is_null($latestStockArrivalDate)) {
             $now = new DateTime();
             $publishingDateRole = ($latestStockArrivalDate < $now) ? '12' : '26';
-            $publishingDates->push(['PublishingDateRole' => $publishingDateRole, 'Date' => $latestStockArrivalDate->format('Ymd')]);
+
+            // Always add Last reprint date
+            if ($publishingDateRole === '12') {
+                $publishingDates->push(['PublishingDateRole' => $publishingDateRole, 'Date' => $latestStockArrivalDate->format('Ymd')]);
+            }
+
+            // Add reprint dates only on later editions
+            if ($publishingDateRole === '26' && $this->getLatestPrintNumber() > 1) {
+                $publishingDates->push(['PublishingDateRole' => $publishingDateRole, 'Date' => $latestStockArrivalDate->format('Ymd')]);
+            }
         }
 
         return $publishingDates;

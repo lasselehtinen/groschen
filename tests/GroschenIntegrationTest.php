@@ -126,7 +126,7 @@ class GroschenIntegrationTest extends TestCase
         // Trade paperback or "Jättipokkari"
         $groschen = new Groschen('9789520403072');
         $this->assertSame('BC', $groschen->getProductForm());
-        $this->assertContains('B106', $groschen->getProductFormDetails());
+        $this->assertContains('B114', $groschen->getProductFormDetails());
 
         // Board book
         $groschen = new Groschen('9789521609336');
@@ -1328,9 +1328,9 @@ class GroschenIntegrationTest extends TestCase
         // Latest reprint
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());
 
-        // Reprint in the future
+        // Reprint in the future with multiple prints
         $groschen = new Groschen('9789510386033');
-        $this->assertContains(['PublishingDateRole' => '26', 'Date' => '20210927'], $groschen->getPublishingDates());
+        $this->assertContains(['PublishingDateRole' => '26', 'Date' => '20211011'], $groschen->getPublishingDates());
 
         // Products with sales embargo
         $groschen = new Groschen('9789520407230');
@@ -1345,6 +1345,10 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510464946');
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20210701'], $groschen->getPublishingDates());
         $this->assertContains(['PublishingDateRole' => '02', 'Date' => '20210701'], $groschen->getPublishingDates());
+
+        // We should not send reprint date on first edition
+        $groschen = new Groschen('9789520407902');
+        $this->assertNotContains(['PublishingDateRole' => '26', 'Date' => '20220912'], $groschen->getPublishingDates());
     }
 
     /**
