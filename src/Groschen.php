@@ -548,6 +548,7 @@ class Groschen implements ProductInterface
                     'YouTube' => '42',
                     'Trailer' => '42',
                     'Twitter' => '42',
+                    'Instagram' => '42',
                 ];
 
                 return [
