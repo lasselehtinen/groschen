@@ -1521,7 +1521,7 @@ class Groschen implements ProductInterface
         }
 
         // Logout from Elvis
-        $response = $client->request('GET', 'logout');
+        $response = $client->request('POST', 'logout');
 
         // Add audio/reading samples and YouTube trailers
         foreach ($this->product->links as $link) {
