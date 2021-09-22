@@ -3049,22 +3049,39 @@ class GroschenIntegrationTest extends TestCase
     {
         // Author
         $author = [
-            'Identifier' => 62281,
+            'Identifier' => 62420,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
-            'NamesBeforeKey' => 'Max',
-            'PersonNameInverted' => 'Manner, Max',
-            'KeyNames' => 'Manner',
-            'BiographicalNote' => '<p><strong>Max Manner</strong> (s. 1965) on turkulainen, Luxemburgissa pitkään asunut kirjailija. Häneltä on ilmestynyt tähän mennessä kolmetoista romaania, viimeisimpänä <em>Kadotettujen kahvila</em> (2018). Manner on International Thriller Writersin jäsen. Hän viettää vapaa-aikansa moottoripyörien, ruskean labradorin ulkoiluttamisen, matkustelun ja suuhun sopivimman punaviinin etsinnän parissa.</p>',
+            'NamesBeforeKey' => 'Elina',
+            'PersonNameInverted' => 'Kilkku, Elina',
+            'KeyNames' => 'Kilkku',
+            'BiographicalNote' => '<p><strong>Elina Kilkku</strong> (s. 1980) on helsinkiläinen teatteriohjaaja ja kirjailija. Hän on työskennellyt ohjaajana mm. Kansallisteatterissa, Teatteri Jurkassa ja Teatteri Takomossa sekä kirjoittanut useita näytelmiä.<br/><br/>Kilkun esikoisromaani <em>Äideistä paskin</em> ilmestyi vuonna 2014. Sen jälkeen häneltä on julkaistu useita teoksia, muun muassa vuonna 2020 nuorten romaani <em>Ihana tyttö</em>, joka herätti puhuttelevalla aiheellaan paljon keskustelua, sekä hulvaton, parisuhteen stereotypioita kellistävä <em>Vaimovallankumous</em> helmikuussa 2021. Lisäksi hän on kirjoittanut työttömästä freelance-taideammattilaisesta ja sinkkuäidistä kertovan Alina-trilogian, jonka päätösosa <em>Jumalainen jälkinäytös</em> julkaistiin elokuussa 2021. Tässä mustan huumorin maustamassa trilogiassa ovat aiemmin ilmestyneet romaanit <em>Täydellinen näytelmä</em> ja <em>Mahdoton elämä</em>.</p>',
             'WebSites' => [
                 [
-                    "WebsiteRole" => "06",
-                    "Website" => "http://maxmanner.com",
-                ]
-            ]
+                  'WebsiteRole' => '42',
+                  'WebsiteDescription' => 'Elina Kilkku Twitterissä',
+                  'Website' => 'https://twitter.com/elinakilkku',
+                ],
+                [
+                  'WebsiteRole' => '06',
+                  'WebsiteDescription' => 'Tekijän omat nettisivut',
+                  'Website' => 'http://www.elinakilkku.com/',
+                ],
+                [
+                  'WebsiteRole' => '42',
+                  'WebsiteDescription' => 'Elina Kilkku Instagramissa',
+                  'Website' => 'https://www.instagram.com/elinakilkku/',
+                ],
+                [
+                  'WebsiteRole' => '42',
+                  'WebsiteDescription' => 'Elina Kilkku Facebookissa',
+                  'Website' => 'https://www.facebook.com/kirjailijaelinakilkku/',
+                ],
+            ],
+            'ContributorDates' => [],
         ];
 
-        $groschen = new Groschen('9789522796844');
+        $groschen = new Groschen('9789522796783');
         $this->assertContains($author, $groschen->getContributors());
     }
 
