@@ -291,7 +291,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products form details (Onix codelist 175)
-     * @return string|null
+     * @return Collection
      */
     public function getProductFormDetails()
     {
