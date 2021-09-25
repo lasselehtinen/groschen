@@ -2788,6 +2788,7 @@ class GroschenIntegrationTest extends TestCase
         $edition = [
             'isbn' => 9789520419172,
             'title' => 'Missä milloinkin',
+            'publisher' => 'Tammi',
         ];
 
         $this->assertContains($edition, $this->groschen->getEditions());

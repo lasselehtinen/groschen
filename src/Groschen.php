@@ -3186,7 +3186,7 @@ class Groschen implements ProductInterface
         $response = $this->client->get('v2/search/productions', [
             'query' => [
                 'limit' => 1,
-                '$select' => 'isbn,title',
+                '$select' => 'isbn,title,publishingHouseName',
                 '$filter' => '(isCancelled eq true or isCancelled eq false)',
             ],
         ]);
@@ -3202,7 +3202,7 @@ class Groschen implements ProductInterface
             // Query current page with offset
             $response = $this->client->get('v2/search/productions', [
                 'query' => [
-                    '$select' => 'isbn,title',
+                    '$select' => 'isbn,title,publishingHouseName',
                     '$filter' => '(isCancelled eq true or isCancelled eq false)',
                     'limit' => $limit,
                     'offset' => $offset,
@@ -3216,6 +3216,7 @@ class Groschen implements ProductInterface
                     $editions->push([
                         'isbn' => intval($result->document->isbn),
                         'title' => optional($result->document)->title,
+                        'publisher' => optional($result->document)->publishingHouseName,
                     ]);
                 }
             }
