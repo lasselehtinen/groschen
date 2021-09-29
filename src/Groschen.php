@@ -1151,6 +1151,9 @@ class Groschen implements ProductInterface
             'Minerva' => [
                 '15' => '0817445-1',
             ],
+            'CrimeTime' => [
+                '15' => '2394427-4',
+            ],
         ];
 
         if (array_key_exists($publisherName, $mappingTable) === false) {
