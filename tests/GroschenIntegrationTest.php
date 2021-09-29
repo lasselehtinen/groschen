@@ -868,6 +868,13 @@ class GroschenIntegrationTest extends TestCase
         $this->assertFalse($groschen->getMeasures()->contains('MeasureType', '02'));
         $this->assertFalse($groschen->getMeasures()->contains('MeasureType', '03'));
         $this->assertFalse($groschen->getMeasures()->contains('MeasureType', '08'));
+
+        // Downloadable audio book should not have any measures
+        $groschen = new Groschen('9789510450079');
+        $this->assertFalse($groschen->getMeasures()->contains('MeasureType', '01'));
+        $this->assertFalse($groschen->getMeasures()->contains('MeasureType', '02'));
+        $this->assertFalse($groschen->getMeasures()->contains('MeasureType', '03'));
+        $this->assertFalse($groschen->getMeasures()->contains('MeasureType', '08'));
     }
 
     /**

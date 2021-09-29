@@ -841,6 +841,11 @@ class Groschen implements ProductInterface
         // Collection for measures
         $measures = new Collection;
 
+        // Do not return any measurements for digital products even though they might exists
+        if ($this->isImmaterial()) {
+            return $measures;
+        }
+
         // Add width, height and length
         if (!empty($this->product->height)) {
             $measures->push(['MeasureType' => '01', 'Measurement' => intval($this->product->height), 'MeasureUnitCode' => 'mm']);
