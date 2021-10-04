@@ -944,6 +944,15 @@ class Groschen implements ProductInterface
             $subjects->push(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => $this->getBicCode()]);
         }
 
+        // Internal category
+        if (isset($this->product->internalCategory)) {
+            $subjects->push([
+                'SubjectSchemeIdentifier' => '23',
+                'SubjectSchemeName' => 'Internal category',
+                'SubjectCode' => $this->product->internalCategory->name,
+            ]);
+        }
+
         // Cost center number
         if (!empty($this->getCostCenter())) {
             $subjects->push([

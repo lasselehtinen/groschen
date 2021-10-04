@@ -3215,4 +3215,15 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '71', 'SubjectSchemeName' => 'YSO - General Finnish ontology', 'SubjectCode' => 'käsityöt'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '71', 'SubjectSchemeName' => 'YSO - General Finnish ontology', 'SubjectCode' => 'käsityöt.'], $subjects);
     }
+
+    /**
+     * Test that the internal category is returned in subjects
+     * @return [type] [description]
+     */
+    public function testGettingInternalCategoryInSubjects() {
+        $groschen = new Groschen('9789510444009');
+
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Internal category', 'SubjectCode' => 'Valmis'], $groschen->getSubjects());
+
+    }
 }
