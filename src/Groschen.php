@@ -3425,7 +3425,8 @@ class Groschen implements ProductInterface
     public function getEditionTypes() {
         $editionTypes = new Collection;
 
-        $relatedProducts = $this->getRelatedProducts();
+        // We are only interested in products in the same work
+        $relatedProducts = $this->getRelatedProducts()->where('ProductRelationCode', '06');
 
         // If we don't have any other formats, is the current one digital
         if ($relatedProducts->count() === 0 && $this->isImmaterial()) {
@@ -3448,6 +3449,25 @@ class Groschen implements ProductInterface
         // If none of the related products are physical and current one is digital
         if ($physicalProducts->count() === 0 && $this->isImmaterial()) {
             $editionTypes->push(['EditionType' => 'DGO']);
+        }
+
+        // Check if article text or title contains information about edition type
+        $title = $this->getTitleDetails()->where('TitleType', '01')->pluck('TitleElement.TitleText')->first();
+        $deliveryNoteTitle = $this->getTitleDetails()->where('TitleType', '10')->pluck('TitleElement.TitleText')->first();
+
+        // Illustrated
+        if (Str::contains($title, 'kuvitettu') || Str::contains($deliveryNoteTitle, 'kuvitettu')) {
+            $editionTypes->push(['EditionType' => 'ILL']);
+        }
+
+        // Movie tie-in
+        if (Str::contains($title, 'leffakansi') || Str::contains($deliveryNoteTitle, 'leffakansi')) {
+            $editionTypes->push(['EditionType' => 'MDT']);
+        }
+
+        // ePub 3 with extra audio
+        if ($this->getTechnicalBindingType() === 'EPUB3' && (bool) $this->product->activePrint->ebookHasAudioFile === true) {
+            $editionTypes->push(['EditionType' => 'ENH']);
         }
 
         return $editionTypes;
