@@ -3470,7 +3470,7 @@ class Groschen implements ProductInterface
             $editionTypes->push(['EditionType' => 'ENH']);
         }
 
-        return $editionTypes;
+        return $editionTypes->unique('EditionType');
     }
 
     /**
