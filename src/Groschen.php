@@ -2578,6 +2578,7 @@ class Groschen implements ProductInterface
             'Supla' => 'SUP',
             'Elisa Kirja Kuukausitilaus' => 'ELK',
             'Podit' => 'POY',
+            'Lukulumo (ILT)' => 'ILT',
         ];
 
         if(!array_key_exists($salesOutletName, $salesOutlets)) {
