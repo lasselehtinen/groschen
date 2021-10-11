@@ -666,6 +666,29 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting contributor which is a company
+     * @return void
+     */
+    public function testGettintContributorWhichIsCompany()
+    {
+        $groschen = new Groschen('9789510483725');
+
+        // First author
+        $corporateAuthor = [
+            'Identifier' => 67060,
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'A01',
+            'CorporateName' => 'L.O.L. Surprise!',
+            'BiographicalNote' => null,
+            'WebSites' => [],
+            'ContributorDates' => [],
+        ];
+
+        $this->assertContains($corporateAuthor, $groschen->getContributors());
+
+    }
+
+    /**
      * Test getting products languages
      * @return void
      */
@@ -3241,5 +3264,10 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510444009');
 
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Internal category', 'SubjectCode' => 'Valmis'], $groschen->getSubjects());
+    }
+
+    public function testFoobar() {
+        $groschen = new Groschen('9789520406387');
+        dd($groschen->getContributors(false));
     }
 }

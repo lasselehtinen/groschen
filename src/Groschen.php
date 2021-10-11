@@ -513,21 +513,26 @@ class Groschen implements ProductInterface
                 'Identifier' => $contributor->contact->id,
                 'SequenceNumber' => $sequenceNumber,
                 'ContributorRole' => $contributor->role->customProperties->onixCode,
-                'NamesBeforeKey' => trim($contributor->contact->firstName),
             ];
 
-            // Handle PersonNameInverted and KeyNames differently depending if they have the lastname or not
-            if (empty($contributor->contact->lastName) && !empty($contributor->contact->firstName)) {
-                $contributorData['PersonNameInverted'] = trim($contributor->contact->firstName);
-                $contributorData['KeyNames'] = trim($contributor->contact->firstName);
-            } else {
-                $contributorData['PersonNameInverted'] = trim($contributor->contact->lastName) . ', ' . trim($contributor->contact->firstName);
-                $contributorData['KeyNames'] = trim($contributor->contact->lastName);
-            }
-
-            // Get biography and links
+            // Get contact
             $response = $this->searchClient->get('v2/contacts/' . $contributor->contact->id);
             $contact = json_decode($response->getBody()->getContents());
+
+            if ($contact->isCompanyContact === true) {
+                $contributorData['CorporateName'] = trim($contact->company->name1 . ' ' . $contact->company->name2);
+            } else {
+                $contributorData['NamesBeforeKey'] = trim($contributor->contact->firstName);
+
+                // Handle PersonNameInverted and KeyNames differently depending if they have the lastname or not
+                if (empty($contributor->contact->lastName) && !empty($contributor->contact->firstName)) {
+                    $contributorData['PersonNameInverted'] = trim($contributor->contact->firstName);
+                    $contributorData['KeyNames'] = trim($contributor->contact->firstName);
+                } else {
+                    $contributorData['PersonNameInverted'] = trim($contributor->contact->lastName) . ', ' . trim($contributor->contact->firstName);
+                    $contributorData['KeyNames'] = trim($contributor->contact->lastName);
+                }
+            }
 
             $response = $this->searchClient->get('v2/contacts/' . $contributor->contact->id . '/links');
             $links = json_decode($response->getBody()->getContents());
