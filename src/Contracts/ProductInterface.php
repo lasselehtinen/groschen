@@ -505,4 +505,10 @@ interface ProductInterface
      * @return string
      */
     public function getNotificationType();
+
+    /**
+     * Getting the country of manufacture. Returns two letter ISO 3166-1 code.
+     * @return string|null
+     */
+    public function getCountryOfManufacture();
 }

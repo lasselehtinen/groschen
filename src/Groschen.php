@@ -17,6 +17,7 @@ use Isbn;
 use kamermans\OAuth2\GrantType\NullGrantType;
 use kamermans\OAuth2\OAuth2Middleware;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
+use League\ISO3166\ISO3166;
 use League\OAuth2\Client\Provider\GenericProvider;
 use League\Uri\Uri;
 use League\Uri\UriModifier;
@@ -628,6 +629,7 @@ class Groschen implements ProductInterface
 
         foreach ($this->product->members as $member) {
             $contributors->push([
+                'Id' => $member->contact->id,
                 'Role' => $member->role->name,
                 'FirstName' => $member->contact->firstName ?? null,
                 'LastName' => $member->contact->lastName ?? null,
@@ -3642,5 +3644,33 @@ class Groschen implements ProductInterface
         }
 
         return $value;
+    }
+
+    /**
+     * Getting the country of manufacture. Returns two letter ISO 3166-1 code.
+     * @return string|null
+     */
+    public function getCountryOfManufacture() {
+        // Check if the product contains Printer role or is digital
+        if ($this->isImmaterial() || $this->getAllContributors()->contains('Role', 'Printer WS') === false) {
+            return null;
+        }
+
+        // Get the printer contact
+        $printer = $this->getAllContributors()->where('Role', 'Printer WS')->first();
+
+        $response = $this->searchClient->get('v2/contacts/' . $printer['Id']);
+        $contact = json_decode($response->getBody()->getContents());
+
+        foreach($contact->addresses as $address) {
+            if (property_exists($address, 'country')) {
+                try {
+                    $iso3166 = (new ISO3166)->name($address->country);
+                    return $iso3166['alpha2'];
+                } catch (\League\ISO3166\Exception\OutOfBoundsException $e) {
+                    throw new Exception('Cannot find ISO-3166 code for country named ' . $address->country);
+                }
+            }
+        }
     }
 }

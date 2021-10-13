@@ -3266,8 +3266,19 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Internal category', 'SubjectCode' => 'Valmis'], $groschen->getSubjects());
     }
 
-    public function testFoobar() {
-        $groschen = new Groschen('9789520406387');
-        dd($groschen->getContributors(false));
+    /**
+     * Test getting the count of manufacture
+     * @return void
+     */
+    public function testGettingCountryOfManufacture() {
+        $this->assertSame('FI', $this->groschen->getCountryOfManufacture());
+
+        // Contact without address information
+        $groschen = new Groschen('9789510378151');
+        $this->assertNull($groschen->getCountryOfManufacture());
+
+        // Digital product should return null
+        $groschen = new Groschen('9789510477113');
+        $this->assertNull($groschen->getCountryOfManufacture());
     }
 }
