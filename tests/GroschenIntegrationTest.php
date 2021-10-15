@@ -2342,6 +2342,14 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting quantity on production plan for warehouse delivery
+     * @return void
+     */
+    public function testGettingQuantityOnProductionPlanForWarehouseDelivery() {
+        $this->assertSame(3000, $this->groschen->getProductionPlan()->where('print', 16)->where('name', 'Delivery to warehouse')->pluck('quantity')->first());
+    }
+
+    /**
      * Test getting comments
      * @return void
      */

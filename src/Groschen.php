@@ -2752,6 +2752,7 @@ class Groschen implements ProductInterface
             foreach ($productionPlanEntry->timePlanEntries as $timePlanEntry) {
                 $productionPlans->push([
                     'print' => $productionPlanEntry->print,
+                    'quantity' => ($timePlanEntry->type->name === 'Delivery to warehouse') ? $productionPlanEntry->quantityOrdered : null,
                     'id' => $timePlanEntry->type->id,
                     'name' => $timePlanEntry->type->name,
                     'planned_date' => isset($timePlanEntry->planned) ? DateTime::createFromFormat('!Y-m-d', substr($timePlanEntry->planned, 0, 10)) : null,
