@@ -521,7 +521,11 @@ class Groschen implements ProductInterface
             $contact = json_decode($response->getBody()->getContents());
 
             if ($contact->isCompanyContact === true) {
-                $contributorData['CorporateName'] = trim($contact->company->name1 . ' ' . $contact->company->name2);
+                if (isset($contact->company->name1) && isset($contact->company->name2)) {
+                    $contributorData['CorporateName'] = trim($contact->company->name1 . ' ' . $contact->company->name2);
+                } else {
+                    $contributorData['CorporateName'] = trim($contact->company->name1);
+                }
             } else {
                 $contributorData['NamesBeforeKey'] = trim($contributor->contact->firstName);
 
