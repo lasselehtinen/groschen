@@ -1246,6 +1246,7 @@ class Groschen implements ProductInterface
         // Other statuses
         switch ($this->product->listingCode->name) {
             case 'Sold out':
+            case 'Permanently withdrawn from sale':
                 return '07';
             case 'Cancelled':
                 return '01';
@@ -2957,6 +2958,7 @@ class Groschen implements ProductInterface
         // Governing codes which are mapped directly where available stock does not affect
         switch ($this->product->listingCode->name) {
             case 'Sold out':
+            case 'Permanently withdrawn from sale':
                 return '40';
             case 'Cancelled':
                 return '01';

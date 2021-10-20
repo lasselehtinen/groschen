@@ -2561,6 +2561,11 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('07', $groschen->getPublishingStatus($provider));
         $this->assertSame('40', $groschen->getProductAvailability($provider));
 
+        // Digital product with Withdrawn from sales
+        $groschen = new Groschen('9789513164133');
+        $this->assertSame('07', $groschen->getPublishingStatus($provider));
+        $this->assertSame('40', $groschen->getProductAvailability($provider));
+
         // Cancelled
         $groschen = new Groschen('9789510423042');
         $this->assertSame('01', $groschen->getPublishingStatus($provider));
