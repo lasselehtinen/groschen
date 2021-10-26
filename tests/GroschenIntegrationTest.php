@@ -496,7 +496,6 @@ class GroschenIntegrationTest extends TestCase
             'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
             'PersonName' => 'Sunaakugan',
-            'PersonNameInverted' => 'Sunaakugan',
             'KeyNames' => 'Sunaakugan',
             'BiographicalNote' => null,
             'WebSites' => [],

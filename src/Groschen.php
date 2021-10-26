@@ -527,12 +527,9 @@ class Groschen implements ProductInterface
                     $contributorData['CorporateName'] = trim($contact->company->name1);
                 }
             } else {
-
-
                 // Handle PersonNameInverted and KeyNames differently depending if they have the lastname or not
                 if (empty($contributor->contact->lastName) && !empty($contributor->contact->firstName)) {
                     $contributorData['PersonName'] = trim($contributor->contact->firstName);
-                    $contributorData['PersonNameInverted'] = trim($contributor->contact->firstName);
                     $contributorData['KeyNames'] = trim($contributor->contact->firstName);
                 } else {
                     $contributorData['PersonName'] = trim($contributor->contact->firstName) . ' ' . trim($contributor->contact->lastName);
