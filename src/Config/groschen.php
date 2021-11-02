@@ -6,10 +6,6 @@ return [
         'username' => env('ELVIS_USERNAME', 'elvisuser'),
         'password' => env('ELVIS_PASSWORD', 'foobar'),
     ],
-    'soundcloud' => [
-        'clientId' => env('SOUNDCLOUD_CLIENTID'),
-        'clientSecret' => env('SOUNDCLOUD_CLIENTSECRET'),
-    ],
     'mockingbird' => [
         'work_api_hostname' => env('MOCKINGBIRD_WORK_API_HOSTNAME'),
         'contact_api_hostname' => env('MOCKINGBIRD_CONTACT_API_HOSTNAME'),
