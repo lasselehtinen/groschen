@@ -1461,6 +1461,7 @@ class Groschen implements ProductInterface
             'mimeType',
             'fileSize',
             'cf_catalogMediatype',
+            'cf_creditorNumber',
         ];
 
         // Elvis uses mime types, so we need mapping table for ResourceVersionFeatureValue codelist
@@ -1485,7 +1486,7 @@ class Groschen implements ProductInterface
         // Add hits to collection
         foreach ($searchResults->hits as $hit) {
             // Check that we have all the required metadata fields
-            foreach ($metadataFields as $requiredMetadataField) {
+            foreach (array_diff($metadataFields, ['cf_creditorNumber']) as $requiredMetadataField) {
                 if (property_exists($hit->metadata, $requiredMetadataField) === false) {
                     throw new Exception('The required metadata field '. $requiredMetadataField . ' does not exist in Elvis.');
                 }
@@ -1513,7 +1514,7 @@ class Groschen implements ProductInterface
                 throw new Exception('Could not determine ResourceContentType for ' . $hit->metadata->assetPath);
             }
 
-            $supportingResources->push([
+            $supportingResource = [
                 'ResourceContentType' => $resourceContentType,
                 'ContentAudience' => '00',
                 'ResourceMode' => '03',
@@ -1547,7 +1548,19 @@ class Groschen implements ProductInterface
                     ],
                     'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl),
                 ],
-            ]);
+            ];
+
+            // Add ResourceVersionFeatureType 06 (Proprietary ID of resource contributor) if ResourceContentType 04 (Author image)
+            if ($resourceContentType === '04') {
+                array_splice($supportingResource['ResourceVersion']['ResourceVersionFeatures'], 5, 0, [
+                    [
+                        'ResourceVersionFeatureType' => '06',
+                        'FeatureValue' => $hit->metadata->cf_creditorNumber
+                    ]
+                ]);
+            }
+
+            $supportingResources->push($supportingResource);
         }
 
         // Add audio/reading samples and YouTube trailers

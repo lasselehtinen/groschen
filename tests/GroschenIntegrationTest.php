@@ -1629,6 +1629,10 @@ class GroschenIntegrationTest extends TestCase
                         'FeatureValue' => '9.8',
                     ],
                     [
+                        'ResourceVersionFeatureType' => '06',
+                        'FeatureValue' => 62281,
+                    ],
+                    [
                         'ResourceVersionFeatureType' => '07',
                         'FeatureValue' => 10326073,
                     ],
