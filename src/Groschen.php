@@ -1462,6 +1462,8 @@ class Groschen implements ProductInterface
             'fileSize',
             'cf_catalogMediatype',
             'cf_creditorNumber',
+            'copyright',
+            'creatorName',
         ];
 
         // Elvis uses mime types, so we need mapping table for ResourceVersionFeatureValue codelist
@@ -1486,7 +1488,7 @@ class Groschen implements ProductInterface
         // Add hits to collection
         foreach ($searchResults->hits as $hit) {
             // Check that we have all the required metadata fields
-            foreach (array_diff($metadataFields, ['cf_creditorNumber']) as $requiredMetadataField) {
+            foreach (array_diff($metadataFields, ['cf_creditorNumber', 'copyright', 'creatorName']) as $requiredMetadataField) {
                 if (property_exists($hit->metadata, $requiredMetadataField) === false) {
                     throw new Exception('The required metadata field '. $requiredMetadataField . ' does not exist in Elvis.');
                 }
@@ -1550,8 +1552,20 @@ class Groschen implements ProductInterface
                 ],
             ];
 
-            // Add ResourceVersionFeatureType 06 (Proprietary ID of resource contributor) if ResourceContentType 04 (Author image)
+            // Add ResourceVersionFeatureType 06 (Proprietary ID of resource contributor) if ResourceContentType 04 (Author image) and copyright
             if ($resourceContentType === '04') {
+                // Required credit and Copyright
+                $supportingResource['ResourceFeatures'] = [
+                    [
+                        'ResourceFeatureType' => '01',
+                        'FeatureValue' => $hit->metadata->copyright,
+                    ],
+                    [
+                        'ResourceFeatureType' => '03',
+                        'FeatureValue' => $hit->metadata->creatorName[0],
+                    ]
+                ];
+
                 array_splice($supportingResource['ResourceVersion']['ResourceVersionFeatures'], 5, 0, [
                     [
                         'ResourceVersionFeatureType' => '06',

@@ -1639,6 +1639,16 @@ class GroschenIntegrationTest extends TestCase
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/58orYt5TqjnAyBVgE454q3/*/Max_Manner_c_Nauska_5637x.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
+            'ResourceFeatures' => [
+              [
+                'ResourceFeatureType' => '01',
+                'FeatureValue' => '© Nauska',
+              ],
+              [
+                'ResourceFeatureType' => '03',
+                'FeatureValue' => 'Nauska',
+              ],
+            ]
         ];
 
         $groschen = new Groschen('9789522796844');
