@@ -1546,6 +1546,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting supporting resources like cover image / reading sample links etc.
+     * @group SupportingResources
      * @return void
      */
     public function testGettingCoverImageInSupportingResources()
@@ -1578,18 +1579,9 @@ class GroschenIntegrationTest extends TestCase
                         'FeatureValue' => '1.7',
                     ],
                     [
-                        'ResourceVersionFeatureType' => '06',
-                        'FeatureValue' => 'd1a5615e4e0e71610e364ddb0cbfeb53',
-                    ],
-                    [
                         'ResourceVersionFeatureType' => '07',
                         'FeatureValue' => 1738016,
                     ],
-                    [
-                        'ResourceVersionFeatureType' => '08',
-                        'FeatureValue' => 'c251a4df3d83d470ad2acb4c1c0956a37c7820d8bd44f98c21f313d4d44355bc',
-                    ],
-
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
@@ -1604,6 +1596,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting author image in supporting resources
+     * @group SupportingResources
      * @return void
      */
     public function testGettingAuthorImageInSupportingResources()
@@ -1637,7 +1630,7 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 10325923,
+                        'FeatureValue' => 10326073,
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/58orYt5TqjnAyBVgE454q3/*/Max_Manner_c_Nauska_5637x.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
@@ -1650,6 +1643,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting Bazar 3D cover image
+     * @group SupportingResources
      * @return void
      */
     public function testGettingBazar3dCoverImage()
@@ -1682,18 +1676,9 @@ class GroschenIntegrationTest extends TestCase
                         'FeatureValue' => '1.6',
                     ],
                     [
-                        'ResourceVersionFeatureType' => '06',
-                        'FeatureValue' => '86814a6951dab9f9de76198a66c619ab',
-                    ],
-                    [
                         'ResourceVersionFeatureType' => '07',
                         'FeatureValue' => 1632039,
                     ],
-                    [
-                        'ResourceVersionFeatureType' => '08',
-                        'FeatureValue' => '082242685ff0bfe7b8b1d4d3fa5e1ff905cff2359d9d210367e316cf1de56d7d',
-                    ],
-
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/EnfeCLahawWASi-G08b4bh/*/9789522796714_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
@@ -1727,18 +1712,9 @@ class GroschenIntegrationTest extends TestCase
                         'FeatureValue' => '3.7',
                     ],
                     [
-                        'ResourceVersionFeatureType' => '06',
-                        'FeatureValue' => '08c53ee79fb2409441075d3b20b5bfc3',
-                    ],
-                    [
                         'ResourceVersionFeatureType' => '07',
                         'FeatureValue' => 3836788,
                     ],
-                    [
-                        'ResourceVersionFeatureType' => '08',
-                        'FeatureValue' => 'eea14284ea232d5f2b398c307e1904d427f98e8b26a306470bfe0ab8501b972e',
-                    ],
-
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/8V4HW-00aJUASGSHpJCNB1/*/9789522796714_frontcover_final_3d.png?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
@@ -1752,7 +1728,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting audio sample links to Soundcloud
-     * @see https://bonnierforlagen.tpondemand.com/entity/3444-external-links-are-missing
+     * @group SupportingResources
      * @return void
      */
     public function testGettingExternalLinksInSupportingResources()

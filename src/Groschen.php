@@ -1443,15 +1443,25 @@ class Groschen implements ProductInterface
             throw new Exception($json->loginFaultMessage);
         }
 
-        // Search for cover image in Elvis
-        $response = $client->request('POST', 'search', [
-            'query' => [
-                'q' => 'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND (ancestorPaths:/WSOY/Kansikuvat OR ancestorPaths:/Tammi/Kansikuvat OR ancestorPaths:/Kosmos/Kansikuvat OR ancestorPaths:/Disney/Kansikuvat OR ancestorPaths:/Bazar/Kansikuvat OR ancestorPaths:/Minerva/Kansikuvat OR ancestorPaths:/Docendo/Kansikuvat OR ancestorPaths:/CrimeTime/Kansikuvat)',
-                'metadataToReturn' => 'height, width, mimeType, fileSize',
-            ],
-        ]);
+        // Compile list of Elvis queries
+        // Cover image
+        $queries = [
+            '(gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND (ancestorPaths:/WSOY/Kansikuvat OR ancestorPaths:/Tammi/Kansikuvat OR ancestorPaths:/Kosmos/Kansikuvat OR ancestorPaths:/Disney/Kansikuvat OR ancestorPaths:/Bazar/Kansikuvat OR ancestorPaths:/Minerva/Kansikuvat OR ancestorPaths:/Docendo/Kansikuvat OR ancestorPaths:/CrimeTime/Kansikuvat))'
+        ];
 
-        $searchResults = json_decode($response->getBody());
+        // Add separate queries for each contributor
+        foreach ($this->getContributors() as $contributor) {
+            array_push($queries, '(cf_creditorNumber:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true)');
+        }
+
+        // List of metadata fields from Elvis that we need
+        $metadataFields = [
+            'height',
+            'width',
+            'mimeType',
+            'fileSize',
+            'cf_catalogMediatype',
+        ];
 
         // Elvis uses mime types, so we need mapping table for ResourceVersionFeatureValue codelist
         $mimeTypeToCodelistMapping = [
@@ -1462,28 +1472,46 @@ class Groschen implements ProductInterface
             'image/tiff' => 'D504',
         ];
 
-        // Add cover images to collection
+        // Perform query in Elvis
+        $response = $client->request('POST', 'search', [
+            'query' => [
+                'q' => implode(' OR ', $queries),
+                'metadataToReturn' => implode(',', $metadataFields),
+            ],
+        ]);
+
+        $searchResults = json_decode($response->getBody());
+
+        // Add hits to collection
         foreach ($searchResults->hits as $hit) {
-            // Download the file for MD5/SHA checksums
-            $contents = file_get_contents($this->getAuthCredUrl($hit->originalUrl));
-
             // Check that we have all the required metadata fields
-            $requiredMetadataFields = [
-                'mimeType',
-                'height',
-                'width',
-                'filename',
-                'fileSize',
-            ];
-
-            foreach ($requiredMetadataFields as $requiredMetadataField) {
+            foreach ($metadataFields as $requiredMetadataField) {
                 if (property_exists($hit->metadata, $requiredMetadataField) === false) {
                     throw new Exception('The required metadata field '. $requiredMetadataField . ' does not exist in Elvis.');
                 }
             }
 
-            // Determine ResourceContentType (either normal frontcover or 3D)
-            $resourceContentType = (Str::contains($hit->metadata->filename, '_3d.')) ? '03' : '01';
+            // Determine ResourceContentTypes
+            unset($resourceContentType);
+
+            // Normal cover
+            if ($hit->metadata->cf_catalogMediatype === 'Cover' && Str::contains($hit->metadata->assetPath, 'Kansikuvat') && Str::contains($hit->metadata->filename, '_3d.') === false) {
+                $resourceContentType = '01';
+            }
+
+            // 3D front cover
+            if ($hit->metadata->cf_catalogMediatype === 'Cover' && Str::contains($hit->metadata->assetPath, 'Kansikuvat') && Str::contains($hit->metadata->filename, '_3d.')) {
+                $resourceContentType = '03';
+            }
+
+            // Author images
+            if ($hit->metadata->cf_catalogMediatype === 'Stakeholder' && Str::contains($hit->metadata->assetPath, 'Kirjailijakuvat')) {
+                $resourceContentType = '04';
+            }
+
+            if (!isset($resourceContentType)) {
+                throw new Exception('Could not determine ResourceContentType for ' . $hit->metadata->assetPath);
+            }
 
             $supportingResources->push([
                 'ResourceContentType' => $resourceContentType,
@@ -1513,90 +1541,14 @@ class Groschen implements ProductInterface
                             'FeatureValue' => number_format($hit->metadata->fileSize->value / 1048576, 1),
                         ],
                         [
-                            'ResourceVersionFeatureType' => '06',
-                            'FeatureValue' => hash('md5', $contents),
-                        ],
-                        [
                             'ResourceVersionFeatureType' => '07',
                             'FeatureValue' => $hit->metadata->fileSize->value,
-                        ],
-                        [
-                            'ResourceVersionFeatureType' => '08',
-                            'FeatureValue' => hash('sha256', $contents),
                         ],
                     ],
                     'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl),
                 ],
             ]);
         }
-
-        // Search for contributor image(s) in Elvis
-        foreach ($this->getContributors() as $contributor) {
-            $response = $client->request('POST', 'search', [
-                'query' => [
-                    'q' => 'cf_creditorNumber:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true',
-                    'metadataToReturn' => 'height, width, mimeType, fileSize',
-                ],
-            ]);
-
-            $searchResults = json_decode($response->getBody());
-
-            foreach ($searchResults->hits as $hit) {
-                // Check that we have all the required metadata fields
-                $requiredMetadataFields = [
-                    'mimeType',
-                    'height',
-                    'width',
-                    'filename',
-                    'fileSize',
-                ];
-
-                foreach ($requiredMetadataFields as $requiredMetadataField) {
-                    if (property_exists($hit->metadata, $requiredMetadataField) === false) {
-                        throw new Exception('The required metadata field '. $requiredMetadataField . ' does not exist in Elvis.');
-                    }
-                }
-
-                $supportingResources->push([
-                    'ResourceContentType' => '04',
-                    'ContentAudience' => '00',
-                    'ResourceMode' => '03',
-                    'ResourceVersion' => [
-                        'ResourceForm' => '02',
-                        'ResourceVersionFeatures' => [
-                            [
-                                'ResourceVersionFeatureType' => '01',
-                                'FeatureValue' => $mimeTypeToCodelistMapping[$hit->metadata->mimeType],
-                            ],
-                            [
-                                'ResourceVersionFeatureType' => '02',
-                                'FeatureValue' => $hit->metadata->height,
-                            ],
-                            [
-                                'ResourceVersionFeatureType' => '03',
-                                'FeatureValue' => $hit->metadata->width,
-                            ],
-                            [
-                                'ResourceVersionFeatureType' => '04',
-                                'FeatureValue' => $hit->metadata->filename,
-                            ],
-                            [
-                                'ResourceVersionFeatureType' => '05',
-                                'FeatureValue' => number_format($hit->metadata->fileSize->value / 1048576, 1),
-                            ],
-                            [
-                                'ResourceVersionFeatureType' => '07',
-                                'FeatureValue' => $hit->metadata->fileSize->value,
-                            ],
-                        ],
-                        'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl),
-                    ],
-                ]);
-            }
-        }
-
-        // Logout from Elvis
-        $response = $client->request('POST', 'logout');
 
         // Add audio/reading samples and YouTube trailers
         foreach ($this->product->links as $link) {
