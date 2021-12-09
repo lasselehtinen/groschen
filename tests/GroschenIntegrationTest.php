@@ -3280,7 +3280,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that the internal category is returned in subjects
-     * @return [type] [description]
+     * @return void
      */
     public function testGettingInternalCategoryInSubjects() {
         $groschen = new Groschen('9789510444009');
@@ -3302,5 +3302,30 @@ class GroschenIntegrationTest extends TestCase
         // Digital product should return null
         $groschen = new Groschen('9789510477113');
         $this->assertNull($groschen->getCountryOfManufacture());
+    }
+
+    /**
+     * Test getting contributors ISNI numbers
+     * @return void
+     */
+    public function testGettingContributorsIsniNumber()
+    {
+        // Author
+        $author = [
+            'Identifier' => 68945,
+            'SequenceNumber' => 3,
+            'ContributorRole' => 'A01',
+            'PersonName' => 'Tuomas Eriksson',
+            'PersonNameInverted' => 'Eriksson, Tuomas',
+            'KeyNames' => 'Eriksson',
+            'NamesBeforeKey' => 'Tuomas',
+            'BiographicalNote' => null,
+            'WebSites' => [],
+            'ContributorDates' => [],
+            'ISNI' => '0000000407191313',
+        ];
+
+        $groschen = new Groschen('9789510486320');
+        $this->assertContains($author, $groschen->getContributors());
     }
 }

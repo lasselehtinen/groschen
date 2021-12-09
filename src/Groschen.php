@@ -609,6 +609,11 @@ class Groschen implements ProductInterface
                 ]);
             }
 
+            // Add ISNI if exists
+            if (property_exists($contact, 'isni')) {
+                $contributorData['ISNI'] = $contact->isni;
+            }
+
             // Add to collection
             $contributors->push($contributorData);
 
