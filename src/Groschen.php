@@ -564,7 +564,12 @@ class Groschen implements ProductInterface
                 ];
 
                 // Form website description
-                $name = $contributorData['NamesBeforeKey'] . ' ' . $contributorData['KeyNames'];
+                if (array_key_exists('CorporateName', $contributorData)) {
+                    $name = $contributorData['CorporateName'];
+                } else {
+                    $name = $contributorData['NamesBeforeKey'] . ' ' . $contributorData['KeyNames'];
+                }
+
                 switch ($link->linkType->name) {
                     case 'Facebook':
                         $description = $name . ' Facebookissa';

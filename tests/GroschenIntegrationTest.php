@@ -3155,6 +3155,32 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting contributor biography and links for pseudonym
+     * @return void
+     */
+    public function testGettingContributorBiographyAndLinksForCorporateName()
+    {
+        // CorporateName
+        $corporateName = [
+            'Identifier' => 59760,
+            'SequenceNumber' => 4,
+            'ContributorRole' => 'E07',
+            'CorporateName' => 'Silencio',
+            'BiographicalNote' => null,
+            'WebSites' => [
+                [
+                  'WebsiteRole' => '06',
+                  'WebsiteDescription' => 'Tekijän omat nettisivut',
+                  'Website' => 'http://silencio.fi/aanikirjat/',
+                ],
+            ],
+            'ContributorDates' => [],
+        ];
+
+        $groschen = new Groschen('9789523764484');
+        $this->assertContains($corporateName, $groschen->getContributors());
+    }
+    /**
      * Test getting contributor dates (birth year)
      * @return void
      */
