@@ -2580,6 +2580,7 @@ class Groschen implements ProductInterface
             'Elisa Kirja Kuukausitilaus' => 'ELK',
             'Podit' => 'POY',
             'Lukulumo (ILT)' => 'ILT',
+            'ElibU' => 'ELU',
         ];
 
         if(!array_key_exists($salesOutletName, $salesOutlets)) {
