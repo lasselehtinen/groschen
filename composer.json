@@ -51,5 +51,10 @@
             "config-default-path": "vendor/lasselehtinen/laravel-conventions-checker/grumphp.yml"
         }
 
+    },
+    "config": {
+        "allow-plugins": {
+            "phpro/grumphp": true
+        }
     }
 }
