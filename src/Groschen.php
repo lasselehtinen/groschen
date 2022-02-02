@@ -3670,4 +3670,41 @@ class Groschen implements ProductInterface
             }
         }
     }
+
+    /**
+     * Get the sales rights territories
+     * @return Collection
+     */
+    public function getSalesRightsTerritories() {
+        $territories = new Collection;
+
+        if (empty($this->product->countriesIncluded) && empty($this->product->countriesExcluded)) {
+            $territories->push(['RegionsIncluded' => 'WORLD']);
+            return $territories;
+        }
+
+        // Add included countries
+        if (is_array($this->product->countriesIncluded) && count($this->product->countriesIncluded) > 0) {
+            $countriesIncluded = [];
+
+            foreach ($this->product->countriesIncluded as $includedCountry) {
+                array_push($countriesIncluded, $includedCountry->id);
+            }
+
+            $territories->push(['CountriesIncluded' => implode(' ', $countriesIncluded)]);
+        }
+
+        // Add excluded countries
+        if (is_array($this->product->countriesExcluded) && count($this->product->countriesExcluded) > 0) {
+            $countriesExcluded = [];
+
+            foreach ($this->product->countriesExcluded as $excludedCountry) {
+                array_push($countriesExcluded, $excludedCountry->id);
+            }
+
+            $territories->push(['CountriesExcluded' => implode(' ', $countriesExcluded)]);
+        }
+
+        return $territories;
+    }
 }

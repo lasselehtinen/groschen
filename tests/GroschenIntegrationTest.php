@@ -3354,4 +3354,23 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510486320');
         $this->assertContains($author, $groschen->getContributors());
     }
+
+    /**
+     * Test getting sales restrictions for product that has Territory restrictions
+     * @return void
+     */
+    public function testGettingSalesRightsTerritory()
+    {
+        // Digital product that does not have territory limitations, we return just world
+        $groschen = new Groschen('9789510397923');
+        $territories = $groschen->getSalesRightsTerritories();
+        $this->assertCount(1, $territories);
+        $this->assertContains(['RegionsIncluded' => 'WORLD'], $territories);
+
+        // Product that has territory limitations
+        $groschen = new Groschen('9789520438654');
+        $territories = $groschen->getSalesRightsTerritories();
+        $this->assertCount(1, $territories);
+        $this->assertContains(['CountriesIncluded' => 'FI'], $territories);
+    }
 }

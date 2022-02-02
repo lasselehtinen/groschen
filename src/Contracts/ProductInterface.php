@@ -339,6 +339,12 @@ interface ProductInterface
     public function getLatestPrintNumber();
 
     /**
+     * Get the sales rights territories
+     * @return Collection
+     */
+    public function getSalesRightsTerritories();
+
+    /**
      * Get the sales restrictions
      * @return Collection
      */
