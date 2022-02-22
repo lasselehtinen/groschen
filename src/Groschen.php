@@ -1264,6 +1264,7 @@ class Groschen implements ProductInterface
                 return '02';
             case 'Exclusive Sales':
             case 'Delivery block':
+            case 'Print On Demand':
                 return '04';
             case 'Development-Confidential':
                 return '00';
@@ -2197,7 +2198,7 @@ class Groschen implements ProductInterface
      */
     public function isPrintOnDemand()
     {
-        return $this->product->listingCode->name === 'Short run';
+        return $this->product->listingCode->name === 'Short run' || $this->product->listingCode->name === 'Print On Demand';
     }
 
     /**
