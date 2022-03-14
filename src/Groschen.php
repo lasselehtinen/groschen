@@ -2024,7 +2024,8 @@ class Groschen implements ProductInterface
             }
         }
 
-        return $keywords;
+        // Leave unique values
+        return array_map('unserialize', array_unique(array_map('serialize', $keywords)));
     }
 
     /**

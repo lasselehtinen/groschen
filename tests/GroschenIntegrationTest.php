@@ -3293,15 +3293,27 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test that duplicate Finna keywords are filtered out
+     * Test that duplicate Finna keywords with periods are filtered out
      * @return void
      */
-    public function testDuplicateFinnaKeywordsAreFilteredOut() {
+    public function testDuplicateFinnaKeywordsWithPeriodsAreFilteredOut() {
         $groschen = new Groschen('9789520408657');
         $subjects = $groschen->getSubjects();
 
         $this->assertContains(['SubjectSchemeIdentifier' => '71', 'SubjectSchemeName' => 'YSO - General Finnish ontology', 'SubjectCode' => 'käsityöt'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '71', 'SubjectSchemeName' => 'YSO - General Finnish ontology', 'SubjectCode' => 'käsityöt.'], $subjects);
+    }
+
+    /**
+     * Test that duplicate Finna keywords are filtered out
+     * @return void
+     */
+    public function testDuplicateFinnaKeywordsAreFilteredOut() {
+        $groschen = new Groschen('9789522919618');
+        $subjects = $groschen->getSubjects();
+        $sampleSubjects = $subjects->where('SubjectSchemeIdentifier', '71')->where('SubjectSchemeName', 'YSO - General Finnish ontology')->where('SubjectCode', 'sinkut');
+
+        $this->assertCount(1, $sampleSubjects);
     }
 
     /**
