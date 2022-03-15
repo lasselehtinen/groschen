@@ -2934,6 +2934,17 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting correct edition and work id for deactivated product
+     * @return void
+     */
+    public function testGettingCorrectEditionAndWorkIdForDuplicateIsbn()
+    {
+        $groschen = new Groschen('9789523820999');
+        $this->assertSame(291890, $groschen->getWorkId());
+        $this->assertSame(297407, $groschen->getEditionId());
+    }
+
+    /**
      * Test getting edition types
      * @return void
      */

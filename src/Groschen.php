@@ -143,9 +143,8 @@ class Groschen implements ProductInterface
         $response = $this->client->get('v2/search/productions', [
             'query' => [
                 'q' => $this->productNumber,
-                'limit' => 1,
                 'searchFields' => 'isbn',
-                '$select' => 'workId,id',
+                '$select' => 'workId,id,isCancelled',
                 '$filter' => '(isCancelled eq true or isCancelled eq false)',
             ],
         ]);
@@ -156,8 +155,25 @@ class Groschen implements ProductInterface
             throw new Exception('Could not find product in Mockingbird.');
         }
 
+        // If we get multiple results, prefer the one that is not deactivated
         if (count($json->results) > 1) {
-            throw new Exception('Too many results found in Mockingbird.');
+            // Remove those that are deactivated
+            foreach($json->results as $key => $result) {
+                if ($result->document->isCancelled === true) {
+                    unset($json->results[$key]);
+                }
+            }
+
+            if (count($json->results) > 1) {
+                throw new Exception('ISBN has multiple active editions');
+            }
+
+            $key = array_key_first($json->results);
+
+            return [
+                $json->results[$key]->document->workId,
+                $json->results[$key]->document->id,
+            ];
         }
 
         return [
