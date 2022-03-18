@@ -1500,6 +1500,7 @@ class Groschen implements ProductInterface
             'image/jpeg' => 'D502',
             'image/png' => 'D503',
             'image/tiff' => 'D504',
+            'application/vnd.adobe.photoshop' => 'D507',
         ];
 
         // Perform query in Elvis
