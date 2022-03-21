@@ -1526,12 +1526,12 @@ class Groschen implements ProductInterface
             unset($resourceContentType);
 
             // Normal cover
-            if (strtolower($hit->metadata->cf_catalogMediatype) === 'cover' && Str::contains($hit->metadata->assetPath, 'Kansikuvat') && Str::contains($hit->metadata->filename, '_3d.', true) === false) {
+            if (strtolower($hit->metadata->cf_catalogMediatype) === 'cover' && Str::contains($hit->metadata->assetPath, 'Kansikuvat') && Str::contains($hit->metadata->filename, '3d', true) === false) {
                 $resourceContentType = '01';
             }
 
             // 3D front cover
-            if (strtolower($hit->metadata->cf_catalogMediatype) === 'cover' && Str::contains($hit->metadata->assetPath, 'Kansikuvat') && Str::contains($hit->metadata->filename, '_3d.', true)) {
+            if (strtolower($hit->metadata->cf_catalogMediatype) === 'cover' && Str::contains($hit->metadata->assetPath, 'Kansikuvat') && Str::contains($hit->metadata->filename, '3d', true)) {
                 $resourceContentType = '03';
             }
 
