@@ -20,7 +20,8 @@
         "league/oauth2-client": "^2.3",
         "kamermans/guzzle-oauth2-subscriber": "^1.0.7",
         "league/uri-components": "^2.2",
-        "league/iso3166": "^3.0"
+        "league/iso3166": "^3.0",
+        "whitecube/lingua": "^1.1"
     },
     "autoload": {
         "psr-4": {

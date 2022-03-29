@@ -736,6 +736,17 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting incorrect language code throws exception
+     * @return void
+     */
+    public function testIncorrectLanguageCodeThrowsException()
+    {
+        $groschen = new Groschen('9789523755864');
+        $this->expectException(Exception::class);
+        $languages = $groschen->getLanguages();
+    }
+
+    /**
      * Test getting products extents
      * @return void
      */
@@ -1738,6 +1749,13 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($coverImageNormal, $groschen->getSupportingResources());
         $this->assertContains($coverImage3D, $groschen->getSupportingResources());
+    }
+
+    public function testFoobar()
+    {
+        $groschen = new Groschen('9789523127470');
+        dd($groschen->getPublishingStatus(), $groschen->isImmaterial());
+
     }
 
     /**

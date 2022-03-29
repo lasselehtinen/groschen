@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8879c1256f27e96155d2b30d35e3c870",
+    "content-hash": "f6981abed14e41157093487cbbd5a957",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -1179,6 +1179,79 @@
                 }
             ],
             "time": "2021-11-01T23:48:49+00:00"
+        },
+        {
+            "name": "whitecube/lingua",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/whitecube/lingua.git",
+                "reference": "db5e8a211085178bc293a92dc024320b1c62aec6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/whitecube/lingua/zipball/db5e8a211085178bc293a92dc024320b1c62aec6",
+                "reference": "db5e8a211085178bc293a92dc024320b1c62aec6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.0|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WhiteCube\\Lingua\\": "src/Lingua/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "WhiteCube",
+                    "email": "hello@whitecube.be",
+                    "homepage": "http://www.whitecube.be",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Toon Van den Bos",
+                    "email": "toon@whitecube.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Adrien Leloup",
+                    "email": "adrien@whitecube.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP language codes converter, from and to the most common formats (ISO, W3C, PHP and human-readable names).",
+            "keywords": [
+                "BCP-47",
+                "codes",
+                "conversion",
+                "iso",
+                "language",
+                "locales",
+                "localization",
+                "translate",
+                "translation"
+            ],
+            "support": {
+                "issues": "https://github.com/whiteCube/lingua/issues",
+                "source": "https://github.com/whiteCube/lingua"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/whitecube",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-11-25T13:30:13+00:00"
         }
     ],
     "packages-dev": [
