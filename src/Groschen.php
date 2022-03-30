@@ -2975,6 +2975,8 @@ class Groschen implements ProductInterface
 
         // Governing codes which are mapped directly where available stock does not affect
         switch ($this->product->listingCode->name) {
+            case 'Print On Demand':
+                return '21';
             case 'Sold out':
             case 'Permanently withdrawn from sale':
                 return '40';
