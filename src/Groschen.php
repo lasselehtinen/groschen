@@ -263,6 +263,7 @@ class Groschen implements ProductInterface
         ]);
 
         // GTIN-13 and ISBN-13
+        dump($this->product->isbn, $this->isValidGtin($this->product->isbn));
         if (!empty($this->product->isbn) && $this->isValidGtin($this->product->isbn)) {
             foreach (['03', '15'] as $id_value) {
                 $productIdentifiers->push([
@@ -2976,7 +2977,7 @@ class Groschen implements ProductInterface
         // Governing codes which are mapped directly where available stock does not affect
         switch ($this->product->listingCode->name) {
             case 'Print On Demand':
-                return '21';
+                return '23';
             case 'Sold out':
             case 'Permanently withdrawn from sale':
                 return '40';
