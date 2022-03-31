@@ -1257,6 +1257,11 @@ class Groschen implements ProductInterface
      */
     public function getPublishingStatus()
     {
+        // Check that we don't have illogical combinations
+        if (in_array($this->product->listingCode->name, ['Short run', 'Print On Demand']) && $this->isImmaterial()) {
+            throw new Exception('Product has governing code that is not allowed for immaterial / digital products.');
+        }
+
         // For published and short run books, the books stocks affect the publishing status.
         if (in_array($this->product->listingCode->name, ['Published', 'Short run'])) {
             // For digital/immaterial products, we don't need to check the stock balances
@@ -2957,6 +2962,11 @@ class Groschen implements ProductInterface
      */
     public function getProductAvailability()
     {
+        // Check that we don't have illogical combinations
+        if (in_array($this->product->listingCode->name, ['Short run', 'Print On Demand']) && $this->isImmaterial()) {
+            throw new Exception('Product has governing code that is not allowed for immaterial / digital products.');
+        }
+
         // Governing codes where the available stock affects
         if (in_array($this->product->listingCode->name, ['Published', 'Short run'])) {
             // Check if the product has free stock

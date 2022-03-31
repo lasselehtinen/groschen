@@ -64,6 +64,16 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['ProductIDType' => '15', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
     }
 
+    public function testFoobar()
+    {
+        $groschen = new Groschen('9789523127661');
+        $this->assertContains(['ProductIDType' => '01', 'id_type_name' => 'Werner Söderström Ltd - Internal product number', 'id_value' => 9789523127661], $groschen->getProductIdentifiers());
+        $this->assertContains(['ProductIDType' => '03', 'id_value' => 9789523127661], $groschen->getProductIdentifiers());
+        $this->assertContains(['ProductIDType' => '15', 'id_value' => 9789523127661], $groschen->getProductIdentifiers());
+
+
+    }
+
     /**
      * Test getting products composition
      * @return void
@@ -1749,13 +1759,6 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($coverImageNormal, $groschen->getSupportingResources());
         $this->assertContains($coverImage3D, $groschen->getSupportingResources());
-    }
-
-    public function testFoobar()
-    {
-        $groschen = new Groschen('9789523127470');
-        dd($groschen->getPublishingStatus(), $groschen->isImmaterial());
-
     }
 
     /**
