@@ -2637,10 +2637,15 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('04', $groschen->getPublishingStatus());
         $this->assertSame('21', $groschen->getProductAvailability());
 
-        // Print On Demand product
-        $groschen = new Groschen('9789524924252');
+        // Upcoming Print On Demand product
+        $groschen = new Groschen('9789520448028');
         $this->assertSame('04', $groschen->getPublishingStatus());
-        $this->assertSame('21', $groschen->getProductAvailability());
+        $this->assertSame('12', $groschen->getProductAvailability());
+
+        // Print On Demand product in the past
+        $groschen = new Groschen('9789523125094');
+        $this->assertSame('04', $groschen->getPublishingStatus());
+        $this->assertSame('23', $groschen->getProductAvailability());
 
         // Short-run product with 0 stock and planned reprint date in the future
         /*

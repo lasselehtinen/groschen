@@ -2983,10 +2983,18 @@ class Groschen implements ProductInterface
             return ($tomorrow > $stockArrivalDate) ? '31' : '32';
         }
 
+        // On Print On Demand it depends if we are pass publication date
+        if ($this->product->listingCode->name === 'Print On Demand') {
+            if ($this->isPublicationDatePassed()) {
+                return '23';
+            } else {
+                return '12';
+            }
+        }
+
         // Governing codes which are mapped directly where available stock does not affect
         switch ($this->product->listingCode->name) {
-            case 'Print On Demand':
-                return '23';
+
             case 'Sold out':
             case 'Permanently withdrawn from sale':
                 return '40';
