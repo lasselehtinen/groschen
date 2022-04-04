@@ -263,7 +263,6 @@ class Groschen implements ProductInterface
         ]);
 
         // GTIN-13 and ISBN-13
-        dump($this->product->isbn, $this->isValidGtin($this->product->isbn));
         if (!empty($this->product->isbn) && $this->isValidGtin($this->product->isbn)) {
             foreach (['03', '15'] as $id_value) {
                 $productIdentifiers->push([
