@@ -2886,19 +2886,19 @@ class Groschen implements ProductInterface
         // Soft cover
         $technicalData->push([
             'partName' => 'softCover',
-            'paperType' => null,
-            'grammage' => null,
-            'colors' => null,
-            'colorNames' => null,
-            'foil' => null,
-            'hasBlindEmbossing'  => false,
-            'hasFlaps'  => false,
-            'hasUvSpotVarnishGlossy'  => false,
-            'hasUvSpotVarnishMatt'  => false,
-            'hasDispersionVarnish'  => false,
-            'hasReliefSpotVarnish'  => false,
-            'placement' => null,
-            'lamination' => null,
+            'paperType' => $this->product->activePrint->softCover->paper->name ?? null,
+            'paperName' => $this->product->activePrint->softCover->paperOther ?? null,
+            'grammage' => (isset($this->product->activePrint->softCover->paperWeight)) ? intval($this->product->activePrint->softCover->paperWeight) : null,
+            'colors' => (isset($this->product->activePrint->softCover->printing->name)) ? str_replace('+', '/', $this->product->activePrint->softCover->printing->name) : null,
+            'colorNames' => $this->product->activePrint->softCover->colors ?? null,
+            'foil' => $this->product->activePrint->softCover->foil ?? null,
+            'hasBlindEmbossing' => $this->product->activePrint->softCover->hasBlindEmbossing ?? false,
+            'hasUvSpotVarnishGlossy' => $this->product->activePrint->softCover->hasUvSpotVarnishGlossy ?? false,
+            'hasUvSpotVarnishMatt' => $this->product->activePrint->softCover->hasUvSpotVarnishMatt ?? false,
+            'hasDispersionVarnish' => $this->product->activePrint->softCover->hasDispersionVarnish ?? false,
+            'hasReliefSpotVarnish' => $this->product->activePrint->softCover->hasReliefSpotVarnish ?? false,
+            'placement' => $this->product->activePrint->softCover->placement->name ?? null,
+            'lamination' => $this->product->activePrint->softCover->lamination->name ?? null,
         ]);
 
         // End papers
