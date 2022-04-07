@@ -2818,6 +2818,7 @@ class Groschen implements ProductInterface
             'paperType' => $this->product->activePrint->insidePaper->name ?? null,
             'paperName' => $this->product->activePrint->insideName ?? null,
             'grammage' => (isset($this->product->activePrint->insideWeight->name)) ? intval($this->product->activePrint->insideWeight->name) : null,
+            'grammageOther' => (isset($this->product->activePrint->insideWeightOther)) ? intval($this->product->activePrint->insideWeightOther) : null,
             'bulk' => $this->product->activePrint->insideBulk->name ?? null,
             'bulkValue' => $this->product->activePrint->insideBulkOther ?? null,
             'colors' => (isset($this->product->activePrint->insidePrinting->name)) ? str_replace('+', '/', $this->product->activePrint->insidePrinting->name) : null,
