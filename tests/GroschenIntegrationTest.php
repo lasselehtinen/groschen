@@ -3415,4 +3415,21 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(1, $territories);
         $this->assertContains(['CountriesIncluded' => 'FI'], $territories);
     }
+
+    /**
+     * Test searching for editions
+     * @return void
+     */
+    public function testSearchingForEditions()
+    {
+        // Basic search just with term
+        $groschen = new Groschen('9789520448042');
+        $searchResults = $groschen->searchEditions('tervo');
+        $this->assertTrue($searchResults->contains('isbn', 9789510407714));
+
+        // Search with filters
+        $groschen = new Groschen('9789520448042');
+        $searchResults = $groschen->searchEditions('', "(listingCodeId eq '113')");
+        $this->assertTrue($searchResults->contains('isbn', 9789523125698));
+    }
 }

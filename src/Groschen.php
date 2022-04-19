@@ -3756,4 +3756,53 @@ class Groschen implements ProductInterface
 
         return $territories;
     }
+
+    /**
+     * Search for editions
+     * @param  string $query
+     * @param  string $filter
+     * @return Collection
+     */
+    public function searchEditions($query = '', $filter = null) {
+        // Get the number of pages
+        $response = $this->client->get('v2/search/productions', [
+            'query' => [
+                'q' => $query,
+                'limit' => 1000,
+                '$filter' => $filter,
+                '$select' => 'workId,id,isbn',
+            ]
+        ]);
+
+        $json = json_decode($response->getBody()->getContents());
+        $pages = intval($json->pagination->pagesTotalCount+1);
+
+        // Collection to hold all editions
+        $editions = new Collection;
+
+        for ($page = 1; $page < $pages; $page++) {
+            // Get page
+            $response = $this->client->get('v2/search/productions', [
+                'query' => [
+                    'q' => $query,
+                    'limit' => 1000,
+                    '$filter' => $filter,
+                    'offset' => ($page === 1) ? 0 : 1000 * ($page-1),
+                    '$select' => 'workId,id,isbn,interestAgeName',
+                ]
+            ]);
+
+            $json = json_decode($response->getBody()->getContents());
+
+            foreach ($json->results as $result) {
+                $editions->push([
+                    'workId' => $result->document->workId,
+                    'editionId' => $result->document->id,
+                    'isbn' => $result->document->isbn,
+                ]);
+            }
+        }
+
+        return $editions;
+    }
 }
