@@ -811,6 +811,15 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the publishers id
+     * @return string
+     */
+    public function getPublisherId()
+    {
+        return $this->product->publishingHouse->id;
+    }
+
+    /**
      * Get the products imprints
      * @return Collection
      */
