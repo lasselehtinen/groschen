@@ -928,6 +928,46 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products estimated measures
+     * @return Collection
+     */
+    public function getEstimatedMeasures()
+    {
+        // Collection for measures
+        $measures = new Collection;
+
+        // Do not return any measurements for digital products even though they might exists
+        if ($this->isImmaterial()) {
+            return $measures;
+        }
+
+        // Add width, height and length
+        if (!empty($this->product->estimatedHeight)) {
+            $measures->push(['MeasureType' => '01', 'Measurement' => intval($this->product->estimatedHeight), 'MeasureUnitCode' => 'mm']);
+        }
+
+        if (!empty($this->product->estimatedWidth)) {
+            $measures->push(['MeasureType' => '02', 'Measurement' => intval($this->product->estimatedWidth), 'MeasureUnitCode' => 'mm']);
+        }
+
+        if (!empty($this->product->estimatedDepth)) {
+            $measures->push(['MeasureType' => '03', 'Measurement' => intval($this->product->estimatedDepth), 'MeasureUnitCode' => 'mm']);
+        }
+
+        // Add weight
+        if (!empty($this->product->estimatedWeight)) {
+            $measures->push(['MeasureType' => '08', 'Measurement' => intval($this->product->estimatedWeight * 1000), 'MeasureUnitCode' => 'gr']);
+        }
+
+        // Filter out zero values
+        $measures = $measures->filter(function ($measure) {
+            return $measure['Measurement'] > 0;
+        });
+
+        return $measures;
+    }
+
+    /**
      * Get the products original publication date
      * @return DateTime|null
      */
