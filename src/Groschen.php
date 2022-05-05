@@ -1404,7 +1404,7 @@ class Groschen implements ProductInterface
             }
 
             // Add reprint dates only if we are past publishing date
-            if ($publishingDateRole === '26' && $publishingDate < $now) {
+            if ($publishingDateRole === '26' && isset($publishingDate) && $publishingDate < $now) {
                 $publishingDates->push(['PublishingDateRole' => $publishingDateRole, 'Date' => $latestStockArrivalDate->format('Ymd')]);
             }
         }
