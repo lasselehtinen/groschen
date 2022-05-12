@@ -80,7 +80,7 @@ class Groschen implements ProductInterface
     public function __construct($productNumber)
     {
         // Get access token for Mockingbird
-        $accessToken = Cache::remember('accessToken', 59, function () {
+        $accessToken = Cache::remember('accessToken', 3599, function () {
             $provider = new GenericProvider([
                 'clientId' => config('groschen.mockingbird.clientId'),
                 'clientSecret' => config('groschen.mockingbird.clientSecret'),
