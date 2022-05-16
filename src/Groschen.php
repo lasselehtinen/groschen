@@ -2663,6 +2663,7 @@ class Groschen implements ProductInterface
             'Podit' => 'POY',
             'Lukulumo (ILT)' => 'ILT',
             'ElibU' => 'ELU',
+            'Podimo' => 'POD',
         ];
 
         if(!array_key_exists($salesOutletName, $salesOutlets)) {
