@@ -22,6 +22,7 @@ use League\OAuth2\Client\Provider\GenericProvider;
 use League\Uri\Uri;
 use League\Uri\UriModifier;
 use stdClass;
+use WhiteCube\Lingua\LanguagesRepository;
 use WhiteCube\Lingua\Service as Lingua;
 
 class Groschen implements ProductInterface
@@ -698,10 +699,14 @@ class Groschen implements ProductInterface
 
         // Validate that all LanguageCodes are valid
         $languages->pluck('LanguageCode')->each(function ($languageCode, $key) {
+            LanguagesRepository::register(['name' => 'greek', 'iso-639-2b' => 'grc']);
             $language = Lingua::createFromISO_639_2b($languageCode);
-            if (empty($language->toName())) {
+
+            try {
+                $language->toName();
+            } catch (Exception $e) {
                 throw new Exception('Incorrect LanguageCode ' . $languageCode);
-            };
+            }
         });
 
         return $languages;
