@@ -1234,71 +1234,17 @@ class Groschen implements ProductInterface
     {
         $publishers = new Collection;
 
-        // Map PublisherIdentifiers based on the publisher
-        $publisherName = $this->getPublisher();
-
-        // Mapping table for the identifiers
-        $mappingTable = [
-            'WSOY' => [
-                '01' => '10001',
-                '15' => '1522079-4',
-            ],
-            'Tammi' => [
-                '01' => '10004',
-                '15' => '2628236-8',
-            ],
-            'Kosmos' => [
-                '01' => '10020',
-                '15' => '2675233-1',
-            ],
-            'Readme.fi' => [
-                '01' => '10057',
-                '15' => '2160350-5',
-            ],
-            'Bazar' => [
-                '01' => '10056',
-                '15' => '1768366-1',
-            ],
-            'Docendo' => [
-                '15' => '2321889-7',
-            ],
-            'Minerva' => [
-                '15' => '0817445-1',
-            ],
-            'CrimeTime' => [
-                '15' => '2394427-4',
-            ],
-        ];
-
-        if (array_key_exists($publisherName, $mappingTable) === false) {
-            throw new Exception('Could not determine publisher identifiers for ' . $publisherName);
-        }
-
-        // Array holding publisher identifiers
-        $publisherIdentifiers = [];
-
-        foreach($mappingTable[$publisherName] as $publisherIdType => $identifierValue) {
-            switch ($publisherIdType) {
-                case '01':
-                    $idTypeName = 'BR-ID';
-                    break;
-                case '15':
-                    $idTypeName = 'Y-tunnus';
-                    break;
-            }
-
-            array_push($publisherIdentifiers, [
-                'PublisherIDType' => strval($publisherIdType),
-                'IDTypeName' => $idTypeName,
-                'IDValue' => $identifierValue,
-            ]);
-        }
-
         // Add main publisher
         $publishers->push([
             'PublishingRole' => '01',
-            'PublisherIdentifiers' => $publisherIdentifiers,
-            'PublisherName' => $publisherName
+            'PublisherIdentifiers' => [
+                [
+                    'PublisherIDType' => '15',
+                    'IDTypeName' => 'Y-tunnus',
+                    'IDValue' => '0599340-0',
+                ],
+            ],
+            'PublisherName' => $this->getPublisher(),
         ]);
 
         return $publishers;

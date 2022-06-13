@@ -1206,14 +1206,9 @@ class GroschenIntegrationTest extends TestCase
             'PublishingRole' => '01',
             'PublisherIdentifiers' => [
                 [
-                    'PublisherIDType' => '01',
-                    'IDTypeName' => 'BR-ID',
-                    'IDValue' => '10001',
-                ],
-                [
                     'PublisherIDType' => '15',
                     'IDTypeName' => 'Y-tunnus',
-                    'IDValue' => '1522079-4',
+                    'IDValue' => '0599340-0',
                 ],
             ],
             'PublisherName' => 'WSOY'
@@ -1225,14 +1220,9 @@ class GroschenIntegrationTest extends TestCase
             'PublishingRole' => '01',
             'PublisherIdentifiers' => [
                 [
-                    'PublisherIDType' => '01',
-                    'IDTypeName' => 'BR-ID',
-                    'IDValue' => '10001',
-                ],
-                [
                     'PublisherIDType' => '15',
                     'IDTypeName' => 'Y-tunnus',
-                    'IDValue' => '1522079-4',
+                    'IDValue' => '0599340-0',
                 ],
             ],
             'PublisherName' => 'WSOY'
@@ -1244,14 +1234,9 @@ class GroschenIntegrationTest extends TestCase
             'PublishingRole' => '01',
             'PublisherIdentifiers' => [
                 [
-                    'PublisherIDType' => '01',
-                    'IDTypeName' => 'BR-ID',
-                    'IDValue' => '10004',
-                ],
-                [
                     'PublisherIDType' => '15',
                     'IDTypeName' => 'Y-tunnus',
-                    'IDValue' => '2628236-8',
+                    'IDValue' => '0599340-0',
                 ],
             ],
             'PublisherName' => 'Tammi'
@@ -1263,14 +1248,9 @@ class GroschenIntegrationTest extends TestCase
             'PublishingRole' => '01',
             'PublisherIdentifiers' => [
                 [
-                    'PublisherIDType' => '01',
-                    'IDTypeName' => 'BR-ID',
-                    'IDValue' => '10004',
-                ],
-                [
                     'PublisherIDType' => '15',
                     'IDTypeName' => 'Y-tunnus',
-                    'IDValue' => '2628236-8',
+                    'IDValue' => '0599340-0',
                 ],
             ],
             'PublisherName' => 'Tammi'
@@ -1282,14 +1262,9 @@ class GroschenIntegrationTest extends TestCase
             'PublishingRole' => '01',
             'PublisherIdentifiers' => [
                 [
-                    'PublisherIDType' => '01',
-                    'IDTypeName' => 'BR-ID',
-                    'IDValue' => '10020',
-                ],
-                [
                     'PublisherIDType' => '15',
                     'IDTypeName' => 'Y-tunnus',
-                    'IDValue' => '2675233-1',
+                    'IDValue' => '0599340-0',
                 ],
             ],
             'PublisherName' => 'Kosmos'
