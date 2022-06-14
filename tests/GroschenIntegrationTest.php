@@ -2217,7 +2217,8 @@ class GroschenIntegrationTest extends TestCase
             ->where('channel', 'Elisa Kirja')
             ->where('channelType', 'Unit sales')
             ->where('hasRights', true)
-            ->where('distributionAllowed', true);
+            ->where('distributionAllowed', true)
+            ->where('salesOutletId', 'ELS');
 
         $this->assertCount(1, $elisa->toArray());
 
@@ -2225,7 +2226,8 @@ class GroschenIntegrationTest extends TestCase
             ->where('channel', 'BookBeat')
             ->where('channelType', 'Subscription')
             ->where('hasRights', true)
-            ->where('distributionAllowed', true);
+            ->where('distributionAllowed', true)
+            ->where('salesOutletId', 'BOO');
 
         $this->assertCount(0, $bookbeat->toArray());
     }

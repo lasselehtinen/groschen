@@ -2517,10 +2517,10 @@ class Groschen implements ProductInterface
         if ($distributionChannels->containsStrict('hasRights', true)) {
             $retailerExclusiveSalesOutlets = $distributionChannels->where('hasRights', true)->map(function ($distributionChannel, $key) {
                 // Get IDValue
-                $salesOutletIdentifierIdValue = $this->getSalesOutletIdValue($distributionChannel['channel']);
+                $salesOutletIdentifierIdValue = $distributionChannel['salesOutletId'];
                 $salesOutletIDType = '03';
 
-                // In case mapping is not found, fall back to propietary
+                // In case sales outlet id is not found, fall back to propietary
                 if (is_null($salesOutletIdentifierIdValue)) {
                     $salesOutletIDType = '01';
                     $salesOutletIdentifierIdValue = $distributionChannel['channel'];
@@ -2550,7 +2550,7 @@ class Groschen implements ProductInterface
         if ($distributionChannels->containsStrict('hasRights', false)) {
             $retailerExceptionSalesOutlets = $distributionChannels->where('hasRights', false)->map(function ($distributionChannel, $key) {
                 // Get IDValue
-                $salesOutletIdentifierIdValue = $this->getSalesOutletIdValue($distributionChannel['channel']);
+                $salesOutletIdentifierIdValue = $distributionChannel['salesOutletId'];
                 $salesOutletIDType = '03';
 
                 // In case mapping is not found, fall back to propietary
@@ -2580,51 +2580,6 @@ class Groschen implements ProductInterface
         }
 
         return $salesRestrictions->sortBy('SalesRestrictionType');
-    }
-
-    /**
-     * Get sales outlet id value for the given sales outlet
-     * @param  string $salesOutletName
-     * @return string|null
-     */
-    public function getSalesOutletIdValue($salesOutletName)
-    {
-        // Mapping table for Mockingbird
-        $salesOutlets = [
-            'Adlibris.com' => 'ADL',
-            'Alma Talent' => 'ALT',
-            'Apple Books (iBooks)' => 'APC',
-            'Axiell (Swedish libraries)' => 'ELB',
-            'BookBeat' => 'BOO',
-            'BookBeat WS' => 'BOO',
-            'CDon.com' => 'CDN',
-            'Elisa Kirja' => 'ELS',
-            'Ellibs' => 'ELL',
-            'Ellibs (Finnish libraries)' => 'ELL',
-            'Google Play Store' => 'GOO',
-            //'Kirjavälitys' => '',
-            //'Lasten Oma Satukirjasto' => '',
-            //'Lukulumo (ILT)' => '',
-            'Nextory' => 'NXT',
-            'Nextory WS' => 'NXT',
-            'Storytel' => 'STT',
-            'Storytel WS' => 'STT',
-            'Suomalainen.com' => 'SKK',
-            'Suomalainen Plus' => 'SPL',
-            'Prisma.fi' => 'SGR',
-            'Supla' => 'SUP',
-            'Elisa Kirja Kuukausitilaus' => 'ELK',
-            'Podit' => 'POY',
-            'Lukulumo (ILT)' => 'ILT',
-            'ElibU' => 'ELU',
-            'Podimo' => 'POD',
-        ];
-
-        if(!array_key_exists($salesOutletName, $salesOutlets)) {
-            return null;
-        }
-
-        return $salesOutlets[$salesOutletName];
     }
 
     /**
@@ -2679,6 +2634,7 @@ class Groschen implements ProductInterface
                 'channelType' => $exportRule->salesType->name,
                 'hasRights' => $exportRule->hasRights,
                 'distributionAllowed' => $exportRule->hasDistribution,
+                'salesOutletId' => $exportRule->salesChannel->customProperties->onixSalesOutletId ?? null,
             ]);
         }
 
