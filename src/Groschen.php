@@ -1087,32 +1087,9 @@ class Groschen implements ProductInterface
         // Suomalainen kirja-alan luokitus
         $subjects->push(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => $this->getFinnishBookTradeCategorisation()]);
 
-        // Add subjects/keywords from Finna
-        $finnaSubjects = $this->getSubjectWords();
-        foreach ($finnaSubjects as $finnaSubject) {
-            $subjects->push($finnaSubject);
-        }
-
-        // Remove those where SubjectCode is empty
-        $subjects = $subjects->filter(function ($subject) {
-            return !empty($subject['SubjectCode']);
-        });
-
-        // Add all keywords separated by semicolon from finnish ontologies
-        $keywords = [];
-
-        foreach ($finnaSubjects as $subject) {
-            switch ($subject['SubjectSchemeIdentifier']) {
-                case '69': // KAUNO - ontology for fiction
-                case '71': // YSO - General Finnish ontology
-                case '64': // YSA - General Finnish thesaurus
-                    $keywords[] = $subject['SubjectCode'];
-                    break;
-            }
-        }
-
-        if (!empty($keywords)) {
-            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => implode(';', array_unique($keywords))]);
+        // Add keywords from Mockingbird
+        if (isset($this->product->keywords) && !empty($this->product->keywords)) {
+            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $this->product->keywords]);
         }
 
         return $subjects->sortBy('SubjectSchemeIdentifier');
@@ -1984,79 +1961,6 @@ class Groschen implements ProductInterface
         }
 
         return null;
-    }
-
-    /**
-     * Get the subjects from Finna
-     * @return array
-     */
-    public function getSubjectWords()
-    {
-        // Fetch subjects from Finna API
-        $client = new Client();
-
-        $response = $client->get('https://api.finna.fi/v1/search', [
-            'query' => [
-                'lookfor' => $this->product->isbn,
-                'filter[0]' => 'format:0/Book/',
-                'field[]' => 'subjectsExtended',
-            ]]);
-
-        $json = json_decode($response->getBody()->getContents());
-
-        // Array for
-        $keywords = [];
-
-        // Check if we found the book and have subjects
-        if ($json->resultCount > 0 && isset($json->records[0]->subjectsExtended)) {
-            foreach ($json->records as $record) {
-                foreach ($record->subjectsExtended as $subject) {
-                    // Detect the subjects ontology if type is subject
-                    if (isset($subject->type) && isset($subject->source) && $subject->type === 'topic') {
-                        switch ($subject->source) {
-                            case 'kaunokki':
-                                $subjectSchemeIdentifier = '69';
-                                $subjectSchemeName = 'KAUNO - ontology for fiction';
-                                break;
-                            case 'yso':
-                            case 'yso/fin':
-                                $subjectSchemeIdentifier = '71';
-                                $subjectSchemeName = 'YSO - General Finnish ontology';
-                                break;
-                            case 'ysa':
-                            case 'ysa/fin':
-                                $subjectSchemeIdentifier = '64';
-                                $subjectSchemeName = 'YSA - General Finnish thesaurus';
-                                break;
-                            case 'allars':
-                                $subjectSchemeIdentifier = '65';
-                                $subjectSchemeName = 'Allmän tesaurus på svenska';
-                                break;
-                            default:
-                                $subjectSchemeIdentifier = null;
-                                $subjectSchemeName = 'Unknown';
-                                break;
-                        }
-
-                        // Go through all the headings/subjects
-                        if(isset($subject->heading) && is_array($subject->heading)) {
-                            foreach ($subject->heading as $heading) {
-                                if ($heading !== 'Ellibs' && substr($heading, -1) !== '.') {
-                                    $keywords[] = [
-                                        'SubjectSchemeIdentifier' => $subjectSchemeIdentifier,
-                                        'SubjectSchemeName' => $subjectSchemeName,
-                                        'SubjectCode' => $heading,
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Leave unique values
-        return array_map('unserialize', array_unique(array_map('serialize', $keywords)));
     }
 
     /**

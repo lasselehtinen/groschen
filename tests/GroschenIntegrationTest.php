@@ -943,16 +943,16 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC000000'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
         $subjects = $groschen->getSubjects();
-        $this->assertContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;sodankäynti;sotarintama;kirjallisuuspalkinnot;sota;Suomi;1939-1945'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => '1939-1945;2013;sotahistoria;Lapin sota;jatkosota;talvisota;psykohistoria;psykiatria;sotilaspsykiatria;psykiatrinen hoito;traumaperäinen stressireaktio;traumat;sotarintama;mielenterveyshäiriöt;mielenterveys;sotilaat;kokemukset;sodat;kirjallisuuspalkinnot;Suomi'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
@@ -3305,22 +3305,10 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testDuplicateFinnaKeywordsWithPeriodsAreFilteredOut() {
         $groschen = new Groschen('9789520408657');
-        $subjects = $groschen->getSubjects();
+        $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
 
-        $this->assertContains(['SubjectSchemeIdentifier' => '71', 'SubjectSchemeName' => 'YSO - General Finnish ontology', 'SubjectCode' => 'käsityöt'], $subjects);
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '71', 'SubjectSchemeName' => 'YSO - General Finnish ontology', 'SubjectCode' => 'käsityöt.'], $subjects);
-    }
-
-    /**
-     * Test that duplicate Finna keywords are filtered out
-     * @return void
-     */
-    public function testDuplicateFinnaKeywordsAreFilteredOut() {
-        $groschen = new Groschen('9789522919618');
-        $subjects = $groschen->getSubjects();
-        $sampleSubjects = $subjects->where('SubjectSchemeIdentifier', '71')->where('SubjectSchemeName', 'YSO - General Finnish ontology')->where('SubjectCode', 'sinkut');
-
-        $this->assertCount(1, $sampleSubjects);
+        $this->assertContains('käsityöt', $keywords);
+        $this->assertNotContains('käsityöt.', $keywords);
     }
 
     /**
