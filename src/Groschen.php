@@ -1092,9 +1092,9 @@ class Groschen implements ProductInterface
             $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $this->product->keywords]);
         }
 
-        // Remove those where SubjectCode is empty
+        // Remove those where SubjectCode and/or SubjectHeadingText is empty
         $subjects = $subjects->filter(function ($subject) {
-            return !empty($subject['SubjectCode']);
+            return !empty($subject['SubjectCode']) || !empty($subject['SubjectHeadingText']);
         });
 
         return $subjects->sortBy('SubjectSchemeIdentifier');
