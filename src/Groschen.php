@@ -812,6 +812,10 @@ class Groschen implements ProductInterface
      */
     public function getPublisher()
     {
+        if (isset($this->product->brand->name) && $this->product->brand->name === 'Johnny Kniga') {
+            return 'Johnny Kniga';
+        }
+
         return $this->product->publishingHouse->name;
     }
 
@@ -832,7 +836,7 @@ class Groschen implements ProductInterface
     {
         $imprints = new Collection;
 
-        if (isset($this->product->brand->name) && $this->product->publishingHouse->name !== $this->product->brand->name) {
+        if (isset($this->product->brand->name) && $this->product->publishingHouse->name !== $this->product->brand->name && $this->product->brand->name !== 'Johnny Kniga') {
             $imprints->push([
                 'ImprintName' => $this->product->brand->name,
             ]);

@@ -1184,7 +1184,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Johnny Kniga product
         $groschen = new Groschen('9789510405314');
-        $this->assertSame('WSOY', $groschen->getPublisher());
+        $this->assertSame('Johnny Kniga', $groschen->getPublisher());
 
         // Normal Tammi product
         $groschen = new Groschen('9789513179564');
@@ -1225,7 +1225,7 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => '0599340-0',
                 ],
             ],
-            'PublisherName' => 'WSOY'
+            'PublisherName' => 'Johnny Kniga'
         ], $groschen->getPublishers());
 
         // Normal Tammi product
@@ -1283,10 +1283,6 @@ class GroschenIntegrationTest extends TestCase
         // Bazar product without brand
         $groschen = new Groschen('9789522799531');
         $this->assertCount(0, $groschen->getImprints());
-
-        // Johnny Kniga (imprint of WSOY)
-        $groschen = new Groschen('9789510405314');
-        $this->assertContains(['ImprintName' => 'Johnny Kniga'], $groschen->getImprints());
     }
 
     /**
@@ -3396,5 +3392,16 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789520448042');
         $searchResults = $groschen->searchEditions('', "(listingCodeId eq '113')");
         $this->assertTrue($searchResults->contains('isbn', 9789523125698));
+    }
+
+    /**
+     * Test faking for Johnny Kniga
+     * @return void
+     */
+    public function testGettingJohnnyKnigaAsPublishingHouse()
+    {
+        $groschen = new Groschen('9789510475027');
+        $this->assertSame('Johnny Kniga', $groschen->getPublisher());
+        $this->assertCount(0, $groschen->getImprints());
     }
 }
