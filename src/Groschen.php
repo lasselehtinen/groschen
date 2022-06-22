@@ -803,7 +803,7 @@ class Groschen implements ProductInterface
      */
     public function getInsideNumberOfPages()
     {
-        return (isset($this->product->insidePages)) ? intval($this->product->insidePages) : null;
+        return (isset($this->product->activePrint->insidePages)) ? intval($this->product->activePrint->insidePages) : null;
     }
 
     /**
