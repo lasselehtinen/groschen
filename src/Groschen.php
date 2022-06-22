@@ -798,6 +798,15 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the products estimated number of pages
+     * @return int|null
+     */
+    public function getInsideNumberOfPages()
+    {
+        return (isset($this->product->insidePages)) ? intval($this->product->insidePages) : null;
+    }
+
+    /**
      * Get the products number of characters
      * @return int|null
      */
