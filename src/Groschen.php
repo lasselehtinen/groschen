@@ -1482,7 +1482,7 @@ class Groschen implements ProductInterface
         // Compile list of Elvis queries
         // Cover image
         $queries = [
-            '(gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND (ancestorPaths:/WSOY/Kansikuvat OR ancestorPaths:/Tammi/Kansikuvat OR ancestorPaths:/Kosmos/Kansikuvat OR ancestorPaths:/Disney/Kansikuvat OR ancestorPaths:/Bazar/Kansikuvat OR ancestorPaths:/Minerva/Kansikuvat OR ancestorPaths:/Docendo/Kansikuvat OR ancestorPaths:/CrimeTime/Kansikuvat))'
+            '(gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND (ancestorPaths:/WSOY/Kansikuvat OR ancestorPaths:/Tammi/Kansikuvat OR ancestorPaths:/Kosmos/Kansikuvat OR ancestorPaths:/Disney/Kansikuvat OR ancestorPaths:/Bazar/Kansikuvat OR ancestorPaths:/Minerva/Kansikuvat OR ancestorPaths:/Docendo/Kansikuvat OR ancestorPaths:/CrimeTime/Kansikuvat OR ancestorPaths:/Johnny Kniga/Kansikuvat))'
         ];
 
         // Add separate queries for each contributor
