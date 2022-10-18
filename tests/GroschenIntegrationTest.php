@@ -1468,7 +1468,7 @@ class GroschenIntegrationTest extends TestCase
         // Publisher retail price including tax
         $publisherRetailPriceIncludingTax = [
             'PriceType' => '42',
-            'PriceAmount' => 10.0,
+            // 'PriceAmount' => 10.0,
             'PriceCoded' => [
                 'PriceCodeType' => '02',
                 'PriceCode' => 'E',
