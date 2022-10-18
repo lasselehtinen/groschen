@@ -1460,6 +1460,37 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting products prices for pocket book
+     * @return void
+     */
+    public function testGettingPricesForPocketBook()
+    {
+        // Publisher retail price including tax
+        $publisherRetailPriceIncludingTax = [
+            'PriceType' => '42',
+            'PriceAmount' => 10.0,
+            'PriceCoded' => [
+                'PriceCodeType' => '02',
+                'PriceCode' => 'E',
+            ],
+            'Tax' => [
+                'TaxType' => '01',
+                'TaxRateCode' => 'S',
+                'TaxRatePercent' => 10.0,
+                'TaxableAmount' => 9.1,
+                'TaxAmount' => 0.9,
+            ],
+            'CurrencyCode' => 'EUR',
+            'Territory' => [
+                'RegionsIncluded' => 'WORLD',
+            ],
+        ];
+
+        $groschen = new Groschen(9789510488225);
+        $this->assertContains($publisherRetailPriceIncludingTax, $groschen->getPrices());
+    }
+
+    /**
      * Test net price including taxes is rounded correctly
      * @return void
      */
@@ -2019,7 +2050,6 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789521606700');
         $this->assertNull($groschen->getLibraryClass());
     }
-
 
     /**
      * Test getting the products library class
@@ -3019,6 +3049,21 @@ class GroschenIntegrationTest extends TestCase
 
         // Others
         $this->assertSame(1.4, $this->groschen->getRetailPriceMultiplier());
+    }
+
+    /**
+     * Test getting trade category
+     *
+     */
+    public function testGettingTradeCategory()
+    {
+        // Normal hardback from catalogue
+        $groschen = new Groschen('9789521616068');
+        $this->assertSame('19', $groschen->getTradeCategory());
+
+        // Pocket book
+        $groschen = new Groschen('9789510427484');
+        $this->assertSame('04', $groschen->getTradeCategory());
     }
 
     /**

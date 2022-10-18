@@ -1406,7 +1406,7 @@ class Groschen implements ProductInterface
 
         // Go through all Price Types
         foreach ($priceTypes as $priceType) {
-            $prices->push([
+            $price = [
                 'PriceType' => $priceType['PriceTypeCode'],
                 'PriceAmount' => $priceType['PriceAmount'],
                 'Tax' => $this->getTaxElement($priceType),
@@ -1414,7 +1414,14 @@ class Groschen implements ProductInterface
                 'Territory' => [
                     'RegionsIncluded' => 'WORLD',
                 ],
-            ]);
+            ];
+
+            // Add pocket book price group
+            if ($priceType['PriceTypeCode'] === '42' && isset($this->product->priceGroupPocket)) {
+                $price = array_slice($price, 0, 2, true) + array('PriceCoded' => ['PriceCodeType' => '02', 'PriceCode' => $this->product->priceGroupPocket->name]) + array_slice($price, 2, count($price) - 1, true) ;
+            }
+
+            $prices->push($price);
         }
 
         return $prices;
@@ -3541,6 +3548,20 @@ class Groschen implements ProductInterface
         ]);
 
         return $contentTypes;
+    }
+
+    /**
+     * Get the products trade category
+     * @return string|null
+     */
+    public function getTradeCategory() {
+        switch ($this->getProductType()) {
+            case 'Pocket book':
+                return '04';
+            // Catalogue (default)
+            default:
+                return '19';
+        }
     }
 
     /**

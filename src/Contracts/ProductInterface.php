@@ -517,4 +517,10 @@ interface ProductInterface
      * @return string|null
      */
     public function getCountryOfManufacture();
+
+    /**
+     * Get the products trade category
+     * @return string|null
+     */
+    public function getTradeCategory();
 }
