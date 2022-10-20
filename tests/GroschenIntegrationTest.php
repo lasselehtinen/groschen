@@ -1465,10 +1465,26 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingPricesForPocketBook()
     {
-        // Publisher retail price including tax
-        $publisherRetailPriceIncludingTax = [
+        // Publisher retail price including tax with PriceAmount
+        $publisherRetailPriceIncludingTaxWithPriceAmount = [
             'PriceType' => '42',
-            // 'PriceAmount' => 10.0,
+            'PriceAmount' => 10.0,
+            'Tax' => [
+                'TaxType' => '01',
+                'TaxRateCode' => 'S',
+                'TaxRatePercent' => 10.0,
+                'TaxableAmount' => 9.1,
+                'TaxAmount' => 0.9,
+            ],
+            'CurrencyCode' => 'EUR',
+            'Territory' => [
+                'RegionsIncluded' => 'WORLD',
+            ],
+        ];
+
+        // Publisher retail price including tax with PriceCoded
+        $publisherRetailPriceIncludingTaxWithPriceCoded = [
+            'PriceType' => '42',
             'PriceCoded' => [
                 'PriceCodeType' => '02',
                 'PriceCode' => 'E',
@@ -1487,7 +1503,8 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $groschen = new Groschen(9789510488225);
-        $this->assertContains($publisherRetailPriceIncludingTax, $groschen->getPrices());
+        $this->assertContains($publisherRetailPriceIncludingTaxWithPriceAmount, $groschen->getPrices());
+        $this->assertContains($publisherRetailPriceIncludingTaxWithPriceCoded, $groschen->getPrices());
     }
 
     /**
