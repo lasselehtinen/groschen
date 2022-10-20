@@ -1425,13 +1425,6 @@ class GroschenIntegrationTest extends TestCase
         $suppliersNetPriceExcludingTax = [
             'PriceType' => '05',
             'PriceAmount' => 16.25,
-            'Tax' => [
-                'TaxType' => '01',
-                'TaxRateCode' => 'Z',
-                'TaxRatePercent' => 10.0,
-                'TaxableAmount' => 16.25,
-                'TaxAmount' => 0.0,
-            ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
                 'RegionsIncluded' => 'WORLD',

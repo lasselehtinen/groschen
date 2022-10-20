@@ -1416,6 +1416,30 @@ class Groschen implements ProductInterface
                 ],
             ];
 
+            // Remove TaxElement from prices that no not include tax
+            $taxExcludedPriceTypes = [
+                '01',
+                '03',
+                '05',
+                '06',
+                '08',
+                '11',
+                '13',
+                '15',
+                '21',
+                '23',
+                '25',
+                '31',
+                '32',
+                '33',
+                '35',
+                '41',
+            ];
+
+            if (in_array($price['PriceType'], $taxExcludedPriceTypes)) {
+                unset($price['Tax']);
+            }
+
             $prices->push($price);
 
             // Add pocket book price group as separate PriceType
