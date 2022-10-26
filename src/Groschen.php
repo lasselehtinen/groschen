@@ -737,7 +737,7 @@ class Groschen implements ProductInterface
             'ED', // Digital (delivered electronically). eBooks sometimes contain audio.
         ]);
 
-        if ($productIsAllowedToHaveAudio && ($this->product->audioPlaytimeHours)) {
+        if ($productIsAllowedToHaveAudio && isset($this->product->audioPlaytimeHours)) {
             $audioPlaytimeHours = str_pad($this->product->audioPlaytimeHours, 3, '0', STR_PAD_LEFT);
 
             // If no minutes are given, use 00
