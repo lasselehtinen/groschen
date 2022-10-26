@@ -854,6 +854,23 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that audio book duration is not shared if audio book is main edition
+     * @return void
+     */
+    public function testThatAudioBookDurationIsNotShared()
+    {
+        // Audio book which is main edition
+        $groschen = new Groschen('9789510449677');
+        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '00913', 'ExtentUnit' => '15'], $groschen->getExtents());
+        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '33180', 'ExtentUnit' => '06'], $groschen->getExtents());
+
+        // e-book under the same work
+        $groschen = new Groschen('9789510496107');
+        $this->assertNotContains(['ExtentType' => '09', 'ExtentValue' => '00913', 'ExtentUnit' => '15'], $groschen->getExtents());
+        $this->assertNotContains(['ExtentType' => '09', 'ExtentValue' => '33180', 'ExtentUnit' => '06'], $groschen->getExtents());
+    }
+
+    /**
      * Test getting product text contents
      * @return void
      */

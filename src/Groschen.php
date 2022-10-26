@@ -729,8 +729,15 @@ class Groschen implements ProductInterface
             ]);
         }
 
-        // Audio duration, convert from HH:MM to HHHMM - TODO - audioPlaytimeHours what is the accuracy? No minutes?
-        if (isset($this->product->audioPlaytimeHours)) {
+        // Audio duration, convert from HH:MM to HHHMM
+        $productIsAllowedToHaveAudio = in_array($this->getProductForm(), [
+            'AC', // CD-Audio
+            'AE', // Audio disc
+            'AJ', // Downloadable audio file
+            'ED', // Digital (delivered electronically). eBooks sometimes contain audio.
+        ]);
+
+        if ($productIsAllowedToHaveAudio && ($this->product->audioPlaytimeHours)) {
             $audioPlaytimeHours = str_pad($this->product->audioPlaytimeHours, 3, '0', STR_PAD_LEFT);
 
             // If no minutes are given, use 00
