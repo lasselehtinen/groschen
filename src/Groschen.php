@@ -2029,12 +2029,19 @@ class Groschen implements ProductInterface
      */
     public function getFinnishBookTradeCategorisation()
     {
+        if (isset($this->product->libraryCodePrefix) === false) {
+            return null;
+        }
+
         // Pocket books should always return 'T'
-        if ($this->getProductForm() === 'BC' && $this->getProductFormDetails()->contains('B104')) {
+        $isPocketBook = $this->getProductForm() === 'BC' && $this->getProductFormDetails()->contains('B104');
+
+        if ($isPocketBook) {
             return 'T';
         }
 
-        if (isset($this->product->libraryCodePrefix) === false) {
+        // Sometimes pocket book is the main edition and the prefix is shared to editions where it does not belong
+        if ($this->product->libraryCodePrefix->id === 'T' && $isPocketBook === false) {
             return null;
         }
 

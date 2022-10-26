@@ -3466,4 +3466,15 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('Johnny Kniga', $groschen->getPublisher());
         $this->assertCount(0, $groschen->getImprints());
     }
+
+    /**
+     * Test that Finnish library code prefix is not shared if main edition is pocket book
+     * @return void
+     */
+    public function testFinnishLibraryCodePrefixIsNotSharedFromMainEdition()
+    {
+        $groschen = new Groschen('9789526637747');
+
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'T'], $groschen->getSubjects());
+    }
 }
