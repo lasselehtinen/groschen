@@ -2986,16 +2986,6 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510410738');
         $this->assertCount(0, $groschen->getEditionTypes());
 
-        // Work with only ePub and audio book version
-        $groschen = new Groschen('9789520406691');
-        $this->assertCount(1, $groschen->getEditionTypes());
-        $this->assertContains(['EditionType' => 'DGO'], $groschen->getEditionTypes());
-
-        // Work where ePub only product
-        $groschen = new Groschen('9789510384794');
-        $this->assertCount(1, $groschen->getEditionTypes());
-        $this->assertContains(['EditionType' => 'DGO'], $groschen->getEditionTypes());
-
         // Illustrated edition
         $groschen = new Groschen('9789513187057');
         $this->assertCount(1, $groschen->getEditionTypes());

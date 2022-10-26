@@ -3396,32 +3396,6 @@ class Groschen implements ProductInterface
     public function getEditionTypes() {
         $editionTypes = new Collection;
 
-        // We are only interested in products in the same work
-        $relatedProducts = $this->getRelatedProducts()->where('ProductRelationCode', '06');
-
-        // If we don't have any other formats, is the current one digital
-        if ($relatedProducts->count() === 0 && $this->isImmaterial()) {
-            $editionTypes->push(['EditionType' => 'DGO']);
-        }
-
-        // Check if all editions from work are digital
-        $physicalProducts = $relatedProducts->filter(function ($relatedProduct, $key) {
-            // Only check ISBNs
-            foreach ($relatedProduct['ProductIdentifiers'] as $productIdentifier) {
-                if ($productIdentifier['ProductIDType'] === '03') {
-                    $groschen = new Groschen($productIdentifier['IDValue']);
-                    return $groschen->isImmaterial() === false;
-                }
-            }
-
-            return true;
-        });
-
-        // If none of the related products are physical and current one is digital
-        if ($physicalProducts->count() === 0 && $this->isImmaterial()) {
-            $editionTypes->push(['EditionType' => 'DGO']);
-        }
-
         // Check if article text or title contains information about edition type
         $title = $this->getTitleDetails()->where('TitleType', '01')->pluck('TitleElement.TitleText')->first();
         $deliveryNoteTitle = $this->getTitleDetails()->where('TitleType', '10')->pluck('TitleElement.TitleText')->first();
