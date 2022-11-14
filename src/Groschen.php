@@ -3574,6 +3574,8 @@ class Groschen implements ProductInterface
         switch ($this->getProductType()) {
             case 'Pocket book':
                 return '04';
+            case 'Podcast':
+                return '17';
             // Catalogue (default)
             default:
                 return '19';
