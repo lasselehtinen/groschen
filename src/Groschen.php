@@ -3576,10 +3576,9 @@ class Groschen implements ProductInterface
                 return '04';
             case 'Podcast':
                 return '17';
-            // Catalogue (default)
-            default:
-                return '19';
         }
+
+        return null;
     }
 
     /**
