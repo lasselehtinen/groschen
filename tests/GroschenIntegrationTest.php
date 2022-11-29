@@ -1330,7 +1330,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('02', $groschen->getPublishingStatus());
 
         // Exclusive sales
-        $groschen = new Groschen('9789513197506');
+        $groschen = new Groschen('9789510491317');
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Sold out
@@ -1352,6 +1352,10 @@ class GroschenIntegrationTest extends TestCase
         // Delivery block
         $groschen = new Groschen('9789510359686');
         $this->assertSame('07', $groschen->getPublishingStatus());
+
+        // Permanently withdrawn from sale
+        $groschen = new Groschen('9789520426705');
+        $this->assertSame('11', $groschen->getPublishingStatus());
     }
 
     /**
@@ -3349,12 +3353,16 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('03', $this->groschen->getNotificationType());
 
         // Publishing date in the future
-        $groschen = new Groschen('9789510453469');
+        $groschen = new Groschen('9789510421611');
         $this->assertSame('02', $groschen->getNotificationType());
 
         // Exclusive sales
-        $groschen = new Groschen('9789513181611');
+        $groschen = new Groschen('9789510491317');
         $this->assertSame('01', $groschen->getNotificationType());
+
+        // Permanently withdrawn from sales
+        $groschen = new Groschen('9789520426705');
+        $this->assertSame('05', $groschen->getNotificationType());
     }
 
     /**

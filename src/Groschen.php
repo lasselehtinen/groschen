@@ -1288,7 +1288,6 @@ class Groschen implements ProductInterface
         // Other statuses
         switch ($this->product->listingCode->name) {
             case 'Sold out':
-            case 'Permanently withdrawn from sale':
                 return '07';
             case 'Cancelled':
                 return '01';
@@ -1300,6 +1299,8 @@ class Groschen implements ProductInterface
                 return '04';
             case 'Development-Confidential':
                 return '00';
+            case 'Permanently withdrawn from sale':
+                return '11';
             default:
                 throw new Exception('Could not map product governing code ' . $this->product->listingCode->name . ' to publishing status');
         }
@@ -3587,6 +3588,16 @@ class Groschen implements ProductInterface
      */
     public function getNotificationType()
     {
+        // Product that has the status "Exclusive sales" should return 01 - Early notification from Codelist 1
+        if ($this->getStatus() === 'Exclusive Sales') {
+            return '01';
+        }
+
+        // Product that has the status "Permanently withdrawn from sales" should return 01 - Early notification from Codelist 1
+        if ($this->getStatus() === 'Permanently withdrawn from sale') {
+            return '05';
+        }
+
         // Use OriginalPublishingDate if given, other fallback to PublishingDate
         $dateRole = ($this->getPublishingDates()->contains('PublishingDateRole', '01')) ? '01' : '12';
 
@@ -3602,11 +3613,6 @@ class Groschen implements ProductInterface
             $value = '02';
         } else {
             $value = '03';
-        }
-
-        // Product that has the status "Exclusive sales" should return 01 - Early notification from Codelist 1
-        if ($this->getStatusCode() === 3) {
-            $value = '01';
         }
 
         return $value;
