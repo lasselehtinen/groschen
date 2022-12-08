@@ -1635,16 +1635,19 @@ class Groschen implements ProductInterface
             // Add ResourceVersionFeatureType 06 (Proprietary ID of resource contributor) if ResourceContentType 04 (Author image) and copyright
             if ($resourceContentType === '04') {
                 // Required credit and Copyright
-                $supportingResource['ResourceFeatures'] = [
-                    [
+                if (property_exists($hit->metadata, 'copyright') && !empty($hit->metadata->copyright)) {
+                    $supportingResource['ResourceFeatures'][] = [
                         'ResourceFeatureType' => '01',
                         'FeatureValue' => $hit->metadata->copyright,
-                    ],
-                    [
+                    ];
+                }
+
+                if (property_exists($hit->metadata, 'creatorName') && !empty($hit->metadata->creatorName[0])) {
+                    $supportingResource['ResourceFeatures'][] = [
                         'ResourceFeatureType' => '03',
                         'FeatureValue' => $hit->metadata->creatorName[0],
-                    ]
-                ];
+                    ];
+                }
 
                 array_splice($supportingResource['ResourceVersion']['ResourceVersionFeatures'], 5, 0, [
                     [
