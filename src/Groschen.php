@@ -1531,6 +1531,7 @@ class Groschen implements ProductInterface
         // Add separate queries for each contributor
         foreach ($this->getContributors() as $contributor) {
             array_push($queries, '(cf_creditorNumber:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true)');
+            array_push($queries, '(cf_mockingbirdContactId:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true)');
         }
 
         // List of metadata fields from Elvis that we need
