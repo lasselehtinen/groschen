@@ -1530,7 +1530,6 @@ class Groschen implements ProductInterface
 
         // Add separate queries for each contributor
         foreach ($this->getContributors() as $contributor) {
-            array_push($queries, '(cf_creditorNumber:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true)');
             array_push($queries, '(cf_mockingbirdContactId:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true)');
         }
 
@@ -1541,7 +1540,7 @@ class Groschen implements ProductInterface
             'mimeType',
             'fileSize',
             'cf_catalogMediatype',
-            'cf_creditorNumber',
+            'cf_mockingbirdContactId',
             'copyright',
             'creatorName',
         ];
@@ -1569,7 +1568,7 @@ class Groschen implements ProductInterface
         // Add hits to collection
         foreach ($searchResults->hits as $hit) {
             // Check that we have all the required metadata fields
-            foreach (array_diff($metadataFields, ['cf_creditorNumber', 'copyright', 'creatorName']) as $requiredMetadataField) {
+            foreach (array_diff($metadataFields, ['cf_mockingbirdContactId', 'copyright', 'creatorName']) as $requiredMetadataField) {
                 if (property_exists($hit->metadata, $requiredMetadataField) === false) {
                     throw new Exception('The required metadata field '. $requiredMetadataField . ' does not exist in Elvis.');
                 }
@@ -1650,7 +1649,7 @@ class Groschen implements ProductInterface
                 array_splice($supportingResource['ResourceVersion']['ResourceVersionFeatures'], 5, 0, [
                     [
                         'ResourceVersionFeatureType' => '06',
-                        'FeatureValue' => $hit->metadata->cf_creditorNumber
+                        'FeatureValue' => $hit->metadata->cf_mockingbirdContactId
                     ]
                 ]);
             }
