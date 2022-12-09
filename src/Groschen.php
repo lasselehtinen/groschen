@@ -3712,19 +3712,36 @@ class Groschen implements ProductInterface
         ]);
 
         $json = json_decode($response->getBody()->getContents());
-        $pages = intval($json->pagination->pagesTotalCount+1);
 
         // Collection to hold all editions
         $editions = new Collection;
 
-        for ($page = 1; $page < $pages; $page++) {
+        // In case of just one page, we don't have to do pagination
+        if ($json->pagination->pagesTotalCount === 1) {
+            foreach ($json->results as $result) {
+                $editions->push([
+                    'workId' => $result->document->workId,
+                    'editionId' => $result->document->id,
+                    'isbn' => $result->document->isbn,
+                ]);
+            }
+
+            return $editions;
+        }
+
+        // List pages
+        $pages = intval($json->pagination->pagesTotalCount+1);
+
+        for ($page = 1; $page <= $pages; $page++) {
+            $offset = ($page === 1) ? 0 : 1000 * ($page-1);
+
             // Get page
             $response = $this->client->get('v2/search/productions', [
                 'query' => [
                     'q' => $query,
                     'limit' => 1000,
                     '$filter' => $filter,
-                    'offset' => ($page === 1) ? 0 : 1000 * ($page-1),
+                    'offset' => $offset,
                     '$select' => 'workId,id,isbn,interestAgeName',
                 ]
             ]);
@@ -3735,7 +3752,7 @@ class Groschen implements ProductInterface
                 $editions->push([
                     'workId' => $result->document->workId,
                     'editionId' => $result->document->id,
-                    'isbn' => $result->document->isbn,
+                    'isbn' => $result->document->isbn ?? null,
                 ]);
             }
         }

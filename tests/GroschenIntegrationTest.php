@@ -3454,6 +3454,7 @@ class GroschenIntegrationTest extends TestCase
     public function testSearchingForEditions()
     {
         // Basic search just with term
+       /*
         $groschen = new Groschen('9789520448042');
         $searchResults = $groschen->searchEditions('tervo');
         $this->assertTrue($searchResults->contains('isbn', 9789510407714));
@@ -3462,6 +3463,14 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789520448042');
         $searchResults = $groschen->searchEditions('', "(listingCodeId eq '113')");
         $this->assertTrue($searchResults->contains('isbn', 9789523125698));
+        $this->assertGreaterThan(50, $searchResults->count());
+        */
+
+        // Search with more than 2000k results
+        $groschen = new Groschen('9789520448042');
+        $searchResults = $groschen->searchEditions('', "(bindingCode eq 'BCB104')");
+        $this->assertTrue($searchResults->contains('isbn', 9789510407714));
+        $this->assertGreaterThan(2000, $searchResults->count());
     }
 
     /**
