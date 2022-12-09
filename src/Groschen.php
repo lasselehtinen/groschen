@@ -2196,7 +2196,15 @@ class Groschen implements ProductInterface
      */
     public function isImmaterial()
     {
-        return ($this->product->dispositionCode->id === 'y') ? true : false;
+        return in_array($this->getProductType(), [
+            'Podcast',
+            'Downloadable audio file',
+            'Picture-and-audio book',
+            'ePub2',
+            'ePub3',
+            'Application',
+            'PDF',
+        ]);
     }
 
     /**
