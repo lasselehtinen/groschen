@@ -884,14 +884,7 @@ class Groschen implements ProductInterface
      */
     public function getPrice()
     {
-        if (!isset($this->product->resellerPriceIncludingVat)) {
-            return null;
-        }
-
-        // We need to recalculate net price incl. tax since Mockingbird does not round it correctly
-        $netPrice = (1 + ($this->getTaxRate() / 100)) * $this->getPriceExcludingVat();
-
-        return round($netPrice, 2);
+        return (isset($this->product->resellerPriceIncludingVat)) ? floatval($this->product->resellerPriceIncludingVat) : null;
     }
 
     /**
