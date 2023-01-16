@@ -3382,10 +3382,13 @@ class GroschenIntegrationTest extends TestCase
      * @return void
      */
     public function testNonFictionalCharactersAreListedInKeywords() {
-        $groschen = new Groschen('9789523757486');
+        $groschen = new Groschen('9789510452097');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
 
-        $this->assertContains('Kari Kairamo', $keywords);
+        $this->assertContains('muusikot', $keywords);
+        $this->assertContains('DJ:t', $keywords);
+        $this->assertContains('Tim Bergling', $keywords);
+        $this->assertContains('Avicii', $keywords);
     }
 
     /**

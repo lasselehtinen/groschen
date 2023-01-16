@@ -1106,8 +1106,17 @@ class Groschen implements ProductInterface
         }
 
         if (isset($this->product->bibliographicCharacters) && !empty($this->product->bibliographicCharacters)) {
-            foreach (explode(';', $this->product->bibliographicCharacters) as $bibliographicCharacter) {
-                $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $bibliographicCharacter]);
+            // Add or update existing SubjectSchemeIdentifier 20
+            if ($subjects->contains('SubjectSchemeIdentifier', '20')) {
+                $subjects = collect($subjects)->map(function ($subject) {
+                    if ($subject['SubjectSchemeIdentifier'] === '20') {
+                        $subject['SubjectHeadingText'] = $subject['SubjectHeadingText'].';'.$this->product->bibliographicCharacters;
+                    }
+
+                    return $subject;
+                });
+            } else {
+                $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $this->product->bibliographicCharacters]);
             }
         }
 
