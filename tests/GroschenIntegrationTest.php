@@ -3378,6 +3378,17 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that non-fictional characters are listed in keywords
+     * @return void
+     */
+    public function testNonFictionalCharactersAreListedInKeywords() {
+        $groschen = new Groschen('9789523757486');
+        $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
+
+        $this->assertContains('Kari Kairamo', $keywords);
+    }
+
+    /**
      * Test that the internal category is returned in subjects
      * @return void
      */
