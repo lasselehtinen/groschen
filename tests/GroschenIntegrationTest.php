@@ -3385,10 +3385,14 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510452097');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
 
-        $this->assertContains('muusikot', $keywords);
-        $this->assertContains('DJ:t', $keywords);
         $this->assertContains('Tim Bergling', $keywords);
         $this->assertContains('Avicii', $keywords);
+        $this->assertContains('muusikot', $keywords);
+        $this->assertContains('DJ:t', $keywords);
+
+        // Check that names listed are first
+        $this->assertSame('Tim Bergling', $keywords[0]);
+        $this->assertSame('Avicii', $keywords[1]);
     }
 
     /**

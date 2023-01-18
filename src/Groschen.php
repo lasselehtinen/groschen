@@ -1100,23 +1100,23 @@ class Groschen implements ProductInterface
         // Suomalainen kirja-alan luokitus
         $subjects->push(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => $this->getFinnishBookTradeCategorisation()]);
 
-        // Add keywords from Mockingbird
-        if (isset($this->product->keywords) && !empty($this->product->keywords)) {
-            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $this->product->keywords]);
+        // Add bibliographical characters
+        if (isset($this->product->bibliographicCharacters) && !empty($this->product->bibliographicCharacters)) {
+            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $this->product->bibliographicCharacters]);
         }
 
-        if (isset($this->product->bibliographicCharacters) && !empty($this->product->bibliographicCharacters)) {
-            // Add or update existing SubjectSchemeIdentifier 20
+        // Add keywords from Mockingbird
+        if (isset($this->product->keywords) && !empty($this->product->keywords)) {
             if ($subjects->contains('SubjectSchemeIdentifier', '20')) {
                 $subjects = collect($subjects)->map(function ($subject) {
                     if ($subject['SubjectSchemeIdentifier'] === '20') {
-                        $subject['SubjectHeadingText'] = $subject['SubjectHeadingText'].';'.$this->product->bibliographicCharacters;
+                        $subject['SubjectHeadingText'] = $subject['SubjectHeadingText'].';'.$this->product->keywords;
                     }
 
                     return $subject;
                 });
             } else {
-                $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $this->product->bibliographicCharacters]);
+                $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $this->product->keywords]);
             }
         }
 
