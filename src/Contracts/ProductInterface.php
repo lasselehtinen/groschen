@@ -523,4 +523,10 @@ interface ProductInterface
      * @return string|null
      */
     public function getTradeCategory();
+
+    /**
+     * Get the products names as subjects
+     * @return Collection
+     */
+    public function getNamesAsSubjects();
 }

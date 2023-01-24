@@ -3512,4 +3512,23 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertNotContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'T'], $groschen->getSubjects());
     }
+
+    /**
+     * Test getting names as subjects
+     * @return void
+     */
+    public function testGettingNamesAsSubjects()
+    {
+        // Biography
+        $biography = [
+            'NameType' => '00',
+            'PersonName' => 'Kari Kairamo',
+            'PersonNameInverted' => 'Kairamo, Kari',
+            'KeyNames' => 'Kairamo',
+            'NamesBeforeKey' => 'Kari',
+        ];
+
+        $groschen = new Groschen('9789523757486');
+        $this->assertContains($biography, $groschen->getNamesAsSubjects());
+    }
 }

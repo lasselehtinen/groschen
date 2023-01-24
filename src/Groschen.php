@@ -3767,4 +3767,33 @@ class Groschen implements ProductInterface
 
         return $editions;
     }
+
+    /**
+     * Get the products names as subjects
+     * @return Collection
+     */
+    public function getNamesAsSubjects() {
+        $namesAsSubjects = new Collection;
+
+        if (isset($this->product->bibliographicCharacters) && !empty($this->product->bibliographicCharacters)) {
+            $bibliographicCharacters = explode(';', $this->product->bibliographicCharacters);
+
+            foreach ($bibliographicCharacters as $bibliographicCharacter) {
+                $parts = explode(' ', $bibliographicCharacter);
+                $lastname = array_pop($parts);
+                $firstname = implode(' ', $parts);
+
+                // Add to collection
+                $namesAsSubjects->push([
+                    'NameType' => '00',
+                    'PersonName' => $bibliographicCharacter,
+                    'PersonNameInverted' => $lastname.', '.$firstname,
+                    'KeyNames' => $lastname,
+                    'NamesBeforeKey' => $firstname,
+                ]);
+            }
+        }
+
+        return $namesAsSubjects;
+    }
 }
