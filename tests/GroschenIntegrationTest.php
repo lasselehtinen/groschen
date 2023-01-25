@@ -3531,4 +3531,18 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789523757486');
         $this->assertContains($biography, $groschen->getNamesAsSubjects());
     }
+
+    /**
+     * Test that prizes are listed in keywords
+     * @return void
+     */
+    public function testPrizesAreListedInKeywords() {
+        $groschen = new Groschen('9789510382745');
+        $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
+
+        $this->assertContains('junat', $keywords);
+
+        // Check that names prizes are listed first
+        $this->assertSame('Finlandia-palkinto', $keywords[0]);
+    }
 }

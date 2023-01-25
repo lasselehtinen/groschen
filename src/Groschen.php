@@ -1100,24 +1100,32 @@ class Groschen implements ProductInterface
         // Suomalainen kirja-alan luokitus
         $subjects->push(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => $this->getFinnishBookTradeCategorisation()]);
 
+        // Collection to hold keywords
+        $keywords = collect([]);
+
+        // Add prizes
+        if (isset($this->product->awards) && !empty($this->product->awards)) {
+            foreach ($this->product->awards as $award) {
+                $keywords->push($award->name);
+            }
+        }
+
         // Add bibliographical characters
         if (isset($this->product->bibliographicCharacters) && !empty($this->product->bibliographicCharacters)) {
-            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $this->product->bibliographicCharacters]);
+            foreach (explode(';', $this->product->bibliographicCharacters) as $bibliographicCharacter) {
+                $keywords->push($bibliographicCharacter);
+            }
         }
 
         // Add keywords from Mockingbird
         if (isset($this->product->keywords) && !empty($this->product->keywords)) {
-            if ($subjects->contains('SubjectSchemeIdentifier', '20')) {
-                $subjects = collect($subjects)->map(function ($subject) {
-                    if ($subject['SubjectSchemeIdentifier'] === '20') {
-                        $subject['SubjectHeadingText'] = $subject['SubjectHeadingText'].';'.$this->product->keywords;
-                    }
-
-                    return $subject;
-                });
-            } else {
-                $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $this->product->keywords]);
+            foreach (explode(';', $this->product->keywords) as $keyword) {
+                $keywords->push($keyword);
             }
+        }
+
+        if ($keywords->count() > 0) {
+            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $keywords->unique()->implode(';')]);
         }
 
         // Remove those where SubjectCode and/or SubjectHeadingText is empty
