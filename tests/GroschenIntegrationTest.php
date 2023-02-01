@@ -1658,19 +1658,19 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '02',
-                        'FeatureValue' => 3658,
+                        'FeatureValue' => 5059,
                     ],
                     [
                         'ResourceVersionFeatureType' => '03',
-                        'FeatureValue' => 5616,
+                        'FeatureValue' => 3360,
                     ],
                     [
                         'ResourceVersionFeatureType' => '04',
-                        'FeatureValue' => 'Max_Manner_c_Nauska_5637x.jpg',
+                        'FeatureValue' => 'Max_Manner_c_Nauska_6170.jpg',
                     ],
                     [
                         'ResourceVersionFeatureType' => '05',
-                        'FeatureValue' => '9.8',
+                        'FeatureValue' => '12.3',
                     ],
                     [
                         'ResourceVersionFeatureType' => '06',
@@ -1678,10 +1678,10 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 10326073,
+                        'FeatureValue' => 12858320,
                     ],
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/58orYt5TqjnAyBVgE454q3/*/Max_Manner_c_Nauska_5637x.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/D6hl5y3JKlR9FqRtBpClWq/*/Max_Manner_c_Nauska_6170.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
             'ResourceFeatures' => [
               [
