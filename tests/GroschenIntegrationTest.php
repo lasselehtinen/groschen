@@ -138,14 +138,14 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('ED', $groschen->getProductForm());
         $this->assertContains('E101', $groschen->getProductFormDetails());
 
-        // ePub3
-        $groschen = new Groschen('9789510428788');
+        // ePub3 without audio
+        $groschen = new Groschen('9789520441869');
         $this->assertSame('ED', $groschen->getProductForm());
         $this->assertContains('E101', $groschen->getProductFormDetails());
         $this->assertNotContains('A305', $groschen->getProductFormDetails());
 
         // ePub3 with additional audio
-        $groschen = new Groschen('9789520432850');
+        $groschen = new Groschen('9789510491263');
         $this->assertSame('ED', $groschen->getProductForm());
         $this->assertContains('E101', $groschen->getProductFormDetails());
         $this->assertContains('A305', $groschen->getProductFormDetails());

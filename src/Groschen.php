@@ -321,7 +321,7 @@ class Groschen implements ProductInterface
         }
 
         // Add additional entry for ePub 3's that contain audio
-        if (isset($this->product->technicalProductionType->customProperties->canContainAudioFile) && $this->product->technicalProductionType->customProperties->canContainAudioFile === true) {
+        if (isset($this->product->activePrint->ebookHasAudioFile) && $this->product->activePrint->ebookHasAudioFile === true) {
             $productFormDetails->push('A305');
         }
 
