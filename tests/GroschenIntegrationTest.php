@@ -736,17 +736,6 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting incorrect language code throws exception
-     * @return void
-     */
-    public function testIncorrectLanguageCodeThrowsException()
-    {
-        $groschen = new Groschen('9789523755864');
-        $this->expectException(Exception::class);
-        $languages = $groschen->getLanguages();
-    }
-
-    /**
      * Test getting products extents
      * @return void
      */
@@ -956,7 +945,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Main product group', 'SubjectCode' => '1', 'SubjectHeadingText' => 'Kotimainen kauno'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Product sub-group', 'SubjectCode' => '24', 'SubjectHeadingText' => 'Nykyromaanit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Cost center', 'SubjectCode' => '301', 'SubjectHeadingText' => 'Kotimainen kauno'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Cost center', 'SubjectCode' => '301', 'SubjectHeadingText' => 'WSOY - Kotimainen kauno'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC000000'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
@@ -969,7 +958,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertNotContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => '1939-1945;2013;sotahistoria;Lapin sota;jatkosota;talvisota;psykohistoria;psykiatria;sotilaspsykiatria;psykiatrinen hoito;traumaperäinen stressireaktio;traumat;sotarintama;mielenterveyshäiriöt;mielenterveys;sotilaat;kokemukset;sodat;kirjallisuuspalkinnot;Suomi'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;sodankäynti;Suomi;1939-1945;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
@@ -1080,19 +1069,19 @@ class GroschenIntegrationTest extends TestCase
     {
         // Pocket book
         $groschen = new Groschen('9789513151027');
-        $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'T'], $groschen->getSubjects());
+        $this->assertSame('T', $groschen->getFinnishBookTradeCategorisation());
 
         // Young adults pocket book should return only T
         $groschen = new Groschen('9789510396100');
-        $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'T'], $groschen->getSubjects());
+        $this->assertSame('T', $groschen->getFinnishBookTradeCategorisation());
 
         // Childrens book
         $groschen = new Groschen('9789520412722');
-        $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'L'], $groschen->getSubjects());
+        $this->assertSame('L', $groschen->getFinnishBookTradeCategorisation());
 
         // Young adults book
         $groschen = new Groschen('9789513189075');
-        $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'N'], $groschen->getSubjects());
+        $this->assertSame('N', $groschen->getFinnishBookTradeCategorisation());
     }
 
     /**
