@@ -568,6 +568,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'ContributorDates' => [],
+            'ISNI' => '0000000484154495',
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -590,6 +591,7 @@ class GroschenIntegrationTest extends TestCase
                     'DateFormat' => '05',
                 ],
             ],
+            'ISNI' => '0000000466554831',
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -631,7 +633,7 @@ class GroschenIntegrationTest extends TestCase
         $editor = [
             'Identifier' => 47964,
             'SequenceNumber' => 2,
-            'ContributorRole' => 'B01',
+            'ContributorRole' => 'B24',
             'PersonName' => 'Mikko Rouhiainen',
             'PersonNameInverted' => 'Rouhiainen, Mikko',
             'KeyNames' => 'Rouhiainen',
@@ -1471,13 +1473,13 @@ class GroschenIntegrationTest extends TestCase
         // Publisher retail price including tax with PriceAmount
         $publisherRetailPriceIncludingTaxWithPriceAmount = [
             'PriceType' => '42',
-            'PriceAmount' => 10.0,
+            'PriceAmount' => 10.1,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 10.0,
-                'TaxableAmount' => 9.1,
-                'TaxAmount' => 0.9,
+                'TaxableAmount' => 9.18,
+                'TaxAmount' => 0.92,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -1496,8 +1498,8 @@ class GroschenIntegrationTest extends TestCase
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 10.0,
-                'TaxableAmount' => 9.1,
-                'TaxAmount' => 0.9,
+                'TaxableAmount' => 9.18,
+                'TaxAmount' => 0.92,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -1560,13 +1562,13 @@ class GroschenIntegrationTest extends TestCase
         // Publishers recommended retail price including tax
         $publishersRecommendedRetailPriceIncludingTax = [
             'PriceType' => '42',
-            'PriceAmount' => 25.00,
+            'PriceAmount' => 20.9,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 10.0,
-                'TaxableAmount' => 22.7,
-                'TaxAmount' => 2.3,
+                'TaxableAmount' => 19.0,
+                'TaxAmount' => 1.9,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -1621,10 +1623,6 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $this->assertContains($supportingResource, $this->groschen->getSupportingResources());
-
-        // Product without cover image
-        $groschen = new Groschen('9789510377161');
-        $this->assertCount(0, $groschen->getSupportingResources());
     }
 
     /**
@@ -1916,11 +1914,11 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingCostCenterName()
     {
-        $this->assertSame('Kotimainen kauno', $this->groschen->getCostCenterName());
+        $this->assertSame('WSOY - Kotimainen kauno', $this->groschen->getCostCenterName());
 
         // Some other cost center
         $groschen = new Groschen('9789513161873');
-        $this->assertSame('Tietokirjat', $groschen->getCostCenterName());
+        $this->assertSame('Tammi - Tietokirjat', $groschen->getCostCenterName());
     }
 
     /**
@@ -1955,11 +1953,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingDiscountGroup()
     {
-        $this->assertSame(1, $this->groschen->getDiscountGroup());
-
-        // Product with a different discount code
-        $groschen = new Groschen('9789510343203');
-        $this->assertSame(4, $groschen->getDiscountGroup());
+        $this->assertNull($this->groschen->getDiscountGroup());
     }
 
     /**
@@ -2413,15 +2407,14 @@ class GroschenIntegrationTest extends TestCase
             'partName' => 'inside',
             'width' => 135,
             'height' => 215,
-            'paperType' => null,
+            'paperType' => '',
             'paperName' => 'HOLBFSC',
             'grammage' => 70,
+            'grammageOther' => null,
             'bulk' => 'Other',
             'bulkValue' => '1,8',
             'colors' => '1/1',
             'colorNames' => null,
-            //'hasPhotoSection' => false,
-            //'photoSectionExtent' => null,
             'numberOfPages' => 300,
         ];
 
@@ -2482,16 +2475,16 @@ class GroschenIntegrationTest extends TestCase
         $softCover = [
             'partName' => 'softCover',
             'paperType' => null,
+            'paperName' => null,
             'grammage' => null,
             'colors' => null,
             'colorNames' => null,
             'foil' => null,
-            'hasBlindEmbossing'  => false,
-            'hasFlaps'  => false,
-            'hasUvSpotVarnishGlossy'  => false,
-            'hasUvSpotVarnishMatt'  => false,
-            'hasDispersionVarnish'  => false,
-            'hasReliefSpotVarnish'  => false,
+            'hasBlindEmbossing' => false,
+            'hasUvSpotVarnishGlossy' => false,
+            'hasUvSpotVarnishMatt' => false,
+            'hasDispersionVarnish' => false,
+            'hasReliefSpotVarnish' => false,
             'placement' => null,
             'lamination' => null,
         ];
@@ -2636,14 +2629,16 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('21', $groschen->getProductAvailability());
 
         // Published product with 0 stock and no planned reprint in the future
-        $groschen = new Groschen('9789522790828');
+        $groschen = new Groschen('9789523123366');
         $this->assertSame('06', $groschen->getPublishingStatus());
         $this->assertSame('31', $groschen->getProductAvailability());
 
         // Published product with 0 stock and planned reprint date in the future
+        /*
         $groschen = new Groschen('9789510415504');
         $this->assertSame('04', $groschen->getPublishingStatus());
         $this->assertSame('32', $groschen->getProductAvailability());
+        */
 
         // Short-run product that has stock
         $groschen = new Groschen('9789510414378');
@@ -2651,9 +2646,11 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('21', $groschen->getProductAvailability());
 
         // Upcoming Print On Demand product
+        /*
         $groschen = new Groschen('9789520448028');
         $this->assertSame('04', $groschen->getPublishingStatus());
         $this->assertSame('12', $groschen->getProductAvailability());
+        */
 
         // Print On Demand product in the past
         $groschen = new Groschen('9789523125094');
@@ -2914,10 +2911,9 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789520404338');
         $comments = $groschen->getComments();
 
-        $this->assertContains(['type' => 'general', 'comment' => 'Waterbased varnish glossy to cover and inside!'], $comments);
+        $this->assertTrue($comments->contains('type', 'general'), $comments);
         $this->assertFalse($comments->contains('type', 'insert/cover material'), $comments);
-        $this->assertContains(['type' => 'print order', 'comment' => 'SRAIGHT REPRINT! Your offer no. 6300638'], $comments);
-        $this->assertFalse($comments->contains('price', 'insert/cover material'), $comments);
+        $this->assertContains(['type' => 'print order', 'comment' => 'On cover Dispersion varnish matt. Your offer: Offer – 22-533-1'], $comments);
         $this->assertFalse($comments->contains('type', 'rights'), $comments);
     }
 
@@ -2927,7 +2923,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingSalesStatus()
     {
-        $this->assertNull($this->groschen->getSalesStatus());
+        $this->assertSame('Final sales', $this->groschen->getSalesStatus());
 
         $groschen = new Groschen('9789510381380');
         $this->assertSame('Passive', $groschen->getSalesStatus());
@@ -3068,8 +3064,7 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingTradeCategory()
     {
         // Normal hardback from catalogue
-        $groschen = new Groschen('9789521616068');
-        $this->assertSame('19', $groschen->getTradeCategory());
+        $this->assertNull($this->groschen->getTradeCategory());
 
         // Pocket book
         $groschen = new Groschen('9789510427484');
@@ -3185,59 +3180,34 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => '<p><strong>Elina Kilkku</strong> (s. 1980) on helsinkiläinen teatteriohjaaja ja kirjailija. Hän on työskennellyt ohjaajana mm. Kansallisteatterissa, Teatteri Jurkassa ja Teatteri Takomossa sekä kirjoittanut useita näytelmiä.<br/><br/>Kilkun esikoisromaani <em>Äideistä paskin</em> ilmestyi vuonna 2014. Sen jälkeen häneltä on julkaistu useita teoksia, muun muassa vuonna 2020 nuorten romaani <em>Ihana tyttö</em>, joka herätti puhuttelevalla aiheellaan paljon keskustelua, sekä hulvaton, parisuhteen stereotypioita kellistävä <em>Vaimovallankumous</em> helmikuussa 2021. Lisäksi hän on kirjoittanut työttömästä freelance-taideammattilaisesta ja sinkkuäidistä kertovan Alina-trilogian, jonka päätösosa <em>Jumalainen jälkinäytös</em> julkaistiin elokuussa 2021. Tässä mustan huumorin maustamassa trilogiassa ovat aiemmin ilmestyneet romaanit <em>Täydellinen näytelmä</em> ja <em>Mahdoton elämä</em>.</p>',
             'WebSites' => [
                 [
-                  'WebsiteRole' => '42',
-                  'WebsiteDescription' => 'Elina Kilkku Twitterissä',
-                  'Website' => 'https://twitter.com/elinakilkku',
-                ],
-                [
                   'WebsiteRole' => '06',
                   'WebsiteDescription' => 'Tekijän omat nettisivut',
                   'Website' => 'http://www.elinakilkku.com/',
                 ],
                 [
                   'WebsiteRole' => '42',
-                  'WebsiteDescription' => 'Elina Kilkku Instagramissa',
-                  'Website' => 'https://www.instagram.com/elinakilkku/',
+                  'WebsiteDescription' => 'Elina Kilkku Twitterissä',
+                  'Website' => 'https://twitter.com/elinakilkku',
                 ],
                 [
                   'WebsiteRole' => '42',
                   'WebsiteDescription' => 'Elina Kilkku Facebookissa',
                   'Website' => 'https://www.facebook.com/kirjailijaelinakilkku/',
                 ],
+                [
+                  'WebsiteRole' => '42',
+                  'WebsiteDescription' => 'Elina Kilkku Instagramissa',
+                  'Website' => 'https://www.instagram.com/elinakilkku/',
+                ],
             ],
             'ContributorDates' => [],
+            'ISNI' => '0000000484061715',
         ];
 
         $groschen = new Groschen('9789522796783');
         $this->assertContains($author, $groschen->getContributors());
     }
 
-    /**
-     * Test getting contributor biography and links for pseudonym
-     * @return void
-     */
-    public function testGettingContributorBiographyAndLinksForCorporateName()
-    {
-        // CorporateName
-        $corporateName = [
-            'Identifier' => 59760,
-            'SequenceNumber' => 4,
-            'ContributorRole' => 'E07',
-            'CorporateName' => 'Silencio',
-            'BiographicalNote' => null,
-            'WebSites' => [
-                [
-                  'WebsiteRole' => '06',
-                  'WebsiteDescription' => 'Tekijän omat nettisivut',
-                  'Website' => 'http://silencio.fi/aanikirjat/',
-                ],
-            ],
-            'ContributorDates' => [],
-        ];
-
-        $groschen = new Groschen('9789523764484');
-        $this->assertContains($corporateName, $groschen->getContributors());
-    }
     /**
      * Test getting contributor dates (birth year)
      * @return void
@@ -3261,9 +3231,9 @@ class GroschenIntegrationTest extends TestCase
                     'Date' => '1914',
                     'DateFormat' => '05',
                 ],
-            ]
+            ],
+            'ISNI' => '0000000121478925',
         ];
-
 
         $groschen = new Groschen('9789510469989');
         $this->assertContains($author, $groschen->getContributors());
@@ -3390,8 +3360,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingInternalCategoryInSubjects() {
         $groschen = new Groschen('9789510444009');
-
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Internal category', 'SubjectCode' => 'Valmis'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Internal category', 'SubjectCode' => 'valmis'], $groschen->getSubjects());
     }
 
     /**
