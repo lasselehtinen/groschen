@@ -1697,6 +1697,16 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting supporting resources for Sangatsu Manga
+     * @return void
+     */
+    public function testGettingSupportingResourcesForSangatsuManga()
+    {
+        $groschen = new Groschen('9789521621338');
+        $this->assertGreaterThan(0, $groschen->getSupportingResources()->count());
+    }
+
+    /**
      * Test getting Bazar 3D cover image
      * @group SupportingResources
      * @return void

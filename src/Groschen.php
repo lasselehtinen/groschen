@@ -1538,15 +1538,17 @@ class Groschen implements ProductInterface
             throw new Exception($json->loginFaultMessage);
         }
 
-        // Compile list of Elvis queries
+        // Brand mapping
+        $brand = ($this->product->brand->name === 'Sangatsu Manga') ? 'Tammi' : $this->product->brand->name;
+
         // Cover image
         $queries = [
-            'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND ancestorPaths:"/'.$this->product->brand->name.'/Kansikuvat"'
+            'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND ancestorPaths:"/'.$brand.'/Kansikuvat"'
         ];
 
         // Add separate queries for each contributor
         foreach ($this->getContributors() as $contributor) {
-            array_push($queries, 'cf_mockingbirdContactId:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true AND ancestorPaths:"/'.$this->product->brand->name.'/Kirjailijakuvat"');
+            array_push($queries, 'cf_mockingbirdContactId:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true AND ancestorPaths:"/'.$brand.'/Kirjailijakuvat"');
         }
 
         // List of metadata fields from Elvis that we need
