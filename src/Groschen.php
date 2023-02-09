@@ -523,6 +523,11 @@ class Groschen implements ProductInterface
             });
         }
 
+        // Remove duplicate roles for the same person
+        $teamMembers = $teamMembers->unique(function ($teamMember) {
+            return $teamMember->contact->id.$teamMember->role->customProperties->onixCode;
+        });
+
         // Init SequenceNumber
         $sequenceNumber = 1;
 

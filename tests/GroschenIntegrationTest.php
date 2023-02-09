@@ -483,6 +483,18 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that duplicate contributors mapped to same Onix are filtered
+     * @return void
+     */
+    public function testThatContributorsMappedToSameOnixRoleAreFiltered()
+    {
+        $groschen = new Groschen('9789510471586');
+
+        // Both Illustrator, cover WS and Designer, cover WS are mapped to A36
+        $this->assertCount(1, $groschen->getContributors()->where('PersonName', 'Riad Sattouf')->where('ContributorRole', 'A36'), 'The contributor and role combination is duplicated.');
+    }
+
+    /**
      * Test contributor with only one name or pseudonym is handled correctly
      * @return void
      */
