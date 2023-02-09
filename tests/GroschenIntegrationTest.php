@@ -1687,6 +1687,16 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting supporting resource that has multiple images
+     * @return void
+     */
+    public function testGettingSupportingResourcesWithMultipleImages()
+    {
+        $groschen = new Groschen('9789510485132');
+        $this->assertGreaterThan(0, $groschen->getSupportingResources()->count());
+    }
+
+    /**
      * Test getting Bazar 3D cover image
      * @group SupportingResources
      * @return void

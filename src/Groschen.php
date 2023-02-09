@@ -1541,12 +1541,12 @@ class Groschen implements ProductInterface
         // Compile list of Elvis queries
         // Cover image
         $queries = [
-            '(gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND (ancestorPaths:/WSOY/Kansikuvat OR ancestorPaths:/Tammi/Kansikuvat OR ancestorPaths:/Kosmos/Kansikuvat OR ancestorPaths:/Disney/Kansikuvat OR ancestorPaths:/Bazar/Kansikuvat OR ancestorPaths:/Minerva/Kansikuvat OR ancestorPaths:/Docendo/Kansikuvat OR ancestorPaths:/CrimeTime/Kansikuvat OR ancestorPaths:"/Johnny Kniga/Kansikuvat"))'
+            'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND ancestorPaths:"/'.$this->product->brand->name.'/Kansikuvat"'
         ];
 
         // Add separate queries for each contributor
         foreach ($this->getContributors() as $contributor) {
-            array_push($queries, '(cf_mockingbirdContactId:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true AND (ancestorPaths:"/Bazar/Kirjailijakuvat" OR ancestorPaths:"/CrimeTime/Kirjailijakuvat" OR ancestorPaths:"/Disney/Kirjailijakuvat" OR ancestorPaths:"/Docendo/Kirjailijakuvat" OR ancestorPaths:"/Johnny Kniga/Kirjailijakuvat" OR ancestorPaths:"/Kosmos/Kirjailijakuvat" OR ancestorPaths:"/Minerva/Kirjailijakuvat" OR ancestorPaths:"/Readme.fi/Kirjailijakuvat" OR ancestorPaths:"/Tammi/Kirjailijakuvat" OR ancestorPaths:"/WSOY/Kirjailijakuvat"))');
+            array_push($queries, 'cf_mockingbirdContactId:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true AND ancestorPaths:"/'.$this->product->brand->name.'/Kirjailijakuvat"');
         }
 
         // List of metadata fields from Elvis that we need
@@ -1571,18 +1571,22 @@ class Groschen implements ProductInterface
             'application/vnd.adobe.photoshop' => 'D507',
         ];
 
-        // Perform query in Elvis
-        $response = $client->request('POST', 'search', [
-            'query' => [
-                'q' => implode(' OR ', $queries),
-                'metadataToReturn' => implode(',', $metadataFields),
-            ],
-        ]);
+        // Perform queries in Elvis
+        $hits = [];
+        foreach ($queries as $query) {
+            $response = $client->request('POST', 'search', [
+                'query' => [
+                    'q' => $query,
+                    'metadataToReturn' => implode(',', $metadataFields),
+                ],
+            ]);
 
-        $searchResults = json_decode($response->getBody());
+            $searchResults = json_decode($response->getBody());
+            $hits = array_merge($hits, $searchResults->hits);
+        }
 
         // Add hits to collection
-        foreach ($searchResults->hits as $hit) {
+        foreach ($hits as $hit) {
             // Check that we have all the required metadata fields
             foreach (array_diff($metadataFields, ['cf_mockingbirdContactId', 'copyright', 'creatorName']) as $requiredMetadataField) {
                 if (property_exists($hit->metadata, $requiredMetadataField) === false) {
