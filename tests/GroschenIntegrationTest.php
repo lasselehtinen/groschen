@@ -1638,6 +1638,17 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting cover image for Disney which is not brand based
+     * @group SupportingResources
+     * @return void
+     */
+    public function testGettingCoverImageForDisney()
+    {
+        $groschen = new Groschen('9789520449155');
+        $this->assertTrue($groschen->getSupportingResources()->contains('ResourceContentType', '01'));
+    }
+
+    /**
      * Test getting author image in supporting resources
      * @group SupportingResources
      * @return void

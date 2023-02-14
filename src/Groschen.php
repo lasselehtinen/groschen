@@ -1546,6 +1546,11 @@ class Groschen implements ProductInterface
         // Brand mapping
         $brand = ($this->product->brand->name === 'Sangatsu Manga') ? 'Tammi' : $this->product->brand->name;
 
+        // Disney are based on cost center, not brand
+        if ($this->getCostCenter() === 909) {
+            $brand = 'Disney';
+        }
+
         // Cover image
         $queries = [
             'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND ancestorPaths:"/'.$brand.'/Kansikuvat"'
