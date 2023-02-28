@@ -900,6 +900,22 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that author description(s) are picked from contact if author presentation paragraph is missing
+     * @return void
+     */
+    public function testAuthorDescriptionIsTakenFromTheContactIfAuthorPresentationParagraphIsMissing()
+    {
+        $groschen = new Groschen('9789524030199');
+        $textContents = $groschen->getTextContents();
+        $this->assertTrue($textContents->contains('TextType', '03'));
+
+        $marketingText = $textContents->where('TextType', '03')->pluck('Text')->first();
+
+        $this->assertStringContainsString('<p><strong>Göran Wennqvist </strong>(s. 1955) on eläköitynyt porvoolainen rikosylikomisario, jolla on takanaan 43 vuotta kestänyt monipuolinen työura ja tehtävät poliisin eri yksiköissä.', $marketingText);
+        $this->assertStringContainsString('><p><strong>Tero Haapala</strong> (s. 1958) on eläköitynyt helsinkiläinen rikosylikomisario, joka toimi 41 vuotta kestäneen työuransa kaikki vuodet rikostutkintatehtävissä, ensin Helsingin rikospoliisissa ja 35 viimeisintä vuotta keskusrikospoliisissa.', $marketingText);
+    }
+
+    /**
      * Test getting texts
      * @return void
      */
@@ -1835,14 +1851,14 @@ class GroschenIntegrationTest extends TestCase
             ],
         ];
 
-        // Reading sample in Issuu
+        // Reading sample
         $readingSample = [
             'ResourceContentType' => '15',
             'ContentAudience' => '00',
             'ResourceMode' => '04',
             'ResourceVersion' => [
                 'ResourceForm' => '03',
-                'ResourceLink' => 'http://media.bonnierbooks.fi/sample-pages/9789510409749_lukun.pdf',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/E3xpJ3rBKdkAfC9Y_R2z3U/*/9789510409749_lukun.pdf?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
         ];
 
@@ -3545,5 +3561,30 @@ class GroschenIntegrationTest extends TestCase
 
         // Check that names prizes are listed first
         $this->assertSame('Finlandia-palkinto', $keywords[0]);
+    }
+
+    /**
+     * Test that determining publisher folder works correctly
+     * @return void
+     */
+    public function testDeterminingPublisherFolderInAssetManagementWorksCorrectly() {
+        // WSOY
+        $groschen = new Groschen('9789510382745');
+        $this->assertSame('WSOY', $$groschen->getPublisherFolder());
+
+        // CrimeTime (Publisher and brand CrimeTime)
+        $groschen = new Groschen('xxx');
+        $this->assertSame('CrimeTime', $$groschen->getPublisherFolder());
+
+        // Docendo (Publisher Docendo and brand CrimeTime)
+        $this->assertSame('Docendo', $$groschen->getPublisherFolder());
+
+        // Disney (Publisher Tammi)
+        $groschen = new Groschen('9789520444884 ');
+        $this->assertSame('Disney', $$groschen->getPublisherFolder());
+
+        // Sangatsu Manga (Publisher Tammi)
+        $groschen = new Groschen('9789520444884 ');
+        $this->assertSame('/Tammi/Archive/Manga', $$groschen->getPublisherFolder());
     }
 }

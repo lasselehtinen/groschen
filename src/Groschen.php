@@ -1190,6 +1190,13 @@ class Groschen implements ProductInterface
             return $text->textType->name === 'Author presentation';
         });
 
+        // Use general contributor texts as backup
+        if ($authorDescription->count() === 0) {
+            $authorDescription = collect([
+                (object) ['text' => $this->getContributors()->where('BiographicalNote', '<>', '')->pluck('BiographicalNote')->implode('')],
+            ]);
+        }
+
         // Merge the texts and add missing paragraph tags
         $mergedTexts = $headline->merge($copyOne)->merge($copyTwo)->merge($authorDescription)->transform(function ($text) {
             if (substr($text->text, 0, 3) !== '<p>') {
