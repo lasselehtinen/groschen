@@ -1026,62 +1026,62 @@ class GroschenIntegrationTest extends TestCase
     {
         // 00 Kotimainen Kaunokirjallisuus
         $groschen = new Groschen('9789520429034');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '00', 'SubjectHeadingText' => 'Kotimainen Kaunokirjallisuus'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '00', 'SubjectHeadingText' => 'Kotimainen Kaunokirjallisuus'], $groschen->getSubjects());
 
         // 01 Käännetty Kaunokirjallisuus
         $groschen = new Groschen('9789510461730');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '01', 'SubjectHeadingText' => 'Käännetty Kaunokirjallisuus'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '01', 'SubjectHeadingText' => 'Käännetty Kaunokirjallisuus'], $groschen->getSubjects());
 
         // 03 Tietokirjallisuus
         $groschen = new Groschen('9789510467176');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '03', 'SubjectHeadingText' => 'Tietokirjallisuus'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '03', 'SubjectHeadingText' => 'Tietokirjallisuus'], $groschen->getSubjects());
 
         // 04 Lasten ja nuorten kirjat (kotimainen ja käännetty)
         $groschen = new Groschen('9789520428068');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '04', 'SubjectHeadingText' => 'Lasten ja nuorten kirjat'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '04', 'SubjectHeadingText' => 'Lasten ja nuorten kirjat'], $groschen->getSubjects());
 
         $groschen = new Groschen('9789520424909');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '04', 'SubjectHeadingText' => 'Lasten ja nuorten kirjat'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '04', 'SubjectHeadingText' => 'Lasten ja nuorten kirjat'], $groschen->getSubjects());
 
         // 06 Pokkarit
         $groschen = new Groschen('9789510467145');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '06', 'SubjectHeadingText' => 'Pokkarit'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '06', 'SubjectHeadingText' => 'Pokkarit'], $groschen->getSubjects());
 
         // 64 Äänikirjat
         $groschen = new Groschen('9789510366486');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '64', 'SubjectHeadingText' => 'Äänikirjat'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '64', 'SubjectHeadingText' => 'Äänikirjat'], $groschen->getSubjects());
 
         // 40 Kalenterit
         $groschen = new Groschen('9789523521018');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '40', 'SubjectHeadingText' => 'Kalenterit'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '40', 'SubjectHeadingText' => 'Kalenterit'], $groschen->getSubjects());
 
         // 86 Puuha- ja värityskirjat
         $groschen = new Groschen('9789513112721');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '86', 'SubjectHeadingText' => 'Puuha- ja värityskirjat'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '86', 'SubjectHeadingText' => 'Puuha- ja värityskirjat'], $groschen->getSubjects());
 
         $groschen = new Groschen('9789510355794');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '86', 'SubjectHeadingText' => 'Puuha- ja värityskirjat'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '86', 'SubjectHeadingText' => 'Puuha- ja värityskirjat'], $groschen->getSubjects());
 
         // 80 Myymälämateriaalit (telineet ym.)
         // Kadonnut sisar -lava
         $groschen = new Groschen('6430060033023');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '80', 'SubjectHeadingText' => 'Myymälämateriaalit (telineet ym.)'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '80', 'SubjectHeadingText' => 'Myymälämateriaalit (telineet ym.)'], $groschen->getSubjects());
 
         // Tokmanni, jättipokkarilava kesä 2021
         $groschen = new Groschen('6430060032200');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '80', 'SubjectHeadingText' => 'Myymälämateriaalit (telineet ym.)'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '80', 'SubjectHeadingText' => 'Myymälämateriaalit (telineet ym.)'], $groschen->getSubjects());
 
         // Neropatin päiväkirja 15 -pöytäteline
         $groschen = new Groschen('6430060032125');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '80', 'SubjectHeadingText' => 'Myymälämateriaalit (telineet ym.)'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '80', 'SubjectHeadingText' => 'Myymälämateriaalit (telineet ym.)'], $groschen->getSubjects());
 
         // Werner Söderström -kassi logoilla 2020
         $groschen = new Groschen('6430060032040');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '80', 'SubjectHeadingText' => 'Myymälämateriaalit (telineet ym.)'], $groschen->getSubjects());
+        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '80', 'SubjectHeadingText' => 'Myymälämateriaalit (telineet ym.)'], $groschen->getSubjects());
 
         // Book that has "kassi" in the title should not be determined as marketing material
         $groschen = new Groschen('9789510478318');
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä', 'SubjectCode' => '80', 'SubjectHeadingText' => 'Myymälämateriaalit (telineet ym.)'], $groschen->getSubjects());
+        $this->assertNotContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'kirjavälitys - Tuoteryhmä', 'SubjectCode' => '80', 'SubjectHeadingText' => 'Myymälämateriaalit (telineet ym.)'], $groschen->getSubjects());
 
         // The following codes are not mapped
         // 10 Peruskoulun oppikirjat
@@ -2769,7 +2769,7 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Kirjavälitys',
+            'SupplierName' => 'kirjavälitys',
             'TelephoneNumber' => '+358 10 345 1520',
             'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 100,
@@ -2805,7 +2805,7 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Kirjavälitys',
+            'SupplierName' => 'kirjavälitys',
             'TelephoneNumber' => '+358 10 345 1520',
             'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 100,
@@ -2842,7 +2842,7 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Kirjavälitys',
+            'SupplierName' => 'kirjavälitys',
             'TelephoneNumber' => '+358 10 345 1520',
             'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 0,
@@ -2879,7 +2879,7 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Kirjavälitys',
+            'SupplierName' => 'kirjavälitys',
             'TelephoneNumber' => '+358 10 345 1520',
             'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 100,
@@ -3586,5 +3586,37 @@ class GroschenIntegrationTest extends TestCase
         // Sangatsu Manga (Publisher Tammi)
         $groschen = new Groschen('9789520444884 ');
         $this->assertSame('/Tammi/Archive/Manga', $$groschen->getPublisherFolder());
+    }
+
+    /**
+     * Test getting editions internal title
+     * @return void
+     */
+    public function testGettingInternalTitle()
+    {
+        $testTitles = [
+            9789524030434 => 'kirja ZOV',
+            9789513126018 => 'kirja Vauvan vaaka (nuottivihko ja leikkiohjeet)',
+            9789521621871 => 'kirja your name. Another Side: Earthbound 2',
+            9789510400098 => 'kirja MUKAVAT MUUMIAMIGURUMIT',
+            9789523820777 => 'kirja Vesimelonin kuivatus ja muita matemaattisia',
+            9789522892355 => 'pokkari Ystävä sä lapsien',
+            9789520442163 => 'kirja Yksisarvinen',
+            9789513169947 => 'kirja Yllätys kasvimaalla, Muumipappa!',
+            9789524030458 => 'ä-kirja ZOV',
+            9789513126001 => 'cd Vauvan vaaka',
+            9789510450505 => 'cd Zombikuume',
+            9789513178529 => 'kä-kirja Soiva laulukirja 5',
+            9789524030441 => 'e-kirja ZOV',
+            9789520447434 => 'e-kirja Explorer Academy 3. Kaksoiskierre',
+            9789510493151 => 'eä-kirja Minisijainen metsäretkellä',
+            6430060036031 => 'muu Sitan kalenteri 2023',
+            9789523753686 => 'pdf Voihan nenä!',
+        ];
+
+        foreach ($testTitles as $gtin => $expectedInternalTitle) {
+            $groschen = new Groschen($gtin);
+            $this->assertSame($expectedInternalTitle, $groschen->getInternalTitle());
+        }
     }
 }

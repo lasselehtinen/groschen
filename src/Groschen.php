@@ -489,6 +489,49 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the internal title for edition
+     * @return string
+     */
+    public function getInternalTitle()
+    {
+        $bindingCodeMapping = [
+            'Podcast' => 'podcast',
+            'Hardback' => 'kirja',
+            'Saddle-stitched' => 'kirja',
+            'Paperback' => 'kirja',
+            'Spiral bound' => 'kirja',
+            'Flex' => 'kirja',
+            'Pocket book' => 'pokkari',
+            'Trade paperback or "Jättipokkari"' => 'kirja',
+            'Board book' => 'kirja',
+            'Downloadable audio file' => 'ä-kirja',
+            'CD' => 'cd',
+            'MP3-CD' => 'cd',
+            'Other audio format' => 'muu audio',
+            'Picture-and-audio book' => 'kä-kirja',
+            'ePub2' => 'e-kirja',
+            'ePub3' => 'e-kirja',
+            'Application' => 'sovellus',
+            'Kit' => 'paketti',
+            'Miscellaneous' => 'muu',
+            'Pre-recorded digital audio player' => 'kirjastosoitin',
+            'PDF' => 'pdf',
+        ];
+
+        if (array_key_exists($this->getProductType(), $bindingCodeMapping) === false) {
+            throw new Exception('Could not map binding code for internal title. Binding code: '.$this->getProductType());
+        }
+
+        $internalTitle = $bindingCodeMapping[$this->getProductType()] .' '. $this->product->title;
+
+        if (isset($this->product->activePrint->ebookHasAudioFile) && $this->product->activePrint->ebookHasAudioFile === true) {
+            $internalTitle = 'eä-kirja' .' '. $this->product->title;
+        }
+
+        return trim(substr($internalTitle, 0, 50));
+    }
+
+    /**
      * Get the products contributors
      * @param  boolean $returnInternalResources
      * @return Collection
