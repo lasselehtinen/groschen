@@ -1273,6 +1273,11 @@ class Groschen implements ProductInterface
             }
         }
 
+        // Remove empty texts
+        $textContents = $textContents->filter(function ($textContent) {
+            return !empty($textContent['Text']);
+        });
+
         return $textContents;
     }
 
