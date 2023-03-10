@@ -1210,6 +1210,27 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting AudienceRanges for products with multiple interest qualifiers
+     * @return void
+     */
+    public function testGettingAudienceRangesWithProductWithMultipleInterestQualifiers()
+    {
+        $groschen = new Groschen(9789520448608);
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
+                [
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 3,
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+    }
+
+    /**
      * Test getting the products publisher
      * @return void
      */

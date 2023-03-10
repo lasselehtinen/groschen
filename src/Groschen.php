@@ -2417,7 +2417,9 @@ class Groschen implements ProductInterface
         $audiences = new Collection;
 
         // Get Thema interest age
-        $interestAge = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->pluck('SubjectCode')->first();
+        $interestAge = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->filter(function ($subject, $key) {
+            return Str::startsWith($subject['SubjectCode'], '5A');
+        })->pluck('SubjectCode')->first();
 
         // Map the Thema interest age to Audience
         switch ($interestAge) {
@@ -2463,7 +2465,9 @@ class Groschen implements ProductInterface
         // Collection for audience ranges
         $audienceRanges = new Collection;
 
-        $interestAge = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->pluck('SubjectCode')->first();
+        $interestAge = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->filter(function ($subject, $key) {
+            return Str::startsWith($subject['SubjectCode'], '5A');
+        })->pluck('SubjectCode')->first();
 
         $interestAges = [
             '5AB' => 0,
