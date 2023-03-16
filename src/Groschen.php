@@ -516,6 +516,9 @@ class Groschen implements ProductInterface
             'Miscellaneous' => 'muu',
             'Pre-recorded digital audio player' => 'kirjastosoitin',
             'PDF' => 'pdf',
+            'Calendar (Hardback)' => 'kalenteri'
+            'Calendar (Paperback)' => 'kalenteri'
+            'Calendar (Other)' => 'kalenteri',
         ];
 
         if (array_key_exists($this->getProductType(), $bindingCodeMapping) === false) {
