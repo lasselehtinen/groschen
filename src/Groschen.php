@@ -1239,7 +1239,7 @@ class Groschen implements ProductInterface
         // Use general contributor texts as backup
         if ($authorDescription->count() === 0) {
             $authorDescription = collect([
-                (object) ['text' => $this->getContributors()->where('BiographicalNote', '<>', '')->pluck('BiographicalNote')->implode('')],
+                (object) ['text' => $this->getContributors()->where('BiographicalNote', '<>', '')->pluck('BiographicalNote')->unique()->implode('')],
             ]);
         }
 

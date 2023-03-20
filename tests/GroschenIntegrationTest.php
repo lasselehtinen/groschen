@@ -908,11 +908,25 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789524030199');
         $textContents = $groschen->getTextContents();
         $this->assertTrue($textContents->contains('TextType', '03'));
-
         $marketingText = $textContents->where('TextType', '03')->pluck('Text')->first();
 
         $this->assertStringContainsString('<p><strong>Göran Wennqvist </strong>(s. 1955) on eläköitynyt porvoolainen rikosylikomisario, jolla on takanaan 43 vuotta kestänyt monipuolinen työura ja tehtävät poliisin eri yksiköissä.', $marketingText);
         $this->assertStringContainsString('><p><strong>Tero Haapala</strong> (s. 1958) on eläköitynyt helsinkiläinen rikosylikomisario, joka toimi 41 vuotta kestäneen työuransa kaikki vuodet rikostutkintatehtävissä, ensin Helsingin rikospoliisissa ja 35 viimeisintä vuotta keskusrikospoliisissa.', $marketingText);
+    }
+
+    /**
+     * Test that author description is listed only once even though the same contact has multiple roles on the edition
+     *
+     * @return void
+     */
+    public function testAuthorDescriptionIsTakenOnlyOnceIfHasMultipleRoles()
+    {
+        $groschen = new Groschen('9789524030274');
+        $textContents = $groschen->getTextContents();
+
+        $this->assertTrue($textContents->contains('TextType', '03'));
+        $marketingText = $textContents->where('TextType', '03')->pluck('Text')->first();
+        $this->assertSame(1, substr_count($marketingText, 'Juha Vuorinen</strong> (s. 1967) on kirjailija, joka tunnetaan myös radio- ja televisiotoimittajana'));
     }
 
     /**
