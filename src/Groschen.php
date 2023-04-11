@@ -636,7 +636,7 @@ class Groschen implements ProductInterface
                 if (array_key_exists('CorporateName', $contributorData)) {
                     $name = $contributorData['CorporateName'];
                 } else {
-                    $name = $contributorData['NamesBeforeKey'] . ' ' . $contributorData['KeyNames'];
+                    $name = (array_key_exists('NamesBeforeKey', $contributorData)) ? $contributorData['NamesBeforeKey'] . ' ' . $contributorData['KeyNames'] : $contributorData['KeyNames'];
                 }
 
                 switch ($link->linkType->name) {
