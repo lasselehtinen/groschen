@@ -3870,13 +3870,23 @@ class Groschen implements ProductInterface
                 $firstname = implode(' ', $parts);
 
                 // Add to collection
-                $namesAsSubjects->push([
-                    'NameType' => '00',
-                    'PersonName' => $bibliographicCharacter,
-                    'PersonNameInverted' => $lastname.', '.$firstname,
-                    'KeyNames' => $lastname,
-                    'NamesBeforeKey' => $firstname,
-                ]);
+                if (!empty($firstname)) {
+                    $namesAsSubjects->push([
+                        'NameType' => '00',
+                        'PersonName' => $bibliographicCharacter,
+                        'PersonNameInverted' => $lastname.', '.$firstname,
+                        'KeyNames' => $lastname,
+                        'NamesBeforeKey' => $firstname,
+                    ]);
+                } else {
+                    $namesAsSubjects->push([
+                        'NameType' => '00',
+                        'PersonName' => $bibliographicCharacter,
+                        'PersonNameInverted' => $lastname,
+                        'KeyNames' => $lastname,
+                    ]);
+                }
+
             }
         }
 

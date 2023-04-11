@@ -3585,6 +3585,24 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting names as subjects for pseudonym
+     * @return void
+     */
+    public function testGettingNamesAsSubjectsForPseudonym()
+    {
+        // Biography
+        $biography = [
+            'NameType' => '00',
+            'PersonName' => 'Avicii',
+            'PersonNameInverted' => 'Avicii',
+            'KeyNames' => 'Avicii',
+        ];
+
+        $groschen = new Groschen('9789510452097');
+        $this->assertContains($biography, $groschen->getNamesAsSubjects());
+    }
+
+    /**
      * Test that prizes are listed in keywords
      * @return void
      */
