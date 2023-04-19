@@ -3303,6 +3303,35 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting contributor links for pseudonym
+     *
+     * @return void
+     */
+    public function testGettingLinksForPseudonym()
+    {
+         // Author
+         $author = [
+            'Identifier' => 56749,
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'A01',
+            'PersonName' => 'Jenniemilia',
+            'KeyNames' => 'Jenniemilia',
+            'BiographicalNote' => '<strong>Jenniemilia</strong> on valmentaja, joogan ja meditaation opettaja sekä valokuvaaja. Hän pitää suosittuja <em>Elä, opi ja rakasta</em> -kursseja, joissa hän hyödyntää mm. kehollisen läsnäolon ja kognitiivisen psykoterapian menetelmiä.',
+            'WebSites' => [
+                [
+                  'WebsiteRole' => '42',
+                  'WebsiteDescription' => 'Jenniemilia Facebookissa',
+                  'Website' => 'https://www.facebook.com/jenniemiliaofficial',
+                ],
+            ],
+            'ContributorDates' => [],
+        ];
+
+        $groschen = new Groschen('9789510404355');
+        $this->assertContains($author, $groschen->getContributors());
+    }
+
+    /**
      * Test getting contributor dates (birth year)
      * @return void
      */
