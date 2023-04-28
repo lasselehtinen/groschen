@@ -36,7 +36,7 @@
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "vlucas/phpdotenv": "^5.0",
-        "orchestra/testbench": "^7.0",
+        "orchestra/testbench": "^8.0",
         "lasselehtinen/laravel-conventions-checker": "^4.0"
     },
     "extra": {
