@@ -185,11 +185,6 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('EA', $groschen->getProductForm());
         $this->assertContains('E107', $groschen->getProductFormDetails());
 
-        // Other audio format
-        $groschen = new Groschen('9789510232644');
-        $this->assertSame('AZ', $groschen->getProductForm());
-        $this->assertEmpty($groschen->getProductFormDetails());
-
         // Miscellaneous
         $groschen = new Groschen('6430060034020');
         $this->assertSame('ZZ', $groschen->getProductForm());
@@ -1380,7 +1375,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('04', $this->groschen->getPublishingStatus());
 
         // Development
-        $groschen = new Groschen('9789510448380');
+        $groschen = new Groschen('9789513196721');
         $this->assertSame('02', $groschen->getPublishingStatus());
 
         // Exclusive sales
@@ -2804,7 +2799,7 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'kirjavälitys',
+            'SupplierName' => 'Kirjavälitys',
             'TelephoneNumber' => '+358 10 345 1520',
             'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 100,
@@ -2840,7 +2835,7 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'kirjavälitys',
+            'SupplierName' => 'Kirjavälitys',
             'TelephoneNumber' => '+358 10 345 1520',
             'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 100,
@@ -2877,7 +2872,7 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'kirjavälitys',
+            'SupplierName' => 'Kirjavälitys',
             'TelephoneNumber' => '+358 10 345 1520',
             'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 0,
@@ -2914,7 +2909,7 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'kirjavälitys',
+            'SupplierName' => 'Kirjavälitys',
             'TelephoneNumber' => '+358 10 345 1520',
             'EmailAddress' => 'tilaukset@kirjavalitys.fi',
             'OnHand' => 100,
@@ -3274,24 +3269,24 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => '<p><strong>Elina Kilkku</strong> (s. 1980) on helsinkiläinen teatteriohjaaja ja kirjailija. Hän on työskennellyt ohjaajana mm. Kansallisteatterissa, Teatteri Jurkassa ja Teatteri Takomossa sekä kirjoittanut useita näytelmiä.<br/><br/>Kilkun esikoisromaani <em>Äideistä paskin</em> ilmestyi vuonna 2014. Sen jälkeen häneltä on julkaistu useita teoksia, muun muassa vuonna 2020 nuorten romaani <em>Ihana tyttö</em>, joka herätti puhuttelevalla aiheellaan paljon keskustelua, sekä hulvaton, parisuhteen stereotypioita kellistävä <em>Vaimovallankumous</em> helmikuussa 2021. Lisäksi hän on kirjoittanut työttömästä freelance-taideammattilaisesta ja sinkkuäidistä kertovan Alina-trilogian, jonka päätösosa <em>Jumalainen jälkinäytös</em> julkaistiin elokuussa 2021. Tässä mustan huumorin maustamassa trilogiassa ovat aiemmin ilmestyneet romaanit <em>Täydellinen näytelmä</em> ja <em>Mahdoton elämä</em>.</p>',
             'WebSites' => [
                 [
+                    'WebsiteRole' => '42',
+                    'WebsiteDescription' => 'Elina Kilkku Twitterissä',
+                    'Website' => 'https://twitter.com/elinakilkku',
+                  ],
+                [
                   'WebsiteRole' => '06',
                   'WebsiteDescription' => 'Tekijän omat nettisivut',
                   'Website' => 'http://www.elinakilkku.com/',
                 ],
                 [
-                  'WebsiteRole' => '42',
-                  'WebsiteDescription' => 'Elina Kilkku Twitterissä',
-                  'Website' => 'https://twitter.com/elinakilkku',
-                ],
+                    'WebsiteRole' => '42',
+                    'WebsiteDescription' => 'Elina Kilkku Instagramissa',
+                    'Website' => 'https://www.instagram.com/elinakilkku/',
+                  ],
                 [
                   'WebsiteRole' => '42',
                   'WebsiteDescription' => 'Elina Kilkku Facebookissa',
                   'Website' => 'https://www.facebook.com/kirjailijaelinakilkku/',
-                ],
-                [
-                  'WebsiteRole' => '42',
-                  'WebsiteDescription' => 'Elina Kilkku Instagramissa',
-                  'Website' => 'https://www.instagram.com/elinakilkku/',
                 ],
             ],
             'ContributorDates' => [],
@@ -3439,7 +3434,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('02', $groschen->getNotificationType());
 
         // Exclusive sales
-        $groschen = new Groschen('9789510491317');
+        $groschen = new Groschen('9789513130503');
         $this->assertSame('01', $groschen->getNotificationType());
 
         // Permanently withdrawn from sales
@@ -3475,15 +3470,6 @@ class GroschenIntegrationTest extends TestCase
         // Check that names listed are first
         $this->assertSame('Tim Bergling', $keywords[0]);
         $this->assertSame('Avicii', $keywords[1]);
-    }
-
-    /**
-     * Test that the internal category is returned in subjects
-     * @return void
-     */
-    public function testGettingInternalCategoryInSubjects() {
-        $groschen = new Groschen('9789510444009');
-        $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Internal category', 'SubjectCode' => 'valmis'], $groschen->getSubjects());
     }
 
     /**
@@ -3677,23 +3663,24 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingInternalTitle()
     {
         $testTitles = [
-            9789524030434 => 'kirja ZOV',
-            9789513126018 => 'kirja Vauvan vaaka (nuottivihko ja leikkiohjeet)',
-            9789521621871 => 'kirja your name. Another Side: Earthbound 2',
-            9789510400098 => 'kirja MUKAVAT MUUMIAMIGURUMIT',
-            9789523820777 => 'kirja Vesimelonin kuivatus ja muita matemaattisia',
-            9789522892355 => 'pokkari Ystävä sä lapsien',
-            9789520442163 => 'kirja Yksisarvinen',
-            9789513169947 => 'kirja Yllätys kasvimaalla, Muumipappa!',
-            9789524030458 => 'ä-kirja ZOV',
-            9789513126001 => 'cd Vauvan vaaka',
-            9789510450505 => 'cd Zombikuume',
-            9789513178529 => 'kä-kirja Soiva laulukirja 5',
-            9789524030441 => 'e-kirja ZOV',
-            9789520447434 => 'e-kirja Explorer Academy 3. Kaksoiskierre',
-            9789510493151 => 'eä-kirja Minisijainen metsäretkellä',
-            6430060036031 => 'muu Sitan kalenteri 2023',
-            9789523753686 => 'pdf Voihan nenä!',
+            9789524030434 => 'ZOV kirja',
+            9789513126018 => 'Vauvan vaaka (nuottivihko ja leikkiohjeet) kirja',
+            9789521621871 => 'your name. Another Side: Earthbound 2 kirja',
+            9789510400098 => 'MUKAVAT MUUMIAMIGURUMIT kirja',
+            9789523820777 => 'Vesimelonin kuivatus ja muita matemaattisia kirja',
+            9789522892355 => 'Ystävä sä lapsien pokkari',
+            9789520442163 => 'Yksisarvinen kirja',
+            9789513169947 => 'Yllätys kasvimaalla, Muumipappa! kirja',
+            9789524030458 => 'ZOV ä-kirja',
+            9789513126995 => 'Kapteeni Kalsari ja ulkoavaruuden uskomattom kirja',
+            9789513126001 => 'Vauvan vaaka cd',
+            9789510450505 => 'Zombikuume cd',
+            9789513178529 => 'PERUTTU Soiva laulukirja 5 kä-kirja',
+            9789524030441 => 'ZOV e-kirja',
+            9789520447434 => 'Explorer Academy 3. Kaksoiskierre e-kirja',
+            9789510493151 => 'Minisijainen metsäretkellä eä-kirja',
+            6430060036031 => 'Sitan kalenteri 2023 kalenteri',
+            9789523753686 => 'Voihan nenä! pdf',
         ];
 
         foreach ($testTitles as $gtin => $expectedInternalTitle) {

@@ -525,13 +525,16 @@ class Groschen implements ProductInterface
             throw new Exception('Could not map binding code for internal title. Binding code: '.$this->getProductType());
         }
 
-        $internalTitle = $bindingCodeMapping[$this->getProductType()] .' '. $this->product->title;
+        $format = $bindingCodeMapping[$this->getProductType()];
 
         if (isset($this->product->activePrint->ebookHasAudioFile) && $this->product->activePrint->ebookHasAudioFile === true) {
-            $internalTitle = 'eä-kirja' .' '. $this->product->title;
+            $format = 'eä-kirja';
         }
 
-        return trim(substr($internalTitle, 0, 50));
+        // Space reserved for format + one space
+        $spaceForFormat = strlen($format)+1;
+        
+        return trim(substr($this->product->title, 0, 50-$spaceForFormat)).' '.$format;
     }
 
     /**
