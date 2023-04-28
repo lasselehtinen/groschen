@@ -12,9 +12,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-	"php": "^8.0",
+        "php": "^8.0",
         "ezyang/htmlpurifier": "^4.9",
-        "guzzlehttp/guzzle": "~7.0",
+        "guzzlehttp/guzzle": "^7.5",
         "fale/isbn": "^3.0",
         "league/uri": "^6.0",
         "league/oauth2-client": "^2.3",
@@ -51,7 +51,6 @@
         "grumphp": {
             "config-default-path": "vendor/lasselehtinen/laravel-conventions-checker/grumphp.yml"
         }
-
     },
     "config": {
         "allow-plugins": {
