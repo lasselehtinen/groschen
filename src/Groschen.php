@@ -1604,17 +1604,17 @@ class Groschen implements ProductInterface
             throw new Exception($json->loginFaultMessage);
         }
 
-        // Brand mapping
-        $brand = ($this->product->brand->name === 'Sangatsu Manga') ? 'Tammi' : $this->product->brand->name;
+        // Publisher mapping
+        $publisher = ($this->product->brand->name === 'Sangatsu Manga') ? 'Tammi' : $this->product->publishingHouse->name;
 
         // Disney are based on cost center, not brand
         if ($this->getCostCenter() === 909) {
-            $brand = 'Disney';
+            $publisher = 'Disney';
         }
 
         // Cover image
         $queries = [
-            'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND ancestorPaths:"/'.$brand.'/Kansikuvat"'
+            'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND ancestorPaths:"/'.$publisher.'/Kansikuvat"'
         ];
 
         // Add separate queries for each contributor
