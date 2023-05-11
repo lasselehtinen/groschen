@@ -3229,7 +3229,7 @@ class Groschen implements ProductInterface
         $latestStockArrivalDate = $this->getLatestStockArrivalDate();
 
         if (!is_null($latestStockArrivalDate)) {
-            $supplyDates->push(['SupplyDateRole' => '08', 'Date' => $latestStockArrivalDate->format('Ymd')]);
+            $supplyDates->push(['SupplyDateRole' => '34', 'Date' => $latestStockArrivalDate->format('Ymd')]);
         }
 
         return $supplyDates;
