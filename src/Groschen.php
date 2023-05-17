@@ -532,9 +532,9 @@ class Groschen implements ProductInterface
         }
 
         // Space reserved for format + one space
-        $spaceForFormat = strlen($format)+1;
+        $spaceForFormat = mb_strlen($format)+1;
         
-        return trim(substr($this->product->title, 0, 50-$spaceForFormat)).' '.$format;
+        return trim(mb_substr($this->product->title, 0, 50-$spaceForFormat)).' '.$format;
     }
 
     /**

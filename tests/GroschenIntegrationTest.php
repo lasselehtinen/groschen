@@ -3681,6 +3681,7 @@ class GroschenIntegrationTest extends TestCase
             9789510493151 => 'Minisijainen metsäretkellä eä-kirja',
             6430060036031 => 'Sitan kalenteri 2023 kalenteri',
             9789523753686 => 'Voihan nenä! pdf',
+            9789510504147 => 'Kettulan kahvila: Pelli-pupun syntymäpäiv eä-kirja',
         ];
 
         foreach ($testTitles as $gtin => $expectedInternalTitle) {
