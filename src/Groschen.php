@@ -2310,6 +2310,15 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Is the product a Print On Demand checked?
+     * @return boolean
+     */
+    public function isPrintOnDemandChecked()
+    {
+        return isset($this->product->isPrintOnDemand) && $this->product->isPrintOnDemand === true;
+    }
+
+    /**
      * Get internal product number
      * @return string|null
      */

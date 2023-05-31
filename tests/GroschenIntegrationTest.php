@@ -3688,5 +3688,18 @@ class GroschenIntegrationTest extends TestCase
             $groschen = new Groschen($gtin);
             $this->assertSame($expectedInternalTitle, $groschen->getInternalTitle());
         }
+    }   
+
+    /**
+     * Tests for checking if the print on demand is checked
+     *
+     * @return void
+     */
+    public function testPrintOnDemandIsCheckedCorrectly() {
+        $groschen = new Groschen('9789520444884');
+        $this->assertFalse($groschen->isPrintOnDemandChecked());
+
+        $groschen = new Groschen('9789524032865');
+        $this->assertTrue($groschen->isPrintOnDemandChecked());
     }
 }
