@@ -1156,6 +1156,13 @@ class Groschen implements ProductInterface
 
         // Collection to hold keywords
         $keywords = collect([]);
+        
+        // Add custom keywords
+        if (isset($this->product->bookTypes) && !empty($this->product->bookTypes)) {
+            foreach (explode(';', $this->product->bookTypes) as $bookType) {
+                $keywords->push($bookType);
+            }
+        }
 
         // Add prizes
         if (isset($this->product->awards) && !empty($this->product->awards)) {

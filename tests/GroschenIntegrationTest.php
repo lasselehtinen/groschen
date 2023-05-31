@@ -3632,6 +3632,21 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that custom keywords are included and listed first
+     *
+     * @return void
+     */
+    public function testBookTypeIsListedInKeywords() {
+        $groschen = new Groschen('9789510487532');
+        $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
+
+        $this->assertContains('BookTok', $keywords);
+        $this->assertContains('rakkaus', $keywords);
+
+        $this->assertSame('BookTok', $keywords[0]);
+    }
+
+    /**
      * Test that determining publisher folder works correctly
      * @return void
      */
