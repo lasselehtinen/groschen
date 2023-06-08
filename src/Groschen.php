@@ -1157,12 +1157,8 @@ class Groschen implements ProductInterface
         // Collection to hold keywords
         $keywords = collect([]);
         
-        // Add custom keywords
-        if (isset($this->product->bookTypes) && !empty($this->product->bookTypes)) {
-            foreach (explode(';', $this->product->bookTypes) as $bookType) {
-                $keywords->push($bookType);
-            }
-        }
+        // Add marketing keywords
+        $keywords = $keywords->merge($this->getMarketingKeywords());
 
         // Add prizes
         if (isset($this->product->awards) && !empty($this->product->awards)) {
@@ -1195,6 +1191,24 @@ class Groschen implements ProductInterface
         });
 
         return $subjects->sortBy('SubjectSchemeIdentifier');
+    }
+
+    /**
+     * Get the marketing keywords
+     *
+     * @return Collection
+     */
+    public function getMarketingKeywords()
+    {
+        $marketingKeywords = collect([]);
+
+        if (isset($this->product->bookTypes) && !empty($this->product->bookTypes)) {
+            foreach (explode(';', $this->product->bookTypes) as $bookType) {
+                $marketingKeywords->push($bookType);
+            }
+        }
+
+        return $marketingKeywords;
     }
 
     /**
