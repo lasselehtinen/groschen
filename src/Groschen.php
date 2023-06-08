@@ -1161,25 +1161,13 @@ class Groschen implements ProductInterface
         $keywords = $keywords->merge($this->getMarketingKeywords());
 
         // Add prizes
-        if (isset($this->product->awards) && !empty($this->product->awards)) {
-            foreach ($this->product->awards as $award) {
-                $keywords->push($award->name);
-            }
-        }
+        $keywords = $keywords->merge($this->getPrizes()->pluck('PrizeName'));
 
         // Add bibliographical characters
-        if (isset($this->product->bibliographicCharacters) && !empty($this->product->bibliographicCharacters)) {
-            foreach (explode(';', $this->product->bibliographicCharacters) as $bibliographicCharacter) {
-                $keywords->push($bibliographicCharacter);
-            }
-        }
+        $keywords = $keywords->merge($this->getBibliographicCharacters());
 
         // Add keywords from Mockingbird
-        if (isset($this->product->keywords) && !empty($this->product->keywords)) {
-            foreach (explode(';', $this->product->keywords) as $keyword) {
-                $keywords->push($keyword);
-            }
-        }
+        $keywords = $keywords->merge($this->getKeywords());
 
         if ($keywords->count() > 0) {
             $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $keywords->unique()->implode(';')]);
@@ -1191,6 +1179,24 @@ class Groschen implements ProductInterface
         });
 
         return $subjects->sortBy('SubjectSchemeIdentifier');
+    }
+
+    /**
+     * Get keywords
+     *
+     * @return Collection
+     */
+    public function getKeywords()
+    {
+        $keywords = collect([]);
+
+        if (isset($this->product->keywords) && !empty($this->product->keywords)) {
+            foreach (explode(';', $this->product->keywords) as $keyword) {
+                $keywords->push($keyword);
+            }
+        }
+
+        return $keywords;
     }
 
     /**
@@ -1209,6 +1215,24 @@ class Groschen implements ProductInterface
         }
 
         return $marketingKeywords;
+    }
+
+    /**
+     * Get bibliographic characters
+     *
+     * @return Collection
+     */
+    public function getBibliographicCharacters()
+    {
+        $bibliographicCharacters = collect([]);
+
+        if (isset($this->product->bibliographicCharacters) && !empty($this->product->bibliographicCharacters)) {
+            foreach (explode(';', $this->product->bibliographicCharacters) as $bibliographicCharacter) {
+                $bibliographicCharacters->push($bibliographicCharacter);
+            }
+        }
+
+        return $bibliographicCharacters;
     }
 
     /**
