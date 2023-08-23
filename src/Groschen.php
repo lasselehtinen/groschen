@@ -1363,6 +1363,39 @@ class Groschen implements ProductInterface
     {
         $publishers = new Collection;
 
+        // Array holding web sites
+        $webSites = [];
+
+        $publisherWebsites = [
+            'Bazar' => 'https://www.bazarkustannus.fi',
+            'CrimeTime' => 'http://www.crime.fi',
+            'Docendo' => 'https://docendo.fi',
+            'Johnny Kniga' => 'https://www.johnnykniga.fi',
+            'Kosmos' => 'https://www.kosmoskirjat.fi',
+            'Minerva' => 'https://www.minervakustannus.fi',
+            'Readme.fi' => 'https://www.readme.fi',
+            'Tammi' => 'https://www.tammi.fi',
+            'WSOY' => 'https://www.wsoy.fi',
+        ];
+
+        $publisher = $this->getPublisher();
+
+        if (array_key_exists($publisher, $publisherWebsites) === false) {
+            throw new Exception('Could not find web site mapping for: '.$publisher);
+        }
+
+        // Add web site link to publishers website
+        array_push($webSites, [
+            'WebsiteRole' => '01',
+            'WebsiteLink' => $publisherWebsites[$publisher],
+        ]);
+
+        // Add link to sustainability page
+        array_push($webSites, [
+            'WebsiteRole' => '50',
+            'WebsiteLink' => 'https://bonnierbooks.com/sustainability/',
+        ]);
+
         // Add main publisher
         $publishers->push([
             'PublishingRole' => '01',
@@ -1374,6 +1407,7 @@ class Groschen implements ProductInterface
                 ],
             ],
             'PublisherName' => $this->getPublisher(),
+            'WebSites' => $webSites,
         ]);
 
         return $publishers;

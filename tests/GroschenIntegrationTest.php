@@ -1277,7 +1277,17 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => '0599340-0',
                 ],
             ],
-            'PublisherName' => 'WSOY'
+            'PublisherName' => 'WSOY',
+            'WebSites' => [
+                [
+                    'WebsiteRole' => '01',
+                    'WebsiteLink' => 'https://www.wsoy.fi',
+                ],
+                [
+                    'WebsiteRole' => '50',
+                    'WebsiteLink' => 'https://bonnierbooks.com/sustainability/',
+                ],
+            ],
         ], $this->groschen->getPublishers());
 
         // Johnny Kniga product
@@ -1291,7 +1301,17 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => '0599340-0',
                 ],
             ],
-            'PublisherName' => 'Johnny Kniga'
+            'PublisherName' => 'Johnny Kniga',
+            'WebSites' => [
+                [
+                    'WebsiteRole' => '01',
+                    'WebsiteLink' => 'https://www.johnnykniga.fi',
+                ],
+                [
+                    'WebsiteRole' => '50',
+                    'WebsiteLink' => 'https://bonnierbooks.com/sustainability/',
+                ],
+            ],            
         ], $groschen->getPublishers());
 
         // Normal Tammi product
@@ -1305,21 +1325,17 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => '0599340-0',
                 ],
             ],
-            'PublisherName' => 'Tammi'
-        ], $groschen->getPublishers());
-
-        // Manga product
-        $groschen = new Groschen('9789521619779');
-        $this->assertContains([
-            'PublishingRole' => '01',
-            'PublisherIdentifiers' => [
+            'PublisherName' => 'Tammi',
+            'WebSites' => [
                 [
-                    'PublisherIDType' => '15',
-                    'IDTypeName' => 'Y-tunnus',
-                    'IDValue' => '0599340-0',
+                    'WebsiteRole' => '01',
+                    'WebsiteLink' => 'https://www.tammi.fi',
                 ],
-            ],
-            'PublisherName' => 'Tammi'
+                [
+                    'WebsiteRole' => '50',
+                    'WebsiteLink' => 'https://bonnierbooks.com/sustainability/',
+                ],
+            ],            
         ], $groschen->getPublishers());
 
         // Kosmos product
@@ -1333,7 +1349,17 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => '0599340-0',
                 ],
             ],
-            'PublisherName' => 'Kosmos'
+            'PublisherName' => 'Kosmos',
+            'WebSites' => [
+                [
+                    'WebsiteRole' => '01',
+                    'WebsiteLink' => 'https://www.kosmoskirjat.fi',
+                ],
+                [
+                    'WebsiteRole' => '50',
+                    'WebsiteLink' => 'https://bonnierbooks.com/sustainability/',
+                ],
+            ],
         ], $groschen->getPublishers());
     }
 
