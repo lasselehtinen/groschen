@@ -619,22 +619,22 @@ class Groschen implements ProductInterface
                 return $text->textType->name === 'Contact presentation';
             })->pluck('text')->first();
 
+            // Mapping Mockingbird link types to Onix codelist 73 values
+            $linkTypeMapping = [
+                'Other' => '00',
+                'Webpage' => '06',
+                'Website' => '06',
+                'Blog' => '23',
+                'Wiki' => '00',
+                'Facebook' => '42',
+                'YouTube' => '42',
+                'Trailer' => '42',
+                'Twitter' => '42',
+                'Instagram' => '42',
+            ];
+            
             // Add links
-            $contributorData['WebSites'] = collect($links->contactLinks)->map(function ($link, $key) use ($contributorData) {
-                // Mapping Mockingbird link types to Onix codelist 73 values
-                $linkTypeMapping = [
-                    'Other' => '00',
-                    'Webpage' => '06',
-                    'Website' => '06',
-                    'Blog' => '23',
-                    'Wiki' => '00',
-                    'Facebook' => '42',
-                    'YouTube' => '42',
-                    'Trailer' => '42',
-                    'Twitter' => '42',
-                    'Instagram' => '42',
-                ];
-
+            $contributorData['WebSites'] = collect($links)->map(function ($link, $key) use ($contributorData, $linkTypeMapping) {
                 // Form website description
                 if (array_key_exists('CorporateName', $contributorData)) {
                     $name = $contributorData['CorporateName'];
@@ -642,35 +642,38 @@ class Groschen implements ProductInterface
                     $name = (array_key_exists('NamesBeforeKey', $contributorData)) ? $contributorData['NamesBeforeKey'] . ' ' . $contributorData['KeyNames'] : $contributorData['KeyNames'];
                 }
 
-                switch ($link->linkType->name) {
-                    case 'Facebook':
-                        $description = $name . ' Facebookissa';
-                        break;
-                    case 'Twitter':
-                        $description = $name . ' Twitterissä';
-                        break;
-                    case 'Instagram':
-                        $description = $name . ' Instagramissa';
-                        break;
-                    case 'YouTube':
-                        $description = $name . ' YouTubessa';
-                        break;
-                    case 'Webpage':
-                        $description = 'Tekijän omat nettisivut';
-                        break;
-                    case 'Other':
-                        $description = 'Muu linkki';
-                        break;
-                    default:
-                        $description = null;
-                        break;
-                }
+                if (is_object($link) && property_exists($link, 'linkType')) {
 
-                return [
-                    'WebsiteRole' => $linkTypeMapping[(string) $link->linkType->name],
-                    'WebsiteDescription' => $description,
-                    'Website' => (string) $link->value,
-                ];
+                    switch ($link->linkType->name) {
+                        case 'Facebook':
+                            $description = $name . ' Facebookissa';
+                            break;
+                        case 'Twitter':
+                            $description = $name . ' Twitterissä';
+                            break;
+                        case 'Instagram':
+                            $description = $name . ' Instagramissa';
+                            break;
+                        case 'YouTube':
+                            $description = $name . ' YouTubessa';
+                            break;
+                        case 'Webpage':
+                            $description = 'Tekijän omat nettisivut';
+                            break;
+                        case 'Other':
+                            $description = 'Muu linkki';
+                            break;
+                        default:
+                            $description = null;
+                            break;
+                    }
+
+                    return [
+                        'WebsiteRole' => $linkTypeMapping[(string) $link->linkType->name],
+                        'WebsiteDescription' => $description,
+                        'Website' => (string) $link->value,
+                    ];
+                }
             })->toArray();
 
             // Add contributor dates
