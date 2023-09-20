@@ -634,7 +634,7 @@ class Groschen implements ProductInterface
             ];
             
             // Add links
-            $contributorData['WebSites'] = collect($links)->map(function ($link, $key) use ($contributorData, $linkTypeMapping) {
+            $contributorData['WebSites'] = collect($links->contactLinks)->map(function ($link, $key) use ($contributorData, $linkTypeMapping) {
                 // Form website description
                 if (array_key_exists('CorporateName', $contributorData)) {
                     $name = $contributorData['CorporateName'];
