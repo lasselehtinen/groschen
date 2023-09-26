@@ -3337,11 +3337,14 @@ class Groschen implements ProductInterface
         // Get the maximum amount
         $response = $this->searchClient->get('v3/search/contacts', [
             'query' => [
+                'q' => '',
                 'limit' => 1,
+                '$select' => 'id',
             ],
         ]);
 
         $json = json_decode($response->getBody()->getContents());
+
         $totalCount = $json->pagination->itemsTotalCount;
 
         // Loop through all pages, maximum is 1000
