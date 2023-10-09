@@ -1615,7 +1615,7 @@ class Groschen implements ProductInterface
             $prices->push($price);
 
             // Add pocket book price group as separate PriceType
-            if ($priceType['PriceTypeCode'] === '42' && isset($this->product->priceGroupPocket)) {
+            if ($priceType['PriceTypeCode'] === '42' && !is_null($this->getPocketBookPriceGroup())) {
                 $price = array_slice($price, 0, 2, true) + array('PriceCoded' => ['PriceCodeType' => '02', 'PriceCode' => $this->product->priceGroupPocket->name]) + array_slice($price, 2, count($price) - 1, true);
 
                 // We need to remove PriceAmount since it is either PriceAmount OR PriceCoded

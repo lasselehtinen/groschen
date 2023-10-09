@@ -711,7 +711,6 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $this->assertContains($corporateAuthor, $groschen->getContributors());
-
     }
 
     /**
@@ -1311,7 +1310,7 @@ class GroschenIntegrationTest extends TestCase
                     'WebsiteRole' => '50',
                     'WebsiteLink' => 'https://bonnierbooks.com/sustainability/',
                 ],
-            ],            
+            ],
         ], $groschen->getPublishers());
 
         // Normal Tammi product
@@ -1335,7 +1334,7 @@ class GroschenIntegrationTest extends TestCase
                     'WebsiteRole' => '50',
                     'WebsiteLink' => 'https://bonnierbooks.com/sustainability/',
                 ],
-            ],            
+            ],
         ], $groschen->getPublishers());
 
         // Kosmos product
@@ -2495,7 +2494,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting quantity on production plan for warehouse delivery
      * @return void
      */
-    public function testGettingQuantityOnProductionPlanForWarehouseDelivery() {
+    public function testGettingQuantityOnProductionPlanForWarehouseDelivery()
+    {
         $this->assertSame(3000, $this->groschen->getProductionPlan()->where('print', 16)->where('name', 'Delivery to warehouse')->pluck('quantity')->first());
     }
 
@@ -3346,10 +3346,10 @@ class GroschenIntegrationTest extends TestCase
                 ],
             ],
             'ContributorDates' => [],
-        ];
+         ];
 
-        $groschen = new Groschen('9789510404355');
-        $this->assertContains($author, $groschen->getContributors());
+         $groschen = new Groschen('9789510404355');
+         $this->assertContains($author, $groschen->getContributors());
     }
 
     /**
@@ -3451,7 +3451,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting the Onix notification type
      * @return void
      */
-    public function testGettingNotificationType() {
+    public function testGettingNotificationType()
+    {
         // Already published product
         $this->assertSame('03', $this->groschen->getNotificationType());
 
@@ -3472,7 +3473,8 @@ class GroschenIntegrationTest extends TestCase
      * Test that duplicate Finna keywords with periods are filtered out
      * @return void
      */
-    public function testDuplicateFinnaKeywordsWithPeriodsAreFilteredOut() {
+    public function testDuplicateFinnaKeywordsWithPeriodsAreFilteredOut()
+    {
         $groschen = new Groschen('9789520408657');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
 
@@ -3484,7 +3486,8 @@ class GroschenIntegrationTest extends TestCase
      * Test that non-fictional characters are listed in keywords
      * @return void
      */
-    public function testNonFictionalCharactersAreListedInKeywords() {
+    public function testNonFictionalCharactersAreListedInKeywords()
+    {
         $groschen = new Groschen('9789510452097');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
 
@@ -3502,7 +3505,8 @@ class GroschenIntegrationTest extends TestCase
      * Test getting the count of manufacture
      * @return void
      */
-    public function testGettingCountryOfManufacture() {
+    public function testGettingCountryOfManufacture()
+    {
         $this->assertSame('FI', $this->groschen->getCountryOfManufacture());
 
         // Contact without address information
@@ -3647,7 +3651,8 @@ class GroschenIntegrationTest extends TestCase
      * Test that prizes are listed in keywords
      * @return void
      */
-    public function testPrizesAreListedInKeywords() {
+    public function testPrizesAreListedInKeywords()
+    {
         $groschen = new Groschen('9789510382745');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
 
@@ -3662,7 +3667,8 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testBookTypeIsListedInKeywords() {
+    public function testBookTypeIsListedInKeywords()
+    {
         $groschen = new Groschen('9789510487532');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
 
@@ -3676,7 +3682,8 @@ class GroschenIntegrationTest extends TestCase
      * Test that determining publisher folder works correctly
      * @return void
      */
-    public function testDeterminingPublisherFolderInAssetManagementWorksCorrectly() {
+    public function testDeterminingPublisherFolderInAssetManagementWorksCorrectly()
+    {
         // WSOY
         $groschen = new Groschen('9789510382745');
         $this->assertSame('WSOY', $$groschen->getPublisherFolder());
@@ -3729,14 +3736,15 @@ class GroschenIntegrationTest extends TestCase
             $groschen = new Groschen($gtin);
             $this->assertSame($expectedInternalTitle, $groschen->getInternalTitle());
         }
-    }   
+    }
 
     /**
      * Tests for checking if the print on demand is checked
      *
      * @return void
      */
-    public function testPrintOnDemandIsCheckedCorrectly() {
+    public function testPrintOnDemandIsCheckedCorrectly()
+    {
         $groschen = new Groschen('9789520444884');
         $this->assertFalse($groschen->isPrintOnDemandChecked());
 
