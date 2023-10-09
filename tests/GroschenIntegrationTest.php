@@ -3743,4 +3743,20 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789524032865');
         $this->assertTrue($groschen->isPrintOnDemandChecked());
     }
+
+    /**
+     * Test that pocket book price group is fetched correctly
+     *
+     * @return void
+     */
+    public function testPocketBookPriceGroupIsFetchedCorrectly()
+    {
+        // Not a pocket book
+        $groschen = new Groschen('9789520444884');
+        $this->assertNull($groschen->getPocketBookPriceGroup());
+
+        // Pocket book with price group
+        $groschen = new Groschen('9789510499887');
+        $this->assertSame('G', $groschen->getPocketBookPriceGroup());
+    }
 }

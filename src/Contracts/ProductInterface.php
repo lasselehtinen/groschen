@@ -529,4 +529,11 @@ interface ProductInterface
      * @return Collection
      */
     public function getNamesAsSubjects();
+
+    /**
+     * Get the pocket book price group
+     *
+     * @return string|null
+     */
+    public function getPocketBookPriceGroup();
 }

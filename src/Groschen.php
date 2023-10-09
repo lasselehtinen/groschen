@@ -3989,4 +3989,18 @@ class Groschen implements ProductInterface
 
         return $namesAsSubjects;
     }
+
+    /**
+     * Get the pocket book price group
+     *
+     * @return string|null
+     */
+    public function getPocketBookPriceGroup()
+    {
+        if(isset($this->product->priceGroupPocket) && !empty($this->product->priceGroupPocket)) {
+            return $this->product->priceGroupPocket->name;
+        }
+
+        return null;
+    }
 }
