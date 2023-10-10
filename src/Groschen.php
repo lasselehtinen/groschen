@@ -208,7 +208,7 @@ class Groschen implements ProductInterface
     {
         // Get the production from Mockingbird
         try {
-            $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId);
+            $response = $this->client->get('/v2/editions/' . $this->productionId);
         } catch (ServerException $e) {
             throw new Exception('Server exception: ' . $e->getResponse()->getBody());
         }
