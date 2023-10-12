@@ -3660,13 +3660,15 @@ class Groschen implements ProductInterface
 
         $activities = $this->getActivities();
 
-        foreach ($activities->activities as $activity) {
-            if($activity->sharingLevel->name === 'Public') {
-                $events->push([
-                    'EventRole' => '31',
-                    'EventName' => $activity->name,
-                    'EventDate' => DateTime::createFromFormat('!Y-m-d', substr($activity->activityStartDate, 0, 10))->format('Ymd'),
-                ]);
+        if (is_object($activities) && property_exists($activities, 'activities') && is_array($activities->activities)) {
+            foreach ($activities->activities as $activity) {
+                if($activity->sharingLevel->name === 'Public') {
+                    $events->push([
+                        'EventRole' => '31',
+                        'EventName' => $activity->name,
+                        'EventDate' => DateTime::createFromFormat('!Y-m-d', substr($activity->activityStartDate, 0, 10))->format('Ymd'),
+                    ]);
+                }
             }
         }
 
