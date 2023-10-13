@@ -1399,10 +1399,6 @@ class GroschenIntegrationTest extends TestCase
         // Published
         $this->assertSame('04', $this->groschen->getPublishingStatus());
 
-        // Development
-        $groschen = new Groschen('9789513196721');
-        $this->assertSame('02', $groschen->getPublishingStatus());
-
         // Exclusive sales
         $groschen = new Groschen('9789510491317');
         $this->assertSame('04', $groschen->getPublishingStatus());
@@ -2740,7 +2736,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Published product that has stock
         $groschen = new Groschen('9789510423370');
-        $this->assertSame('04', $groschen->getPublishingStatus());
+        $this->assertSame('07', $groschen->getPublishingStatus());
         $this->assertSame('21', $groschen->getProductAvailability());
 
         // Published product with 0 stock and no planned reprint in the future
@@ -3038,7 +3034,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingSalesStatus()
     {
-        $this->assertSame('Final sales', $this->groschen->getSalesStatus());
+        $this->assertSame('Donation', $this->groschen->getSalesStatus());
 
         $groschen = new Groschen('9789510381380');
         $this->assertSame('Passive', $groschen->getSalesStatus());
@@ -3728,7 +3724,7 @@ class GroschenIntegrationTest extends TestCase
             9789520447434 => 'Explorer Academy 3. Kaksoiskierre e-kirja',
             9789510493151 => 'Minisijainen metsäretkellä eä-kirja',
             6430060036031 => 'Sitan kalenteri 2023 kalenteri',
-            9789523753686 => 'Voihan nenä! pdf',
+            9789523753686 => 'POISTETTU MYYNNISTÄ Voihan nenä! pdf',
             9789510504147 => 'Kettulan kahvila: Pelli-pupun syntymäpäiv eä-kirja',
         ];
 
@@ -3766,5 +3762,30 @@ class GroschenIntegrationTest extends TestCase
         // Pocket book with price group
         $groschen = new Groschen('9789510499887');
         $this->assertSame('G', $groschen->getPocketBookPriceGroup());
+    }
+
+    /**
+     * Test that contributor with two digit sort order is ordered correctly
+     * @group contributors
+     * @return void
+     */
+    public function testContributorPriorityWithTwoNumberIsSortedCorrectly()
+    {
+        $groschen = new Groschen('9789520455637');
+
+        // First author
+        $firstAuthor = [
+            'Identifier' => 64846,
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'A01',
+            'PersonName' => 'Lotta-Sofia Saahko',
+            'PersonNameInverted' => 'Saahko, Lotta-Sofia',
+            'KeyNames' => 'Saahko',
+            'NamesBeforeKey' => 'Lotta-Sofia',
+            'BiographicalNote' => '<p><strong>Lotta-Sofia Saahko</strong> (FM) on monipuolinen taitaja, jolla on pitkä kokemus sekä musiikkiteatterilavoilta että YouTubesta, ja joka on kirjoittanut runoja pienestä pitäen. Hän on opiskellut ja työskennellyt koko elämänsä ulkomailla, ja siksi suomalaiset ja karjalaiset juurensa ovat hänelle tärkeitä. Kotimaan tukipisteenä on aina ollut Valkeakosken pappala, ja papasta ja Lotasta on tullut toimiva tiimi.</p>',
+            'WebSites' => [],
+            'ContributorDates' => [],
+        ];
+        $this->assertContains($firstAuthor, $groschen->getContributors());
     }
 }

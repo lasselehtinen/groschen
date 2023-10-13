@@ -560,7 +560,7 @@ class Groschen implements ProductInterface
             $sortOrderPriority = $teamMember->sortOrder;
             $rolePriority = $this->getRolePriority($teamMember->role->name);
             $lastNamePriority = (!empty($teamMember->contact->lastName)) ? ord($teamMember->contact->lastName) : 0;
-            $sortOrder = $priorityLevel . '-' . $sortOrderPriority . '-' . $rolePriority . '-' . $lastNamePriority;
+            $sortOrder = str_pad($priorityLevel, 3, '0', STR_PAD_LEFT) . '-' . str_pad($sortOrderPriority, 3, '0', STR_PAD_LEFT) . '-' . str_pad($rolePriority, 3, '0', STR_PAD_LEFT) . '-' . str_pad($lastNamePriority, 3, '0', STR_PAD_LEFT);
 
             return $sortOrder;
         });
@@ -2761,26 +2761,28 @@ class Groschen implements ProductInterface
     public function getRolePriority($role)
     {
         $rolePriorities = [
-            'Author' => 1,
-            'Editor in Chief' => 2,
-            'Editing author' => 3,
-            'Index' => 4,
-            'Preface' => 5,
-            'Foreword' => 6,
-            'Introduction' => 7,
-            'Prologue' => 8,
-            'Afterword' => 9,
-            'Epilogue' => 10,
-            'Illustrator' => 11,
-            'Photographer' => 12,
-            'Reader' => 13,
-            'Translator' => 14,
-            'Graphic Designer' => 15,
-            'Cover design or artwork by' => 16,
-            'Composer' => 17,
-            'Arranged by' => 18,
-            'Maps' => 19,
-            'Assistant' => 20,
+            'Author WS' => 1,
+            'Editor WS in Chief' => 2,
+            'Editing WS author' => 3,
+            'Index WS' => 4,
+            'Preface WS' => 5,
+            'Foreword WS' => 6,
+            'Introduction WS' => 7,
+            'Prologue WS' => 8,
+            'Afterword WS' => 9,
+            'Epilogue WS' => 10,
+            'Illustrator WS' => 11,
+            'Illustrator, cover WS' => 11,
+            'Designer, cover WS' => 11,
+            'Photographer WS' => 12,
+            'Reader WS' => 13,
+            'Translator WS' => 14,
+            'Graphic WS Designer' => 15,
+            'Cover WS design or artwork by' => 16,
+            'Composer WS' => 17,
+            'Arranged WS by' => 18,
+            'Maps WS' => 19,
+            'Assistant WS' => 20,
         ];
 
         if (array_key_exists($role, $rolePriorities)) {
