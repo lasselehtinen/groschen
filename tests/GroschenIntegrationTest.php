@@ -101,7 +101,7 @@ class GroschenIntegrationTest extends TestCase
         // Hardback
         $groschen = new Groschen('9789510405314');
         $this->assertSame('BB', $groschen->getProductForm());
-        $this->assertEmpty($groschen->getProductFormDetails());
+        $this->assertContains('B407', $groschen->getProductFormDetails());
 
         // Saddle-stitched
         $groschen = new Groschen('9789513173968');
@@ -189,6 +189,16 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('6430060034020');
         $this->assertSame('ZZ', $groschen->getProductForm());
         $this->assertEmpty($groschen->getProductFormDetails());
+        
+        // Product with headband
+        $groschen = new Groschen('9789523825741');
+        $this->assertSame('BB', $groschen->getProductForm());
+        $this->assertContains('B407', $groschen->getProductFormDetails());
+        
+        // Product with decorated endpapers
+        $groschen = new Groschen('9789524031394');
+        $this->assertSame('BB', $groschen->getProductForm());
+        $this->assertContains('B408', $groschen->getProductFormDetails());
     }
 
      /**

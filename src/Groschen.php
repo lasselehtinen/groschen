@@ -325,6 +325,25 @@ class Groschen implements ProductInterface
             $productFormDetails->push('A305');
         }
 
+        // Headband
+        $headBand = $this->getTechnicalData()->where('partName', 'bookBinding')->pluck('headBand')->first();
+
+        if (!empty($headBand)) {
+            $productFormDetails->push('B407');
+        }
+
+        // Printed endpapers
+        $endPaperColors = $this->getTechnicalData()->where('partName', 'endPapers')->pluck('colors')->first();
+        
+        if (!empty($endPaperColors)) {
+            [$frontColors, $backColors] = explode('/', $endPaperColors);
+            $endPaperIsPrinted = ($frontColors > 0 || $backColors > 0);
+
+            if ($endPaperIsPrinted) {
+                $productFormDetails->push('B408');
+            }
+        }
+
         return $productFormDetails;
     }
 
@@ -3041,7 +3060,7 @@ class Groschen implements ProductInterface
             'paperType' => $this->product->activePrint->foePaper->name ?? null,
             'paperName' => $this->product->activePrint->foePaperOther ?? null,
             'grammage' => (isset($this->product->activePrint->foeWeight)) ? intval($this->product->activePrint->foeWeight) : null,
-            'colors' => (isset($this->product->activePrint->foePaper)) ? str_replace('+', '/', $this->product->activePrint->foePaper->name) : null,
+            'colors' => (isset($this->product->activePrint->foePrinting->name)) ? str_replace('+', '/', $this->product->activePrint->foePrinting->name) : null,
             'colorNames' => $this->product->activePrint->foeColors ?? null,
             'selfEnds' => $this->product->activePrint->foeIsPressed,
         ]);
