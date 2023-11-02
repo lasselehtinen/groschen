@@ -2195,11 +2195,12 @@ class Groschen implements ProductInterface
                 break;
         }
 
-        // For special cases like calendars, coloring books try to check if title contains a hint
-        if(Str::contains($this->product->title, 'kalenteri')) {
+        // Calendars
+        if(Str::contains($this->getProductType(), 'Calendar')) {
             $productGroup = '40';
         }
 
+        // For coloring books try to check if title contains a hint
         if(Str::contains($this->product->title, ['värityskirja', 'puuhakirja'])) {
             $productGroup = '86';
         }
