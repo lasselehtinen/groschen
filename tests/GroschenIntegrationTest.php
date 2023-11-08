@@ -673,6 +673,7 @@ class GroschenIntegrationTest extends TestCase
         // Author
         $author = [
             'Id' => 55133,
+            'PriorityLevel' => 'Primary',
             'Role' => 'Author WS',
             'FirstName' => 'Tuomas',
             'LastName' => 'Kyrö',
@@ -683,6 +684,7 @@ class GroschenIntegrationTest extends TestCase
         // Keski-Suomen Sivu
         $layout = [
             'Id' => 58360,
+            'PriorityLevel' => 'Internal',
             'Role' => 'Layout WS',
             'FirstName' => 'Keski-Suomen Sivu Oy',
             'LastName' => null,
@@ -693,6 +695,7 @@ class GroschenIntegrationTest extends TestCase
         // Printer
         $printer = [
             'Id' => 59694,
+            'PriorityLevel' => 'Internal',
             'Role' => 'Printer WS',
             'FirstName' => 'Bookwell Oy',
             'LastName' => null,

@@ -738,6 +738,7 @@ class Groschen implements ProductInterface
         foreach ($this->product->members as $member) {
             $contributors->push([
                 'Id' => $member->contact->id,
+                'PriorityLevel' => $member->prioLevel->name,
                 'Role' => $member->role->name,
                 'FirstName' => $member->contact->firstName ?? null,
                 'LastName' => $member->contact->lastName ?? null,
@@ -3133,7 +3134,7 @@ class Groschen implements ProductInterface
             // If product has no stock, check if we have stock arrival date in the future
             $tomorrow = new DateTime('tomorrow');
             $stockArrivalDate = $this->getLatestStockArrivalDate();
-
+            dd($stockArrivalDate);
             return ($tomorrow > $stockArrivalDate) ? '31' : '32';
         }
 
