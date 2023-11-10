@@ -301,11 +301,13 @@ class Groschen implements ProductInterface
      */
     public function getProductForm()
     {
-        if (property_exists($this->product->bindingCode->customProperties, 'productForm') === false) {
-            throw new Exception('Binding code ' . $this->product->bindingCode->name . ' does not have ProductForm in custom properties. Contact support to add.');
+        if (property_exists($this->product->bindingCode->customProperties, 'onixProductForm') === false) {
+            throw new Exception('Binding code ' . $this->product->bindingCode->name . ' does not have ProductForm or OnixProductForm in custom properties. Contact support to add.');
         }
 
-        return $this->product->bindingCode->customProperties->productForm;
+        if (property_exists($this->product->bindingCode->customProperties, 'onixProductForm')) {
+            return $this->product->bindingCode->customProperties->onixProductForm;
+        }
     }
 
     /**
@@ -1309,8 +1311,11 @@ class Groschen implements ProductInterface
 
         // Use general contributor texts as backup
         if ($authorDescription->count() === 0) {
+            // List team members that have prio level primary
+            $primaryContributorIds = $this->getAllContributors()->where('PriorityLevel', 'Primary')->pluck('Id');
+
             $authorDescription = collect([
-                (object) ['text' => $this->getContributors()->where('BiographicalNote', '<>', '')->pluck('BiographicalNote')->unique()->implode('')],
+                (object) ['text' => $this->getContributors()->whereIn('Identifier', $primaryContributorIds)->where('BiographicalNote', '<>', '')->pluck('BiographicalNote')->unique()->implode('')],
             ]);
         }
 

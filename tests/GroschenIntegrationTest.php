@@ -199,6 +199,11 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789524031394');
         $this->assertSame('BB', $groschen->getProductForm());
         $this->assertContains('B408', $groschen->getProductFormDetails());
+
+        // Marketing material
+        $groschen = new Groschen('9789513172664');
+        $this->assertSame('ZZ', $groschen->getProductForm());
+        $this->assertEmpty($groschen->getProductFormDetails());
     }
 
      /**
@@ -3800,5 +3805,27 @@ class GroschenIntegrationTest extends TestCase
             'ContributorDates' => [],
         ];
         $this->assertContains($firstAuthor, $groschen->getContributors());
+    }
+
+    /**
+     * Test that only contributor biography with prio level "primary" are shown in TextType 03
+     *
+     * @return void
+     */
+    public function testOnlyPriorityContributorDescriptionIsShownInMarketingText()
+    {
+        $descriptionMatch = '<strong>Karoliina Niskanen</strong> (s. 1987) valmistui näyttelijäksi';
+
+        // As reader should not appear
+        $groschen = new Groschen('9789523823679');
+        $this->assertStringNotContainsString($descriptionMatch, $groschen->getTextContents()->where('TextType', '03')->pluck('Text')->first());
+    
+        // As author should appear
+        $groschen = new Groschen('9789524033008');
+        $this->assertStringContainsString($descriptionMatch, $groschen->getTextContents()->where('TextType', '03')->pluck('Text')->first());
+
+        // As author and reader should appear
+        $groschen = new Groschen('9789523760769');
+        $this->assertStringContainsString($descriptionMatch, $groschen->getTextContents()->where('TextType', '03')->pluck('Text')->first());
     }
 }
