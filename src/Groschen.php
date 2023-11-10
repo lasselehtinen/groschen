@@ -322,6 +322,10 @@ class Groschen implements ProductInterface
             $productFormDetails->push($this->product->bindingCode->customProperties->productFormDetail);
         }
 
+        if (property_exists($this->product->bindingCode->customProperties, 'OnixProductFormDetail') === true) {
+            $productFormDetails->push($this->product->bindingCode->customProperties->OnixProductFormDetail);
+        }
+
         // Add additional entry for ePub 3's that contain audio
         if (isset($this->product->activePrint->ebookHasAudioFile) && $this->product->activePrint->ebookHasAudioFile === true) {
             $productFormDetails->push('A305');
