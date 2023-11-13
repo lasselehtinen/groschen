@@ -305,9 +305,7 @@ class Groschen implements ProductInterface
             throw new Exception('Binding code ' . $this->product->bindingCode->name . ' does not have ProductForm or OnixProductForm in custom properties. Contact support to add.');
         }
 
-        if (property_exists($this->product->bindingCode->customProperties, 'onixProductForm')) {
-            return $this->product->bindingCode->customProperties->onixProductForm;
-        }
+        return $this->product->bindingCode->customProperties->onixProductForm;
     }
 
     /**
@@ -585,7 +583,7 @@ class Groschen implements ProductInterface
             $sortOrderPriority = $teamMember->sortOrder;
             $rolePriority = $this->getRolePriority($teamMember->role->name);
             $lastNamePriority = (!empty($teamMember->contact->lastName)) ? ord($teamMember->contact->lastName) : 0;
-            $sortOrder = str_pad($priorityLevel, 3, '0', STR_PAD_LEFT) . '-' . str_pad($sortOrderPriority, 3, '0', STR_PAD_LEFT) . '-' . str_pad($rolePriority, 3, '0', STR_PAD_LEFT) . '-' . str_pad($lastNamePriority, 3, '0', STR_PAD_LEFT);
+            $sortOrder = str_pad(strval($priorityLevel), 3, '0', STR_PAD_LEFT) . '-' . str_pad(strval($sortOrderPriority), 3, '0', STR_PAD_LEFT) . '-' . str_pad(strval($rolePriority), 3, '0', STR_PAD_LEFT) . '-' . str_pad(strval($lastNamePriority), 3, '0', STR_PAD_LEFT);
 
             return $sortOrder;
         });
@@ -696,7 +694,7 @@ class Groschen implements ProductInterface
                     return [
                         'WebsiteRole' => $linkTypeMapping[(string) $link->linkType->name],
                         'WebsiteDescription' => $description,
-                        'Website' => (string) $link->value,
+                        'Website' => (string) $link->value, /** @phpstan-ignore-line */
                     ];
                 }
             })->toArray();
@@ -1087,7 +1085,7 @@ class Groschen implements ProductInterface
      */
     public function getLatestPublicationDate()
     {
-        if (!isset($this->product->publishingDate) || is_null($this->product->publishingDate)) {
+        if (!isset($this->product->publishingDate) && is_null($this->product->publishingDate)) {
             return null;
         }
 
@@ -3130,7 +3128,7 @@ class Groschen implements ProductInterface
             // If product has no stock, check if we have stock arrival date in the future
             $tomorrow = new DateTime('tomorrow');
             $stockArrivalDate = $this->getLatestStockArrivalDate();
-            dd($stockArrivalDate);
+
             return ($tomorrow > $stockArrivalDate) ? '31' : '32';
         }
 
@@ -3225,11 +3223,6 @@ class Groschen implements ProductInterface
             $json = json_decode($response->getBody()->getContents());
         } catch (ClientException $e) {
             $response = $e->getResponse();
-
-            if (empty($response)) {
-                throw new Exception('Stock API response is empty for GTIN ' . $this->productNumber);
-            }
-
             $json = json_decode($response->getBody()->getContents());
 
             if ($json->data->error_code !== 404 && $json->data->error_message !== 'The model could not be found.') {
@@ -3770,11 +3763,12 @@ class Groschen implements ProductInterface
             return $contentTypes;
         }
 
-        // Kit, Miscellaneous and Application should not return anything
+        // Kit, Miscellaneous, Application, Marketing material should not return anything
         $undetermined = [
             'Kit',
             'Miscellaneous',
             'Application',
+            'Marketing material',
         ];
 
         if (in_array($this->getProductType(), $undetermined)) {

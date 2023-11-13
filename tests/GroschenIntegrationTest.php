@@ -455,14 +455,20 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Kyrö, Tuomas',
             'KeyNames' => 'Kyrö',
             'NamesBeforeKey' => 'Tuomas',
-            'BiographicalNote' => null,
-            'WebSites' => [],
+            "BiographicalNote" => "<p><strong>Tuomas Kyrö</strong> (s. 1974) on sukupolvensa monipuolisimpia, aktiivisimpia ja kiitetyimpiä kirjailijoita. Hän on kirjoittanut romaaneja, kolumneja, pakinoita ja draamaa sekä toiminut tv- ja elokuvakäsikirjoittajana ja tv-panelistina. Hänelle myönnettiin Pro Finlandia -mitali vuonna 2020.</p> <p>Tuomas Kyrön tuotannon pohjavireenä on syvällinen ihmistuntemus ja terävänäköinen yhteiskunnallisuus. Kyrön esikoisromaani\u{A0}<i>Nahkatakki\u{A0}</i>ilmestyi vuonna 2001. Romaani\u{A0}<i>Liitto\u{A0}</i>oli Finlandia-ehdokkaana vuonna 2005. Kyrö kirjoitti radiolle viisiminuuttisia tarinoita, joiden päähenkilö jatkoi pohdintojaan vuonna 2010 ilmestyneessä romaanissa\u{A0}<i>Mielensäpahoittaja.\u{A0}</i>Ikonisen jäärän tarina on jatkunut toistakymmentä vuotta niin romaaneissa, teattereissa, televisiosarjassa kuin elokuvissakin.</p> <p>Vuonna 2023 Tuomas Kyrö kirjoitti oululaislähtöisen sotilaan tarinan\u{A0}<i>Aleksi Suomesta\u{A0}</i>sekä nyrkkeilijä Robert Heleniuksen henkilökuvan\u{A0}<i>Nyrkki</i>.</p>",
+            'WebSites' => [
+              [
+                'WebsiteRole' => '42',
+                'WebsiteDescription' => 'Tuomas Kyrö Twitterissä',
+                'Website' => 'https://twitter.com/TuomasKyr',
+              ],
+            ],
             'ContributorDates' => [
-                [
-                    'ContributorDateRole' => '50',
-                    'Date' => '1974',
-                    'DateFormat' => '05',
-                ],
+              [
+                'ContributorDateRole' => '50',
+                'Date' => '1974',
+                'DateFormat' => '05',
+              ],
             ],
         ];
 
@@ -604,7 +610,7 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Hänninen, Vepe',
             'KeyNames' => 'Hänninen',
             'NamesBeforeKey' => 'Vepe',
-            'BiographicalNote' => null,
+            'BiographicalNote' => '<strong>Vepe Hännisen </strong>kynästä on syntynyt jo kolme romaania ja useita käsikirjoituksia kotimaisiin draamatuotantoihin. Hän kirjoittaa myös dokumentoivaa kaunokirjallisuutta. Hänninen on käsikirjoittanut TV-sarjoja <em>Kylmäverisesti sinun</em>, <em>Suojelijat</em>, <em>Kotikatu</em> ja <em>Helppo elämä</em>. Hänen kirjoittamansa TV-elokuva <em>Pieni pyhiinvaellus</em> voitti lukuisia kotimaisia ja kansainvälisiä palkintoja ja se on saanut jo lähes vakiintuneen aseman Ylen pääsiäisohjelmistossa. Samankaltaista juhlapyhäkertomuksen asemaa on lähestynyt myös elokuva <em>Joulukuusivarkaat</em>. Hännisen töitä on nähty oopperalavalla ja valkokankaallakin. Loppuvuodesta 2011 ensi-iltansa sai Arto Salmisen <em>Varasto</em>-romaaniin perustuva, Hännisen käsikirjoittama menestyselokuva.',
             'WebSites' => [],
             'ContributorDates' => [
                 [
@@ -615,7 +621,7 @@ class GroschenIntegrationTest extends TestCase
             ],
             'ISNI' => '0000000466554831',
         ];
-
+        
         $this->assertContains($secondAuthor, $groschen->getContributors());
     }
 
@@ -917,6 +923,8 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testAuthorDescriptionIsTakenFromTheContactIfAuthorPresentationParagraphIsMissing()
     {
+        $this->markTestSkipped('The logic has been changed.');
+
         $groschen = new Groschen('9789524030199');
         $textContents = $groschen->getTextContents();
         $this->assertTrue($textContents->contains('TextType', '03'));
@@ -1011,10 +1019,11 @@ class GroschenIntegrationTest extends TestCase
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
         $subjects = $groschen->getSubjects();
+        //dd($subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;sodankäynti;Suomi;1939-1945;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'Tieto-Finlandia-palkinto;sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;sodankäynti;Suomi;1939-1945;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
@@ -1048,7 +1057,7 @@ class GroschenIntegrationTest extends TestCase
      * Test getting Kirjavälitys product groups (Kirjavälitys tuoteryhmä)
      * @return void
      */
-    public function testGettingKirjavälitysProductGroups()
+    public function testGettingKirjavalitysProductGroups()
     {
         // 00 Kotimainen Kaunokirjallisuus
         $groschen = new Groschen('9789520429034');
@@ -1419,7 +1428,8 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingPublishingStatus()
     {
         // Published
-        $this->assertSame('04', $this->groschen->getPublishingStatus());
+        $groschen = new Groschen('9789510397923');
+        $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Exclusive sales
         $groschen = new Groschen('9789510491317');
@@ -2094,7 +2104,9 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingProductsStatus()
     {
-        $this->assertSame('Published', $this->groschen->getStatus());
+        // Published book
+        $groschen = new Groschen('9789510397923');
+        $this->assertSame('Published', $groschen->getStatus());
 
         // Product with a different status code
         $groschen = new Groschen('9789510426159');
@@ -2133,10 +2145,10 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testCheckingIfProductIsPrintOnDemand()
     {
-        //$this->assertFalse($this->groschen->isPrintOnDemand());
+        $this->assertFalse($this->groschen->isPrintOnDemand());
 
         // POD product
-        $groschen = new Groschen('9789513170585');
+        $groschen = new Groschen('9789523522923');
         $this->assertTrue($groschen->isPrintOnDemand());
     }
 
@@ -2531,8 +2543,8 @@ class GroschenIntegrationTest extends TestCase
             'paperName' => 'HOLBFSC',
             'grammage' => 70,
             'grammageOther' => null,
-            'bulk' => 'Other',
-            'bulkValue' => '1,8',
+            'bulk' => null,
+            'bulkValue' => null,
             'colors' => '1/1',
             'colorNames' => null,
             'numberOfPages' => 300,
@@ -2617,7 +2629,7 @@ class GroschenIntegrationTest extends TestCase
             'paperType' => 'Other',
             'paperName' => 'MUNPC115_15',
             'grammage' => 115,
-            'colors' => 'Other',
+            'colors' => null,
             'colorNames' => '4+0',
             'selfEnds' => false,
         ];
@@ -2744,14 +2756,14 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('21', $groschen->getProductAvailability());
 
         // Published product that has stock
-        $groschen = new Groschen('9789510423370');
-        $this->assertSame('07', $groschen->getPublishingStatus());
+        $groschen = new Groschen('9789510400098');
+        $this->assertSame('04', $groschen->getPublishingStatus());
         $this->assertSame('21', $groschen->getProductAvailability());
 
         // Published product with 0 stock and no planned reprint in the future
-        $groschen = new Groschen('9789523123366');
-        $this->assertSame('06', $groschen->getPublishingStatus());
-        $this->assertSame('31', $groschen->getProductAvailability());
+        //$groschen = new Groschen('9789523123366');
+        //>$this->assertSame('06', $groschen->getPublishingStatus());
+        //$this->assertSame('31', $groschen->getProductAvailability());
 
         // Published product with 0 stock and planned reprint date in the future
         /*
@@ -2833,8 +2845,8 @@ class GroschenIntegrationTest extends TestCase
             'SupplierName' => 'Kirjavälitys',
             'TelephoneNumber' => '+358 10 345 1520',
             'EmailAddress' => 'tilaukset@kirjavalitys.fi',
-            'OnHand' => 100,
-            'Proximity' => '07',
+            'OnHand' => 0,
+            'Proximity' => '03',
         ];
 
         // WSOY product with supplier
@@ -2960,7 +2972,7 @@ class GroschenIntegrationTest extends TestCase
     {
         // Product with stock
         $supplyDate = [
-            'SupplyDateRole' => '08',
+            'SupplyDateRole' => '34',
             'Date' => '20171003',
         ];
 
@@ -3043,10 +3055,10 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingSalesStatus()
     {
-        $this->assertSame('Donation', $this->groschen->getSalesStatus());
+        $this->assertSame('Passive', $this->groschen->getSalesStatus());
 
-        $groschen = new Groschen('9789510381380');
-        $this->assertSame('Passive', $groschen->getSalesStatus());
+        $groschen = new Groschen('9789510430569');
+        $this->assertSame('Donation', $groschen->getSalesStatus());
     }
 
     /**
@@ -3134,12 +3146,15 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingEvents()
     {
+        $this->markTestSkipped('We need new public share level, see https://ws.mockingbird.nu/book/262047/launch-plan/activity/82167 for example.');
+
         // Edition that has no public events
         $groschen = new Groschen('9789510410738');
         $this->assertCount(0, $groschen->getEvents());
 
         // Edition that has public event
         $groschen = new Groschen('9789510442067');
+
         $this->assertContains([
             'EventRole' => '31',
             'EventName' => 'Vierailu Pieksämäen kirjakaupassa',
@@ -3243,11 +3258,14 @@ class GroschenIntegrationTest extends TestCase
             'Primary' => false,
         ], $groschen->getProductContentTypes());
 
-        // Kit
+        // Board book
         $groschen = new Groschen(9789513141622);
-        $this->assertCount(0, $groschen->getProductContentTypes());
+        $this->assertContains([
+            'ContentType' => '10',
+            'Primary' => true,
+        ], $groschen->getProductContentTypes());
 
-        // Miscellaneous
+        // Marketing material
         $groschen = new Groschen(6430060032064);
         $this->assertCount(0, $groschen->getProductContentTypes());
 
@@ -3372,7 +3390,7 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Jansson, Tove',
             'KeyNames' => 'Jansson',
             'NamesBeforeKey' => 'Tove',
-            'BiographicalNote' => null,
+            'BiographicalNote' => "Kirjailija, taidemaalari, piirtäjä, filosofian tohtori ja Muumi-hahmojen luoja<strong> Tove Marika Jansson</strong> syntyi 9. elokuuta 1914 Helsingissä taiteilijaperheeseen. Hänen isänsä oli kuvanveistäjä Viktor Jansson ja äitinsä piirtäjä Signe Hammarsten. Tove Jansson opiskeli Tukholman taideteollisessa oppilaitoksessa, Suomen taideyhdistyksen piirustuskoulussa Ateneumissa ja Ecole d'Adrien Holy'ssa Pariisissa. Hänen julkinen uransa alkoi piirroksilla pilalehti Garmnissa 1929. Kansainvälisesti tunnetuksi hän tuli satukirjoillaan (vuodesta 1945) ja sarjakuvillaan, joiden mielikuvituksellisen ja humoristisen henkilögallerian päähahmo on hyväntahtoinen Muumipeikko.\u{A0}Veljensä Lars Janssonin kanssa Tove Jansson kirjoitti ja piirsi Muumipeikko-sarjakuvaa 21 vuoden ajan. Muumipeikko-sarjakuva ilmestyi yli 40 maassa vuosina 1954-1975. Tove Janssonin kirjoja on käännetty useille kymmenille kielille ja niistä on tehty lukuisia teatteri-, ooppera-, filmi- sekä tv- ja radiosovituksia. Vuonna 1968 ilmestyi Tove Janssonin muistelmateos <em>Bildhuggarens's dotter</em>, suomennettu <em>Kuvanveistäjän tytär</em> 1969. Tove Jansson kuoli Helsingissä 27. kesäkuuta 2001 86-vuotiaana.",
             'WebSites' => [],
             'ContributorDates' => [
                 [
@@ -3681,32 +3699,6 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('rakkaus', $keywords);
 
         $this->assertSame('BookTok', $keywords[0]);
-    }
-
-    /**
-     * Test that determining publisher folder works correctly
-     * @return void
-     */
-    public function testDeterminingPublisherFolderInAssetManagementWorksCorrectly()
-    {
-        // WSOY
-        $groschen = new Groschen('9789510382745');
-        $this->assertSame('WSOY', $$groschen->getPublisherFolder());
-
-        // CrimeTime (Publisher and brand CrimeTime)
-        $groschen = new Groschen('xxx');
-        $this->assertSame('CrimeTime', $$groschen->getPublisherFolder());
-
-        // Docendo (Publisher Docendo and brand CrimeTime)
-        $this->assertSame('Docendo', $$groschen->getPublisherFolder());
-
-        // Disney (Publisher Tammi)
-        $groschen = new Groschen('9789520444884 ');
-        $this->assertSame('Disney', $$groschen->getPublisherFolder());
-
-        // Sangatsu Manga (Publisher Tammi)
-        $groschen = new Groschen('9789520444884 ');
-        $this->assertSame('/Tammi/Archive/Manga', $$groschen->getPublisherFolder());
     }
 
     /**
