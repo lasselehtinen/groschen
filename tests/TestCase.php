@@ -1,23 +1,24 @@
 <?php
+
 namespace lasselehtinen\Groschen\Test;
 
 use Dotenv\Dotenv;
+use Illuminate\Foundation\Application;
 use lasselehtinen\Groschen\GroschenFacade;
 use lasselehtinen\Groschen\GroschenServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Illuminate\Foundation\Application;
 
 class TestCase extends OrchestraTestCase
 {
     /**
      * Define environment setup.
      *
-     * @param  Application $app
+     * @param  Application  $app
      * @return void
      */
     protected function getEnvironmentSetUp($app)
     {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+        $dotenv = Dotenv::createImmutable(__DIR__.'/..');
         $dotenv->load();
         $dotenv->required('ELVIS_HOSTNAME');
         $dotenv->required('ELVIS_USERNAME');
@@ -41,16 +42,17 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('groschen.mockingbird.contact_api_hostname', $_ENV['MOCKINGBIRD_CONTACT_API_HOSTNAME']);
         $app['config']->set('groschen.mockingbird.clientId', $_ENV['MOCKINGBIRD_CLIENT_ID']);
         $app['config']->set('groschen.mockingbird.clientSecret', $_ENV['MOCKINGBIRD_CLIENT_SECRET']);
-        $app['config']->set('groschen.mockingbird.urlAuthorize', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'] . '/core/connect/authorize');
-        $app['config']->set('groschen.mockingbird.urlAccessToken', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'] . '/core/connect/token');
-        $app['config']->set('groschen.mockingbird.urlResourceOwnerDetails', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'] . '/core/connect/resource');
+        $app['config']->set('groschen.mockingbird.urlAuthorize', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'].'/core/connect/authorize');
+        $app['config']->set('groschen.mockingbird.urlAccessToken', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'].'/core/connect/token');
+        $app['config']->set('groschen.mockingbird.urlResourceOwnerDetails', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'].'/core/connect/resource');
         $app['config']->set('groschen.mockingbird.username', $_ENV['MOCKINGBIRD_USERNAME']);
         $app['config']->set('groschen.mockingbird.password', $_ENV['MOCKINGBIRD_PASSWORD']);
     }
 
     /**
      * Load package service provider
-     * @param  Application $app
+     *
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -60,7 +62,8 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Load package alias
-     * @param  Application $app
+     *
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageAliases($app)

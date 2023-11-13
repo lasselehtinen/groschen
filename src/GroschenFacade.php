@@ -1,4 +1,5 @@
 <?php
+
 namespace lasselehtinen\Groschen;
 
 use Illuminate\Support\Facades\Facade;

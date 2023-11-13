@@ -1,4 +1,5 @@
 <?php
+
 namespace lasselehtinen\Groschen\Test;
 
 use DateTime;
@@ -20,6 +21,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that non-existing product throws exception
+     *
      * @return void
      */
     public function testNonExistingProductThrowsException()
@@ -31,6 +33,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that deactivated product is fetched also
+     *
      * @return void
      */
     public function testDeactivatedProductWorksFine()
@@ -41,6 +44,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting work and edition id
+     *
      * @return void
      */
     public function testGettingWorkAndEditionId()
@@ -53,6 +57,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting all products identifiers
+     *
      * @return void
      */
     public function testGettingProductIdentifiers()
@@ -66,6 +71,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products composition
+     *
      * @return void
      */
     public function testGettingProductComposition()
@@ -76,6 +82,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products type
+     *
      * @return void
      */
     public function testGettingProductType()
@@ -94,6 +101,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products form and product form detail
+     *
      * @return void
      */
     public function testGettingProductFormAndProductFormDetails()
@@ -189,12 +197,12 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('6430060034020');
         $this->assertSame('ZZ', $groschen->getProductForm());
         $this->assertEmpty($groschen->getProductFormDetails());
-        
+
         // Product with headband
         $groschen = new Groschen('9789523825741');
         $this->assertSame('BB', $groschen->getProductForm());
         $this->assertContains('B407', $groschen->getProductFormDetails());
-        
+
         // Product with decorated endpapers
         $groschen = new Groschen('9789524031394');
         $this->assertSame('BB', $groschen->getProductForm());
@@ -206,8 +214,9 @@ class GroschenIntegrationTest extends TestCase
         $this->assertEmpty($groschen->getProductFormDetails());
     }
 
-     /**
+    /**
      * Test getting ProductFormFeatures
+     *
      * @return void
      */
     public function testGettingTechnicalBindingType()
@@ -223,6 +232,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting ProductFormFeatures
+     *
      * @return void
      */
     public function testGettingProductFormFeatures()
@@ -241,6 +251,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products collections/series
+     *
      * @return void
      */
     public function testGettingCollections()
@@ -318,6 +329,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting number in series
+     *
      * @return void
      */
     public function testGettingNumberInSeriesInCollection()
@@ -346,6 +358,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting title details
+     *
      * @return void
      */
     public function testGettingTitleDetails()
@@ -371,6 +384,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test check if the book is translated or not
+     *
      * @return void
      */
     public function testGettingBookIsTranslatedOrNot()
@@ -396,6 +410,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that original title is returned correctly
+     *
      * @return void
      */
     public function testOriginalTitleIsReturnedCorrectly()
@@ -411,6 +426,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting contributors for edition that has unmapped team roles
+     *
      * @return void
      */
     public function testGettingContributorsForEditionWithUnmappedRoles()
@@ -430,7 +446,7 @@ class GroschenIntegrationTest extends TestCase
                     'WebsiteRole' => '06',
                     'WebsiteDescription' => 'Tekijän omat nettisivut',
                     'Website' => 'http://leahmercer.com/',
-                ]
+                ],
             ],
             'ContributorDates' => [],
         ];
@@ -441,7 +457,9 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products contributors
+     *
      * @group contributors
+     *
      * @return void
      */
     public function testGettingContributors()
@@ -455,20 +473,20 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Kyrö, Tuomas',
             'KeyNames' => 'Kyrö',
             'NamesBeforeKey' => 'Tuomas',
-            "BiographicalNote" => "<p><strong>Tuomas Kyrö</strong> (s. 1974) on sukupolvensa monipuolisimpia, aktiivisimpia ja kiitetyimpiä kirjailijoita. Hän on kirjoittanut romaaneja, kolumneja, pakinoita ja draamaa sekä toiminut tv- ja elokuvakäsikirjoittajana ja tv-panelistina. Hänelle myönnettiin Pro Finlandia -mitali vuonna 2020.</p> <p>Tuomas Kyrön tuotannon pohjavireenä on syvällinen ihmistuntemus ja terävänäköinen yhteiskunnallisuus. Kyrön esikoisromaani\u{A0}<i>Nahkatakki\u{A0}</i>ilmestyi vuonna 2001. Romaani\u{A0}<i>Liitto\u{A0}</i>oli Finlandia-ehdokkaana vuonna 2005. Kyrö kirjoitti radiolle viisiminuuttisia tarinoita, joiden päähenkilö jatkoi pohdintojaan vuonna 2010 ilmestyneessä romaanissa\u{A0}<i>Mielensäpahoittaja.\u{A0}</i>Ikonisen jäärän tarina on jatkunut toistakymmentä vuotta niin romaaneissa, teattereissa, televisiosarjassa kuin elokuvissakin.</p> <p>Vuonna 2023 Tuomas Kyrö kirjoitti oululaislähtöisen sotilaan tarinan\u{A0}<i>Aleksi Suomesta\u{A0}</i>sekä nyrkkeilijä Robert Heleniuksen henkilökuvan\u{A0}<i>Nyrkki</i>.</p>",
+            'BiographicalNote' => "<p><strong>Tuomas Kyrö</strong> (s. 1974) on sukupolvensa monipuolisimpia, aktiivisimpia ja kiitetyimpiä kirjailijoita. Hän on kirjoittanut romaaneja, kolumneja, pakinoita ja draamaa sekä toiminut tv- ja elokuvakäsikirjoittajana ja tv-panelistina. Hänelle myönnettiin Pro Finlandia -mitali vuonna 2020.</p> <p>Tuomas Kyrön tuotannon pohjavireenä on syvällinen ihmistuntemus ja terävänäköinen yhteiskunnallisuus. Kyrön esikoisromaani\u{A0}<i>Nahkatakki\u{A0}</i>ilmestyi vuonna 2001. Romaani\u{A0}<i>Liitto\u{A0}</i>oli Finlandia-ehdokkaana vuonna 2005. Kyrö kirjoitti radiolle viisiminuuttisia tarinoita, joiden päähenkilö jatkoi pohdintojaan vuonna 2010 ilmestyneessä romaanissa\u{A0}<i>Mielensäpahoittaja.\u{A0}</i>Ikonisen jäärän tarina on jatkunut toistakymmentä vuotta niin romaaneissa, teattereissa, televisiosarjassa kuin elokuvissakin.</p> <p>Vuonna 2023 Tuomas Kyrö kirjoitti oululaislähtöisen sotilaan tarinan\u{A0}<i>Aleksi Suomesta\u{A0}</i>sekä nyrkkeilijä Robert Heleniuksen henkilökuvan\u{A0}<i>Nyrkki</i>.</p>",
             'WebSites' => [
-              [
-                'WebsiteRole' => '42',
-                'WebsiteDescription' => 'Tuomas Kyrö Twitterissä',
-                'Website' => 'https://twitter.com/TuomasKyr',
-              ],
+                [
+                    'WebsiteRole' => '42',
+                    'WebsiteDescription' => 'Tuomas Kyrö Twitterissä',
+                    'Website' => 'https://twitter.com/TuomasKyr',
+                ],
             ],
             'ContributorDates' => [
-              [
-                'ContributorDateRole' => '50',
-                'Date' => '1974',
-                'DateFormat' => '05',
-              ],
+                [
+                    'ContributorDateRole' => '50',
+                    'Date' => '1974',
+                    'DateFormat' => '05',
+                ],
             ],
         ];
 
@@ -500,6 +518,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that duplicate contributors mapped to same Onix are filtered
+     *
      * @return void
      */
     public function testThatContributorsMappedToSameOnixRoleAreFiltered()
@@ -512,6 +531,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test contributor with only one name or pseudonym is handled correctly
+     *
      * @return void
      */
     public function testContributorWithOnlyOneNameOrPseudonymIsHandledCorrectly()
@@ -535,7 +555,9 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that stakeholders with same priority are sorted by last name
+     *
      * @group contributors
+     *
      * @return void
      */
     public function testContributorAreSortedByLastname()
@@ -577,7 +599,9 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that priority contributor with same role
+     *
      * @group contributors
+     *
      * @return void
      */
     public function testContributorPriorityIsHandledCorrectly()
@@ -621,12 +645,13 @@ class GroschenIntegrationTest extends TestCase
             ],
             'ISNI' => '0000000466554831',
         ];
-        
+
         $this->assertContains($secondAuthor, $groschen->getContributors());
     }
 
     /**
      * Test contributors without priority level are handled correctly
+     *
      * @return void
      */
     public function testContributorsWithoutPriorityLevelAreHandledCorrectly()
@@ -652,6 +677,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that private contributors are hidden
+     *
      * @return void
      */
     public function testPrivateContributorsAreHidden()
@@ -677,6 +703,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting all contributors
+     *
      * @return void
      */
     public function testGettingAllContributors()
@@ -717,6 +744,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting contributor which is a company
+     *
      * @return void
      */
     public function testGettintContributorWhichIsCompany()
@@ -739,6 +767,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products languages
+     *
      * @return void
      */
     public function testGettingLanguages()
@@ -769,6 +798,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products extents
+     *
      * @return void
      */
     public function testGettingExtents()
@@ -778,6 +808,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products estimated number of pages
+     *
      * @return void
      */
     public function testGettingEstimatedNumberOfPages()
@@ -791,6 +822,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting extents from book without any
+     *
      * @return void
      */
     public function testGettingExtentsFromBookWithoutAny()
@@ -802,6 +834,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting extents for audio book
+     *
      * @return void
      */
     public function testGettingExtentsForAudioBook()
@@ -821,6 +854,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting extents for audio book without duration
+     *
      * @return void
      */
     public function testGettingExtentsForAudioBookWithoutDuration()
@@ -832,6 +866,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting extents for an e-book
+     *
      * @return void
      */
     public function testGettingExtentsForAnEbook()
@@ -848,6 +883,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting extents for an e-book with only one page
+     *
      * @return void
      */
     public function testGettingExtentsForAnEbookWithOnlyOnePage()
@@ -865,6 +901,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting audio books duration only with hours
+     *
      * @return void
      */
     public function testGettingAudioBookDuration()
@@ -876,6 +913,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that audio book duration is not shared if audio book is main edition
+     *
      * @return void
      */
     public function testThatAudioBookDurationIsNotShared()
@@ -893,6 +931,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting product text contents
+     *
      * @return void
      */
     public function testGettingTextContents()
@@ -919,6 +958,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that author description(s) are picked from contact if author presentation paragraph is missing
+     *
      * @return void
      */
     public function testAuthorDescriptionIsTakenFromTheContactIfAuthorPresentationParagraphIsMissing()
@@ -951,6 +991,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting texts
+     *
      * @return void
      */
     public function testGettingText()
@@ -965,6 +1006,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products RRP incl. VAT
+     *
      * @return void
      */
     public function testGettingPrice()
@@ -974,6 +1016,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products weight
+     *
      * @return void
      */
     public function testGettingMeasures()
@@ -1000,6 +1043,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting various subjects
+     *
      * @return void
      */
     public function testGettingSubjects()
@@ -1055,6 +1099,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting Kirjavälitys product groups (Kirjavälitys tuoteryhmä)
+     *
      * @return void
      */
     public function testGettingKirjavalitysProductGroups()
@@ -1132,6 +1177,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that we get correct "Suomalainen kirja-alan luokitus" based on binding code / age group
+     *
      * @return void
      */
     public function testGettingCorrectSuomalainenKirjastoalanLuokitus()
@@ -1155,6 +1201,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test product without subgroup is not throwing exception
+     *
      * @return void
      */
     public function testProductWithoutSubgroupIsNotThrowingException()
@@ -1166,6 +1213,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting audiences
+     *
      * @return void
      */
     public function testGettingAudiences()
@@ -1187,6 +1235,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting AudienceRanges
+     *
      * @return void
      */
     public function testGettingAudienceRanges()
@@ -1250,6 +1299,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting AudienceRanges for products with multiple interest qualifiers
+     *
      * @return void
      */
     public function testGettingAudienceRangesWithProductWithMultipleInterestQualifiers()
@@ -1271,6 +1321,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products publisher
+     *
      * @return void
      */
     public function testGettingTheProductsPublisher()
@@ -1293,6 +1344,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products publisher(s)
+     *
      * @return void
      */
     public function testGettingPublishers()
@@ -1395,6 +1447,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products imprint
+     *
      * @return void
      */
     public function testGettingImprints()
@@ -1409,6 +1462,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products brands
+     *
      * @return void
      */
     public function testGettingBrands()
@@ -1423,6 +1477,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products publishing status
+     *
      * @return void
      */
     public function testGettingPublishingStatus()
@@ -1462,6 +1517,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products publishing dates
+     *
      * @return void
      */
     public function testGettingPublishingDates()
@@ -1505,6 +1561,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting latest reprint date
+     *
      * @return void
      */
     public function testGettingLatestStockArrivalDate()
@@ -1527,6 +1584,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the latest print number
+     *
      * @return void
      */
     public function testGettingLatestPrintNumber()
@@ -1540,6 +1598,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products prices
+     *
      * @return void
      */
     public function testGettingPrices()
@@ -1577,6 +1636,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products prices for pocket book
+     *
      * @return void
      */
     public function testGettingPricesForPocketBook()
@@ -1625,6 +1685,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test net price including taxes is rounded correctly
+     *
      * @return void
      */
     public function testNetPriceIncludingTaxesIsRecalculated()
@@ -1653,6 +1714,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that missing prices do not produce an exception
+     *
      * @return void
      */
     public function testMissingPricesDoNotProduceException()
@@ -1664,6 +1726,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting publishers retail prices
+     *
      * @return void
      */
     public function testGettingPublishersRetailPrices()
@@ -1692,7 +1755,9 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting supporting resources like cover image / reading sample links etc.
+     *
      * @group SupportingResources
+     *
      * @return void
      */
     public function testGettingCoverImageInSupportingResources()
@@ -1738,7 +1803,9 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting cover image for Disney which is not brand based
+     *
      * @group SupportingResources
+     *
      * @return void
      */
     public function testGettingCoverImageForDisney()
@@ -1749,7 +1816,9 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting author image in supporting resources
+     *
      * @group SupportingResources
+     *
      * @return void
      */
     public function testGettingAuthorImageInSupportingResources()
@@ -1793,15 +1862,15 @@ class GroschenIntegrationTest extends TestCase
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/D6hl5y3JKlR9FqRtBpClWq/*/Max_Manner_c_Nauska_6170.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
             ],
             'ResourceFeatures' => [
-              [
-                'ResourceFeatureType' => '01',
-                'FeatureValue' => '© Nauska',
-              ],
-              [
-                'ResourceFeatureType' => '03',
-                'FeatureValue' => 'Nauska',
-              ],
-            ]
+                [
+                    'ResourceFeatureType' => '01',
+                    'FeatureValue' => '© Nauska',
+                ],
+                [
+                    'ResourceFeatureType' => '03',
+                    'FeatureValue' => 'Nauska',
+                ],
+            ],
         ];
 
         $groschen = new Groschen('9789522796844');
@@ -1810,6 +1879,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting supporting resource that has multiple images
+     *
      * @return void
      */
     public function testGettingSupportingResourcesWithMultipleImages()
@@ -1820,6 +1890,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting supporting resources for Sangatsu Manga
+     *
      * @return void
      */
     public function testGettingSupportingResourcesForSangatsuManga()
@@ -1830,7 +1901,9 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting Bazar 3D cover image
+     *
      * @group SupportingResources
+     *
      * @return void
      */
     public function testGettingBazar3dCoverImage()
@@ -1915,7 +1988,9 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting audio sample links to Soundcloud
+     *
      * @group SupportingResources
+     *
      * @return void
      */
     public function testGettingExternalLinksInSupportingResources()
@@ -1951,6 +2026,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting related products
+     *
      * @return void
      */
     public function testGettingRelatedProducts()
@@ -1984,6 +2060,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Getting related products without GTIN
+     *
      * @return void
      */
     public function testGettingRelatedProductsWithoutGtin()
@@ -2005,6 +2082,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test checking if product is confidential
+     *
      * @return void
      */
     public function testCheckingIfProductIsConfidential()
@@ -2022,6 +2100,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test checking if product is a luxury book
+     *
      * @return void
      */
     public function testCheckingIfProductIsLuxuryBook()
@@ -2039,6 +2118,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products cost center
+     *
      * @return void
      */
     public function testGettingCostCenter()
@@ -2052,6 +2132,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products cost center
+     *
      * @return void
      */
     public function testGettingCostCenterName()
@@ -2065,6 +2146,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products media type
+     *
      * @return void
      */
     public function testGettingMediaType()
@@ -2078,6 +2160,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products binding code
+     *
      * @return void
      */
     public function testGettingBindingCode()
@@ -2091,6 +2174,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products discount group
+     *
      * @return void
      */
     public function testGettingDiscountGroup()
@@ -2100,6 +2184,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the product status code
+     *
      * @return void
      */
     public function testGettingProductsStatus()
@@ -2115,6 +2200,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the number of products in the series
+     *
      * @return void
      */
     public function testGettingProductsInSeries()
@@ -2128,6 +2214,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test checking for if the product is immaterial
+     *
      * @return void
      */
     public function testCheckingIfProductIsImmaterial()
@@ -2141,6 +2228,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test checking if the product a Print On Demand product
+     *
      * @return void
      */
     public function testCheckingIfProductIsPrintOnDemand()
@@ -2154,6 +2242,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the internal product number
+     *
      * @return void
      */
     public function testGettingInternalProdNo()
@@ -2164,6 +2253,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting customs number
+     *
      * @return void
      */
     public function testGettingCustomsNumber()
@@ -2181,6 +2271,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products library class
+     *
      * @return void
      */
     public function testGettingLibraryClass()
@@ -2198,6 +2289,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products library class
+     *
      * @return void
      */
     public function testGettingFinnishBookTradeCategorisation()
@@ -2219,6 +2311,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products marketing category
+     *
      * @return void
      */
     public function testGettingMarketingCategory()
@@ -2241,6 +2334,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products sales season
+     *
      * @return void
      */
     public function testGettingSalesSeason()
@@ -2271,6 +2365,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products sales season
+     *
      * @return void
      */
     public function testGettingBacklistSalesSeason()
@@ -2284,6 +2379,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting sales restrictions
+     *
      * @return void
      */
     public function testGettingSalesRestrictionsSubscriptionAndLibraryExcludedProducts()
@@ -2306,6 +2402,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting sales restrictions for each outlet
+     *
      * @return void
      */
     public function testGettingSalesRestrictionsForSalesOutlet()
@@ -2318,11 +2415,11 @@ class GroschenIntegrationTest extends TestCase
         // Check that normal unit sales exists
         $salesOutlet = [
             'SalesOutlet' => [
-              'SalesOutletIdentifiers' => [
-                  [
-                    'SalesOutletIDType' => '03',
-                    'IDValue' => 'BOO',
-                  ],
+                'SalesOutletIdentifiers' => [
+                    [
+                        'SalesOutletIDType' => '03',
+                        'IDValue' => 'BOO',
+                    ],
                 ],
             ],
         ];
@@ -2333,6 +2430,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting sales restrictions for subscription only product
+     *
      * @return void
      */
     public function testGettingSalesRestrictionsForSubscriptionOnlyProduct()
@@ -2349,6 +2447,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting sales restrictions for product that has no exports at all
+     *
      * @return void
      */
     public function testGettingSalesRestrictionsForProductThatHasNoExportsAtAll()
@@ -2359,6 +2458,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the products tax rate
+     *
      * @return void
      */
     public function testGettingTaxRate()
@@ -2377,6 +2477,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Get the distribution channels in Mockingbird
+     *
      * @return void
      */
     public function testGettingDistributionChannels()
@@ -2405,6 +2506,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test the is connected to ERP
+     *
      * @return void
      */
     public function testIfProductIsConnectedToErp()
@@ -2418,6 +2520,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting print orders and their recipients
+     *
      * @return void
      */
     public function testGettingPrintOrders()
@@ -2440,6 +2543,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting print orders for digital products
+     *
      * @return void
      */
     public function testGettingPrintOrdersForDigitalProduct()
@@ -2450,6 +2554,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test if product is main edition
+     *
      * @return void
      */
     public function testIfProductIsMainEdition()
@@ -2465,6 +2570,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test if product is internet edition
+     *
      * @return void
      */
     public function testIfProductIsInternetEdition()
@@ -2480,6 +2586,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting production plan
+     *
      * @return void
      */
     public function testGettingProductionPlan()
@@ -2495,6 +2602,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * During the migration the datestamps were changed, some had milliseconds and some not
+     *
      * @return void
      */
     public function testGettingProductionPlanWhereDateIsInDifferentFormat()
@@ -2509,6 +2617,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting quantity on production plan for warehouse delivery
+     *
      * @return void
      */
     public function testGettingQuantityOnProductionPlanForWarehouseDelivery()
@@ -2518,6 +2627,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting comments
+     *
      * @return void
      */
     public function testGettingTechnicalDescriptionComment()
@@ -2528,6 +2638,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting technical printing data
+     *
      * @return void
      */
     public function testGettingTechnicalData()
@@ -2646,7 +2757,7 @@ class GroschenIntegrationTest extends TestCase
             'spineType' => 'Rounded',
             'spideWidth' => 21,
             'clothedSpineMaterial' => null,
-            'comments' => 'Kannen mittapiirros Saara S/Sanna U  5.11.18'
+            'comments' => 'Kannen mittapiirros Saara S/Sanna U  5.11.18',
         ];
 
         $this->assertContains($bookBinding, $groschen->getTechnicalData());
@@ -2654,6 +2765,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting technical printing data for image attachment
+     *
      * @return void
      */
     public function testGettingAttachmentTechnicalData()
@@ -2676,6 +2788,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting technical data for a project that does not have any does not throw exception
+     *
      * @return void
      */
     public function testGettingTechnicalDataForProductWithoutAnyDoesNotThrowException()
@@ -2686,6 +2799,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products prizes
+     *
      * @return void
      */
     public function testGettingPrizes()
@@ -2716,6 +2830,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting publishing status and product availability for Kirjavälitys
+     *
      * @return void
      */
     public function testGettingProductAvailability()
@@ -2806,6 +2921,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test if the publication date passed is handled correctly
+     *
      * @return void
      */
     public function testIfPublicationDateIsPassed()
@@ -2819,6 +2935,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products suppliers for WSOY product
+     *
      * @return void
      */
     public function testGettingSupplierForWsoyProduct()
@@ -2855,6 +2972,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting fake supplier for digital product
+     *
      * @return void
      */
     public function testGettingSupplierForDigitalProduct()
@@ -2892,6 +3010,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting supplier for Bazar product in Kirjavälitys stock
+     *
      * @return void
      */
     public function testGettingSupplierForBazarProduct()
@@ -2929,6 +3048,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting supplier for Bazar product in Kirjavälitys stock
+     *
      * @return void
      */
     public function testGettingSupplierForBazarProductThatDoesNotExistInKirjavalitys()
@@ -2966,6 +3086,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting SupplyDates
+     *
      * @return void
      */
     public function testGettingSupplyDates()
@@ -2986,6 +3107,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting all contacts
+     *
      * @return void
      */
     public function testGettingContacts()
@@ -3002,6 +3124,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting all editions
+     *
      * @return void
      */
     public function testGettingEditions()
@@ -3017,6 +3140,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting web publishing dates
+     *
      * @return void
      */
     public function testGettingWebPublishingDates()
@@ -3036,6 +3160,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting editions comments
+     *
      * @return void
      */
     public function testGettingComments()
@@ -3051,6 +3176,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products sales status
+     *
      * @return void
      */
     public function testGettingSalesStatus()
@@ -3063,6 +3189,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products main editions ISBN
+     *
      * @return void
      */
     public function testGettingMainEditionIsbn()
@@ -3076,6 +3203,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products main editions cost center
+     *
      * @return void
      */
     public function testGettingMainEditionCostCenter()
@@ -3087,6 +3215,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products work id
+     *
      * @return void
      */
     public function testGettingWorkId()
@@ -3096,6 +3225,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting products edition id
+     *
      * @return void
      */
     public function testGettingEditionId()
@@ -3105,6 +3235,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting correct edition and work id for deactivated product
+     *
      * @return void
      */
     public function testGettingCorrectEditionAndWorkIdForDuplicateIsbn()
@@ -3116,6 +3247,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting edition types
+     *
      * @return void
      */
     public function testGettingEditionTypes()
@@ -3142,6 +3274,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting events
+     *
      * @return void
      */
     public function testGettingEvents()
@@ -3158,12 +3291,13 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains([
             'EventRole' => '31',
             'EventName' => 'Vierailu Pieksämäen kirjakaupassa',
-            'EventDate' => '20191112'
+            'EventDate' => '20191112',
         ], $groschen->getEvents());
     }
 
     /**
      * Test getting the retailer price multiplier, see https://intranet.bonnierbooks.fi/pages/viewpage.action?pageId=16745509
+     *
      * @return void
      */
     public function testGettingRetailerPriceMultiplier()
@@ -3194,7 +3328,6 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting trade category
-     *
      */
     public function testGettingTradeCategory()
     {
@@ -3208,6 +3341,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting ProductContentTypes
+     *
      * @return void
      */
     public function testGettingProductContentTypes()
@@ -3302,6 +3436,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting contributor biography and links
+     *
      * @return void
      */
     public function testGettingContributorBiographyAndLinks()
@@ -3321,21 +3456,21 @@ class GroschenIntegrationTest extends TestCase
                     'WebsiteRole' => '42',
                     'WebsiteDescription' => 'Elina Kilkku Twitterissä',
                     'Website' => 'https://twitter.com/elinakilkku',
-                  ],
+                ],
                 [
-                  'WebsiteRole' => '06',
-                  'WebsiteDescription' => 'Tekijän omat nettisivut',
-                  'Website' => 'http://www.elinakilkku.com/',
+                    'WebsiteRole' => '06',
+                    'WebsiteDescription' => 'Tekijän omat nettisivut',
+                    'Website' => 'http://www.elinakilkku.com/',
                 ],
                 [
                     'WebsiteRole' => '42',
                     'WebsiteDescription' => 'Elina Kilkku Instagramissa',
                     'Website' => 'https://www.instagram.com/elinakilkku/',
-                  ],
+                ],
                 [
-                  'WebsiteRole' => '42',
-                  'WebsiteDescription' => 'Elina Kilkku Facebookissa',
-                  'Website' => 'https://www.facebook.com/kirjailijaelinakilkku/',
+                    'WebsiteRole' => '42',
+                    'WebsiteDescription' => 'Elina Kilkku Facebookissa',
+                    'Website' => 'https://www.facebook.com/kirjailijaelinakilkku/',
                 ],
             ],
             'ContributorDates' => [],
@@ -3353,8 +3488,8 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingLinksForPseudonym()
     {
-         // Author
-         $author = [
+        // Author
+        $author = [
             'Identifier' => 56749,
             'SequenceNumber' => 1,
             'ContributorRole' => 'A01',
@@ -3363,20 +3498,21 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => '<strong>Jenniemilia</strong> on valmentaja, joogan ja meditaation opettaja sekä valokuvaaja. Hän pitää suosittuja <em>Elä, opi ja rakasta</em> -kursseja, joissa hän hyödyntää mm. kehollisen läsnäolon ja kognitiivisen psykoterapian menetelmiä.',
             'WebSites' => [
                 [
-                  'WebsiteRole' => '42',
-                  'WebsiteDescription' => 'Jenniemilia Facebookissa',
-                  'Website' => 'https://www.facebook.com/jenniemiliaofficial',
+                    'WebsiteRole' => '42',
+                    'WebsiteDescription' => 'Jenniemilia Facebookissa',
+                    'Website' => 'https://www.facebook.com/jenniemiliaofficial',
                 ],
             ],
             'ContributorDates' => [],
-         ];
+        ];
 
-         $groschen = new Groschen('9789510404355');
-         $this->assertContains($author, $groschen->getContributors());
+        $groschen = new Groschen('9789510404355');
+        $this->assertContains($author, $groschen->getContributors());
     }
 
     /**
      * Test getting contributor dates (birth year)
+     *
      * @return void
      */
     public function testGettingContributorDates()
@@ -3408,6 +3544,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting related products for author
+     *
      * @return void
      */
     public function testGettingRelatedProductsForAuthor()
@@ -3452,6 +3589,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting work relation code
+     *
      * @return void
      */
     public function testGettingRelatedWorks()
@@ -3472,6 +3610,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the Onix notification type
+     *
      * @return void
      */
     public function testGettingNotificationType()
@@ -3494,6 +3633,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that duplicate Finna keywords with periods are filtered out
+     *
      * @return void
      */
     public function testDuplicateFinnaKeywordsWithPeriodsAreFilteredOut()
@@ -3507,6 +3647,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that non-fictional characters are listed in keywords
+     *
      * @return void
      */
     public function testNonFictionalCharactersAreListedInKeywords()
@@ -3526,6 +3667,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting the count of manufacture
+     *
      * @return void
      */
     public function testGettingCountryOfManufacture()
@@ -3543,6 +3685,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting contributors ISNI numbers
+     *
      * @return void
      */
     public function testGettingContributorsIsniNumber()
@@ -3568,6 +3711,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting sales restrictions for product that has Territory restrictions
+     *
      * @return void
      */
     public function testGettingSalesRightsTerritory()
@@ -3587,22 +3731,23 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test searching for editions
+     *
      * @return void
      */
     public function testSearchingForEditions()
     {
         // Basic search just with term
-       /*
-        $groschen = new Groschen('9789520448042');
-        $searchResults = $groschen->searchEditions('tervo');
-        $this->assertTrue($searchResults->contains('isbn', 9789510407714));
+        /*
+         $groschen = new Groschen('9789520448042');
+         $searchResults = $groschen->searchEditions('tervo');
+         $this->assertTrue($searchResults->contains('isbn', 9789510407714));
 
-        // Search with filters
-        $groschen = new Groschen('9789520448042');
-        $searchResults = $groschen->searchEditions('', "(listingCodeId eq '113')");
-        $this->assertTrue($searchResults->contains('isbn', 9789523125698));
-        $this->assertGreaterThan(50, $searchResults->count());
-        */
+         // Search with filters
+         $groschen = new Groschen('9789520448042');
+         $searchResults = $groschen->searchEditions('', "(listingCodeId eq '113')");
+         $this->assertTrue($searchResults->contains('isbn', 9789523125698));
+         $this->assertGreaterThan(50, $searchResults->count());
+         */
 
         // Search with more than 2000k results
         $groschen = new Groschen('9789520448042');
@@ -3613,6 +3758,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test faking for Johnny Kniga
+     *
      * @return void
      */
     public function testGettingJohnnyKnigaAsPublishingHouse()
@@ -3624,6 +3770,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that Finnish library code prefix is not shared if main edition is pocket book
+     *
      * @return void
      */
     public function testFinnishLibraryCodePrefixIsNotSharedFromMainEdition()
@@ -3635,6 +3782,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting names as subjects
+     *
      * @return void
      */
     public function testGettingNamesAsSubjects()
@@ -3654,6 +3802,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting names as subjects for pseudonym
+     *
      * @return void
      */
     public function testGettingNamesAsSubjectsForPseudonym()
@@ -3672,6 +3821,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that prizes are listed in keywords
+     *
      * @return void
      */
     public function testPrizesAreListedInKeywords()
@@ -3703,6 +3853,7 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting editions internal title
+     *
      * @return void
      */
     public function testGettingInternalTitle()
@@ -3767,7 +3918,9 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that contributor with two digit sort order is ordered correctly
+     *
      * @group contributors
+     *
      * @return void
      */
     public function testContributorPriorityWithTwoNumberIsSortedCorrectly()
@@ -3802,7 +3955,7 @@ class GroschenIntegrationTest extends TestCase
         // As reader should not appear
         $groschen = new Groschen('9789523823679');
         $this->assertStringNotContainsString($descriptionMatch, $groschen->getTextContents()->where('TextType', '03')->pluck('Text')->first());
-    
+
         // As author should appear
         $groschen = new Groschen('9789524033008');
         $this->assertStringContainsString($descriptionMatch, $groschen->getTextContents()->where('TextType', '03')->pluck('Text')->first());

@@ -1,4 +1,5 @@
 <?php
+
 namespace lasselehtinen\Groschen;
 
 use Cache;
@@ -11,7 +12,6 @@ use GuzzleHttp\HandlerStack;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Isbn;
 use kamermans\OAuth2\GrantType\NullGrantType;
@@ -29,54 +29,62 @@ class Groschen implements ProductInterface
 {
     /**
      * Product number
+     *
      * @var string
      */
     private $productNumber;
 
     /**
      * Mockingbird work ID
+     *
      * @var string
      */
     private $workId;
 
     /**
      * Mockingbird production ID
+     *
      * @var string
      */
     private $productionId;
 
     /**
      * Raw product information
+     *
      * @var stdClass
      */
     private $product;
 
     /**
      * Raw product information
+     *
      * @var stdClass
      */
     private $workLevel;
 
     /**
      * Whether the work level is already fetched
+     *
      * @var bool
      */
     private $workLevelFetched;
 
     /**
      * Guzzle HTTP client
+     *
      * @var \GuzzleHttp\Client
      */
     private $client;
 
     /**
      * Guzzle HTTP client
+     *
      * @var \GuzzleHttp\Client
      */
     private $searchClient;
 
     /**
-     * @param string $productNumber
+     * @param  string  $productNumber
      */
     public function __construct($productNumber)
     {
@@ -115,7 +123,7 @@ class Groschen implements ProductInterface
             'handler' => $stack,
             'auth' => 'oauth',
             'headers' => [
-                'User-Agent' => gethostname() . ' / ' . ' PHP/' . PHP_VERSION,
+                'User-Agent' => gethostname().' / '.' PHP/'.PHP_VERSION,
             ],
         ]);
 
@@ -125,18 +133,19 @@ class Groschen implements ProductInterface
             'handler' => $stack,
             'auth' => 'oauth',
             'headers' => [
-                'User-Agent' => gethostname() . ' / ' . ' PHP/' . PHP_VERSION,
+                'User-Agent' => gethostname().' / '.' PHP/'.PHP_VERSION,
             ],
         ]);
 
         $this->productNumber = $productNumber;
-        list($this->workId, $this->productionId) = $this->getEditionAndWorkId();
+        [$this->workId, $this->productionId] = $this->getEditionAndWorkId();
         $this->product = $this->getProduct();
         $this->workLevelFetched = false;
     }
 
     /**
      * Get the editions and works id
+     *
      * @return array
      */
     public function getEditionAndWorkId()
@@ -160,7 +169,7 @@ class Groschen implements ProductInterface
         // If we get multiple results, prefer the one that is not deactivated
         if (count($json->results) > 1) {
             // Remove those that are deactivated
-            foreach($json->results as $key => $result) {
+            foreach ($json->results as $key => $result) {
                 if ($result->document->isCancelled === true) {
                     unset($json->results[$key]);
                 }
@@ -186,31 +195,36 @@ class Groschen implements ProductInterface
 
     /**
      * Returns the editions work id
+     *
      * @return int
      */
-    public function getWorkId() {
+    public function getWorkId()
+    {
         return intval($this->workId);
     }
 
     /**
      * Returns the editions id
+     *
      * @return int
      */
-    public function getEditionId() {
+    public function getEditionId()
+    {
         return intval($this->productionId);
     }
 
     /**
      * Get the product information
+     *
      * @return stdClass
      */
     public function getProduct()
     {
         // Get the production from Mockingbird
         try {
-            $response = $this->client->get('/v2/editions/' . $this->productionId);
+            $response = $this->client->get('/v2/editions/'.$this->productionId);
         } catch (ServerException $e) {
-            throw new Exception('Server exception: ' . $e->getResponse()->getBody());
+            throw new Exception('Server exception: '.$e->getResponse()->getBody());
         }
 
         return json_decode($response->getBody()->getContents());
@@ -218,15 +232,16 @@ class Groschen implements ProductInterface
 
     /**
      * Get the print production plan
+     *
      * @return mixed
      */
     public function getPrintProductionPlan()
     {
         // Get the production plan from Mockingbird
         try {
-            $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
+            $response = $this->client->get('/v1/works/'.$this->workId.'/productions/'.$this->productionId.'/printchanges');
         } catch (ServerException $e) {
-            throw new Exception('Server exception: ' . $e->getResponse()->getBody());
+            throw new Exception('Server exception: '.$e->getResponse()->getBody());
         }
 
         return json_decode($response->getBody()->getContents());
@@ -234,13 +249,14 @@ class Groschen implements ProductInterface
 
     /**
      * Get the work level information
+     *
      * @return stdClass
      */
     public function getWorkLevel()
     {
-        if($this->workLevelFetched === false) {
+        if ($this->workLevelFetched === false) {
             // Get the production from Mockingbird
-            $response = $this->client->get('/v1/works/' . $this->workId);
+            $response = $this->client->get('/v1/works/'.$this->workId);
             $this->workLevel = json_decode($response->getBody()->getContents());
             $this->workLevelFetched = true;
         }
@@ -250,6 +266,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products identifiers
+     *
      * @return Collection
      */
     public function getProductIdentifiers()
@@ -264,7 +281,7 @@ class Groschen implements ProductInterface
         ]);
 
         // GTIN-13 and ISBN-13
-        if (!empty($this->product->isbn) && $this->isValidGtin($this->product->isbn)) {
+        if (! empty($this->product->isbn) && $this->isValidGtin($this->product->isbn)) {
             foreach (['03', '15'] as $id_value) {
                 $productIdentifiers->push([
                     'ProductIDType' => $id_value,
@@ -278,6 +295,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products composition (Onix Codelist 2)
+     *
      * @return string|null
      */
     public function getProductComposition()
@@ -288,6 +306,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products type
+     *
      * @return string
      */
     public function getProductType()
@@ -297,12 +316,13 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products from (Onix codelist 150)
+     *
      * @return string|null
      */
     public function getProductForm()
     {
         if (property_exists($this->product->bindingCode->customProperties, 'onixProductForm') === false) {
-            throw new Exception('Binding code ' . $this->product->bindingCode->name . ' does not have ProductForm or OnixProductForm in custom properties. Contact support to add.');
+            throw new Exception('Binding code '.$this->product->bindingCode->name.' does not have ProductForm or OnixProductForm in custom properties. Contact support to add.');
         }
 
         return $this->product->bindingCode->customProperties->onixProductForm;
@@ -310,6 +330,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products form details (Onix codelist 175)
+     *
      * @return Collection
      */
     public function getProductFormDetails()
@@ -332,14 +353,14 @@ class Groschen implements ProductInterface
         // Headband
         $headBand = $this->getTechnicalData()->where('partName', 'bookBinding')->pluck('headBand')->first();
 
-        if (!empty($headBand)) {
+        if (! empty($headBand)) {
             $productFormDetails->push('B407');
         }
 
         // Printed endpapers
         $endPaperColors = $this->getTechnicalData()->where('partName', 'endPapers')->pluck('colors')->first();
-        
-        if (!empty($endPaperColors)) {
+
+        if (! empty($endPaperColors)) {
             [$frontColors, $backColors] = explode('/', $endPaperColors);
             $endPaperIsPrinted = ($frontColors > 0 || $backColors > 0);
 
@@ -353,6 +374,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products technical binding type
+     *
      * @return string|null
      */
     public function getTechnicalBindingType()
@@ -366,6 +388,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products form features
+     *
      * @return Collection
      */
     public function getProductFormFeatures()
@@ -394,8 +417,9 @@ class Groschen implements ProductInterface
 
     /**
      * Check if the given product number is valid GTIN
+     *
      * @param  string  $gtin
-     * @return boolean
+     * @return bool
      */
     public function isValidGtin($gtin)
     {
@@ -406,6 +430,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products collections/series
+     *
      * @return Collection
      */
     public function getCollections()
@@ -443,7 +468,7 @@ class Groschen implements ProductInterface
         }
 
         // Add products marketing serie
-        if (!empty($this->product->marketingSerie)) {
+        if (! empty($this->product->marketingSerie)) {
             $collections->push([
                 'CollectionType' => '11', [
                     'TitleDetail' => [
@@ -462,6 +487,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products title details
+     *
      * @return  Collection
      */
     public function getTitleDetails()
@@ -478,17 +504,18 @@ class Groschen implements ProductInterface
         ]);
 
         // Add subtitle
-        if (!empty($this->product->subtitle)) {
+        if (! empty($this->product->subtitle)) {
             $titleDetails = $titleDetails->map(function ($titleDetail) {
                 $titleDetail['TitleElement']['Subtitle'] = $this->product->subtitle;
+
                 return $titleDetail;
             });
         }
 
         // Original title
         // Note: Since title is automatically copied to original title, we don't want to return if they are the same
-        if (!empty($this->product->originalTitle)) {
-            if($this->isTranslated() || $this->product->title !== $this->product->originalTitle) {
+        if (! empty($this->product->originalTitle)) {
+            if ($this->isTranslated() || $this->product->title !== $this->product->originalTitle) {
                 $titleDetails->push([
                     'TitleType' => '03',
                     'TitleElement' => [
@@ -513,6 +540,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the internal title for edition
+     *
      * @return string
      */
     public function getInternalTitle()
@@ -555,14 +583,15 @@ class Groschen implements ProductInterface
         }
 
         // Space reserved for format + one space
-        $spaceForFormat = mb_strlen($format)+1;
-        
-        return trim(mb_substr($this->product->title, 0, 50-$spaceForFormat)).' '.$format;
+        $spaceForFormat = mb_strlen($format) + 1;
+
+        return trim(mb_substr($this->product->title, 0, 50 - $spaceForFormat)).' '.$format;
     }
 
     /**
      * Get the products contributors
-     * @param  boolean $returnInternalResources
+     *
+     * @param  bool  $returnInternalResources
      * @return Collection
      */
     public function getContributors($returnInternalResources = true)
@@ -570,7 +599,7 @@ class Groschen implements ProductInterface
         $contributors = new Collection;
 
         // If no stakeholders present
-        if (!isset($this->product->members)) {
+        if (! isset($this->product->members)) {
             return $contributors;
         }
 
@@ -582,8 +611,8 @@ class Groschen implements ProductInterface
             $priorityLevel = (isset($teamMember->prioLevel)) ? $teamMember->prioLevel->id : 0;
             $sortOrderPriority = $teamMember->sortOrder;
             $rolePriority = $this->getRolePriority($teamMember->role->name);
-            $lastNamePriority = (!empty($teamMember->contact->lastName)) ? ord($teamMember->contact->lastName) : 0;
-            $sortOrder = str_pad(strval($priorityLevel), 3, '0', STR_PAD_LEFT) . '-' . str_pad(strval($sortOrderPriority), 3, '0', STR_PAD_LEFT) . '-' . str_pad(strval($rolePriority), 3, '0', STR_PAD_LEFT) . '-' . str_pad(strval($lastNamePriority), 3, '0', STR_PAD_LEFT);
+            $lastNamePriority = (! empty($teamMember->contact->lastName)) ? ord($teamMember->contact->lastName) : 0;
+            $sortOrder = str_pad(strval($priorityLevel), 3, '0', STR_PAD_LEFT).'-'.str_pad(strval($sortOrderPriority), 3, '0', STR_PAD_LEFT).'-'.str_pad(strval($rolePriority), 3, '0', STR_PAD_LEFT).'-'.str_pad(strval($lastNamePriority), 3, '0', STR_PAD_LEFT);
 
             return $sortOrder;
         });
@@ -612,29 +641,29 @@ class Groschen implements ProductInterface
             ];
 
             // Get contact
-            $response = $this->searchClient->get('v2/contacts/' . $contributor->contact->id);
+            $response = $this->searchClient->get('v2/contacts/'.$contributor->contact->id);
             $contact = json_decode($response->getBody()->getContents());
 
             if ($contact->isCompanyContact === true) {
                 if (isset($contact->company->name1) && isset($contact->company->name2)) {
-                    $contributorData['CorporateName'] = trim($contact->company->name1 . ' ' . $contact->company->name2);
+                    $contributorData['CorporateName'] = trim($contact->company->name1.' '.$contact->company->name2);
                 } else {
                     $contributorData['CorporateName'] = trim($contact->company->name1);
                 }
             } else {
                 // Handle PersonNameInverted and KeyNames differently depending if they have the lastname or not
-                if (empty($contributor->contact->lastName) && !empty($contributor->contact->firstName)) {
+                if (empty($contributor->contact->lastName) && ! empty($contributor->contact->firstName)) {
                     $contributorData['PersonName'] = trim($contributor->contact->firstName);
                     $contributorData['KeyNames'] = trim($contributor->contact->firstName);
                 } else {
-                    $contributorData['PersonName'] = trim($contributor->contact->firstName) . ' ' . trim($contributor->contact->lastName);
-                    $contributorData['PersonNameInverted'] = trim($contributor->contact->lastName) . ', ' . trim($contributor->contact->firstName);
+                    $contributorData['PersonName'] = trim($contributor->contact->firstName).' '.trim($contributor->contact->lastName);
+                    $contributorData['PersonNameInverted'] = trim($contributor->contact->lastName).', '.trim($contributor->contact->firstName);
                     $contributorData['KeyNames'] = trim($contributor->contact->lastName);
                     $contributorData['NamesBeforeKey'] = trim($contributor->contact->firstName);
                 }
             }
 
-            $response = $this->searchClient->get('v2/contacts/' . $contributor->contact->id . '/links');
+            $response = $this->searchClient->get('v2/contacts/'.$contributor->contact->id.'/links');
             $links = json_decode($response->getBody()->getContents());
 
             // Add BiographicalNote
@@ -655,30 +684,30 @@ class Groschen implements ProductInterface
                 'Twitter' => '42',
                 'Instagram' => '42',
             ];
-            
+
             // Add links
             $contributorData['WebSites'] = collect($links->contactLinks)->map(function ($link, $key) use ($contributorData, $linkTypeMapping) {
                 // Form website description
                 if (array_key_exists('CorporateName', $contributorData)) {
                     $name = $contributorData['CorporateName'];
                 } else {
-                    $name = (array_key_exists('NamesBeforeKey', $contributorData)) ? $contributorData['NamesBeforeKey'] . ' ' . $contributorData['KeyNames'] : $contributorData['KeyNames'];
+                    $name = (array_key_exists('NamesBeforeKey', $contributorData)) ? $contributorData['NamesBeforeKey'].' '.$contributorData['KeyNames'] : $contributorData['KeyNames'];
                 }
 
                 if (is_object($link) && property_exists($link, 'linkType')) {
 
                     switch ($link->linkType->name) {
                         case 'Facebook':
-                            $description = $name . ' Facebookissa';
+                            $description = $name.' Facebookissa';
                             break;
                         case 'Twitter':
-                            $description = $name . ' Twitterissä';
+                            $description = $name.' Twitterissä';
                             break;
                         case 'Instagram':
-                            $description = $name . ' Instagramissa';
+                            $description = $name.' Instagramissa';
                             break;
                         case 'YouTube':
-                            $description = $name . ' YouTubessa';
+                            $description = $name.' YouTubessa';
                             break;
                         case 'Webpage':
                             $description = 'Tekijän omat nettisivut';
@@ -728,6 +757,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the all contributors, including those that don't have Onix roles
+     *
      * @return Collection
      */
     public function getAllContributors()
@@ -735,7 +765,7 @@ class Groschen implements ProductInterface
         $contributors = new Collection;
 
         // If no stakeholders present
-        if (!isset($this->product->members)) {
+        if (! isset($this->product->members)) {
             return $contributors;
         }
 
@@ -754,6 +784,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products languages
+     *
      * @return Collection
      */
     public function getLanguages()
@@ -761,7 +792,7 @@ class Groschen implements ProductInterface
         $languages = new Collection;
 
         // Add text language
-        if (!empty($this->product->languages)) {
+        if (! empty($this->product->languages)) {
             foreach ($this->product->languages as $language) {
                 $languages->push([
                     'LanguageRole' => '01',
@@ -786,7 +817,7 @@ class Groschen implements ProductInterface
             try {
                 $language->toName();
             } catch (Exception $e) {
-                throw new Exception('Incorrect LanguageCode ' . $languageCode);
+                throw new Exception('Incorrect LanguageCode '.$languageCode);
             }
         });
 
@@ -795,6 +826,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products extents
+     *
      * @return Collection
      */
     public function getExtents()
@@ -822,11 +854,11 @@ class Groschen implements ProductInterface
             $audioPlaytimeHours = str_pad($this->product->audioPlaytimeHours, 3, '0', STR_PAD_LEFT);
 
             // If no minutes are given, use 00
-            $audioPlaytimeMinutes = (!isset($this->product->audioPlaytimeMinutes)) ? '00' : str_pad($this->product->audioPlaytimeMinutes, 2, '0', STR_PAD_LEFT);
+            $audioPlaytimeMinutes = (! isset($this->product->audioPlaytimeMinutes)) ? '00' : str_pad($this->product->audioPlaytimeMinutes, 2, '0', STR_PAD_LEFT);
 
             // Skip if we don't have value
-            $extentValue = $audioPlaytimeHours . $audioPlaytimeMinutes;
-            if($extentValue !== '00000') {
+            $extentValue = $audioPlaytimeHours.$audioPlaytimeMinutes;
+            if ($extentValue !== '00000') {
                 // Hours and minutes HHHMM
                 $extents->push([
                     'ExtentType' => '09',
@@ -865,7 +897,7 @@ class Groschen implements ProductInterface
         }
 
         // Add number of pages in the printer counterpart for digital products from main edition
-        if($this->isImmaterial() && isset($this->product->pages) && $this->product->pages > 0) {
+        if ($this->isImmaterial() && isset($this->product->pages) && $this->product->pages > 0) {
             $extents->push([
                 'ExtentType' => '08',
                 'ExtentValue' => strval($this->product->pages),
@@ -878,6 +910,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products estimated number of pages
+     *
      * @return int|null
      */
     public function getEstimatedNumberOfPages()
@@ -887,6 +920,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products estimated number of pages
+     *
      * @return int|null
      */
     public function getInsideNumberOfPages()
@@ -896,6 +930,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products number of characters
+     *
      * @return int|null
      */
     public function getNumberOfCharacters()
@@ -905,6 +940,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the publishers name
+     *
      * @return string
      */
     public function getPublisher()
@@ -918,6 +954,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the publishers id
+     *
      * @return string
      */
     public function getPublisherId()
@@ -927,6 +964,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products imprints
+     *
      * @return Collection
      */
     public function getImprints()
@@ -944,15 +982,16 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products brand
+     *
      * @return string
      */
     public function getBrand()
     {
-        if (!isset($this->product->brand)) {
+        if (! isset($this->product->brand)) {
             throw new Exception('The edition is missing brand.');
         }
 
-        if($this->getCostCenter() === 909) {
+        if ($this->getCostCenter() === 909) {
             return 'Disney';
         }
 
@@ -961,6 +1000,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products net price RRP including VAT
+     *
      * @return float|null
      */
     public function getPrice()
@@ -970,6 +1010,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products net price excluding VAT
+     *
      * @return float|null
      */
     public function getPriceExcludingVat()
@@ -979,6 +1020,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products retail price including VAT
+     *
      * @return float|null
      */
     public function getPublisherRetailPrice()
@@ -988,6 +1030,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products measures
+     *
      * @return Collection
      */
     public function getMeasures()
@@ -1001,20 +1044,20 @@ class Groschen implements ProductInterface
         }
 
         // Add width, height and length
-        if (!empty($this->product->height)) {
+        if (! empty($this->product->height)) {
             $measures->push(['MeasureType' => '01', 'Measurement' => intval($this->product->height), 'MeasureUnitCode' => 'mm']);
         }
 
-        if (!empty($this->product->width)) {
+        if (! empty($this->product->width)) {
             $measures->push(['MeasureType' => '02', 'Measurement' => intval($this->product->width), 'MeasureUnitCode' => 'mm']);
         }
 
-        if (!empty($this->product->depth)) {
+        if (! empty($this->product->depth)) {
             $measures->push(['MeasureType' => '03', 'Measurement' => intval($this->product->depth), 'MeasureUnitCode' => 'mm']);
         }
 
         // Add weight
-        if (!empty($this->product->weight)) {
+        if (! empty($this->product->weight)) {
             $measures->push(['MeasureType' => '08', 'Measurement' => intval($this->product->weight * 1000), 'MeasureUnitCode' => 'gr']);
         }
 
@@ -1028,6 +1071,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products estimated measures
+     *
      * @return Collection
      */
     public function getEstimatedMeasures()
@@ -1041,20 +1085,20 @@ class Groschen implements ProductInterface
         }
 
         // Add width, height and length
-        if (!empty($this->product->estimatedHeight)) {
+        if (! empty($this->product->estimatedHeight)) {
             $measures->push(['MeasureType' => '01', 'Measurement' => intval($this->product->estimatedHeight), 'MeasureUnitCode' => 'mm']);
         }
 
-        if (!empty($this->product->estimatedWidth)) {
+        if (! empty($this->product->estimatedWidth)) {
             $measures->push(['MeasureType' => '02', 'Measurement' => intval($this->product->estimatedWidth), 'MeasureUnitCode' => 'mm']);
         }
 
-        if (!empty($this->product->estimatedDepth)) {
+        if (! empty($this->product->estimatedDepth)) {
             $measures->push(['MeasureType' => '03', 'Measurement' => intval($this->product->estimatedDepth), 'MeasureUnitCode' => 'mm']);
         }
 
         // Add weight
-        if (!empty($this->product->estimatedWeight)) {
+        if (! empty($this->product->estimatedWeight)) {
             $measures->push(['MeasureType' => '08', 'Measurement' => intval($this->product->estimatedWeight * 1000), 'MeasureUnitCode' => 'gr']);
         }
 
@@ -1068,6 +1112,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products original publication date
+     *
      * @return DateTime|null
      */
     public function getOriginalPublicationDate()
@@ -1081,11 +1126,12 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products latest publication date
+     *
      * @return DateTime|null
      */
     public function getLatestPublicationDate()
     {
-        if (!isset($this->product->publishingDate) && is_null($this->product->publishingDate)) {
+        if (! isset($this->product->publishingDate) && is_null($this->product->publishingDate)) {
             return null;
         }
 
@@ -1094,6 +1140,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products subjects, like library class, Thema, BIC, BISAC etc.
+     *
      * @return Collection
      */
     public function getSubjects()
@@ -1104,7 +1151,7 @@ class Groschen implements ProductInterface
         // Library class
         $libraryClass = $this->getLibraryClass();
 
-        if (!empty($libraryClass)) {
+        if (! empty($libraryClass)) {
             $subjects->push([
                 'SubjectSchemeIdentifier' => '66',
                 'SubjectSchemeName' => 'YKL',
@@ -1148,7 +1195,7 @@ class Groschen implements ProductInterface
         }
 
         // Cost center number
-        if (!empty($this->getCostCenter())) {
+        if (! empty($this->getCostCenter())) {
             $subjects->push([
                 'SubjectSchemeIdentifier' => '23',
                 'SubjectSchemeName' => 'Werner Söderström Ltd - Cost center',
@@ -1183,7 +1230,7 @@ class Groschen implements ProductInterface
 
         // Collection to hold keywords
         $keywords = collect([]);
-        
+
         // Add marketing keywords
         $keywords = $keywords->merge($this->getMarketingKeywords());
 
@@ -1202,7 +1249,7 @@ class Groschen implements ProductInterface
 
         // Remove those where SubjectCode and/or SubjectHeadingText is empty
         $subjects = $subjects->filter(function ($subject) {
-            return !empty($subject['SubjectCode']) || !empty($subject['SubjectHeadingText']);
+            return ! empty($subject['SubjectCode']) || ! empty($subject['SubjectHeadingText']);
         });
 
         return $subjects->sortBy('SubjectSchemeIdentifier');
@@ -1217,7 +1264,7 @@ class Groschen implements ProductInterface
     {
         $keywords = collect([]);
 
-        if (isset($this->product->keywords) && !empty($this->product->keywords)) {
+        if (isset($this->product->keywords) && ! empty($this->product->keywords)) {
             foreach (explode(';', $this->product->keywords) as $keyword) {
                 $keywords->push($keyword);
             }
@@ -1235,7 +1282,7 @@ class Groschen implements ProductInterface
     {
         $marketingKeywords = collect([]);
 
-        if (isset($this->product->bookTypes) && !empty($this->product->bookTypes)) {
+        if (isset($this->product->bookTypes) && ! empty($this->product->bookTypes)) {
             foreach (explode(';', $this->product->bookTypes) as $bookType) {
                 $marketingKeywords->push($bookType);
             }
@@ -1253,7 +1300,7 @@ class Groschen implements ProductInterface
     {
         $bibliographicCharacters = collect([]);
 
-        if (isset($this->product->bibliographicCharacters) && !empty($this->product->bibliographicCharacters)) {
+        if (isset($this->product->bibliographicCharacters) && ! empty($this->product->bibliographicCharacters)) {
             foreach (explode(';', $this->product->bibliographicCharacters) as $bibliographicCharacter) {
                 $bibliographicCharacters->push($bibliographicCharacter);
             }
@@ -1264,6 +1311,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products text contents
+     *
      * @return Collection
      */
     public function getTextContents()
@@ -1271,7 +1319,7 @@ class Groschen implements ProductInterface
         $textContents = new Collection;
 
         // Get texts
-        $response = $this->client->get('v1/works/' . $this->workId . '/productions/' . $this->productionId . '/texts');
+        $response = $this->client->get('v1/works/'.$this->workId.'/productions/'.$this->productionId.'/texts');
         $json = json_decode($response->getBody()->getContents());
         $texts = collect($json->texts);
 
@@ -1324,8 +1372,9 @@ class Groschen implements ProductInterface
         // Merge the texts and add missing paragraph tags
         $mergedTexts = $headline->merge($copyOne)->merge($copyTwo)->merge($authorDescription)->transform(function ($text) {
             if (substr($text->text, 0, 3) !== '<p>') {
-                $text->text = '<p>' . $text->text . '</p>';
+                $text->text = '<p>'.$text->text.'</p>';
             }
+
             return $text;
         });
 
@@ -1340,11 +1389,11 @@ class Groschen implements ProductInterface
         }
 
         // Get review quotes
-        $response = $this->client->get('/v1/works/' . $this->workId . '/reviewquotes');
+        $response = $this->client->get('/v1/works/'.$this->workId.'/reviewquotes');
         $json = json_decode($response->getBody()->getContents());
 
         foreach ($json->reviewQuotes as $reviewQuote) {
-            if (!empty($reviewQuote->quote) && !empty($reviewQuote->source)) {
+            if (! empty($reviewQuote->quote) && ! empty($reviewQuote->source)) {
                 $textContents->push([
                     'TextType' => '06',
                     'ContentAudience' => '00',
@@ -1356,7 +1405,7 @@ class Groschen implements ProductInterface
 
         // Remove empty texts
         $textContents = $textContents->filter(function ($textContent) {
-            return !empty($textContent['Text']);
+            return ! empty($textContent['Text']);
         });
 
         return $textContents;
@@ -1364,13 +1413,14 @@ class Groschen implements ProductInterface
 
     /**
      * Get a spesific text
-     * @param  string $name
+     *
+     * @param  string  $name
      * @return null|string
      */
     public function getText($name)
     {
         // Get texts
-        $response = $this->client->get('v1/works/' . $this->workId . '/productions/' . $this->productionId . '/texts');
+        $response = $this->client->get('v1/works/'.$this->workId.'/productions/'.$this->productionId.'/texts');
         $json = json_decode($response->getBody()->getContents());
         $texts = collect($json->texts);
 
@@ -1378,7 +1428,7 @@ class Groschen implements ProductInterface
             return $text->textType->name === $name;
         });
 
-        if($text->count() === 0) {
+        if ($text->count() === 0) {
             return null;
         }
 
@@ -1387,6 +1437,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products publishers and their role
+     *
      * @return Collection
      */
     public function getPublishers()
@@ -1445,6 +1496,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products publishing status (Onix codelist 64)
+     *
      * @return string
      */
     public function getPublishingStatus()
@@ -1457,13 +1509,13 @@ class Groschen implements ProductInterface
         // For published and short run books, the books stocks affect the publishing status.
         if (in_array($this->product->listingCode->name, ['Published', 'Short run'])) {
             // For digital/immaterial products, we don't need to check the stock balances
-            if($this->isImmaterial()) {
+            if ($this->isImmaterial()) {
                 return '04';
             }
 
             // Check if the product has free stock
             $onHand = $this->getSuppliers()->pluck('OnHand')->first();
-            $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
+            $hasStock = (! empty($onHand) && $onHand > 0) ? true : false;
 
             if ($hasStock) {
                 return '04';
@@ -1493,12 +1545,13 @@ class Groschen implements ProductInterface
             case 'Permanently withdrawn from sale':
                 return '11';
             default:
-                throw new Exception('Could not map product governing code ' . $this->product->listingCode->name . ' to publishing status');
+                throw new Exception('Could not map product governing code '.$this->product->listingCode->name.' to publishing status');
         }
     }
 
     /**
      * Get the product publishing dates
+     *
      * @return Collection
      */
     public function getPublishingDates()
@@ -1506,31 +1559,31 @@ class Groschen implements ProductInterface
         $publishingDates = new Collection;
 
         // Add original publishing date
-        if (!empty($this->product->publishingDate)) {
+        if (! empty($this->product->publishingDate)) {
             $publishingDate = DateTime::createFromFormat('!Y-m-d', substr($this->product->publishingDate, 0, 10));
             $publishingDates->push(['PublishingDateRole' => '01', 'Date' => $publishingDate->format('Ymd')]);
         }
 
         // Add Embargo / First permitted day of sale if given
-        if (!empty($this->product->firstSellingDay)) {
+        if (! empty($this->product->firstSellingDay)) {
             $salesEmbargoDate = DateTime::createFromFormat('!Y-m-d', substr($this->product->firstSellingDay, 0, 10));
         }
 
         // For digital products, set sales embargo date same as publication date
-        if ($this->isImmaterial() && !empty($this->product->publishingDate)) {
+        if ($this->isImmaterial() && ! empty($this->product->publishingDate)) {
             $salesEmbargoDate = DateTime::createFromFormat('!Y-m-d', substr($this->product->publishingDate, 0, 10));
         }
 
-        if (!empty($salesEmbargoDate)) {
+        if (! empty($salesEmbargoDate)) {
             $publishingDates->push(['PublishingDateRole' => '02', 'Date' => $salesEmbargoDate->format('Ymd')]);
         }
 
         // Add public announcement date / Season
-        if (!empty($this->product->seasonYear) && !empty($this->product->seasonPeriod)) {
+        if (! empty($this->product->seasonYear) && ! empty($this->product->seasonPeriod)) {
             if ($this->product->seasonYear->name !== '2099' && $this->product->seasonPeriod->name !== 'N/A') {
                 $publishingDates->push([
                     'PublishingDateRole' => '09',
-                    'Date' => $this->product->seasonYear->name . ' ' . $this->product->seasonPeriod->name,
+                    'Date' => $this->product->seasonYear->name.' '.$this->product->seasonPeriod->name,
                     'Format' => 12,
                 ]);
             }
@@ -1539,7 +1592,7 @@ class Groschen implements ProductInterface
         // Get latest reprint date and check if the date as passed
         $latestStockArrivalDate = $this->getLatestStockArrivalDate();
 
-        if (!is_null($latestStockArrivalDate)) {
+        if (! is_null($latestStockArrivalDate)) {
             $now = new DateTime();
             $publishingDateRole = ($latestStockArrivalDate < $now) ? '12' : '26';
 
@@ -1559,6 +1612,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get The products prices
+     *
      * @return Collection
      */
     public function getPrices()
@@ -1569,7 +1623,7 @@ class Groschen implements ProductInterface
         $priceTypes = new Collection;
 
         // Supplier’s net price excluding tax
-        if (!is_null($this->getPriceExcludingVat())) {
+        if (! is_null($this->getPriceExcludingVat())) {
             $priceTypes->push([
                 'PriceTypeCode' => '05',
                 'TaxIncluded' => false,
@@ -1579,7 +1633,7 @@ class Groschen implements ProductInterface
         }
 
         // Supplier’s net price including tax
-        if (!is_null($this->getPrice())) {
+        if (! is_null($this->getPrice())) {
             $priceTypes->push([
                 'PriceTypeCode' => '07',
                 'TaxIncluded' => true,
@@ -1589,7 +1643,7 @@ class Groschen implements ProductInterface
         }
 
         // Publishers recommended retail price including tax
-        if (!is_null($this->getPublisherRetailPrice())) {
+        if (! is_null($this->getPublisherRetailPrice())) {
             $priceTypes->push([
                 'PriceTypeCode' => '42',
                 'TaxIncluded' => true,
@@ -1600,7 +1654,7 @@ class Groschen implements ProductInterface
 
         // Remove price types that don't have price
         $priceTypes = $priceTypes->filter(function ($priceType, $key) {
-            return !is_null($priceType['PriceAmount']);
+            return ! is_null($priceType['PriceAmount']);
         });
 
         // Go through all Price Types
@@ -1642,8 +1696,8 @@ class Groschen implements ProductInterface
             $prices->push($price);
 
             // Add pocket book price group as separate PriceType
-            if ($priceType['PriceTypeCode'] === '42' && !is_null($this->getPocketBookPriceGroup())) {
-                $price = array_slice($price, 0, 2, true) + array('PriceCoded' => ['PriceCodeType' => '02', 'PriceCode' => $this->product->priceGroupPocket->name]) + array_slice($price, 2, count($price) - 1, true);
+            if ($priceType['PriceTypeCode'] === '42' && ! is_null($this->getPocketBookPriceGroup())) {
+                $price = array_slice($price, 0, 2, true) + ['PriceCoded' => ['PriceCodeType' => '02', 'PriceCode' => $this->product->priceGroupPocket->name]] + array_slice($price, 2, count($price) - 1, true);
 
                 // We need to remove PriceAmount since it is either PriceAmount OR PriceCoded
                 unset($price['PriceAmount']);
@@ -1656,7 +1710,8 @@ class Groschen implements ProductInterface
 
     /**
      * Get the tax element
-     * @param  array $priceType
+     *
+     * @param  array  $priceType
      * @return array
      */
     public function getTaxElement($priceType)
@@ -1692,6 +1747,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get products supporting resources
+     *
      * @return Collection
      */
     public function getSupportingResources()
@@ -1723,12 +1779,12 @@ class Groschen implements ProductInterface
 
         // Cover image
         $queries = [
-            'gtin:' . $this->productNumber . ' AND cf_catalogMediatype:cover AND ancestorPaths:"/'.$publisher.'/Kansikuvat"'
+            'gtin:'.$this->productNumber.' AND cf_catalogMediatype:cover AND ancestorPaths:"/'.$publisher.'/Kansikuvat"',
         ];
 
         // Add separate queries for each contributor
         foreach ($this->getContributors() as $contributor) {
-            array_push($queries, 'cf_mockingbirdContactId:' . $contributor['Identifier'] . ' AND cf_preferredimage:true AND cf_availableinpublicweb:true AND ancestorPaths:"/'.$publisher.'/Kirjailijakuvat"');
+            array_push($queries, 'cf_mockingbirdContactId:'.$contributor['Identifier'].' AND cf_preferredimage:true AND cf_availableinpublicweb:true AND ancestorPaths:"/'.$publisher.'/Kirjailijakuvat"');
         }
 
         // List of metadata fields from Elvis that we need
@@ -1772,7 +1828,7 @@ class Groschen implements ProductInterface
             // Check that we have all the required metadata fields
             foreach (array_diff($metadataFields, ['cf_mockingbirdContactId', 'copyright', 'creatorName']) as $requiredMetadataField) {
                 if (property_exists($hit->metadata, $requiredMetadataField) === false) {
-                    throw new Exception('The required metadata field '. $requiredMetadataField . ' does not exist in Elvis.');
+                    throw new Exception('The required metadata field '.$requiredMetadataField.' does not exist in Elvis.');
                 }
             }
 
@@ -1794,8 +1850,8 @@ class Groschen implements ProductInterface
                 $resourceContentType = '04';
             }
 
-            if (!isset($resourceContentType)) {
-                throw new Exception('Could not determine ResourceContentType for ' . $hit->metadata->assetPath);
+            if (! isset($resourceContentType)) {
+                throw new Exception('Could not determine ResourceContentType for '.$hit->metadata->assetPath);
             }
 
             $supportingResource = [
@@ -1837,14 +1893,14 @@ class Groschen implements ProductInterface
             // Add ResourceVersionFeatureType 06 (Proprietary ID of resource contributor) if ResourceContentType 04 (Author image) and copyright
             if ($resourceContentType === '04') {
                 // Required credit and Copyright
-                if (property_exists($hit->metadata, 'copyright') && !empty($hit->metadata->copyright)) {
+                if (property_exists($hit->metadata, 'copyright') && ! empty($hit->metadata->copyright)) {
                     $supportingResource['ResourceFeatures'][] = [
                         'ResourceFeatureType' => '01',
                         'FeatureValue' => $hit->metadata->copyright,
                     ];
                 }
 
-                if (property_exists($hit->metadata, 'creatorName') && !empty($hit->metadata->creatorName[0])) {
+                if (property_exists($hit->metadata, 'creatorName') && ! empty($hit->metadata->creatorName[0])) {
                     $supportingResource['ResourceFeatures'][] = [
                         'ResourceFeatureType' => '03',
                         'FeatureValue' => $hit->metadata->creatorName[0],
@@ -1854,8 +1910,8 @@ class Groschen implements ProductInterface
                 array_splice($supportingResource['ResourceVersion']['ResourceVersionFeatures'], 5, 0, [
                     [
                         'ResourceVersionFeatureType' => '06',
-                        'FeatureValue' => $hit->metadata->cf_mockingbirdContactId
-                    ]
+                        'FeatureValue' => $hit->metadata->cf_mockingbirdContactId,
+                    ],
                 ]);
             }
 
@@ -1894,14 +1950,15 @@ class Groschen implements ProductInterface
 
     /**
      * Get the authCred URL for the Elvis links
-     * @param  string $url
+     *
+     * @param  string  $url
      * @return string
      */
     public function getAuthCredUrl($url)
     {
         // Add authCred to query parameters
         $uri = Uri::createFromString($url);
-        $newUri = UriModifier::mergeQuery($uri, 'authcred=' . base64_encode(config('groschen.elvis.username') . ':' . config('groschen.elvis.password')));
+        $newUri = UriModifier::mergeQuery($uri, 'authcred='.base64_encode(config('groschen.elvis.username').':'.config('groschen.elvis.password')));
 
         // Remove the underscore version parameter
         $newUri = UriModifier::removeParams($newUri, '_');
@@ -1911,6 +1968,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the related products
+     *
      * @return Collection
      */
     public function getRelatedProducts()
@@ -1933,14 +1991,14 @@ class Groschen implements ProductInterface
         }
 
         // Add other books from the same authors
-        foreach($this->getContributors()->where('ContributorRole', 'A01') as $author) {
+        foreach ($this->getContributors()->where('ContributorRole', 'A01') as $author) {
             // TODO Add filter just for where role is author aka (roles/any(t: t eq '304'))
             $response = $this->client->get('v2/search/productions', [
                 'query' => [
                     'q' => null,
                     'limit' => 999,
                     '$select' => 'id,workId,isbn',
-                    '$filter' => "(contactRoles/any(t: t eq '" . $author['Identifier'] . "|304'))"
+                    '$filter' => "(contactRoles/any(t: t eq '".$author['Identifier']."|304'))",
                 ],
             ]);
 
@@ -1948,7 +2006,7 @@ class Groschen implements ProductInterface
 
             foreach ($json->results as $result) {
                 // Do not add current products
-                if(property_exists($result->document, 'isbn') && $this->productNumber !== $result->document->isbn) {
+                if (property_exists($result->document, 'isbn') && $this->productNumber !== $result->document->isbn) {
                     $relatedProducts->push([
                         'ProductRelationCode' => '22',
                         'ProductIdentifiers' => [
@@ -1967,6 +2025,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get related works
+     *
      * @return Collection
      */
     public function getRelatedWorks()
@@ -1989,6 +2048,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products tax rate
+     *
      * @return float
      */
     public function getTaxRate()
@@ -1998,7 +2058,8 @@ class Groschen implements ProductInterface
 
     /**
      * Purifies the given XHTML
-     * @param  string $text
+     *
+     * @param  string  $text
      * @return string
      */
     public function purifyHtml($text)
@@ -2011,11 +2072,13 @@ class Groschen implements ProductInterface
         $config->set('AutoFormat.RemoveEmpty', true);
 
         $purifier = new HTMLPurifier($config);
+
         return $purifier->purify($text);
     }
 
     /**
      * Returns the BISAC code equivalent for Mockingbird sub-group
+     *
      * @return string|null
      */
     public function getBisacCode()
@@ -2070,7 +2133,7 @@ class Groschen implements ProductInterface
             '51' => 'CGN004050',
         ];
 
-        if (!array_key_exists($this->product->subGroup->id, $subGroupToBisacMapping)) {
+        if (! array_key_exists($this->product->subGroup->id, $subGroupToBisacMapping)) {
             return null;
         }
 
@@ -2079,6 +2142,7 @@ class Groschen implements ProductInterface
 
     /**
      * Returns the BIC code equivalent for Mockingbird sub-group
+     *
      * @return string|null
      */
     public function getBicCode()
@@ -2138,7 +2202,7 @@ class Groschen implements ProductInterface
             '51' => 'FXA',
         ];
 
-        if (!array_key_exists($this->product->subGroup->id, $subGroupToBicMapping)) {
+        if (! array_key_exists($this->product->subGroup->id, $subGroupToBicMapping)) {
             return null;
         }
 
@@ -2147,6 +2211,7 @@ class Groschen implements ProductInterface
 
     /**
      * Return the Kirjavälitys product group
+     *
      * @return array|null
      */
     public function getKirjavälitysProductGroup()
@@ -2203,14 +2268,14 @@ class Groschen implements ProductInterface
                 break;
             case 'Calendar':
                 $productGroup = '40';
-                break;            
+                break;
             case 'Marketing material':
                 $productGroup = '80';
                 break;
         }
 
         // For coloring books try to check if title contains a hint
-        if(Str::contains($this->product->title, ['värityskirja', 'puuhakirja'])) {
+        if (Str::contains($this->product->title, ['värityskirja', 'puuhakirja'])) {
             $productGroup = '86';
         }
 
@@ -2228,6 +2293,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get Finnish book trade categorisations - See http://www.onixkeskus.fi/onix/misc/popup.jsp?page=onix_help_subjectcategorisation
+     *
      * @return string|null
      */
     public function getFinnishBookTradeCategorisation()
@@ -2253,6 +2319,7 @@ class Groschen implements ProductInterface
 
     /**
      * Return Thema interest age / special interest qualifier based on the Mockingbird age group
+     *
      * @return string|null
      */
     public function getThemaInterestAge()
@@ -2277,7 +2344,8 @@ class Groschen implements ProductInterface
 
     /**
      * Is the product confidential?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isConfidential()
     {
@@ -2292,7 +2360,8 @@ class Groschen implements ProductInterface
 
     /**
      * Is the product a luxury book?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isLuxuryBook()
     {
@@ -2307,6 +2376,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products cost center
+     *
      * @return int|null
      */
     public function getCostCenter()
@@ -2320,6 +2390,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products cost center name
+     *
      * @return string|null
      */
     public function getCostCenterName()
@@ -2333,6 +2404,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products media type
+     *
      * @return string|null
      */
     public function getMediaType()
@@ -2342,6 +2414,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products binding code
+     *
      * @return string|null
      */
     public function getBindingCode()
@@ -2355,6 +2428,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products discount group
+     *
      * @return int|null
      */
     public function getDiscountGroup()
@@ -2364,6 +2438,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products status
+     *
      * @return string
      */
     public function getStatus()
@@ -2373,6 +2448,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the number of products in the series
+     *
      * @return int|null
      */
     public function getProductsInSeries()
@@ -2382,7 +2458,8 @@ class Groschen implements ProductInterface
 
     /**
      * Is the product immaterial?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isImmaterial()
     {
@@ -2399,7 +2476,8 @@ class Groschen implements ProductInterface
 
     /**
      * Is the product a Print On Demand product?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isPrintOnDemand()
     {
@@ -2408,7 +2486,8 @@ class Groschen implements ProductInterface
 
     /**
      * Is the product a Print On Demand checked?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isPrintOnDemandChecked()
     {
@@ -2417,6 +2496,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get internal product number
+     *
      * @return string|null
      */
     public function getInternalProdNo()
@@ -2426,6 +2506,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get customs number
+     *
      * @return int|null
      */
     public function getCustomsNumber()
@@ -2435,7 +2516,7 @@ class Groschen implements ProductInterface
             case 'CD':
             case 'MP3-CD':
                 return 85234920;
-            // Digital products should return null
+                // Digital products should return null
             case 'ePub2':
             case 'ePub3':
             case 'Application':
@@ -2449,11 +2530,12 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products library class
+     *
      * @return string|null
      */
     public function getLibraryClass()
     {
-        if (!isset($this->product->libraryCode)) {
+        if (! isset($this->product->libraryCode)) {
             return null;
         }
 
@@ -2462,6 +2544,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products marketing category
+     *
      * @return string|null
      */
     public function getMarketingCategory()
@@ -2475,52 +2558,56 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products sales season
+     *
      * @return string|null
      */
     public function getSalesSeason()
     {
-        if (!isset($this->product->seasonYear) && !isset($this->product->seasonPeriod)) {
+        if (! isset($this->product->seasonYear) && ! isset($this->product->seasonPeriod)) {
             return null;
         }
 
-        if (!isset($this->product->seasonYear) && isset($this->product->seasonPeriod)) {
+        if (! isset($this->product->seasonYear) && isset($this->product->seasonPeriod)) {
             return null;
         }
 
-        if (isset($this->product->seasonYear) && !isset($this->product->seasonPeriod)) {
+        if (isset($this->product->seasonYear) && ! isset($this->product->seasonPeriod)) {
             return $this->product->seasonYear->name;
         }
 
         // Form sales period
         switch ($this->product->seasonPeriod->name) {
             case 'Spring':
-                return $this->product->seasonYear->name . '/1';
+                return $this->product->seasonYear->name.'/1';
             case 'Autumn':
-                return $this->product->seasonYear->name . '/2';
+                return $this->product->seasonYear->name.'/2';
             default:
-                return $this->product->seasonYear->name . '/' . $this->product->seasonPeriod->name;
+                return $this->product->seasonYear->name.'/'.$this->product->seasonPeriod->name;
         }
     }
 
     /**
      * Get the products backlist sales season
+     *
      * @return string|null
      */
-    public function getBacklistSalesSeason() {
+    public function getBacklistSalesSeason()
+    {
 
-        if (!isset($this->product->backlistSeasonYear) || !isset($this->product->backlistSeasonPeriod)) {
+        if (! isset($this->product->backlistSeasonYear) || ! isset($this->product->backlistSeasonPeriod)) {
             return null;
         }
 
-        if (isset($this->product->backlistSeasonYear) && !isset($this->product->backlistSeasonPeriod)) {
+        if (isset($this->product->backlistSeasonYear) && ! isset($this->product->backlistSeasonPeriod)) {
             return $this->product->backlistSeasonYear->name;
         }
 
-        return $this->product->backlistSeasonYear->name . ' ' . $this->product->backlistSeasonPeriod->name;
+        return $this->product->backlistSeasonYear->name.' '.$this->product->backlistSeasonPeriod->name;
     }
 
     /**
      * Get the products audience groups
+     *
      * @return Collection
      */
     public function getAudiences()
@@ -2551,13 +2638,13 @@ class Groschen implements ProductInterface
             case '5AQ':
                 $audienceCodeValue = '02';
                 break;
-            // Young adult
+                // Young adult
             case '5AS':
             case '5AT':
             case '5AU':
                 $audienceCodeValue = '03';
                 break;
-            // General/trade as fallback
+                // General/trade as fallback
             default:
                 $audienceCodeValue = '01';
                 break;
@@ -2570,6 +2657,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products AudienceRanges
+     *
      * @return Collection
      */
     public function getAudienceRanges()
@@ -2600,7 +2688,7 @@ class Groschen implements ProductInterface
             '5AU' => 17,
         ];
 
-        if (!empty($interestAge) && array_key_exists($interestAge, $interestAges)) {
+        if (! empty($interestAge) && array_key_exists($interestAge, $interestAges)) {
             $audienceRanges->push([
                 'AudienceRangeQualifier' => 17,
                 'AudienceRangeScopes' => [
@@ -2617,12 +2705,13 @@ class Groschen implements ProductInterface
 
     /**
      * Get the latest stock arrival date
+     *
      * @return DateTime|null
      */
     public function getLatestStockArrivalDate()
     {
         // Get the production print orders from Mockingbird
-        $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
+        $response = $this->client->get('/v1/works/'.$this->workId.'/productions/'.$this->productionId.'/printchanges');
         $printOrders = json_decode($response->getBody()->getContents());
 
         // Collection for dates
@@ -2631,11 +2720,11 @@ class Groschen implements ProductInterface
         foreach ($printOrders->prints as $print) {
             foreach ($print->timePlanEntries as $timePlanEntry) {
                 if ($timePlanEntry->type->name === 'Delivery to warehouse') {
-                    if(isset($timePlanEntry->planned)) {
+                    if (isset($timePlanEntry->planned)) {
                         $printDates->push(['date' => DateTime::createFromFormat('!Y-m-d', substr($timePlanEntry->planned, 0, 10))]);
                     }
 
-                    if(isset($timePlanEntry->actual)) {
+                    if (isset($timePlanEntry->actual)) {
                         $printDates->push(['date' => DateTime::createFromFormat('!Y-m-d', substr($timePlanEntry->actual, 0, 10))]);
                     }
                 }
@@ -2647,11 +2736,12 @@ class Groschen implements ProductInterface
 
     /**
      * Get the latest print number
+     *
      * @return int|null
      */
     public function getLatestPrintNumber()
     {
-        if (!isset($this->product->activePrint->printNumber)) {
+        if (! isset($this->product->activePrint->printNumber)) {
             return null;
         }
 
@@ -2660,6 +2750,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the sales restrictions
+     *
      * @return Collection
      */
     public function getSalesRestrictions()
@@ -2719,7 +2810,7 @@ class Groschen implements ProductInterface
                                 'SalesOutletIDType' => $salesOutletIDType,
                                 'IDValue' => $salesOutletIdentifierIdValue,
                             ],
-                        ]
+                        ],
                     ],
                 ];
             })->unique(function ($retailerExclusiveSalesOutlet) {
@@ -2752,7 +2843,7 @@ class Groschen implements ProductInterface
                                 'SalesOutletIDType' => $salesOutletIDType,
                                 'IDValue' => $salesOutletIdentifierIdValue,
                             ],
-                        ]
+                        ],
                     ],
                 ];
             })->unique(function ($retailerExceptionSalesOutlet) {
@@ -2770,7 +2861,8 @@ class Groschen implements ProductInterface
 
     /**
      * Get the role priority
-     * @param  string $role
+     *
+     * @param  string  $role
      * @return int
      */
     public function getRolePriority($role)
@@ -2809,6 +2901,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the rights and distribution for each channel
+     *
      * @return Collection
      */
     public function getDistributionChannels()
@@ -2831,7 +2924,8 @@ class Groschen implements ProductInterface
 
     /**
      * Is the product connected to ERP?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isConnectedToErp()
     {
@@ -2840,6 +2934,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products print orders
+     *
      * @return Collection
      */
     public function getPrintOrders()
@@ -2848,17 +2943,17 @@ class Groschen implements ProductInterface
         $printOrders = new Collection;
 
         // For non-physical products return empty collection
-        if($this->isImmaterial()) {
+        if ($this->isImmaterial()) {
             return $printOrders;
         }
 
         // Get the production print orders from Mockingbird
-        $response = $this->client->get('/v1/works/' . $this->workId . '/productions/' . $this->productionId . '/printchanges');
+        $response = $this->client->get('/v1/works/'.$this->workId.'/productions/'.$this->productionId.'/printchanges');
         $prints = json_decode($response->getBody()->getContents());
 
         foreach ($prints->prints as $print) {
             // Get deliveries
-            $response = $this->client->get('/v2/works/' . $this->workId . '/productions/' . $this->productionId . '/printnumbers/' . $print->print . '/deliveryspecifications');
+            $response = $this->client->get('/v2/works/'.$this->workId.'/productions/'.$this->productionId.'/printnumbers/'.$print->print.'/deliveryspecifications');
             $mockingbirdDeliviries = json_decode($response->getBody()->getContents());
 
             // Store all delivieries to array for later use
@@ -2885,7 +2980,8 @@ class Groschen implements ProductInterface
 
     /**
      * Is the product "Main edition"?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isMainEdition()
     {
@@ -2900,7 +2996,8 @@ class Groschen implements ProductInterface
 
     /**
      * Is the product "Internet edition"?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isInternetEdition()
     {
@@ -2915,6 +3012,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products production plan
+     *
      * @return Collection
      */
     public function getProductionPlan()
@@ -2924,7 +3022,7 @@ class Groschen implements ProductInterface
         $mockingbirdProductionPlan = $this->getPrintProductionPlan();
 
         foreach ($mockingbirdProductionPlan->prints as $productionPlanEntry) {
-             // Add all time plan entries
+            // Add all time plan entries
             foreach ($productionPlanEntry->timePlanEntries as $timePlanEntry) {
                 $productionPlans->push([
                     'print' => $productionPlanEntry->print,
@@ -2952,6 +3050,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products technical printing data
+     *
      * @return Collection
      */
     public function getTechnicalData()
@@ -3079,6 +3178,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the prizes that the product has received
+     *
      * @return Collection
      */
     public function getPrizes()
@@ -3106,6 +3206,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get products availability code
+     *
      * @return string|null
      */
     public function getProductAvailability()
@@ -3119,7 +3220,7 @@ class Groschen implements ProductInterface
         if (in_array($this->product->listingCode->name, ['Published', 'Short run'])) {
             // Check if the product has free stock
             $onHand = $this->getSuppliers()->pluck('OnHand')->first();
-            $hasStock = (!empty($onHand) && $onHand > 0) ? true : false;
+            $hasStock = (! empty($onHand) && $onHand > 0) ? true : false;
 
             if ($hasStock) {
                 return '21';
@@ -3163,6 +3264,7 @@ class Groschen implements ProductInterface
 
     /**
      * Check if original publication date has passed
+     *
      * @return bool
      */
     public function isPublicationDatePassed()
@@ -3170,11 +3272,12 @@ class Groschen implements ProductInterface
         $publicationDate = $this->getOriginalPublicationDate() ?? $this->getLatestPublicationDate();
         $tomorrow = new DateTime('tomorrow');
 
-        return ($tomorrow > $publicationDate);
+        return $tomorrow > $publicationDate;
     }
 
     /**
      * Get the products suppliers
+     *
      * @return Collection
      */
     public function getSuppliers()
@@ -3215,7 +3318,7 @@ class Groschen implements ProductInterface
         // Get stocks from API
         $client = new Client([
             'base_uri' => 'http://stocks.books.local/api/products/gtin/',
-            'timeout'  => 2.0,
+            'timeout' => 2.0,
         ]);
 
         try {
@@ -3226,7 +3329,7 @@ class Groschen implements ProductInterface
             $json = json_decode($response->getBody()->getContents());
 
             if ($json->data->error_code !== 404 && $json->data->error_message !== 'The model could not be found.') {
-                throw new Exception('Could not fetch stock data for GTIN ' . $this->productNumber);
+                throw new Exception('Could not fetch stock data for GTIN '.$this->productNumber);
             } else {
                 // Add default supplier
                 $supplierName = 'Kirjavälitys';
@@ -3280,7 +3383,7 @@ class Groschen implements ProductInterface
 
         if (is_object($json->data->stock_location)) {
             // Bokinfo ID
-            if (!empty($json->data->stock_location->bokinfo_id)) {
+            if (! empty($json->data->stock_location->bokinfo_id)) {
                 $supplierIdentifiers[] = [
                     'SupplierIDType' => '01',
                     'IDTypeName' => 'BR-ID',
@@ -3289,7 +3392,7 @@ class Groschen implements ProductInterface
             }
 
             // GLN number
-            if (!empty($json->data->stock_location->gln)) {
+            if (! empty($json->data->stock_location->gln)) {
                 $supplierIdentifiers[] = [
                     'SupplierIDType' => '06',
                     'IDTypeName' => 'GLN',
@@ -3298,7 +3401,7 @@ class Groschen implements ProductInterface
             }
 
             // VAT identity number
-            if (!empty($json->data->stock_location->vat_identity_number)) {
+            if (! empty($json->data->stock_location->vat_identity_number)) {
                 $supplierIdentifiers[] = [
                     'SupplierIDType' => '23',
                     'IDTypeName' => 'VAT Identity Number',
@@ -3322,6 +3425,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the supply dates
+     *
      * @return Collection
      */
     public function getSupplyDates()
@@ -3331,7 +3435,7 @@ class Groschen implements ProductInterface
         // Latest reprint date
         $latestStockArrivalDate = $this->getLatestStockArrivalDate();
 
-        if (!is_null($latestStockArrivalDate)) {
+        if (! is_null($latestStockArrivalDate)) {
             $supplyDates->push(['SupplyDateRole' => '34', 'Date' => $latestStockArrivalDate->format('Ymd')]);
         }
 
@@ -3340,6 +3444,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get all contacts
+     *
      * @return Collection
      */
     public function getContacts()
@@ -3393,6 +3498,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get all editions
+     *
      * @return Collection
      */
     public function getEditions()
@@ -3429,7 +3535,7 @@ class Groschen implements ProductInterface
             $json = json_decode($response->getBody()->getContents());
 
             foreach ($json->results as $result) {
-                if(isset($result->document->isbn)) {
+                if (isset($result->document->isbn)) {
                     $editions->push([
                         'isbn' => intval($result->document->isbn),
                         'title' => optional($result->document)->title,
@@ -3447,11 +3553,12 @@ class Groschen implements ProductInterface
 
     /**
      * Get the first publication date of the products web page
+     *
      * @return DateTime|null
      */
     public function getWebPublishingStartDate()
     {
-        if(!isset($this->product->activeWebPeriod->startDate)) {
+        if (! isset($this->product->activeWebPeriod->startDate)) {
             return null;
         }
 
@@ -3460,11 +3567,12 @@ class Groschen implements ProductInterface
 
     /**
      * Get the end date for the products web page
+     *
      * @return DateTime|null
      */
     public function getWebPublishingEndDate()
     {
-        if(!isset($this->product->activeWebPeriod->endDate)) {
+        if (! isset($this->product->activeWebPeriod->endDate)) {
             return null;
         }
 
@@ -3473,9 +3581,11 @@ class Groschen implements ProductInterface
 
     /**
      * Get all comments
+     *
      * @return Collection
      */
-    public function getComments() {
+    public function getComments()
+    {
         $comments = new Collection;
 
         // List of comments fields that we want to pick
@@ -3488,7 +3598,7 @@ class Groschen implements ProductInterface
         ];
 
         foreach ($commentFields as $name => $field) {
-            if(isset($this->product->{$field}) || isset($this->product->activePrint->{$field})) {
+            if (isset($this->product->{$field}) || isset($this->product->activePrint->{$field})) {
                 $comments->push([
                     'type' => $name,
                     'comment' => (isset($this->product->{$field})) ? $this->product->{$field} : $this->product->activePrint->{$field},
@@ -3501,10 +3611,12 @@ class Groschen implements ProductInterface
 
     /**
      * Get products sales status
+     *
      * @return string|null
      */
-    public function getSalesStatus() {
-        if(!isset($this->product->salesStatus)) {
+    public function getSalesStatus()
+    {
+        if (! isset($this->product->salesStatus)) {
             return null;
         }
 
@@ -3513,11 +3625,13 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products main editions ISBN
+     *
      * @return int|null
      */
-    public function getMainEditionIsbn() {
+    public function getMainEditionIsbn()
+    {
         foreach ($this->getWorkLevel()->productions as $production) {
-            if ($production->isMainEdition === true && !empty($production->isbn)) {
+            if ($production->isMainEdition === true && ! empty($production->isbn)) {
                 return intval($production->isbn);
             }
         }
@@ -3527,9 +3641,11 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products main editions cost center
+     *
      * @return int|null
      */
-    public function getMainEditionCostCenter() {
+    public function getMainEditionCostCenter()
+    {
         if (isset($this->getWorkLevel()->costCenter->id)) {
             return intval($this->getWorkLevel()->costCenter->id);
         }
@@ -3539,13 +3655,15 @@ class Groschen implements ProductInterface
 
     /**
      * Check if the product is translated or not
-     * @return boolean
+     *
+     * @return bool
      */
-    public function isTranslated() {
+    public function isTranslated()
+    {
         // Check if main group contains "Käännetty" / "Translated" or contains contributor with translator role
         $mainGroup = $this->getSubjects()->where('SubjectSchemeIdentifier', '23')->where('SubjectSchemeName', 'Werner Söderström Ltd - Main product group')->pluck('SubjectHeadingText')->first();
 
-        if(Str::contains($mainGroup, 'Käännetty') || $this->getContributors()->contains('ContributorRole', 'B06')) {
+        if (Str::contains($mainGroup, 'Käännetty') || $this->getContributors()->contains('ContributorRole', 'B06')) {
             return true;
         }
 
@@ -3554,6 +3672,7 @@ class Groschen implements ProductInterface
 
     /**
      * Return list of Thema codes
+     *
      * @return Collection
      */
     public function getThemaCodes()
@@ -3561,7 +3680,7 @@ class Groschen implements ProductInterface
         $themaCodes = new Collection;
 
         // Get Thema codes from work level
-        $response = $this->client->get('/v1/works/' . $this->workId . '/themas');
+        $response = $this->client->get('/v1/works/'.$this->workId.'/themas');
         $contents = json_decode($response->getBody()->getContents());
 
         foreach ($contents as $themaCode) {
@@ -3611,8 +3730,8 @@ class Groschen implements ProductInterface
         }
 
         // Sort the codes by identifier and sort order from Mockingbird
-        $themaCodes = $themaCodes->sortBy(function($themaCode) {
-            return $themaCode['subjectSchemeIdentifier'] . '-' . $themaCode['sortOrder'];
+        $themaCodes = $themaCodes->sortBy(function ($themaCode) {
+            return $themaCode['subjectSchemeIdentifier'].'-'.$themaCode['sortOrder'];
         });
 
         return $themaCodes;
@@ -3620,9 +3739,11 @@ class Groschen implements ProductInterface
 
     /**
      * Get all EditionTypes
+     *
      * @return Collection
      */
-    public function getEditionTypes() {
+    public function getEditionTypes()
+    {
         $editionTypes = new Collection;
 
         // Check if article text or title contains information about edition type
@@ -3649,15 +3770,16 @@ class Groschen implements ProductInterface
 
     /**
      * Get the activities for the work
+     *
      * @return mixed
      */
     public function getActivities()
     {
         // Get the activities from Mockingbird
         try {
-            $response = $this->client->get('/v1/works/' . $this->workId . '/activities');
+            $response = $this->client->get('/v1/works/'.$this->workId.'/activities');
         } catch (ServerException $e) {
-            throw new Exception('Server exception: ' . $e->getResponse()->getBody());
+            throw new Exception('Server exception: '.$e->getResponse()->getBody());
         }
 
         return json_decode($response->getBody()->getContents());
@@ -3665,16 +3787,18 @@ class Groschen implements ProductInterface
 
     /**
      * Get all Events
+     *
      * @return Collection
      */
-    public function getEvents() {
+    public function getEvents()
+    {
         $events = new Collection;
 
         $activities = $this->getActivities();
 
         if (is_object($activities) && property_exists($activities, 'activities') && is_array($activities->activities)) {
             foreach ($activities->activities as $activity) {
-                if($activity->sharingLevel->name === 'Public') {
+                if ($activity->sharingLevel->name === 'Public') {
                     $events->push([
                         'EventRole' => '31',
                         'EventName' => $activity->name,
@@ -3689,9 +3813,11 @@ class Groschen implements ProductInterface
 
     /**
      * Get the retail price multipler
+     *
      * @return float
      */
-    public function getRetailPriceMultiplier() {
+    public function getRetailPriceMultiplier()
+    {
         // Manga and pocket books
         if ($this->getCostCenter() === 965 || $this->getProductType() === 'Pocket book') {
             return 1.64;
@@ -3707,9 +3833,11 @@ class Groschen implements ProductInterface
 
     /**
      * Get all ProductContentTypes
+     *
      * @return Collection
      */
-    public function getProductContentTypes() {
+    public function getProductContentTypes()
+    {
         $contentTypes = new Collection;
 
         // Audio-only binding codes
@@ -3786,9 +3914,11 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products trade category
+     *
      * @return string|null
      */
-    public function getTradeCategory() {
+    public function getTradeCategory()
+    {
         switch ($this->getProductType()) {
             case 'Pocket book':
                 return '04';
@@ -3801,6 +3931,7 @@ class Groschen implements ProductInterface
 
     /**
      * Get the NotificationType
+     *
      * @return string
      */
     public function getNotificationType()
@@ -3837,9 +3968,11 @@ class Groschen implements ProductInterface
 
     /**
      * Getting the country of manufacture. Returns two letter ISO 3166-1 code.
+     *
      * @return string|null
      */
-    public function getCountryOfManufacture() {
+    public function getCountryOfManufacture()
+    {
         // Check if the product contains Printer role or is digital
         if ($this->isImmaterial() || $this->getAllContributors()->contains('Role', 'Printer WS') === false) {
             return null;
@@ -3848,16 +3981,17 @@ class Groschen implements ProductInterface
         // Get the printer contact
         $printer = $this->getAllContributors()->where('Role', 'Printer WS')->first();
 
-        $response = $this->searchClient->get('v2/contacts/' . $printer['Id']);
+        $response = $this->searchClient->get('v2/contacts/'.$printer['Id']);
         $contact = json_decode($response->getBody()->getContents());
 
-        foreach($contact->addresses as $address) {
+        foreach ($contact->addresses as $address) {
             if (property_exists($address, 'country')) {
                 try {
                     $iso3166 = (new ISO3166)->name($address->country);
+
                     return $iso3166['alpha2'];
                 } catch (\League\ISO3166\Exception\OutOfBoundsException $e) {
-                    throw new Exception('Cannot find ISO-3166 code for country named ' . $address->country);
+                    throw new Exception('Cannot find ISO-3166 code for country named '.$address->country);
                 }
             }
         }
@@ -3865,13 +3999,16 @@ class Groschen implements ProductInterface
 
     /**
      * Get the sales rights territories
+     *
      * @return Collection
      */
-    public function getSalesRightsTerritories() {
+    public function getSalesRightsTerritories()
+    {
         $territories = new Collection;
 
         if (empty($this->product->countriesIncluded) && empty($this->product->countriesExcluded)) {
             $territories->push(['RegionsIncluded' => 'WORLD']);
+
             return $territories;
         }
 
@@ -3902,11 +4039,13 @@ class Groschen implements ProductInterface
 
     /**
      * Search for editions
-     * @param  string $query
-     * @param  string $filter
+     *
+     * @param  string  $query
+     * @param  string  $filter
      * @return Collection
      */
-    public function searchEditions($query = '', $filter = null) {
+    public function searchEditions($query = '', $filter = null)
+    {
         // Get the number of pages
         $response = $this->client->get('v2/search/productions', [
             'query' => [
@@ -3914,7 +4053,7 @@ class Groschen implements ProductInterface
                 'limit' => 1000,
                 '$filter' => $filter,
                 '$select' => 'workId,id,isbn',
-            ]
+            ],
         ]);
 
         $json = json_decode($response->getBody()->getContents());
@@ -3936,10 +4075,10 @@ class Groschen implements ProductInterface
         }
 
         // List pages
-        $pages = intval($json->pagination->pagesTotalCount+1);
+        $pages = intval($json->pagination->pagesTotalCount + 1);
 
         for ($page = 1; $page <= $pages; $page++) {
-            $offset = ($page === 1) ? 0 : 1000 * ($page-1);
+            $offset = ($page === 1) ? 0 : 1000 * ($page - 1);
 
             // Get page
             $response = $this->client->get('v2/search/productions', [
@@ -3949,7 +4088,7 @@ class Groschen implements ProductInterface
                     '$filter' => $filter,
                     'offset' => $offset,
                     '$select' => 'workId,id,isbn,interestAgeName',
-                ]
+                ],
             ]);
 
             $json = json_decode($response->getBody()->getContents());
@@ -3968,12 +4107,14 @@ class Groschen implements ProductInterface
 
     /**
      * Get the products names as subjects
+     *
      * @return Collection
      */
-    public function getNamesAsSubjects() {
+    public function getNamesAsSubjects()
+    {
         $namesAsSubjects = new Collection;
 
-        if (isset($this->product->bibliographicCharacters) && !empty($this->product->bibliographicCharacters)) {
+        if (isset($this->product->bibliographicCharacters) && ! empty($this->product->bibliographicCharacters)) {
             $bibliographicCharacters = explode(';', $this->product->bibliographicCharacters);
 
             foreach ($bibliographicCharacters as $bibliographicCharacter) {
@@ -3982,7 +4123,7 @@ class Groschen implements ProductInterface
                 $firstname = implode(' ', $parts);
 
                 // Add to collection
-                if (!empty($firstname)) {
+                if (! empty($firstname)) {
                     $namesAsSubjects->push([
                         'NameType' => '00',
                         'PersonName' => $bibliographicCharacter,
@@ -4012,7 +4153,7 @@ class Groschen implements ProductInterface
      */
     public function getPocketBookPriceGroup()
     {
-        if(isset($this->product->priceGroupPocket) && !empty($this->product->priceGroupPocket)) {
+        if (isset($this->product->priceGroupPocket) && ! empty($this->product->priceGroupPocket)) {
             return $this->product->priceGroupPocket->name;
         }
 
