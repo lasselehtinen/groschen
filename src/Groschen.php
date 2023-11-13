@@ -2203,21 +2203,17 @@ class Groschen implements ProductInterface
             case 'CD':
                 $productGroup = '64';
                 break;
-        }
-
-        // Calendars
-        if(Str::contains($this->getProductType(), 'Calendar')) {
-            $productGroup = '40';
+            case 'Calendar':
+                $productGroup = '40';
+                break;            
+            case 'Marketing material':
+                $productGroup = '80';
+                break;
         }
 
         // For coloring books try to check if title contains a hint
         if(Str::contains($this->product->title, ['värityskirja', 'puuhakirja'])) {
             $productGroup = '86';
-        }
-
-        // Marketing materials
-        if(Str::startsWith($this->getInternalProdNo(), '978') === false && Str::contains($this->product->title, ['lava', 'pöytäteline', 'kassi'])) {
-            $productGroup = '80';
         }
 
         if (isset($productGroup) && array_key_exists($productGroup, $kirjavälitysProductGroups)) {

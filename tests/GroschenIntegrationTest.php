@@ -1109,6 +1109,10 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789524031745');
         $this->assertSame('01', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
 
+        // Marketing material
+        $groschen = new Groschen('6430060034518');
+        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+
         // The following codes are not mapped
         // 10 Peruskoulun oppikirjat
         // 20 Oppikirjat
