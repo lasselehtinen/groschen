@@ -2374,15 +2374,6 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Get the products status code
-     * @return int
-     */
-    public function getStatusCode()
-    {
-        return intval($this->product->listingCode->customProperties->schillingId_1001);
-    }
-
-    /**
      * Get the number of products in the series
      * @return int|null
      */

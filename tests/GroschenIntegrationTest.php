@@ -2102,19 +2102,6 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting the product status code
-     * @return void
-     */
-    public function testGettingStatusCode()
-    {
-        $this->assertSame(2, $this->groschen->getStatusCode());
-
-        // Product with a different status code
-        $groschen = new Groschen('9789510426159');
-        $this->assertSame(6, $groschen->getStatusCode());
-    }
-
-    /**
      * Test getting the number of products in the series
      * @return void
      */
