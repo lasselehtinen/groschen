@@ -1360,6 +1360,7 @@ class Groschen implements ProductInterface
         });
 
         // Use general contributor texts as backup
+        /*
         if ($authorDescription->count() === 0) {
             // List team members that have prio level primary
             $primaryContributorIds = $this->getAllContributors()->where('PriorityLevel', 'Primary')->pluck('Id');
@@ -1368,6 +1369,7 @@ class Groschen implements ProductInterface
                 (object) ['text' => $this->getContributors()->whereIn('Identifier', $primaryContributorIds)->where('BiographicalNote', '<>', '')->pluck('BiographicalNote')->unique()->implode('')],
             ]);
         }
+        */
 
         // Merge the texts and add missing paragraph tags
         $mergedTexts = $headline->merge($copyOne)->merge($copyTwo)->merge($authorDescription)->transform(function ($text) {

@@ -981,6 +981,8 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testAuthorDescriptionIsTakenOnlyOnceIfHasMultipleRoles()
     {
+        $this->markTestSkipped('Will be implemented later after texts have been fixed.');
+
         $groschen = new Groschen('9789524030274');
         $textContents = $groschen->getTextContents();
 
@@ -3950,6 +3952,8 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testOnlyPriorityContributorDescriptionIsShownInMarketingText()
     {
+        $this->markTestSkipped('Will be implemented later after texts have been fixed.');
+
         $descriptionMatch = '<strong>Karoliina Niskanen</strong> (s. 1987) valmistui näyttelijäksi';
 
         // As reader should not appear
