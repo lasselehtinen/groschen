@@ -3990,4 +3990,15 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($contributorWithoutPriority, $groschen->getAllContributors());
     }
+
+    /**
+     * Test getting latest publication date on product without publication date
+     *
+     * @return void
+     */
+    public function testGettingLatestPublicationDateOnProductWithoutPublicationDate()
+    {
+        $groschen = new Groschen('9789510461259');
+        $this->assertNull($groschen->getLatestPublicationDate());
+    }
 }
