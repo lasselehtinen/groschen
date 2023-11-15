@@ -3943,6 +3943,7 @@ class GroschenIntegrationTest extends TestCase
             'WebSites' => [],
             'ContributorDates' => [],
         ];
+
         $this->assertContains($firstAuthor, $groschen->getContributors());
     }
 
@@ -3968,5 +3969,25 @@ class GroschenIntegrationTest extends TestCase
         // As author and reader should appear
         $groschen = new Groschen('9789523760769');
         $this->assertStringContainsString($descriptionMatch, $groschen->getTextContents()->where('TextType', '03')->pluck('Text')->first());
+    }
+
+    /**
+     * Test getting contributors without prio level
+     *
+     * @return void
+     */
+    public function testGettingContributorsWithoutPriolevel()
+    {
+        $groschen = new Groschen('9789510452493');
+
+        $contributorWithoutPriority = [
+            'Id' => 47893,
+            'PriorityLevel' => null,
+            'Role' => 'Sales Manager',
+            'FirstName' => 'SM',
+            'LastName' => 'WSOY',
+        ];
+
+        $this->assertContains($contributorWithoutPriority, $groschen->getAllContributors());
     }
 }

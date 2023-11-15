@@ -773,7 +773,7 @@ class Groschen implements ProductInterface
         foreach ($this->product->members as $member) {
             $contributors->push([
                 'Id' => $member->contact->id,
-                'PriorityLevel' => $member->prioLevel->name,
+                'PriorityLevel' => $member->prioLevel->name ?? null,
                 'Role' => $member->role->name,
                 'FirstName' => $member->contact->firstName ?? null,
                 'LastName' => $member->contact->lastName ?? null,
