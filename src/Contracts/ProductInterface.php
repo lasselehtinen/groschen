@@ -615,4 +615,11 @@ interface ProductInterface
      * @return string|null
      */
     public function getPocketBookPriceGroup();
+
+    /**
+     * Get the target persona
+     *
+     * @return Collection
+     */
+    public function getTargetPersonas();
 }

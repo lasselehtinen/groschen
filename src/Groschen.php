@@ -248,6 +248,23 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the communication plan
+     *
+     * @return mixed
+     */
+    public function getCommunicationPlan()
+    {
+        // Get the communication plan from Mockingbird
+        try {
+            $response = $this->client->get('/v1/works/'.$this->workId.'/communicationplan');
+        } catch (ServerException $e) {
+            throw new Exception('Server exception: '.$e->getResponse()->getBody());
+        }
+
+        return json_decode($response->getBody()->getContents());
+    }
+
+    /**
      * Get the work level information
      *
      * @return stdClass
@@ -4161,5 +4178,25 @@ class Groschen implements ProductInterface
         }
 
         return null;
+    }
+
+    /**
+     * Get the target persona(s)
+     *
+     * @return Collection
+     */
+    public function getTargetPersonas()
+    {
+        $targetPersonas = new Collection;
+
+        $communicationPlan = $this->getCommunicationPlan();
+
+        if (isset($communicationPlan->targetGroups) && is_array($communicationPlan->targetGroups)) {
+            foreach ($communicationPlan->targetGroups as $targetGroup) {
+                $targetPersonas->push($targetGroup->name);
+            }
+        }
+
+        return $targetPersonas;
     }
 }

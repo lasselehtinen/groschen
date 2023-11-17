@@ -4001,4 +4001,20 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510461259');
         $this->assertNull($groschen->getLatestPublicationDate());
     }
+
+    /**
+     * Test getting target personas
+     *
+     * @return void
+     */
+    public function testGettingTargetPersonas()
+    {
+        // Product without target groups
+        $this->assertEmpty($this->groschen->getTargetPersonas());
+
+        // Product with two target groups
+        $groschen = new Groschen('9789510501474');
+        $this->assertContains('Kirjallisuuden arvostajat', $groschen->getTargetPersonas());
+        $this->assertContains('Tapalukijat', $groschen->getTargetPersonas());
+    }
 }
