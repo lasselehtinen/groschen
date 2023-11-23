@@ -4207,6 +4207,10 @@ class Groschen implements ProductInterface
      */
     public function getCalculatedPublisherRetailPrice()
     {
+        if ($this->getPrice() === 0.0) {
+            return 0.0;
+        }
+
         $price = $this->getPrice() * $this->getRetailPriceMultiplier();
 
         // Rounding for pocket books, manga and digital products is up to nearest 10 cents

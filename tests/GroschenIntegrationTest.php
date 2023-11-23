@@ -4018,6 +4018,11 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('Tapalukijat', $groschen->getTargetPersonas());
     }
 
+    /**
+     * Test getting calculated publisher retail price
+     *
+     * @return void
+     */
     public function testGettingCalculatedPublisherRetailPrice()
     {
         // Hardback
@@ -4030,5 +4035,9 @@ class GroschenIntegrationTest extends TestCase
         // E-book
         $groschen = new Groschen('9789510369654');
         $this->assertSame(6.4, $groschen->getCalculatedPublisherRetailPrice());
+
+        // Product without any price
+        $groschen = new Groschen('9789510429259');
+        $this->assertSame(0.0, $groschen->getCalculatedPublisherRetailPrice());
     }
 }
