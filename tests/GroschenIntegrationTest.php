@@ -4017,4 +4017,18 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('Kirjallisuuden arvostajat', $groschen->getTargetPersonas());
         $this->assertContains('Tapalukijat', $groschen->getTargetPersonas());
     }
+
+    public function testGettingCalculatedPublisherRetailPrice()
+    {
+        // Hardback
+        $this->assertSame(21.9, $this->groschen->getCalculatedPublisherRetailPrice());
+
+        // Pocket book
+        $groschen = new Groschen('9789510407554');
+        $this->assertSame(10.1, $groschen->getCalculatedPublisherRetailPrice());
+
+        // E-book
+        $groschen = new Groschen('9789510369654');
+        $this->assertSame(6.4, $groschen->getCalculatedPublisherRetailPrice());
+    }
 }

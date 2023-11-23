@@ -4199,4 +4199,28 @@ class Groschen implements ProductInterface
 
         return $targetPersonas;
     }
+
+    /**
+     * Return calculated publisher retail price incl. VAT
+     *
+     * @return float
+     */
+    public function getCalculatedPublisherRetailPrice()
+    {
+        $price = $this->getPrice() * $this->getRetailPriceMultiplier();
+
+        // Rounding for pocket books, manga and digital products is up to nearest 10 cents
+        if ($this->getCostCenter() === 965 || $this->getProductType() === 'Pocket book' || $this->isImmaterial()) {
+            return ceil($price * 10) / 10;
+        }
+
+        // All others to nearest 90 cents
+        $fraction = $price - floor($price);
+
+        if ($fraction > 0.9) {
+            $price++;
+        }
+
+        return floor($price) + 0.9;
+    }
 }
