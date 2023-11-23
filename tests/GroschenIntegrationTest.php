@@ -3325,7 +3325,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame(1.25, $groschen->getRetailPriceMultiplier());
 
         // Others
-        $this->assertSame(1.4, $this->groschen->getRetailPriceMultiplier());
+        $this->assertSame(1.2, $this->groschen->getRetailPriceMultiplier());
     }
 
     /**
