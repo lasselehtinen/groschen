@@ -3848,7 +3848,7 @@ class Groschen implements ProductInterface
             return 1.25;
         }
 
-        return 1.4;
+        return 1.2;
     }
 
     /**
