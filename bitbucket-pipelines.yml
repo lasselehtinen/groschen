@@ -1,4 +1,4 @@
-image: php:8.1.6
+image: php:8.3.0
 
 definitions:
   steps:
