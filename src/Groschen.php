@@ -367,22 +367,25 @@ class Groschen implements ProductInterface
             $productFormDetails->push('A305');
         }
 
-        // Headband
-        $headBand = $this->getTechnicalData()->where('partName', 'bookBinding')->pluck('headBand')->first();
+        // Add technical detail if product is not immaterial
+        if ($this->isImmaterial() === false) {
+            // Headband
+            $headBand = $this->getTechnicalData()->where('partName', 'bookBinding')->pluck('headBand')->first();
 
-        if (! empty($headBand)) {
-            $productFormDetails->push('B407');
-        }
+            if (! empty($headBand)) {
+                $productFormDetails->push('B407');
+            }
 
-        // Printed endpapers
-        $endPaperColors = $this->getTechnicalData()->where('partName', 'endPapers')->pluck('colors')->first();
+            // Printed endpapers
+            $endPaperColors = $this->getTechnicalData()->where('partName', 'endPapers')->pluck('colors')->first();
 
-        if (! empty($endPaperColors)) {
-            [$frontColors, $backColors] = explode('/', $endPaperColors);
-            $endPaperIsPrinted = ($frontColors > 0 || $backColors > 0);
+            if (! empty($endPaperColors)) {
+                [$frontColors, $backColors] = explode('/', $endPaperColors);
+                $endPaperIsPrinted = ($frontColors > 0 || $backColors > 0);
 
-            if ($endPaperIsPrinted) {
-                $productFormDetails->push('B408');
+                if ($endPaperIsPrinted) {
+                    $productFormDetails->push('B408');
+                }
             }
         }
 

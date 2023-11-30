@@ -212,6 +212,10 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789513172664');
         $this->assertSame('ZZ', $groschen->getProductForm());
         $this->assertEmpty($groschen->getProductFormDetails());
+
+        // eBook that originally had B407 - Head and tail bands
+        $groschen = new Groschen('9789510379622');
+        $this->assertNotContains('B407', $groschen->getProductFormDetails());
     }
 
     /**
