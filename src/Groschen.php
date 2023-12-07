@@ -478,7 +478,7 @@ class Groschen implements ProductInterface
         $range = array_merge([978], range(9791, 9799));
 
         foreach ($range as $start) {
-            if (str_starts_with(strval($gtin), $start)) {
+            if (str_starts_with($gtin, strval($start))) {
                 return true;
             }
         }
