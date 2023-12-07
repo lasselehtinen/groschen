@@ -15,13 +15,13 @@
         "php": "^8.0",
         "ezyang/htmlpurifier": "^4.9",
         "guzzlehttp/guzzle": "^7.5",
-        "fale/isbn": "^3.0",
         "league/uri": "^6.0",
         "league/oauth2-client": "^2.3",
         "kamermans/guzzle-oauth2-subscriber": "^1.0.7",
         "league/uri-components": "^2.2",
         "league/iso3166": "^3.0",
-        "whitecube/lingua": "^1.1"
+        "whitecube/lingua": "^1.1",
+        "intervention/validation": "^3.3"
     },
     "autoload": {
         "psr-4": {

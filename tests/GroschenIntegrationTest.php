@@ -63,10 +63,15 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingProductIdentifiers()
     {
         // Product with valid GTIN/EAN/ISBN13
-
         $this->assertContains(['ProductIDType' => '01', 'id_type_name' => 'Werner Söderström Ltd - Internal product number', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
         $this->assertContains(['ProductIDType' => '03', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
         $this->assertContains(['ProductIDType' => '15', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
+
+        // Product with valid GTIN but no ISBN-13
+        $groschen = new Groschen('6430060032187');
+        $this->assertContains(['ProductIDType' => '01', 'id_type_name' => 'Werner Söderström Ltd - Internal product number', 'id_value' => 6430060032187], $groschen->getProductIdentifiers());
+        $this->assertContains(['ProductIDType' => '03', 'id_value' => 6430060032187], $groschen->getProductIdentifiers());
+        $this->assertNotContains(['ProductIDType' => '15', 'id_value' => 6430060032187], $groschen->getProductIdentifiers());
     }
 
     /**

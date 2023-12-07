@@ -13,7 +13,9 @@ use HTMLPurifier;
 use HTMLPurifier_Config;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Isbn;
+use Intervention\Validation\Rules\Gtin;
+use Intervention\Validation\Rules\Isbn;
+use Intervention\Validation\Validator;
 use kamermans\OAuth2\GrantType\NullGrantType;
 use kamermans\OAuth2\OAuth2Middleware;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
@@ -297,14 +299,20 @@ class Groschen implements ProductInterface
             'id_value' => intval($this->product->isbn),
         ]);
 
-        // GTIN-13 and ISBN-13
+        // GTIN-13
         if (! empty($this->product->isbn) && $this->isValidGtin($this->product->isbn)) {
-            foreach (['03', '15'] as $id_value) {
-                $productIdentifiers->push([
-                    'ProductIDType' => $id_value,
-                    'id_value' => intval($this->product->isbn),
-                ]);
-            }
+            $productIdentifiers->push([
+                'ProductIDType' => '03',
+                'id_value' => intval($this->product->isbn),
+            ]);
+        }
+
+        // ISBN-13
+        if (! empty($this->product->isbn) && $this->isValidIsbn13($this->product->isbn)) {
+            $productIdentifiers->push([
+                'ProductIDType' => '15',
+                'id_value' => intval($this->product->isbn),
+            ]);
         }
 
         return $productIdentifiers;
@@ -443,9 +451,39 @@ class Groschen implements ProductInterface
      */
     public function isValidGtin($gtin)
     {
-        $isbn = new Isbn\Isbn();
+        $validator = Validator::make(['gtin' => $gtin], [
+            'gtin' => new Gtin(),
+        ]);
 
-        return $isbn->validation->isbn13($gtin);
+        return $validator->passes();
+    }
+
+    /**
+     * Check if the given product number is valid ISBN
+     *
+     * @param  string  $gtin
+     * @return bool
+     */
+    public function isValidIsbn13($gtin)
+    {
+        $validator = Validator::make(['gtin' => $gtin], [
+            'gtin' => new Isbn(),
+        ]);
+
+        if ($validator->passes() === false) {
+            return false;
+        }
+
+        // Additional checks starting 978 or 9791–9799
+        $range = array_merge([978], range(9791, 9799));
+
+        foreach ($range as $start) {
+            if (str_starts_with(strval($gtin), $start)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
