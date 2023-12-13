@@ -2,6 +2,7 @@
 
 namespace lasselehtinen\Groschen;
 
+use Biblys\Isbn\Isbn;
 use Cache;
 use DateTime;
 use Exception;
@@ -13,9 +14,6 @@ use HTMLPurifier;
 use HTMLPurifier_Config;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Intervention\Validation\Rules\Gtin;
-use Intervention\Validation\Rules\Isbn;
-use Intervention\Validation\Validator;
 use kamermans\OAuth2\GrantType\NullGrantType;
 use kamermans\OAuth2\OAuth2Middleware;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
@@ -23,6 +21,7 @@ use League\ISO3166\ISO3166;
 use League\OAuth2\Client\Provider\GenericProvider;
 use League\Uri\Uri;
 use League\Uri\UriModifier;
+use Real\Validator\Gtin;
 use stdClass;
 use WhiteCube\Lingua\LanguagesRepository;
 use WhiteCube\Lingua\Service as Lingua;
@@ -451,11 +450,7 @@ class Groschen implements ProductInterface
      */
     public function isValidGtin($gtin)
     {
-        $validator = Validator::make(['gtin' => $gtin], [
-            'gtin' => new Gtin(),
-        ]);
-
-        return $validator->passes();
+        return Gtin\Factory::isValid($gtin);
     }
 
     /**
@@ -466,24 +461,13 @@ class Groschen implements ProductInterface
      */
     public function isValidIsbn13($gtin)
     {
-        $validator = Validator::make(['gtin' => $gtin], [
-            'gtin' => new Isbn(),
-        ]);
-
-        if ($validator->passes() === false) {
+        try {
+            Isbn::validateAsEan13($gtin);
+        } catch (Exception $e) { // Will throw because third hyphen is misplaced
             return false;
         }
 
-        // Additional checks starting 978 or 9791–9799
-        $range = array_merge([978], range(9791, 9799));
-
-        foreach ($range as $start) {
-            if (str_starts_with($gtin, strval($start))) {
-                return true;
-            }
-        }
-
-        return false;
+        return true;
     }
 
     /**
