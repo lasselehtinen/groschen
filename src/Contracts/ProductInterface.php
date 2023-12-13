@@ -622,4 +622,11 @@ interface ProductInterface
      * @return Collection
      */
     public function getTargetPersonas();
+
+    /**
+     * Get the editions planning code
+     *
+     * @return string|null
+     */
+    public function getPlanningCode();
 }

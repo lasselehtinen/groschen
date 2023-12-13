@@ -4268,4 +4268,18 @@ class Groschen implements ProductInterface
 
         return floor($price) + 0.9;
     }
+
+    /**
+     * Get the editions planning code
+     *
+     * @return string|null
+     */
+    public function getPlanningCode()
+    {
+        if (isset($this->product->dispositionCode) && ! empty($this->product->dispositionCode->name)) {
+            return $this->product->dispositionCode->name;
+        }
+
+        return null;
+    }
 }

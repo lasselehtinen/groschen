@@ -4049,4 +4049,19 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510429259');
         $this->assertSame(0.0, $groschen->getCalculatedPublisherRetailPrice());
     }
+
+    /**
+     * Test getting editions planning/disposition code
+     *
+     * @return void
+     */
+    public function testGettingDispositionCode()
+    {
+        // Hardback
+        $this->assertSame('d', $this->groschen->getPlanningCode());
+
+        // E-book
+        $groschen = new Groschen('9789510369654');
+        $this->assertSame('y', $groschen->getPlanningCode());
+    }
 }
