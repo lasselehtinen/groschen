@@ -3870,7 +3870,7 @@ class Groschen implements ProductInterface
 
         // Immaterial
         if ($this->isImmaterial()) {
-            return 1.25;
+            return 1.43;
         }
 
         return 1.2;

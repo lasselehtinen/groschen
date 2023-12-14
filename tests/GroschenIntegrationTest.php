@@ -3323,15 +3323,15 @@ class GroschenIntegrationTest extends TestCase
 
         // ePub2
         $groschen = new Groschen('9789510425121');
-        $this->assertSame(1.25, $groschen->getRetailPriceMultiplier());
+        $this->assertSame(1.43, $groschen->getRetailPriceMultiplier());
 
         // ePub3
         $groschen = new Groschen('9789520405670');
-        $this->assertSame(1.25, $groschen->getRetailPriceMultiplier());
+        $this->assertSame(1.43, $groschen->getRetailPriceMultiplier());
 
         // Audio book
         $groschen = new Groschen('9789510430415');
-        $this->assertSame(1.25, $groschen->getRetailPriceMultiplier());
+        $this->assertSame(1.43, $groschen->getRetailPriceMultiplier());
 
         // Others
         $this->assertSame(1.2, $this->groschen->getRetailPriceMultiplier());
@@ -4043,7 +4043,7 @@ class GroschenIntegrationTest extends TestCase
 
         // E-book
         $groschen = new Groschen('9789510369654');
-        $this->assertSame(6.4, $groschen->getCalculatedPublisherRetailPrice());
+        $this->assertSame(7.4, $groschen->getCalculatedPublisherRetailPrice());
 
         // Product without any price
         $groschen = new Groschen('9789510429259');
