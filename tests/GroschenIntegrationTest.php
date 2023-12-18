@@ -1805,7 +1805,7 @@ class GroschenIntegrationTest extends TestCase
                         'FeatureValue' => 1738016,
                     ],
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
             ],
         ];
 
@@ -1870,7 +1870,7 @@ class GroschenIntegrationTest extends TestCase
                         'FeatureValue' => 12858320,
                     ],
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/D6hl5y3JKlR9FqRtBpClWq/*/Max_Manner_c_Nauska_6170.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/D6hl5y3JKlR9FqRtBpClWq/*/Max_Manner_c_Nauska_6170.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
             ],
             'ResourceFeatures' => [
                 [
@@ -1951,7 +1951,7 @@ class GroschenIntegrationTest extends TestCase
                         'FeatureValue' => 1632039,
                     ],
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/EnfeCLahawWASi-G08b4bh/*/9789522796714_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/EnfeCLahawWASi-G08b4bh/*/9789522796714_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
             ],
         ];
 
@@ -1987,7 +1987,7 @@ class GroschenIntegrationTest extends TestCase
                         'FeatureValue' => 3836788,
                     ],
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/8V4HW-00aJUASGSHpJCNB1/*/9789522796714_frontcover_final_3d.png?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/8V4HW-00aJUASGSHpJCNB1/*/9789522796714_frontcover_final_3d.png?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
             ],
         ];
 
@@ -2027,7 +2027,7 @@ class GroschenIntegrationTest extends TestCase
             'ResourceMode' => '04',
             'ResourceVersion' => [
                 'ResourceForm' => '03',
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/E3xpJ3rBKdkAfC9Y_R2z3U/*/9789510409749_lukun.pdf?authcred=Z3Vlc3Q6Z3Vlc3Q=',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/E3xpJ3rBKdkAfC9Y_R2z3U/*/9789510409749_lukun.pdf?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
             ],
         ];
 
