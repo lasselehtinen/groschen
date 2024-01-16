@@ -3471,24 +3471,24 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => '<p><strong>Elina Kilkku</strong> (s. 1980) on helsinkiläinen teatteriohjaaja ja kirjailija. Hän on työskennellyt ohjaajana mm. Kansallisteatterissa, Teatteri Jurkassa ja Teatteri Takomossa sekä kirjoittanut useita näytelmiä.<br/><br/>Kilkun esikoisromaani <em>Äideistä paskin</em> ilmestyi vuonna 2014. Sen jälkeen häneltä on julkaistu useita teoksia, muun muassa vuonna 2020 nuorten romaani <em>Ihana tyttö</em>, joka herätti puhuttelevalla aiheellaan paljon keskustelua, sekä hulvaton, parisuhteen stereotypioita kellistävä <em>Vaimovallankumous</em> helmikuussa 2021. Lisäksi hän on kirjoittanut työttömästä freelance-taideammattilaisesta ja sinkkuäidistä kertovan Alina-trilogian, jonka päätösosa <em>Jumalainen jälkinäytös</em> julkaistiin elokuussa 2021. Tässä mustan huumorin maustamassa trilogiassa ovat aiemmin ilmestyneet romaanit <em>Täydellinen näytelmä</em> ja <em>Mahdoton elämä</em>.</p>',
             'WebSites' => [
                 [
-                    'WebsiteRole' => '42',
-                    'WebsiteDescription' => 'Elina Kilkku Twitterissä',
-                    'Website' => 'https://twitter.com/elinakilkku',
-                ],
-                [
                     'WebsiteRole' => '06',
                     'WebsiteDescription' => 'Tekijän omat nettisivut',
                     'Website' => 'http://www.elinakilkku.com/',
                 ],
                 [
                     'WebsiteRole' => '42',
-                    'WebsiteDescription' => 'Elina Kilkku Instagramissa',
-                    'Website' => 'https://www.instagram.com/elinakilkku/',
+                    'WebsiteDescription' => 'Elina Kilkku Twitterissä',
+                    'Website' => 'https://twitter.com/elinakilkku',
                 ],
                 [
                     'WebsiteRole' => '42',
                     'WebsiteDescription' => 'Elina Kilkku Facebookissa',
                     'Website' => 'https://www.facebook.com/kirjailijaelinakilkku/',
+                ],
+                [
+                    'WebsiteRole' => '42',
+                    'WebsiteDescription' => 'Elina Kilkku Instagramissa',
+                    'Website' => 'https://www.instagram.com/elinakilkku/',
                 ],
             ],
             'ContributorDates' => [],
