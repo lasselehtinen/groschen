@@ -111,15 +111,22 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testGettingProductFormAndProductFormDetails()
     {
-        // Hardback
+        // Hardback / glued binding
         $groschen = new Groschen('9789510405314');
         $this->assertSame('BB', $groschen->getProductForm());
+        $this->assertContains('B305', $groschen->getProductFormDetails());
+        $this->assertContains('B407', $groschen->getProductFormDetails());
+
+        // Hardback / sewn binding
+        $groschen = new Groschen('9789510496886');
+        $this->assertSame('BB', $groschen->getProductForm());
+        $this->assertContains('B304', $groschen->getProductFormDetails());
         $this->assertContains('B407', $groschen->getProductFormDetails());
 
         // Saddle-stitched
-        $groschen = new Groschen('9789513173968');
+        $groschen = new Groschen('9789524101301');
         $this->assertSame('BF', $groschen->getProductForm());
-        $this->assertEmpty($groschen->getProductFormDetails());
+        $this->assertContains('B310', $groschen->getProductFormDetails());
 
         // Pocket book
         $groschen = new Groschen('9789510362938');
@@ -186,7 +193,7 @@ class GroschenIntegrationTest extends TestCase
         // Paperback
         $groschen = new Groschen('9789510382745');
         $this->assertSame('BC', $groschen->getProductForm());
-        $this->assertEmpty($groschen->getProductFormDetails());
+        $this->assertContains('B305', $groschen->getProductFormDetails());
 
         // Picture-and-audio book
         $groschen = new Groschen('9789510429945');

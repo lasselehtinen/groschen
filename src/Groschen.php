@@ -394,6 +394,23 @@ class Groschen implements ProductInterface
                     $productFormDetails->push('B408');
                 }
             }
+
+            // Check if glued or sewn
+            $technicalBindingType = $this->getTechnicalBindingType();
+
+            if (Str::contains($technicalBindingType, 'sewn binding')) {
+                $productFormDetails->push('B304');
+            }
+
+            if (Str::contains($technicalBindingType, 'glued binding')) {
+                $productFormDetails->push('B305');
+            }
+
+            // Saddle stiched
+            if ($this->getProductType() === 'Saddle-stitched' || Str::contains($technicalBindingType, 'saddle stitch')) {
+                $productFormDetails->push('B310');
+            }
+
         }
 
         return $productFormDetails;
