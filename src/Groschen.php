@@ -988,10 +988,6 @@ class Groschen implements ProductInterface
      */
     public function getPublisher()
     {
-        if (isset($this->product->brand->name) && $this->product->brand->name === 'Johnny Kniga') {
-            return 'Johnny Kniga';
-        }
-
         return $this->product->publishingHouse->name;
     }
 
