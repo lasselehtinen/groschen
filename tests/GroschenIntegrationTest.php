@@ -2076,6 +2076,23 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(0, $groschen->getRelatedProducts()->where('ProductRelationCode', '06'));
     }
 
+    public function testGettingRelatedProductSoThatPrivateProductsAreNotIncluded()
+    {
+        $groschen = new Groschen('9789510282373');
+
+        $relation = [
+            'ProductRelationCode' => '06',
+            'ProductIdentifiers' => [
+                [
+                    'ProductIDType' => '03',
+                    'IDValue' => 9789510421543,
+                ],
+            ],
+        ];
+
+        $this->assertNotContains($relation, $groschen->getRelatedProducts());
+    }
+
     /**
      * Getting related products without GTIN
      *

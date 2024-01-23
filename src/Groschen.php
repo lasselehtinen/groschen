@@ -2034,8 +2034,12 @@ class Groschen implements ProductInterface
         $relatedProducts = new Collection;
 
         foreach ($this->getWorkLevel()->productions as $production) {
-            // Do not add current product
-            if (isset($production->isbn) && $production->isbn !== $this->productNumber) {
+            // Do not add current product or confidential products
+            if (isset($production->isbn)) {
+                $relatedProductGroschen = new Groschen($production->isbn);
+            }
+
+            if (isset($production->isbn) && $production->isbn !== $this->productNumber && isset($relatedProductGroschen) && $relatedProductGroschen->isConfidential() === false) {
                 $relatedProducts->push([
                     'ProductRelationCode' => '06',
                     'ProductIdentifiers' => [
