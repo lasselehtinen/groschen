@@ -228,6 +228,17 @@ class GroschenIntegrationTest extends TestCase
         // eBook that originally had B407 - Head and tail bands
         $groschen = new Groschen('9789510379622');
         $this->assertNotContains('B407', $groschen->getProductFormDetails());
+
+        // Paperback with flaps
+        $groschen = new Groschen('9789510497913');
+        $this->assertContains('B504', $groschen->getProductFormDetails());
+
+        // Dust jacket
+        $groschen = new Groschen('9789520461102');
+        $this->assertContains('B502', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789510434222');
+        $this->assertContains('B502', $groschen->getProductFormDetails());
     }
 
     /**

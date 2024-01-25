@@ -411,6 +411,15 @@ class Groschen implements ProductInterface
                 $productFormDetails->push('B310');
             }
 
+            // Paperback with flaps
+            if (Str::startsWith($technicalBindingType, 'Soft cover with flaps')) {
+                $productFormDetails->push('B504');
+            }
+
+            // Dust jacket
+            if (Str::startsWith($technicalBindingType, 'Dust jacket')) {
+                $productFormDetails->push('B502');
+            }
         }
 
         return $productFormDetails;
