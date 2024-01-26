@@ -2061,36 +2061,6 @@ class Groschen implements ProductInterface
             }
         }
 
-        // Add other books from the same authors
-        foreach ($this->getContributors()->where('ContributorRole', 'A01') as $author) {
-            // TODO Add filter just for where role is author aka (roles/any(t: t eq '304'))
-            $response = $this->client->get('v2/search/productions', [
-                'query' => [
-                    'q' => null,
-                    'limit' => 999,
-                    '$select' => 'id,workId,isbn',
-                    '$filter' => "(contactRoles/any(t: t eq '".$author['Identifier']."|304'))",
-                ],
-            ]);
-
-            $json = json_decode($response->getBody()->getContents());
-
-            foreach ($json->results as $result) {
-                // Do not add current products
-                if (property_exists($result->document, 'isbn') && $this->productNumber !== $result->document->isbn) {
-                    $relatedProducts->push([
-                        'ProductRelationCode' => '22',
-                        'ProductIdentifiers' => [
-                            [
-                                'ProductIDType' => '03',
-                                'IDValue' => intval($result->document->isbn),
-                            ],
-                        ],
-                    ]);
-                }
-            }
-        }
-
         return $relatedProducts;
     }
 
