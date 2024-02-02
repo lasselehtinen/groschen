@@ -292,11 +292,13 @@ class Groschen implements ProductInterface
         $productIdentifiers = new Collection;
 
         // Propietary internal product number
-        $productIdentifiers->push([
-            'ProductIDType' => '01',
-            'id_type_name' => 'Werner Söderström Ltd - Internal product number',
-            'id_value' => intval($this->product->isbn),
-        ]);
+        if (property_exists($this->product, 'isbn') && ! empty($this->product->isbn)) {
+            $productIdentifiers->push([
+                'ProductIDType' => '01',
+                'id_type_name' => 'Werner Söderström Ltd - Internal product number',
+                'id_value' => intval($this->product->isbn),
+            ]);
+        }
 
         // GTIN-13
         if (! empty($this->product->isbn) && $this->isValidGtin($this->product->isbn)) {
@@ -383,6 +385,13 @@ class Groschen implements ProductInterface
                 $productFormDetails->push('B407');
             }
 
+            // Ribbon marker
+            $ribbon = $this->getTechnicalData()->where('partName', 'bookBinding')->pluck('ribbonMarker')->first();
+
+            if (! empty($headBand)) {
+                $productFormDetails->push('B506');
+            }
+
             // Printed endpapers
             $endPaperColors = $this->getTechnicalData()->where('partName', 'endPapers')->pluck('colors')->first();
 
@@ -420,6 +429,19 @@ class Groschen implements ProductInterface
             if (Str::startsWith($technicalBindingType, 'Dust jacket')) {
                 $productFormDetails->push('B502');
             }
+
+            // Paper over boards
+            if (Str::startsWith($technicalBindingType, 'Printed cover')) {
+                $productFormDetails->push('B402');
+            }
+
+            // Lamination
+            $lamination = $this->getTechnicalData()->where('partName', 'printedCover')->pluck('lamination')->first();
+
+            if (! empty($lamination)) {
+                $productFormDetails->push('B415');
+            }
+
         }
 
         return $productFormDetails;
