@@ -4289,9 +4289,17 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('y', $groschen->getPlanningCode());
     }
 
-    public function testGettingHeadBand()
+    /**
+     * Test getting ribbon
+     *
+     * @return void
+     */
+    public function testGettingRibbon()
     {
         $groschen = new Groschen('9789513192402');
         $this->assertNotContains('B506', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('6430060033092');
+        $this->assertContains('B506', $groschen->getProductFormDetails());
     }
 }
