@@ -126,7 +126,7 @@ class GroschenIntegrationTest extends TestCase
         // Saddle-stitched
         $groschen = new Groschen('9789524101301');
         $this->assertSame('BF', $groschen->getProductForm());
-        $this->assertContains('B310', $groschen->getProductFormDetails());
+        //$this->assertContains('B310', $groschen->getProductFormDetails());
 
         // Pocket book
         $groschen = new Groschen('9789510362938');
@@ -239,6 +239,240 @@ class GroschenIntegrationTest extends TestCase
 
         $groschen = new Groschen('9789510434222');
         $this->assertContains('B502', $groschen->getProductFormDetails());
+    }
+
+    /**
+     * Spesific test for getting all kinds of product form details
+     *
+     * @return void
+     */
+    public function testGettingProductFormDetails()
+    {
+        $groschen = new Groschen('9789522797995');
+        $this->assertContains('B114', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789523765320');
+        // $this->assertContains('B501', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789523765573');
+        $this->assertContains('B104', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789523763807');
+        $this->assertContains('B305', $groschen->getProductFormDetails());
+        // $this->assertContains('B501', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789524034302');
+        $this->assertContains('B104', $groschen->getProductFormDetails());
+        $this->assertContains('B305', $groschen->getProductFormDetails());
+
+        // TODO - Missing production planning
+        //$groschen = new Groschen('9789522793041');
+        //$this->assertContains('B504', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789523766273');
+        $this->assertContains('B305', $groschen->getProductFormDetails());
+
+        // TODO - Is not really sewn?
+        $groschen = new Groschen('9789522796677');
+        //$this->assertContains('B304', $groschen->getProductFormDetails());
+        // $this->assertContains('B501', $groschen->getProductFormDetails());
+
+        // TODO - No stationary information
+        $groschen = new Groschen('6430060033092');
+        $this->assertContains('B506', $groschen->getProductFormDetails());
+        //$this->assertContains('P101', $groschen->getProductFormDetails());
+        //$this->assertContains('P201', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789522796257');
+        $this->assertContains('B114', $groschen->getProductFormDetails());
+        $this->assertContains('B305', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789524032339');
+        $this->assertContains('B116', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789523760295');
+        $this->assertContains('B116', $groschen->getProductFormDetails());
+        $this->assertContains('B504', $groschen->getProductFormDetails());
+
+        // TODO - Production planning is missing
+        //$groschen = new Groschen('9789522792785');
+        //$this->assertContains('B304', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('6430060033108');
+        $this->assertContains('P201', $groschen->getProductFormDetails());
+
+        // TODO - Incorrect B116?
+        $groschen = new Groschen('6430060033061');
+        //$this->assertContains('B116', $groschen->getProductFormDetails());
+        //$this->assertContains('B504', $groschen->getProductFormDetails());
+        //$this->assertContains('B506', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('6430060032729');
+        $this->assertContains('P202', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789524032377');
+        $this->assertContains('B407', $groschen->getProductFormDetails());
+        $this->assertContains('B305', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789510480168');
+        $this->assertContains('B407', $groschen->getProductFormDetails());
+        $this->assertContains('B304', $groschen->getProductFormDetails());
+
+        // TODO - KV has incorrect ProductFormDetail?
+        //$groschen = new Groschen('9789510468043');
+        //$this->assertContains('B310', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789523522336');
+        $this->assertContains('B506', $groschen->getProductFormDetails());
+
+        // TODO - Information not in Mockingbird (Flipbook)
+        $groschen = new Groschen('9789523522008');
+        // $this->assertContains('B601', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789523521148');
+        $this->assertContains('B114', $groschen->getProductFormDetails());
+        $this->assertContains('B504', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789523521834');
+        $this->assertContains('B305', $groschen->getProductFormDetails());
+        $this->assertContains('B504', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('6430060036048');
+        $this->assertContains('B506', $groschen->getProductFormDetails());
+        $this->assertContains('P201', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('6430060032743');
+        $this->assertContains('P201', $groschen->getProductFormDetails());
+        $this->assertContains('B407', $groschen->getProductFormDetails());
+        $this->assertContains('B304', $groschen->getProductFormDetails());
+
+        // TODO - Production planning does not structured data
+        $groschen = new Groschen('9789524101301');
+        //$this->assertContains('B201', $groschen->getProductFormDetails());
+        //$this->assertContains('B310', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789523753129');
+        $this->assertContains('B304', $groschen->getProductFormDetails());
+        $this->assertContains('B504', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789520435189');
+        $this->assertContains('B114', $groschen->getProductFormDetails());
+        //$this->assertContains('B310', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789513169947');
+        //$this->assertContains('B221', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789520433864');
+        //$this->assertContains('B310', $groschen->getProductFormDetails());
+        $this->assertContains('B504', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789520461720');
+        //$this->assertContains('B208', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789520413705');
+        // $this->assertContains('B201', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789513187033');
+        // $this->assertContains('B501', $groschen->getProductFormDetails());
+        $this->assertContains('B506', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789513185046');
+        $this->assertContains('B304', $groschen->getProductFormDetails());
+        // $this->assertContains('B501', $groschen->getProductFormDetails());
+        $this->assertContains('B506', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        //$groschen = new Groschen('6430061220408');
+        //$this->assertContains('P108', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789520459956');
+        $this->assertContains('B116', $groschen->getProductFormDetails());
+        $this->assertContains('B304', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789520448134');
+        $this->assertContains('B407', $groschen->getProductFormDetails());
+        $this->assertContains('B408', $groschen->getProductFormDetails());
+        $this->assertContains('B304', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789520449926');
+        //$this->assertContains('B202', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789513171193');
+        //$this->assertContains('B208', $groschen->getProductFormDetails());
+        //$this->assertContains('B221', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789520451752');
+        //$this->assertContains('B212', $groschen->getProductFormDetails());
+
+        // TODO - Question to Tarja
+        $groschen = new Groschen('9789513168735');
+        //$this->assertContains('B115', $groschen->getProductFormDetails());
+        //$this->assertContains('B221', $groschen->getProductFormDetails());
+        $this->assertContains('B305', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789520415174');
+        //$this->assertContains('B202', $groschen->getProductFormDetails());
+        //$this->assertContains('B221', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789520453374');
+        $this->assertContains('B407', $groschen->getProductFormDetails());
+        $this->assertContains('B408', $groschen->getProductFormDetails());
+        $this->assertContains('B305', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789510405666');
+        //$this->assertContains('B415', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789510418529');
+        $this->assertContains('B402', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789510400098');
+        //$this->assertContains('B312', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789510486542');
+        $this->assertContains('B304', $groschen->getProductFormDetails());
+        $this->assertContains('B506', $groschen->getProductFormDetails());
+
+        // TODO - Incorrect data in KV?
+        $groschen = new Groschen('9789510414835');
+        //$this->assertContains('B309', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789510418185');
+        //$this->assertContains('P101', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789510462454');
+        $this->assertContains('B114', $groschen->getProductFormDetails());
+        //$this->assertContains('B310', $groschen->getProductFormDetails());
+        $this->assertContains('B504', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789510427859');
+        $this->assertContains('B304', $groschen->getProductFormDetails());
+        $this->assertContains('B415', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789510453759');
+        //$this->assertContains('P122', $groschen->getProductFormDetails());
+
+        // TODO - Not enough data
+        $groschen = new Groschen('9789510485729');
+        // $this->assertContains('B313', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789510450505');
+        $this->assertContains('A103', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789510439111');
+        //$this->assertContains('B116', $groschen->getProductFormDetails());
+        $this->assertContains('B304', $groschen->getProductFormDetails());
+        $this->assertContains('B506', $groschen->getProductFormDetails());
     }
 
     /**
@@ -4053,5 +4287,11 @@ class GroschenIntegrationTest extends TestCase
         // E-book
         $groschen = new Groschen('9789510369654');
         $this->assertSame('y', $groschen->getPlanningCode());
+    }
+
+    public function testGettingHeadBand()
+    {
+        $groschen = new Groschen('9789513192402');
+        $this->assertNotContains('B506', $groschen->getProductFormDetails());
     }
 }

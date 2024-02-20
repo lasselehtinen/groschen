@@ -388,7 +388,7 @@ class Groschen implements ProductInterface
             // Ribbon marker
             $ribbon = $this->getTechnicalData()->where('partName', 'bookBinding')->pluck('ribbonMarker')->first();
 
-            if (! empty($headBand)) {
+            if (! empty($ribbon)) {
                 $productFormDetails->push('B506');
             }
 
