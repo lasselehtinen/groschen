@@ -527,6 +527,10 @@ class GroschenIntegrationTest extends TestCase
                         'TitleText' => 'Mielensäpahoittaja',
                     ],
                 ],
+                'CollectionSequence' => [
+                    'CollectionSequenceType' => '02',
+                    'CollectionSequenceNumber' => 1,
+                ],
             ],
         ];
 
@@ -2934,7 +2938,7 @@ class GroschenIntegrationTest extends TestCase
             'paperName' => 'HOLBFSC',
             'grammage' => 70,
             'grammageOther' => null,
-            'bulk' => null,
+            'bulk' => 'Other',
             'bulkValue' => null,
             'colors' => '1/1',
             'colorNames' => null,
