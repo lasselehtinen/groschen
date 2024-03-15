@@ -594,7 +594,7 @@ class Groschen implements ProductInterface
         ]);
 
         // Add subtitle
-        if (! empty($this->product->subtitle)) {
+        if (! empty($this->product->subtitle) && $this->product->subtitle !== '-') {
             $titleDetails = $titleDetails->map(function ($titleDetail) {
                 $titleDetail['TitleElement']['Subtitle'] = $this->product->subtitle;
 

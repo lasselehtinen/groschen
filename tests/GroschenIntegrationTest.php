@@ -634,6 +634,11 @@ class GroschenIntegrationTest extends TestCase
         // Should not have original title
         $this->assertFalse($this->groschen->getTitleDetails()->contains('TitleType', '03'));
 
+        // Should not return dash as subtitle
+        $groschen = new Groschen(9789520458805);
+        $this->assertNotContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Vuori, joka katosi', 'Subtitle' => '-']], $groschen->getTitleDetails());
+        $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Vuori, joka katosi']], $groschen->getTitleDetails());
+
         // Product with all possible titles
         $groschen = new Groschen('9789510400432');
 
