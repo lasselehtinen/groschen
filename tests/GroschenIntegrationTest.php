@@ -3937,7 +3937,7 @@ class GroschenIntegrationTest extends TestCase
         // Author
         $author = [
             'Identifier' => 68945,
-            'SequenceNumber' => 3,
+            'SequenceNumber' => 2,
             'ContributorRole' => 'A01',
             'PersonName' => 'Tuomas Eriksson',
             'PersonNameInverted' => 'Eriksson, Tuomas',
@@ -4123,6 +4123,7 @@ class GroschenIntegrationTest extends TestCase
             9789523753686 => 'POISTETTU MYYNNISTÄ Voihan nenä! pdf',
             9789510504147 => 'Kettulan kahvila: Pelli-pupun syntymäpäiv eä-kirja',
             6430060032446 => 'Jättipokkarilava kevät 2022, Tokm mark. materiaali',
+            9789523737815 => 'Avaruus - Koululaisen kirja ja palapel moniosainen',
         ];
 
         foreach ($testTitles as $gtin => $expectedInternalTitle) {

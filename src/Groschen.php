@@ -661,6 +661,7 @@ class Groschen implements ProductInterface
             'Calendar (Paperback)' => 'kalenteri',
             'Calendar (Other)' => 'kalenteri',
             'Marketing material' => 'mark. materiaali',
+            'Multiple-component retail product' => 'moniosainen',
         ];
 
         if (array_key_exists($this->getProductType(), $bindingCodeMapping) === false) {
