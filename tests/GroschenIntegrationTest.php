@@ -3657,6 +3657,7 @@ class GroschenIntegrationTest extends TestCase
             9789510321799, // CD
             9789513185787, // MP3-CD
             9789510232644, // Other audio format
+            6430060032781, // Podcast
         ];
 
         foreach ($audioBasedBindingCodes as $gtin) {

@@ -3911,6 +3911,7 @@ class Groschen implements ProductInterface
             'CD',
             'MP3-CD',
             'Other audio format',
+            'Podcast',
         ];
 
         if (in_array($this->getProductType(), $audioOnly)) {
