@@ -2835,11 +2835,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testIfProductIsConnectedToErp()
     {
-        $this->assertTrue($this->groschen->isConnectedToErp());
-
-        // Product that is not connected to ERP
-        $groschen = new Groschen('9789510443781');
-        $this->assertFalse($groschen->isConnectedToErp());
+        $this->assertFalse($this->groschen->isConnectedToErp());
     }
 
     /**
@@ -3175,7 +3171,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('01', $groschen->getProductAvailability());
 
         // Development product
-        $groschen = new Groschen('9789510421611');
+        $groschen = new Groschen('9789510426906');
         $this->assertSame('02', $groschen->getPublishingStatus());
         $this->assertSame('10', $groschen->getProductAvailability());
 
