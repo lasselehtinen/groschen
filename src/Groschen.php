@@ -2983,6 +2983,11 @@ class Groschen implements ProductInterface
             ]);
         }
 
+        // Remove Elisa and Elisa kirja kuukausitilaus
+        $distributionChannels = $distributionChannels->filter(function (array $distributionChannel, int $key) {
+            return in_array($distributionChannel['salesOutletId'], ['ELS', 'ELK']) === false;
+        });
+
         return $distributionChannels;
     }
 

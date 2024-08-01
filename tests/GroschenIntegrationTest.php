@@ -2718,6 +2718,32 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that E-kirjasto is included as exclusive retailer
+     *
+     * @return void
+     */
+    public function testGettingSalesRestrictionsForEKirjasto()
+    {
+        $groschen = new Groschen('9789510352212');
+        $salesRestrictions = $groschen->getSalesRestrictions();
+        $exclusiveRetailers = $salesRestrictions->where('SalesRestrictionType', '04')->pluck('SalesOutlets')->first();
+
+        // Check that normal unit sales exists
+        $salesOutlet = [
+            'SalesOutlet' => [
+                'SalesOutletIdentifiers' => [
+                    [
+                        'SalesOutletIDType' => '03',
+                        'IDValue' => 'EKJ',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertContains($salesOutlet, $exclusiveRetailers);
+    }
+
+    /**
      * Test getting sales restrictions for subscription only product
      *
      * @return void
@@ -2774,14 +2800,23 @@ class GroschenIntegrationTest extends TestCase
         // ePub 2 unit sales only product
         $groschen = new Groschen('9789510417188');
 
+        // Elisa and Elisa kirja kuukausitilaus should be removed
         $elisa = $groschen->getDistributionChannels()
             ->where('channel', 'Elisa Kirja')
             ->where('channelType', 'Unit sales')
-            ->where('hasRights', true)
-            ->where('distributionAllowed', true)
+            ->where('hasRights', false)
+            ->where('distributionAllowed', false)
             ->where('salesOutletId', 'ELS');
 
-        $this->assertCount(1, $elisa->toArray());
+        $elisaKirjaKuukausitilaus = $groschen->getDistributionChannels()
+            ->where('channel', 'Elisa Kirja Kuukausitilau')
+            ->where('channelType', 'Subscription')
+            ->where('hasRights', false)
+            ->where('distributionAllowed', false)
+            ->where('salesOutletId', 'ELS');
+
+        $this->assertCount(0, $elisa->toArray());
+        $this->assertCount(0, $elisaKirjaKuukausitilaus->toArray());
 
         $bookbeat = $groschen->getDistributionChannels()
             ->where('channel', 'BookBeat')
