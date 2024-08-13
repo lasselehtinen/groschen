@@ -3433,10 +3433,10 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingContacts()
     {
         $contact = [
-            'id' => 57313,
-            'firstName' => 'Veikko',
+            'id' => 57428,
+            'firstName' => 'Aleksi',
             'lastName' => 'Neuvonen',
-            'supplierId' => 20004662,
+            'supplierId' => 20004783,
         ];
 
         $this->assertContains($contact, $this->groschen->getContacts());
