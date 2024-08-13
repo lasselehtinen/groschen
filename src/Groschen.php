@@ -2117,7 +2117,7 @@ class Groschen implements ProductInterface
      */
     public function getTaxRate()
     {
-        return floatval(preg_replace('/[^0-9]/', '', $this->product->taxCode->name));
+        return floatval($this->product->taxCode->customProperties->taxRatePercent);
     }
 
     /**
