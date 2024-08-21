@@ -4049,7 +4049,9 @@ class Groschen implements ProductInterface
         }
 
         // Get the printer contact
-        $printer = $this->getAllContributors()->where('Role', 'Printer WS')->first();
+        $printer = $this->getAllContributors()->where('Role', 'Printer WS')->reject(function (array $contributor, int $key) {            
+            return Str::contains($contributor['FirstName'], 'Yhteispainatus') || Str::contains($contributor['LastName'], 'Yhteispainatus');
+        })->first();
 
         $response = $this->searchClient->get('v2/contacts/'.$printer['Id']);
         $contact = json_decode($response->getBody()->getContents());

@@ -3957,6 +3957,13 @@ class GroschenIntegrationTest extends TestCase
         // Digital product should return null
         $groschen = new Groschen('9789510477113');
         $this->assertNull($groschen->getCountryOfManufacture());
+
+        // Product with "Yhteispainatus" and the actual printer
+        $groschen = new Groschen('6430060032729');
+        $this->assertSame('SK', $groschen->getCountryOfManufacture());
+
+        $groschen = new Groschen('9789520461195');
+        $this->assertSame('CN', $groschen->getCountryOfManufacture());        
     }
 
     /**
