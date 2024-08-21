@@ -4053,6 +4053,10 @@ class Groschen implements ProductInterface
             return Str::contains($contributor['FirstName'], 'Yhteispainatus') || Str::contains($contributor['LastName'], 'Yhteispainatus');
         })->first();
 
+        if (is_null($printer)) {
+            return null;
+        }
+
         $response = $this->searchClient->get('v2/contacts/'.$printer['Id']);
         $contact = json_decode($response->getBody()->getContents());
 
