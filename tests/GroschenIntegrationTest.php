@@ -3963,7 +3963,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('SK', $groschen->getCountryOfManufacture());
 
         $groschen = new Groschen('9789520461195');
-        $this->assertSame('CN', $groschen->getCountryOfManufacture());        
+        $this->assertSame('CN', $groschen->getCountryOfManufacture());
     }
 
     /**

@@ -4049,7 +4049,7 @@ class Groschen implements ProductInterface
         }
 
         // Get the printer contact
-        $printer = $this->getAllContributors()->where('Role', 'Printer WS')->reject(function (array $contributor, int $key) {            
+        $printer = $this->getAllContributors()->where('Role', 'Printer WS')->reject(function (array $contributor, int $key) {
             return Str::contains($contributor['FirstName'], 'Yhteispainatus') || Str::contains($contributor['LastName'], 'Yhteispainatus');
         })->first();
 
