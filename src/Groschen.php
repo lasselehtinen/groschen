@@ -1292,11 +1292,11 @@ class Groschen implements ProductInterface
             ]);
         }
 
-        // Kirjavälitys product group
-        $kirjavälitysProductGroup = $this->getKirjavälitysProductGroup();
+        // Storia product group
+        $storiaProductGroup = $this->getStoriaProductGroup();
 
-        if (is_array($kirjavälitysProductGroup)) {
-            $subjects->push($kirjavälitysProductGroup);
+        if (is_array($storiaProductGroup)) {
+            $subjects->push($storiaProductGroup);
         }
 
         // This is disabled until the Thema project has completed
@@ -2274,14 +2274,14 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Return the Kirjavälitys product group
+     * Return the Storia product group
      *
      * @return array|null
      */
-    public function getKirjavälitysProductGroup()
+    public function getStoriaProductGroup()
     {
         // Product group mapping
-        $kirjavälitysProductGroups = [
+        $storiaProductGroups = [
             '00' => 'Kotimainen Kaunokirjallisuus',
             '01' => 'Käännetty Kaunokirjallisuus',
             '03' => 'Tietokirjallisuus',
@@ -2343,12 +2343,12 @@ class Groschen implements ProductInterface
             $productGroup = '86';
         }
 
-        if (isset($productGroup) && array_key_exists($productGroup, $kirjavälitysProductGroups)) {
+        if (isset($productGroup) && array_key_exists($productGroup, $storiaProductGroups)) {
             return [
                 'SubjectSchemeIdentifier' => '23',
-                'SubjectSchemeName' => 'Kirjavälitys - Tuoteryhmä',
+                'SubjectSchemeName' => 'Storia - Tuoteryhmä',
                 'SubjectCode' => $productGroup,
-                'SubjectHeadingText' => $kirjavälitysProductGroups[$productGroup],
+                'SubjectHeadingText' => $storiaProductGroups[$productGroup],
             ];
         }
 
@@ -3374,9 +3374,9 @@ class Groschen implements ProductInterface
                         'IDValue' => 'FI01100310',
                     ],
                 ],
-                'SupplierName' => 'Kirjavälitys',
+                'SupplierName' => 'Storia',
                 'TelephoneNumber' => '+358 10 345 1520',
-                'EmailAddress' => 'tilaukset@kirjavalitys.fi',
+                'EmailAddress' => 'tilaukset@storia.fi',
                 'OnHand' => 100,
                 'Proximity' => '07',
             ]);
@@ -3401,11 +3401,11 @@ class Groschen implements ProductInterface
                 throw new Exception('Could not fetch stock data for GTIN '.$this->productNumber);
             } else {
                 // Add default supplier
-                $supplierName = 'Kirjavälitys';
+                $supplierName = 'Storia';
                 $telephoneNumber = '+358 10 345 1520';
-                $emailAddress = 'tilaukset@kirjavalitys.fi';
+                $emailAddress = 'tilaukset@storia.fi';
 
-                // Kirjavälitys identifiers
+                // Storia identifiers
                 $supplierIdentifiers = [
                     [
                         'SupplierIDType' => '01',
