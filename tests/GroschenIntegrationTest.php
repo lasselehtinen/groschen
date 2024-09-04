@@ -1370,74 +1370,74 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting Kirjavälitys product groups (Kirjavälitys tuoteryhmä)
+     * Test getting Storia product groups (Storia tuoteryhmä)
      *
      * @return void
      */
-    public function testGettingKirjavalitysProductGroups()
+    public function testGettingStoriaProductGroups()
     {
         // 00 Kotimainen Kaunokirjallisuus
         $groschen = new Groschen('9789520429034');
-        $this->assertSame('00', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('00', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // 01 Käännetty Kaunokirjallisuus
         $groschen = new Groschen('9789510461730');
-        $this->assertSame('01', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('01', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // 03 Tietokirjallisuus
         $groschen = new Groschen('9789510467176');
-        $this->assertSame('03', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('03', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // 04 Lasten ja nuorten kirjat (kotimainen ja käännetty)
         $groschen = new Groschen('9789520428068');
-        $this->assertSame('04', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('04', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         $groschen = new Groschen('9789520424909');
-        $this->assertSame('04', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('04', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // 06 Pokkarit
         $groschen = new Groschen('9789510467145');
-        $this->assertSame('06', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('06', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // 64 Äänikirjat
         $groschen = new Groschen('9789510366486');
-        $this->assertSame('64', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('64', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // 86 Puuha- ja värityskirjat
         $groschen = new Groschen('9789513112721');
-        $this->assertSame('86', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('86', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         $groschen = new Groschen('9789510355794');
-        $this->assertSame('86', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('86', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // 80 Myymälämateriaalit (telineet ym.)
         // Kadonnut sisar -lava
         $groschen = new Groschen('6430060033023');
-        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // Tokmanni, jättipokkarilava kesä 2021
         $groschen = new Groschen('6430060032200');
-        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // Neropatin päiväkirja 15 -pöytäteline
         $groschen = new Groschen('6430060032125');
-        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // Werner Söderström -kassi logoilla 2020
         $groschen = new Groschen('6430060032040');
-        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // Book that has "kassi" in the title should not be determined as marketing material
         $groschen = new Groschen('9789510478318');
-        $this->assertSame('00', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('00', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // Calendar that is Trade paperback or "Jättipokkari"
         $groschen = new Groschen('9789524031745');
-        $this->assertSame('01', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('01', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // Marketing material
         $groschen = new Groschen('6430060034518');
-        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Kirjavälitys - Tuoteryhmä')->pluck('SubjectCode')->first());
+        $this->assertSame('80', $groschen->getSubjects()->where('SubjectSchemeName', 'Storia - Tuoteryhmä')->pluck('SubjectCode')->first());
 
         // The following codes are not mapped
         // 10 Peruskoulun oppikirjat
@@ -2785,9 +2785,9 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510435199');
         $this->assertSame(10.00, $groschen->getTaxRate());
 
-        // Product with 24% VAT
+        // Product with 25.5% VAT
         $groschen = new Groschen('9789510338728');
-        $this->assertSame(24.00, $groschen->getTaxRate());
+        $this->assertSame(25.50, $groschen->getTaxRate());
     }
 
     /**
@@ -3149,7 +3149,7 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting publishing status and product availability for Kirjavälitys
+     * Test getting publishing status and product availability for Storia
      *
      * @return void
      */
@@ -3279,9 +3279,9 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Kirjavälitys',
+            'SupplierName' => 'Storia',
             'TelephoneNumber' => '+358 10 345 1520',
-            'EmailAddress' => 'tilaukset@kirjavalitys.fi',
+            'EmailAddress' => 'tilaukset@storia.fi',
             'OnHand' => 0,
             'Proximity' => '03',
         ];
@@ -3316,20 +3316,20 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Kirjavälitys',
+            'SupplierName' => 'Storia',
             'TelephoneNumber' => '+358 10 345 1520',
-            'EmailAddress' => 'tilaukset@kirjavalitys.fi',
+            'EmailAddress' => 'tilaukset@storia.fi',
             'OnHand' => 100,
             'Proximity' => '07',
         ];
 
-        // Digital product should return fake Kirjavälitys supplier
+        // Digital product should return fake Storia supplier
         $groschen = new Groschen('9789510420157');
         $this->assertContains($supplier, $groschen->getSuppliers());
     }
 
     /**
-     * Test getting supplier for Bazar product in Kirjavälitys stock
+     * Test getting supplier for Bazar product in Storia stock
      *
      * @return void
      */
@@ -3354,24 +3354,24 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Kirjavälitys',
+            'SupplierName' => 'Storia',
             'TelephoneNumber' => '+358 10 345 1520',
-            'EmailAddress' => 'tilaukset@kirjavalitys.fi',
+            'EmailAddress' => 'tilaukset@storia.fi',
             'OnHand' => 0,
             'Proximity' => '03',
         ];
 
-        // Product in Kirjavälitys stock return them as supplier
+        // Product in Storia stock return them as supplier
         $groschen = new Groschen('9789525637595');
         $this->assertContains($supplier, $groschen->getSuppliers());
     }
 
     /**
-     * Test getting supplier for Bazar product in Kirjavälitys stock
+     * Test getting supplier for Bazar product in Storia stock
      *
      * @return void
      */
-    public function testGettingSupplierForBazarProductThatDoesNotExistInKirjavalitys()
+    public function testGettingSupplierForBazarProductThatDoesNotExistInStoria()
     {
         $supplier = [
             'SupplierRole' => '03',
@@ -3392,14 +3392,14 @@ class GroschenIntegrationTest extends TestCase
                     'IDValue' => 'FI01100310',
                 ],
             ],
-            'SupplierName' => 'Kirjavälitys',
+            'SupplierName' => 'Storia',
             'TelephoneNumber' => '+358 10 345 1520',
-            'EmailAddress' => 'tilaukset@kirjavalitys.fi',
+            'EmailAddress' => 'tilaukset@storia.fi',
             'OnHand' => 100,
             'Proximity' => '07',
         ];
 
-        // Digital product should return Kirjavälitys as supplier
+        // Digital product should return Storia as supplier
         $groschen = new Groschen('9789522794987');
         $this->assertContains($supplier, $groschen->getSuppliers());
     }
