@@ -3391,7 +3391,7 @@ class Groschen implements ProductInterface
         ]);
 
         try {
-            $response = $client->request('GET', $this->productNumber);
+            $response = $client->request('GET', strval($this->productNumber));
             $json = json_decode($response->getBody()->getContents());
         } catch (ClientException $e) {
             $response = $e->getResponse();
