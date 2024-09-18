@@ -4106,7 +4106,7 @@ class Groschen implements ProductInterface
         }
 
         // Add excluded countries
-        if (is_array($this->product->countriesExcluded) && count($this->product->countriesExcluded) > 0) {
+        if (property_exists($this->product, 'countriesExcluded') && is_array($this->product->countriesExcluded) && count($this->product->countriesExcluded) > 0) {
             $countriesExcluded = [];
 
             foreach ($this->product->countriesExcluded as $excludedCountry) {
