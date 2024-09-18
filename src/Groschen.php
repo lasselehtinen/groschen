@@ -578,7 +578,7 @@ class Groschen implements ProductInterface
     /**
      * Get the products title details
      *
-     * @return  Collection
+     * @return Collection
      */
     public function getTitleDetails()
     {
@@ -894,11 +894,13 @@ class Groschen implements ProductInterface
         }
 
         // Add original languages
-        foreach ($this->getWorkLevel()->originalLanguages as $originalLanguage) {
-            $languages->push([
-                'LanguageRole' => '02',
-                'LanguageCode' => $originalLanguage->id,
-            ]);
+        if (property_exists($this->getWorkLevel(), 'originalLanguages')) {
+            foreach ($this->getWorkLevel()->originalLanguages as $originalLanguage) {
+                $languages->push([
+                    'LanguageRole' => '02',
+                    'LanguageCode' => $originalLanguage->id,
+                ]);
+            }
         }
 
         // Validate that all LanguageCodes are valid
@@ -1683,7 +1685,7 @@ class Groschen implements ProductInterface
         $latestStockArrivalDate = $this->getLatestStockArrivalDate();
 
         if (! is_null($latestStockArrivalDate)) {
-            $now = new DateTime();
+            $now = new DateTime;
             $publishingDateRole = ($latestStockArrivalDate < $now) ? '12' : '26';
 
             // Always add Last reprint date
@@ -4023,7 +4025,7 @@ class Groschen implements ProductInterface
         $publicationDate = DateTime::createFromFormat('Ymd', $this->getPublishingDates()->where('PublishingDateRole', $dateRole)->pluck('Date')->first());
 
         // Create new current date
-        $currentDate = new DateTime();
+        $currentDate = new DateTime;
 
         // If publication date is in the future, use Advance notification (before publication)
         // Otherwise use 'Notification confirmed on publication'
