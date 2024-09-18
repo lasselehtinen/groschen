@@ -552,7 +552,7 @@ class Groschen implements ProductInterface
 
                     $collection[0]['CollectionSequence'] = $collectionSequence;
 
-                    return $collection;
+                    return $collection; // @phpstan-ignore-line
                 });
             }
         }
@@ -598,7 +598,7 @@ class Groschen implements ProductInterface
             $titleDetails = $titleDetails->map(function ($titleDetail) {
                 $titleDetail['TitleElement']['Subtitle'] = $this->product->subtitle;
 
-                return $titleDetail;
+                return $titleDetail; // @phpstan-ignore-line
             });
         }
 
