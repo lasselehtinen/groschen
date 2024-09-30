@@ -699,7 +699,7 @@ class Groschen implements ProductInterface
         $teamMembers = collect($this->product->members)->filter(function ($teamMember) {
             return property_exists($teamMember->role, 'customProperties') && property_exists($teamMember->role->customProperties, 'onixCode');
         })->sortBy(function ($teamMember) {
-            // We sort by priority level, sort order and then by the lastname
+            // We sort by priority level, sort order, role priority and then by the lastname
             $priorityLevel = (isset($teamMember->prioLevel)) ? $teamMember->prioLevel->id : 0;
             $sortOrderPriority = $teamMember->sortOrder;
             $rolePriority = $this->getRolePriority($teamMember->role->name);
