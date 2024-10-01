@@ -1775,7 +1775,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('01', $groschen->getPublishingStatus());
 
         // POD / shortrun
-        $groschen = new Groschen('9789513168865');
+        $groschen = new Groschen('9789510516324');
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Delivery block
