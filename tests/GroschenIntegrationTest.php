@@ -1330,16 +1330,15 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;Kiitos kirjasta -mitali;2011;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;kiitos kirjasta -mitali;2011;niksit;kodinhoito;metsänhoito;kalastus;kunnossapito;rakennukset;autot;huolto;ironia;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
         $subjects = $groschen->getSubjects();
-        //dd($subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'Tieto-Finlandia-palkinto;sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;Lapin sota;sotahistoria;sodankäynti;Suomi;1939-1945;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'tieto-finlandia-palkinto;1939-1945;sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;lapin sota;sotahistoria;suomi;sodankäynti;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
@@ -1767,7 +1766,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('07', $groschen->getPublishingStatus());
 
         // Development-confidential
-        $groschen = new Groschen('9789510426159');
+        $groschen = new Groschen('9789510456927');
         $this->assertSame('00', $groschen->getPublishingStatus());
 
         // Cancelled
@@ -2128,7 +2127,7 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 12858320,
+                        'FeatureValue' => 12858398,
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/D6hl5y3JKlR9FqRtBpClWq/*/Max_Manner_c_Nauska_6170.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
@@ -2379,7 +2378,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertFalse($this->groschen->isConfidential());
 
         // Development-confidential
-        $groschen = new Groschen('9789510426159');
+        $groschen = new Groschen('9789510456927');
         $this->assertTrue($groschen->isConfidential());
 
         // Cancelled-Confidential
@@ -2483,7 +2482,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('Published', $groschen->getStatus());
 
         // Product with a different status code
-        $groschen = new Groschen('9789510426159');
+        $groschen = new Groschen('9789510456927');
         $this->assertSame('Development-Confidential', $groschen->getStatus());
     }
 
@@ -3450,7 +3449,7 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingEditions()
     {
         $edition = [
-            'isbn' => 9789520419172,
+            'isbn' => 9789520458195,
             'title' => 'Missä milloinkin',
             'publisher' => 'Tammi',
         ];
