@@ -3922,6 +3922,21 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that same words with different cases are filtered out
+     *
+     * @return void
+     */
+    public function testDifferentCasesAreFilteredOut()
+    {
+        $groschen = new Groschen('9789510356197');
+
+        $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
+
+        $this->assertContains('proosarunot', $keywords);
+        $this->assertNotContains('Proosarunot', $keywords);
+    }
+
+    /**
      * Test that non-fictional characters are listed in keywords
      *
      * @return void
@@ -3931,14 +3946,14 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510452097');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
 
-        $this->assertContains('Tim Bergling', $keywords);
-        $this->assertContains('Avicii', $keywords);
+        $this->assertContains('tim bergling', $keywords);
+        $this->assertContains('avicii', $keywords);
         $this->assertContains('muusikot', $keywords);
-        $this->assertContains('DJ:t', $keywords);
+        $this->assertContains('dj:t', $keywords);
 
         // Check that names listed are first
-        $this->assertSame('Tim Bergling', $keywords[0]);
-        $this->assertSame('Avicii', $keywords[1]);
+        $this->assertSame('tim bergling', $keywords[0]);
+        $this->assertSame('avicii', $keywords[1]);
     }
 
     /**
@@ -4119,7 +4134,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('junat', $keywords);
 
         // Check that names prizes are listed first
-        $this->assertSame('Finlandia-palkinto', $keywords[0]);
+        $this->assertSame('finlandia-palkinto', $keywords[0]);
     }
 
     /**
@@ -4132,10 +4147,10 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510487532');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
 
-        $this->assertContains('BookTok', $keywords);
+        $this->assertContains('booktok', $keywords);
         $this->assertContains('rakkaus', $keywords);
 
-        $this->assertSame('BookTok', $keywords[0]);
+        $this->assertSame('booktok', $keywords[0]);
     }
 
     /**

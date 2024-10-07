@@ -1333,8 +1333,13 @@ class Groschen implements ProductInterface
         // Add keywords from Mockingbird
         $keywords = $keywords->merge($this->getKeywords());
 
+        // Remove duplicates
+        $keywords = $keywords->map(function (string $keyword, int $key) {
+            return strtolower($keyword);
+        })->unique();
+
         if ($keywords->count() > 0) {
-            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $keywords->unique()->implode(';')]);
+            $subjects->push(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => $keywords->implode(';')]);
         }
 
         // Remove those where SubjectCode and/or SubjectHeadingText is empty
