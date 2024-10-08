@@ -629,7 +629,6 @@ class GroschenIntegrationTest extends TestCase
     public function testGettingTitleDetails()
     {
         $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
-        $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
 
         // Should not have original title
         $this->assertFalse($this->groschen->getTitleDetails()->contains('TitleType', '03'));
@@ -647,9 +646,6 @@ class GroschenIntegrationTest extends TestCase
 
         // Original title
         $this->assertContains(['TitleType' => '03', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'A Christmas Carol']], $groschen->getTitleDetails());
-
-        // Distributors title
-        $this->assertContains(['TitleType' => '10', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Joululaulu (pokkari)']], $groschen->getTitleDetails());
     }
 
     /**
@@ -3579,11 +3575,6 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789513187057');
         $this->assertCount(1, $groschen->getEditionTypes());
         $this->assertContains(['EditionType' => 'ILL'], $groschen->getEditionTypes());
-
-        // Pocket book with movie tie-in/cover
-        $groschen = new Groschen('9789510479582');
-        $this->assertCount(1, $groschen->getEditionTypes());
-        $this->assertContains(['EditionType' => 'MDT'], $groschen->getEditionTypes());
 
         // ePub 3 enhanced with audio
         $groschen = new Groschen('9789520405724');

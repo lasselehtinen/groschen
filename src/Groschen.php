@@ -616,15 +616,6 @@ class Groschen implements ProductInterface
             }
         }
 
-        // Distributors title
-        $titleDetails->push([
-            'TitleType' => '10',
-            'TitleElement' => [
-                'TitleElementLevel' => '01',
-                'TitleText' => $this->product->deliveryNoteTitle,
-            ],
-        ]);
-
         return $titleDetails;
     }
 
@@ -3826,17 +3817,16 @@ class Groschen implements ProductInterface
     {
         $editionTypes = new Collection;
 
-        // Check if article text or title contains information about edition type
+        // Check if title contains information about edition type
         $title = $this->getTitleDetails()->where('TitleType', '01')->pluck('TitleElement.TitleText')->first();
-        $deliveryNoteTitle = $this->getTitleDetails()->where('TitleType', '10')->pluck('TitleElement.TitleText')->first();
 
         // Illustrated
-        if (Str::contains($title, 'kuvitettu') || Str::contains($deliveryNoteTitle, 'kuvitettu')) {
+        if (Str::contains($title, 'kuvitettu')) {
             $editionTypes->push(['EditionType' => 'ILL']);
         }
 
         // Movie tie-in
-        if (Str::contains($title, 'leffakansi') || Str::contains($deliveryNoteTitle, 'leffakansi')) {
+        if (Str::contains($title, 'leffakansi')) {
             $editionTypes->push(['EditionType' => 'MDT']);
         }
 
