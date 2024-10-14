@@ -1584,6 +1584,21 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $this->assertSame($expectedAudienceRange, $groschen->getAudienceRanges()->first());
+
+        // Another with 5AG and 5AR
+        $groschen = new Groschen(9789510505861);
+
+        $expectedAudienceRange = [
+            'AudienceRangeQualifier' => 17, // Interest age, years
+            'AudienceRangeScopes' => [
+                [
+                    'AudienceRangePrecision' => '03', // From
+                    'AudienceRangeValue' => 6,
+                ],
+            ],
+        ];
+
+        $this->assertContains($expectedAudienceRange, $groschen->getAudienceRanges());
     }
 
     /**

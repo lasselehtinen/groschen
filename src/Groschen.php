@@ -2678,41 +2678,43 @@ class Groschen implements ProductInterface
         $audiences = new Collection;
 
         // Get Thema interest age
-        $interestAge = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->filter(function ($subject, $key) {
+        $interestAges = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->filter(function ($subject, $key) {
             return Str::startsWith($subject['SubjectCode'], '5A');
-        })->pluck('SubjectCode')->first();
+        })->pluck('SubjectCode')->get();
 
-        // Map the Thema interest age to Audience
-        switch ($interestAge) {
-            // Children/juvenile
-            case '5AB':
-            case '5AC':
-            case '5AD':
-            case '5AF':
-            case '5AG':
-            case '5AH':
-            case '5AJ':
-            case '5AK':
-            case '5AL':
-            case '5AM':
-            case '5AN':
-            case '5AP':
-            case '5AQ':
-                $audienceCodeValue = '02';
-                break;
-                // Young adult
-            case '5AS':
-            case '5AT':
-            case '5AU':
-                $audienceCodeValue = '03';
-                break;
-                // General/trade as fallback
-            default:
-                $audienceCodeValue = '01';
-                break;
+        foreach ($interestAges as $interestAge) {
+            // Map the Thema interest age to Audience
+            switch ($interestAge) {
+                // Children/juvenile
+                case '5AB':
+                case '5AC':
+                case '5AD':
+                case '5AF':
+                case '5AG':
+                case '5AH':
+                case '5AJ':
+                case '5AK':
+                case '5AL':
+                case '5AM':
+                case '5AN':
+                case '5AP':
+                case '5AQ':
+                    $audienceCodeValue = '02';
+                    break;
+                    // Young adult
+                case '5AS':
+                case '5AT':
+                case '5AU':
+                    $audienceCodeValue = '03';
+                    break;
+                    // General/trade as fallback
+                default:
+                    $audienceCodeValue = '01';
+                    break;
+            }
+
+            $audiences->push(['AudienceCodeType' => '01', 'AudienceCodeValue' => $audienceCodeValue]);
         }
-
-        $audiences->push(['AudienceCodeType' => '01', 'AudienceCodeValue' => $audienceCodeValue]);
 
         return $audiences;
     }
@@ -2727,11 +2729,12 @@ class Groschen implements ProductInterface
         // Collection for audience ranges
         $audienceRanges = new Collection;
 
-        $interestAge = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->filter(function ($subject, $key) {
+        $interestAges = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->filter(function ($subject, $key) {
             return Str::startsWith($subject['SubjectCode'], '5A');
-        })->pluck('SubjectCode')->first();
+        })->pluck('SubjectCode');
 
-        $interestAges = [
+        // Map Thema interest ages to numeric values
+        $interestAgeMapping = [
             '5AB' => 0,
             '5AC' => 3,
             '5AD' => 4,
@@ -2750,16 +2753,18 @@ class Groschen implements ProductInterface
             '5AU' => 17,
         ];
 
-        if (! empty($interestAge) && array_key_exists($interestAge, $interestAges)) {
-            $audienceRanges->push([
-                'AudienceRangeQualifier' => 17,
-                'AudienceRangeScopes' => [
-                    [
-                        'AudienceRangePrecision' => '03', // From
-                        'AudienceRangeValue' => $interestAges[$interestAge],
+        foreach ($interestAges as $interestAge) {
+            if (! empty($interestAge) && array_key_exists($interestAge, $interestAgeMapping)) {
+                $audienceRanges->push([
+                    'AudienceRangeQualifier' => 17,
+                    'AudienceRangeScopes' => [
+                        [
+                            'AudienceRangePrecision' => '03', // From
+                            'AudienceRangeValue' => $interestAgeMapping[$interestAge],
+                        ],
                     ],
-                ],
-            ]);
+                ]);
+            }
         }
 
         return $audienceRanges;
@@ -3796,7 +3801,6 @@ class Groschen implements ProductInterface
                 'subjectSchemeIdentifier' => strval($subjectSchemeIdentifier),
                 'subjectSchemeName' => $subjectSchemeName,
                 'sortOrder' => $themaCode->sortOrder,
-
             ]);
         }
 
