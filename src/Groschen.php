@@ -3083,6 +3083,22 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Is the product "Internet edition" explicitly set
+     *
+     * @return bool
+     */
+    public function isInternetEditionExplicitlySet()
+    {
+        foreach ($this->getWorkLevel()->productions as $production) {
+            if ($production->id === $this->product->id && $production->externalPrimaryEdition->isPrimary === true && $production->externalPrimaryEdition->isExplicitlySet === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get the products production plan
      *
      * @return Collection

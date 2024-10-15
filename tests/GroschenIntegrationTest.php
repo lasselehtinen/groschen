@@ -2915,6 +2915,22 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test if product is internet edition is explicitly set
+     *
+     * @return void
+     */
+    public function testIfProductIsInternetEditionIsExplicitlySet()
+    {
+        // Product where "Automatic choice is selected"
+        $groschen = new Groschen('9789510441558');
+        $this->assertFalse($groschen->isInternetEditionExplicitlySet());
+
+        // Product where spesific edition is selected as web edition
+        $groschen = new Groschen('9789523738423');
+        $this->assertTrue($groschen->isInternetEditionExplicitlySet());
+    }
+
+    /**
      * Test getting production plan
      *
      * @return void
