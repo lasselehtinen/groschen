@@ -2680,7 +2680,7 @@ class Groschen implements ProductInterface
         // Get Thema interest age
         $interestAges = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->filter(function ($subject, $key) {
             return Str::startsWith($subject['SubjectCode'], '5A');
-        })->pluck('SubjectCode')->get();
+        })->pluck('SubjectCode');
 
         foreach ($interestAges as $interestAge) {
             // Map the Thema interest age to Audience
@@ -2714,6 +2714,11 @@ class Groschen implements ProductInterface
             }
 
             $audiences->push(['AudienceCodeType' => '01', 'AudienceCodeValue' => $audienceCodeValue]);
+        }
+
+        // If no interest ages are found, add General/Trade
+        if (count($interestAges) === 0) {
+            $audiences->push(['AudienceCodeType' => '01', 'AudienceCodeValue' => '01']);
         }
 
         return $audiences;
