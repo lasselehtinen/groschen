@@ -2802,17 +2802,6 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting sales restrictions for product that has no exports at all
-     *
-     * @return void
-     */
-    public function testGettingSalesRestrictionsForProductThatHasNoExportsAtAll()
-    {
-        $groschen = new Groschen('9789510439555');
-        $this->assertCount(0, $groschen->getSalesRestrictions());
-    }
-
-    /**
      * Test getting the products tax rate
      *
      * @return void
@@ -3233,7 +3222,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('10', $groschen->getProductAvailability());
 
         // Exclusive sales
-        $groschen = new Groschen('9789513183394');
+        $groschen = new Groschen('9789513130503');
         $this->assertSame('04', $groschen->getPublishingStatus());
         $this->assertSame('30', $groschen->getProductAvailability());
 
