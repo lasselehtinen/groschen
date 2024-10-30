@@ -2700,6 +2700,37 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Check that we get sales restrictions for product that does not have any
+     *
+     * @return void
+     */
+    public function testGettingSalesRestrictionsForProductThatDoesNotHaveAny()
+    {
+        $groschen = new Groschen('9789525912531');
+        $salesRestrictions = $groschen->getSalesRestrictions();
+
+        // Product that does not have subscription or library rights
+        $this->assertTrue($salesRestrictions->contains('SalesRestrictionType', '12'));
+        $this->assertTrue($salesRestrictions->contains('SalesRestrictionType', '09'));
+
+        $retailerExceptions = $salesRestrictions->where('SalesRestrictionType', '11')->pluck('SalesOutlets')->first();
+
+        // Check that BookBeat exist in list 11 (Retailer exception)
+        $salesOutlet = [
+            'SalesOutlet' => [
+                'SalesOutletIdentifiers' => [
+                    [
+                        'SalesOutletIDType' => '03',
+                        'IDValue' => 'BOO',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertContains($salesOutlet, $retailerExceptions);
+    }
+
+    /**
      * Test getting sales restrictions for each outlet
      *
      * @return void

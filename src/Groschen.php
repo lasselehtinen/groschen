@@ -2832,9 +2832,8 @@ class Groschen implements ProductInterface
         // Get list of distribution channels
         $distributionChannels = $this->getDistributionChannels();
 
-        // We currently only support digital products and also if none of sales channels contain true, don't return restriction at
-        // all because it means they are not checked
-        if ($this->isImmaterial() === false || $distributionChannels->contains('hasRights', true) === false) {
+        // Only send sales restrictions to digital products
+        if ($this->isImmaterial() === false) {
             return $salesRestrictions;
         }
 
