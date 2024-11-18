@@ -33,7 +33,6 @@ definitions:
             - apt-get -qq update && apt-get -y install git
             - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
             - vendor/bin/grumphp run --testsuite=syntax
-            - vendor/bin/grumphp run --testsuite=style --tasks=phpcs
             - vendor/bin/pint --test
 
       - step: &static-analysis
