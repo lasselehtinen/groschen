@@ -515,7 +515,7 @@ class Groschen implements ProductInterface
                 $onixCode = $accessibilityDetailsMapping->where('id', $accessibilityDetailId)->pluck('onixCode')->first();
 
                 if (is_null($onixCode)) {
-                    throw new Exception('Could not find mapping for ePub accessiblity type with id '.$hazardId);
+                    throw new Exception('Could not find mapping for ePub accessiblity type with id '.$accessibilityDetailId);
                 }
 
                 $productFormFeatures->push([
@@ -533,7 +533,7 @@ class Groschen implements ProductInterface
             $onixCode = $ebookStandardsMapping->where('id', $this->product->productionDetails->ebookStandardId)->pluck('onixCode')->first();
 
             if (is_null($onixCode)) {
-                throw new Exception('Could not find mapping for ePub accessiblity type with id '.$hazardId);
+                throw new Exception('Could not find mapping for ePub accessiblity type with id '.$this->product->productionDetails->ebookStandardId);
             }
 
             $productFormFeatures->push([
