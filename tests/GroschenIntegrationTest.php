@@ -508,6 +508,46 @@ class GroschenIntegrationTest extends TestCase
         // ePub 3
         $groschen = new Groschen('9789510414255');
         $this->assertContains(['ProductFormFeatureType' => '15', 'ProductFormFeatureValue' => '101B'], $groschen->getProductFormFeatures());
+
+        // ePub 3 with accessibility properties
+        $groschen = new Groschen('9789528500308');
+
+        // No flashing hazard warning necessary
+        $this->assertContains(['ProductFormFeatureType' => '12', 'ProductFormFeatureValue' => '14'], $groschen->getProductFormFeatures());
+
+        // No sound hazard warning necessary
+        $this->assertContains(['ProductFormFeatureType' => '12', 'ProductFormFeatureValue' => '16'], $groschen->getProductFormFeatures());
+
+        // No sound hazard warning necessary
+        $this->assertContains(['ProductFormFeatureType' => '12', 'ProductFormFeatureValue' => '18'], $groschen->getProductFormFeatures());
+
+        // All textual content can be modified
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '36'], $groschen->getProductFormFeatures());
+
+        // Next / Previous structural navigation
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '29'], $groschen->getProductFormFeatures());
+
+        // Table of contents navigation
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '11'], $groschen->getProductFormFeatures());
+
+        // Single logical reading order
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '13'], $groschen->getProductFormFeatures());
+
+        // WCAG level AA
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '85'], $groschen->getProductFormFeatures());
+
+        // Epub Accessibility Specification 1.1
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '04'], $groschen->getProductFormFeatures());
+
+        // WCAG v2.1"
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '81'], $groschen->getProductFormFeatures());
+
+        // Language tagging provided
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '22'], $groschen->getProductFormFeatures());
+
+        // All non-decorative content supports reading without sight
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '52'], $groschen->getProductFormFeatures());
+
     }
 
     /**
@@ -3710,7 +3750,6 @@ class GroschenIntegrationTest extends TestCase
         $textBasedBindingCodes = [
             9789510436134, // Hardback
             9789510419915, // ePub2
-            9789510408414, // ePub3 (without audio)
             9789513192648, // PDF
         ];
 
@@ -3792,6 +3831,21 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains([
             'ContentType' => '01',
+            'Primary' => false,
+        ], $groschen->getProductContentTypes());
+
+        // ePub 3 with text and images
+        $groschen = new Groschen(9789528500308);
+
+        // Text
+        $this->assertContains([
+            'ContentType' => '10',
+            'Primary' => false,
+        ], $groschen->getProductContentTypes());
+
+        // Still images / graphics
+        $this->assertContains([
+            'ContentType' => '07',
             'Primary' => false,
         ], $groschen->getProductContentTypes());
     }

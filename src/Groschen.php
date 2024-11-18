@@ -487,6 +487,61 @@ class Groschen implements ProductInterface
             ]);
         }
 
+        // Check if we have spesific product form features for hazards
+        if (property_exists($this->product->productionDetails, 'hazardIds') && is_array($this->product->productionDetails->hazardIds)) {
+            // Get hazard types for mapping
+            $hazardTypesMapping = $this->getProductionDetailsOptions('hazards');
+
+            foreach ($this->product->productionDetails->hazardIds as $hazardId) {
+                $onixCode = $hazardTypesMapping->where('id', $hazardId)->pluck('onixCode')->first();
+
+                if (is_null($onixCode)) {
+                    throw new Exception('Could not find mapping for hazard type with id '.$hazardId);
+                }
+
+                $productFormFeatures->push([
+                    'ProductFormFeatureType' => '12',
+                    'ProductFormFeatureValue' => $onixCode,
+                ]);
+            }
+        }
+
+        // Check if we have spesific product form features for ePub accessiblity settings
+        if (property_exists($this->product->productionDetails, 'accessibilityDetailIds') && is_array($this->product->productionDetails->accessibilityDetailIds)) {
+            // Get accessibility details for mapping
+            $accessibilityDetailsMapping = $this->getProductionDetailsOptions('accessibilityDetails');
+
+            foreach ($this->product->productionDetails->accessibilityDetailIds as $accessibilityDetailId) {
+                $onixCode = $accessibilityDetailsMapping->where('id', $accessibilityDetailId)->pluck('onixCode')->first();
+
+                if (is_null($onixCode)) {
+                    throw new Exception('Could not find mapping for ePub accessiblity type with id '.$hazardId);
+                }
+
+                $productFormFeatures->push([
+                    'ProductFormFeatureType' => '09',
+                    'ProductFormFeatureValue' => $onixCode,
+                ]);
+            }
+        }
+
+        // Codelist 192 values 02 - 09 are picked from "Ebook standard"
+        if (property_exists($this->product->productionDetails, 'ebookStandardId') && ! empty($this->product->productionDetails->ebookStandardId)) {
+            // Get ebookStandard for mapping
+            $ebookStandardsMapping = $this->getProductionDetailsOptions('ebookStandards');
+
+            $onixCode = $ebookStandardsMapping->where('id', $this->product->productionDetails->ebookStandardId)->pluck('onixCode')->first();
+
+            if (is_null($onixCode)) {
+                throw new Exception('Could not find mapping for ePub accessiblity type with id '.$hazardId);
+            }
+
+            $productFormFeatures->push([
+                'ProductFormFeatureType' => '09',
+                'ProductFormFeatureValue' => $onixCode,
+            ]);
+        }
+
         return $productFormFeatures;
     }
 
@@ -3970,16 +4025,36 @@ class Groschen implements ProductInterface
 
         // eBook 3s with or without audio
         if ($this->getProductType() === 'ePub3') {
-            $contentTypes->push([
-                'ContentType' => '10',
-                'Primary' => true,
-            ]);
-
             // Add audio book as a secondary content type if ePub 3 contains audio
             if ($this->getTechnicalBindingType() === 'EPUB3' && (bool) $this->product->activePrint->ebookHasAudioFile === true) {
                 $contentTypes->push([
                     'ContentType' => '01',
                     'Primary' => false,
+                ]);
+            }
+
+            // Check if we have spesific content types
+            if (property_exists($this->product->productionDetails, 'contentTypeIds') && is_array($this->product->productionDetails->contentTypeIds) && ! empty($this->product->productionDetails->contentTypeIds)) {
+                // Get content types for mapping
+                $contentTypesMapping = $this->getProductionDetailsOptions('contentTypes');
+
+                foreach ($this->product->productionDetails->contentTypeIds as $contentTypeId) {
+                    $onixCode = $contentTypesMapping->where('id', $contentTypeId)->pluck('onixCode')->first();
+
+                    if (is_null($onixCode)) {
+                        throw new Exception('Could not find mapping for content type with id '.$contentTypeId);
+                    }
+
+                    $contentTypes->push([
+                        'ContentType' => $onixCode,
+                        'Primary' => false,
+                    ]);
+                }
+            } else {
+                // Fallback to text only
+                $contentTypes->push([
+                    'ContentType' => '10',
+                    'Primary' => true,
                 ]);
             }
 
@@ -4321,5 +4396,23 @@ class Groschen implements ProductInterface
         }
 
         return null;
+    }
+
+    /**
+     * Get production details options
+     *
+     * @return void
+     */
+    public function getProductionDetailsOptions($option)
+    {
+        // Get the production detail options
+        $response = $this->client->get('/v1/settings/productiondetailoptions');
+        $json = json_decode($response->getBody()->getContents(), true);
+
+        if (array_key_exists($option, $json) === false) {
+            throw new Exception('The given option '.$option.'does not exist in production detail options');
+        }
+
+        return collect($json[$option]);
     }
 }
