@@ -4401,7 +4401,7 @@ class Groschen implements ProductInterface
     /**
      * Get production details options
      *
-     * @return void
+     * @return Collection
      */
     public function getProductionDetailsOptions($option)
     {
