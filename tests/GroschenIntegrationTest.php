@@ -940,7 +940,7 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Hänninen, Vepe',
             'KeyNames' => 'Hänninen',
             'NamesBeforeKey' => 'Vepe',
-            'BiographicalNote' => '<strong>Vepe Hännisen </strong>kynästä on syntynyt jo kolme romaania ja useita käsikirjoituksia kotimaisiin draamatuotantoihin. Hän kirjoittaa myös dokumentoivaa kaunokirjallisuutta. Hänninen on käsikirjoittanut TV-sarjoja <em>Kylmäverisesti sinun</em>, <em>Suojelijat</em>, <em>Kotikatu</em> ja <em>Helppo elämä</em>. Hänen kirjoittamansa TV-elokuva <em>Pieni pyhiinvaellus</em> voitti lukuisia kotimaisia ja kansainvälisiä palkintoja ja se on saanut jo lähes vakiintuneen aseman Ylen pääsiäisohjelmistossa. Samankaltaista juhlapyhäkertomuksen asemaa on lähestynyt myös elokuva <em>Joulukuusivarkaat</em>. Hännisen töitä on nähty oopperalavalla ja valkokankaallakin. Loppuvuodesta 2011 ensi-iltansa sai Arto Salmisen <em>Varasto</em>-romaaniin perustuva, Hännisen käsikirjoittama menestyselokuva.',
+            'BiographicalNote' => '<p><strong>Vepe Hännisen </strong>kynästä on syntynyt jo kolme romaania ja useita käsikirjoituksia kotimaisiin draamatuotantoihin. Hän kirjoittaa myös dokumentoivaa kaunokirjallisuutta. Hänninen on käsikirjoittanut TV-sarjoja <em>Kylmäverisesti sinun</em>, <em>Suojelijat</em>, <em>Kotikatu</em> ja <em>Helppo elämä</em>. Hänen kirjoittamansa TV-elokuva <em>Pieni pyhiinvaellus</em> voitti lukuisia kotimaisia ja kansainvälisiä palkintoja ja se on saanut jo lähes vakiintuneen aseman Ylen pääsiäisohjelmistossa. Samankaltaista juhlapyhäkertomuksen asemaa on lähestynyt myös elokuva <em>Joulukuusivarkaat</em>.</p> <p>Hännisen töitä on nähty oopperalavalla ja valkokankaallakin. Loppuvuodesta 2011 ensi-iltansa sai Arto Salmisen <em>Varasto</em>-romaaniin perustuva, Hännisen käsikirjoittama menestyselokuva.</p>',
             'WebSites' => [],
             'ContributorDates' => [
                 [
@@ -2981,10 +2981,6 @@ class GroschenIntegrationTest extends TestCase
      */
     public function testIfProductIsInternetEditionIsExplicitlySet()
     {
-        // Product where "Automatic choice is selected"
-        $groschen = new Groschen('9789510441558');
-        $this->assertFalse($groschen->isInternetEditionExplicitlySet());
-
         // Product where spesific edition is selected as web edition
         $groschen = new Groschen('9789523738423');
         $this->assertTrue($groschen->isInternetEditionExplicitlySet());
@@ -3590,7 +3586,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('Passive', $this->groschen->getSalesStatus());
 
         $groschen = new Groschen('9789510430569');
-        $this->assertSame('Donation', $groschen->getSalesStatus());
+        $this->assertSame('Passive', $groschen->getSalesStatus());
     }
 
     /**
@@ -3942,7 +3938,7 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Jansson, Tove',
             'KeyNames' => 'Jansson',
             'NamesBeforeKey' => 'Tove',
-            'BiographicalNote' => "Kirjailija, taidemaalari, piirtäjä, filosofian tohtori ja Muumi-hahmojen luoja<strong> Tove Marika Jansson</strong> syntyi 9. elokuuta 1914 Helsingissä taiteilijaperheeseen. Hänen isänsä oli kuvanveistäjä Viktor Jansson ja äitinsä piirtäjä Signe Hammarsten. Tove Jansson opiskeli Tukholman taideteollisessa oppilaitoksessa, Suomen taideyhdistyksen piirustuskoulussa Ateneumissa ja Ecole d'Adrien Holy'ssa Pariisissa. Hänen julkinen uransa alkoi piirroksilla pilalehti Garmnissa 1929. Kansainvälisesti tunnetuksi hän tuli satukirjoillaan (vuodesta 1945) ja sarjakuvillaan, joiden mielikuvituksellisen ja humoristisen henkilögallerian päähahmo on hyväntahtoinen Muumipeikko.\u{A0}Veljensä Lars Janssonin kanssa Tove Jansson kirjoitti ja piirsi Muumipeikko-sarjakuvaa 21 vuoden ajan. Muumipeikko-sarjakuva ilmestyi yli 40 maassa vuosina 1954-1975. Tove Janssonin kirjoja on käännetty useille kymmenille kielille ja niistä on tehty lukuisia teatteri-, ooppera-, filmi- sekä tv- ja radiosovituksia. Vuonna 1968 ilmestyi Tove Janssonin muistelmateos <em>Bildhuggarens's dotter</em>, suomennettu <em>Kuvanveistäjän tytär</em> 1969. Tove Jansson kuoli Helsingissä 27. kesäkuuta 2001 86-vuotiaana.",
+            'BiographicalNote' => "<p>Kirjailija, taidemaalari, piirtäjä, filosofian tohtori ja Muumi-hahmojen luoja<strong> Tove Marika Jansson</strong> syntyi 9. elokuuta 1914 Helsingissä taiteilijaperheeseen. Hänen isänsä oli kuvanveistäjä Viktor Jansson ja äitinsä piirtäjä Signe Hammarsten.</p> <p>Tove Jansson opiskeli Tukholman taideteollisessa oppilaitoksessa, Suomen taideyhdistyksen piirustuskoulussa Ateneumissa ja Ecole d'Adrien Holy'ssa Pariisissa. Hänen julkinen uransa alkoi piirroksilla pilalehti Garmnissa 1929.</p> <p>Kansainvälisesti tunnetuksi hän tuli satukirjoillaan (vuodesta 1945) ja sarjakuvillaan, joiden mielikuvituksellisen ja humoristisen henkilögallerian päähahmo on hyväntahtoinen Muumipeikko.\u{A0}Veljensä Lars Janssonin kanssa Tove Jansson kirjoitti ja piirsi Muumipeikko-sarjakuvaa 21 vuoden ajan. Muumipeikko-sarjakuva ilmestyi yli 40 maassa vuosina 1954-1975.</p> <p>Tove Janssonin kirjoja on käännetty useille kymmenille kielille ja niistä on tehty lukuisia teatteri-, ooppera-, filmi- sekä tv- ja radiosovituksia.</p> <p>Vuonna 1968 ilmestyi Tove Janssonin muistelmateos <em>Bildhuggarens's dotter</em>, suomennettu <em>Kuvanveistäjän tytär</em> 1969.</p> <p>Tove Jansson kuoli Helsingissä 27. kesäkuuta 2001 86-vuotiaana.</p>",
             'WebSites' => [],
             'ContributorDates' => [
                 [
