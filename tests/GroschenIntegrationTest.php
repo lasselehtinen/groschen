@@ -4461,4 +4461,103 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('6430060033092');
         $this->assertContains('B506', $groschen->getProductFormDetails());
     }
+
+    /**
+     * Test getting hazards
+     *
+     * @return void
+     */
+    public function testGettingSchemaHazards()
+    {
+        // Product with no hazards
+        $groschen = new Groschen('9789528500308');
+        $schemaHazards = $groschen->getSchemaHazards();
+
+        $this->assertCount(1, $schemaHazards);
+        $this->assertContains('none', $schemaHazards);
+
+        // Product where no hazards are not defined, should return 'unknown'
+        $groschen = new Groschen('9789510419922');
+        $schemaHazards = $groschen->getSchemaHazards();
+
+        $this->assertCount(1, $schemaHazards);
+        $this->assertContains('unknown', $schemaHazards);
+    }
+
+    // Lisää testituotteita, joissa olisi oikeasti hazardeja (video/ääni/väläys)
+
+    /**
+     * Test getting schema access modes
+     *
+     * @return void
+     */
+    public function testGettingSchemaAccessModes()
+    {
+        // Product with only text
+        $groschen = new Groschen('9789510498248');
+        $schemaAccessModes = $groschen->getSchemaAccessModes();
+
+        $this->assertCount(1, $schemaAccessModes);
+        $this->assertContains('textual', $schemaAccessModes);
+
+        // Product with text and images
+        $groschen = new Groschen('9789528500308');
+        $schemaAccessModes = $groschen->getSchemaAccessModes();
+
+        $this->assertCount(2, $schemaAccessModes);
+        $this->assertContains('textual', $schemaAccessModes);
+        $this->assertContains('visual', $schemaAccessModes);
+    }
+
+    /**
+     * Test getting schema access mode sufficient
+     *
+     * @return void
+     */
+    public function testGettingSchemaAccessModeSufficient()
+    {
+        // Product with only text
+        $groschen = new Groschen('9789510498248');
+        $schemaAccessModeSufficients = $groschen->getSchemaAccessModeSufficients();
+
+        $this->assertCount(1, $schemaAccessModeSufficients);
+        $this->assertContains('textual', $schemaAccessModeSufficients);
+
+        // Product with text and images
+        $groschen = new Groschen('9789528500308');
+        $schemaAccessModeSufficients = $groschen->getSchemaAccessModeSufficients();
+
+        $this->assertCount(2, $schemaAccessModeSufficients);
+        $this->assertContains('textual', $schemaAccessModeSufficients);
+        $this->assertContains('visual', $schemaAccessModeSufficients);
+    }
+
+    /**
+     * Test getting schema accessibilityFeatures
+     *
+     * @return void
+     */
+    public function testGettingSchemaAccessibilityFeatures()
+    {
+        $groschen = new Groschen('9789510498248');
+        $schemaAccessibilityFeatures = $groschen->getSchemaAccessibilityFeatures();
+
+        $this->assertContains('textual', $schemaAccessibilityFeatures);
+        $this->assertContains('displayTransformability', $schemaAccessibilityFeatures);
+        $this->assertContains('ttsMarkup', $schemaAccessibilityFeatures);
+        $this->assertContains('structuralNavigation', $schemaAccessibilityFeatures);
+        $this->assertContains('tableOfContents', $schemaAccessibilityFeatures);
+
+        // Book with images
+        $groschen = new Groschen('9789528500308');
+        $schemaAccessibilityFeatures = $groschen->getSchemaAccessibilityFeatures();
+        $this->assertContains('textual', $schemaAccessibilityFeatures);
+        $this->assertContains('visual', $schemaAccessibilityFeatures);
+        $this->assertContains('alternativeText', $schemaAccessibilityFeatures);
+
+        // Single logical reading order Ei mappausta
+
+        // Esimerkki sellaisesta jossa on audiota
+
+    }
 }

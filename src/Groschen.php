@@ -4415,4 +4415,326 @@ class Groschen implements ProductInterface
 
         return collect($json[$option]);
     }
+
+    /**
+     * Get the products schema hazards
+     *
+     * @return Collection
+     */
+    public function getSchemaHazards()
+    {
+        $schemaHazards = new Collection;
+
+        // Hazards are listed as ProductFormFeatureType 12 from Codelist 143
+        // See: https://ns.editeur.org/onix/en/143
+        $hazardMappingTable = [
+            '00' => 'none',
+            '13' => 'flashing',
+            '14' => 'noFlashingHazard',
+            '15' => 'sound',
+            '16' => 'noSoundHazard',
+            '17' => 'motionSimulation',
+            '18' => 'noMotionSimulationHazard',
+            '24' => 'unknownFlashingHazard',
+            '25' => 'unknownSoundHazard',
+            '26' => 'unknownMotionSimulationHazard',
+        ];
+
+        foreach ($this->getProductFormFeatures()->where('ProductFormFeatureType', 12) as $productFormFeature) {
+            if (array_key_exists($productFormFeature['ProductFormFeatureValue'], $hazardMappingTable)) {
+                $schemaHazards->push($hazardMappingTable[$productFormFeature['ProductFormFeatureValue']]);
+            }
+        }
+
+        // If exactly three hazards and all are "no", just return "none"
+        if ($schemaHazards->count() === 3 && $schemaHazards->contains('noFlashingHazard') && $schemaHazards->contains('noSoundHazard') && $schemaHazards->contains('noMotionSimulationHazard')) {
+            $schemaHazards = collect(['none']);
+        }
+
+        // If no hazards are defined, return 'unknown'
+        if ($schemaHazards->count() === 0) {
+            $schemaHazards->push('unknown');
+        }
+
+        return $schemaHazards;
+    }
+
+    /**
+     * Get the products schema access modes
+     *
+     * @return Collection
+     */
+    public function getSchemaAccessModes()
+    {
+        $schemaAccessModes = new Collection;
+
+        // auditory
+        $auditoryProductContentTypes = [
+            '01', // Audiobook
+            '22', // Additional audio content not part of main content
+            '13', // Other speech content
+            '03', // Music recording
+            '04', // Other audio
+            '21', // Partial performance – spoken word
+            '23', // Promotional audio for other book product
+        ];
+
+        if ($this->getProductContentTypes()->whereIn('ContentType', $auditoryProductContentTypes)->count() > 0) {
+            $schemaAccessModes->push('auditory');
+        }
+
+        // chartOnVisual and/or diagramOnVisual
+        if ($this->getProductContentTypes()->contains('ContentType', '19')) {
+            $schemaAccessModes->push('chartOnVisual');
+            $schemaAccessModes->push('diagramOnVisual');
+        }
+
+        // chemOnVisual
+        if ($this->getProductContentTypes()->contains('ContentType', '47')) {
+            $schemaAccessModes->push('chemOnVisual');
+        }
+
+        // mathOnVisual
+        if ($this->getProductContentTypes()->contains('ContentType', '48')) {
+            $schemaAccessModes->push('mathOnVisual');
+        }
+
+        // musicOnVisual
+        if ($this->getProductContentTypes()->contains('ContentType', '11')) {
+            $schemaAccessModes->push('musicOnVisual');
+        }
+
+        // textOnVisual
+        if ($this->getProductContentTypes()->contains('ContentType', '49')) {
+            $schemaAccessModes->push('textOnVisual');
+        }
+
+        // textual
+        if ($this->getProductContentTypes()->contains('ContentType', '10') || $this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '52')->count() === 1) {
+            $schemaAccessModes->push('textual');
+        }
+
+        // visual
+        $visualProductContentTypes = [
+            '07', // Still images / graphics, or
+            '18', // Photographs, or
+            '19', // Figures, diagrams, charts, graphs, or
+            '20', // Additional images / graphics not part of main work, or
+            '12', // Maps and/or other cartographic content, or
+            '46', // Decorative images or graphics, or
+            '50', // Video content without audio, or
+            '24', // Animated / interactive illustrations
+        ];
+
+        if ($this->getProductContentTypes()->whereIn('ContentType', $visualProductContentTypes)->count() > 0) {
+            $schemaAccessModes->push('visual');
+        }
+
+        return $schemaAccessModes;
+    }
+
+    /**
+     * Get the products schema access modes
+     *
+     * @return Collection
+     */
+    public function getSchemaAccessModeSufficients()
+    {
+        return $this->getSchemaAccessModes();
+    }
+
+    /**
+     * Get the products schema accessibility features
+     *
+     * @return Collection
+     */
+    public function getSchemaAccessibilityFeatures()
+    {
+        $schemaAccessibilityFeatures = new Collection;
+
+        // alternativeText
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '14')->count() === 1) {
+            $schemaAccessibilityFeatures->push('alternativeText');
+        }
+
+        // annotations
+        if ($this->getEditionTypes()->contains('EditionType', 'ANN')) {
+            $schemaAccessibilityFeatures->push('annotations');
+        }
+
+        // ARIA
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '30')->count() === 1) {
+            $schemaAccessibilityFeatures->push('ARIA');
+        }
+
+        // audioDescription
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '28')->count() === 1) {
+            $schemaAccessibilityFeatures->push('audioDescription');
+        }
+
+        // braille
+        if ($this->getEditionTypes()->contains('EditionType', 'BRL') || $this->getProductFormDetails()->contains('E146')) {
+            $schemaAccessibilityFeatures->push('braille');
+        }
+
+        // ChemML
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '18')->count() === 1) {
+            $schemaAccessibilityFeatures->push('ChemML');
+        }
+
+        // closedCaptions
+        if ($this->getEditionTypes()->contains('EditionType', 'V210')) {
+            $schemaAccessibilityFeatures->push('closedCaptions');
+        }
+
+        // describedMath
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '14')->count() === 1 || $this->getProductContentTypes()->contains('ContentType', '48')) {
+            $schemaAccessibilityFeatures->push('describedMath');
+        }
+
+        // displayTransformability
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '36')->count() === 1) {
+            $schemaAccessibilityFeatures->push('displayTransformability');
+        }
+
+        // highContrastAudio
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '27')->count() === 1) {
+            $schemaAccessibilityFeatures->push('highContrastAudio');
+        }
+
+        // highContrastDisplay
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '26')->count() === 1 || $this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '37')->count() === 1) {
+            $schemaAccessibilityFeatures->push('highContrastDisplay');
+        }
+
+        // index
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '12')->count() === 1) {
+            $schemaAccessibilityFeatures->push('index');
+        }
+
+        // largePrint
+        if ($this->getEditionTypes()->contains('EditionType', 'LTE') || $this->getEditionTypes()->contains('EditionType', 'ULP')) {
+            $schemaAccessibilityFeatures->push('largePrint');
+        }
+
+        // latex
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '35')->count() === 1) {
+            $schemaAccessibilityFeatures->push('latex');
+        }
+
+        // longDescription
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->whereIn('ProductFormFeatureValue', ['15', '16'])->count() > 0) {
+            $schemaAccessibilityFeatures->push('longDescription');
+        }
+
+        // MathML
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '17')->count() === 1) {
+            $schemaAccessibilityFeatures->push('MathML');
+        }
+
+        // MathML-chemistry
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '34')->count() === 1) {
+            $schemaAccessibilityFeatures->push('MathML-chemistry');
+        }
+
+        // none
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '09')->count() === 1) {
+            $schemaAccessibilityFeatures->push('none');
+        }
+
+        // openCaptions
+        if ($this->getProductFormDetails()->contains('V211')) {
+            $schemaAccessibilityFeatures->push('openCaptions');
+        }
+
+        // pageBreakMarkers
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '19')->count() === 1) {
+            $schemaAccessibilityFeatures->push('pageBreakMarkers');
+        }
+
+        // readingOrder
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '13')->count() === 1) {
+            $schemaAccessibilityFeatures->push('readingOrder');
+        }
+
+        // signLanguage
+        if ($this->getProductFormDetails()->contains('V213')) {
+            $schemaAccessibilityFeatures->push('signLanguage');
+        }
+
+        // structuralNavigation
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '29')->count() === 1) {
+            $schemaAccessibilityFeatures->push('structuralNavigation');
+        }
+
+        // sychronizedAudioText
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '20')->count() === 1) {
+            $schemaAccessibilityFeatures->push('sychronizedAudioText');
+        }
+
+        // tableOfContents
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '11')->count() === 1) {
+            $schemaAccessibilityFeatures->push('tableOfContents');
+        }
+
+        // taggedPDF
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->whereIn('ProductFormFeatureValue', ['05', '06'])->count() > 0) {
+            $schemaAccessibilityFeatures->push('taggedPDF');
+        }
+
+        // transcript
+        if ($this->getProductFormDetails()->contains('V212')) {
+            $schemaAccessibilityFeatures->push('transcript');
+        }
+
+        // ttsMarkup
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '21')->count() === 1 || $this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '22')->count() === 1) {
+            $schemaAccessibilityFeatures->push('ttsMarkup');
+        }
+
+        // unknown
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '08')->count() > 0) {
+            $schemaAccessibilityFeatures->push('unknown');
+        }
+
+        // unlocked not implemented because watermarking
+
+        // auditory is parsed from ProductContentTypes
+        $auditoryProductContentTypes = [
+            '01', // Audiobook
+            '22', // Additional audio content not part of main content
+            '13', // Other speech content
+            '03', // Music recording
+            '04', // Other audio
+            '21', // Partial performance – spoken word
+            '23', // Promotional audio for other book product
+        ];
+
+        if ($this->getProductContentTypes()->whereIn('ContentType', $auditoryProductContentTypes)->count() > 0) {
+            $schemaAccessibilityFeatures->push('auditory');
+        }
+
+        // textual
+        if ($this->getProductContentTypes()->contains('ContentType', '10')) {
+            $schemaAccessibilityFeatures->push('textual');
+        }
+
+        // visual is parsed from ProductContentTypes
+        $visualProductContentTypes = [
+            '07', // Still images / graphics, or
+            '18', // Photographs, or
+            '19', // Figures, diagrams, charts, graphs, or
+            '20', // Additional images / graphics not part of main work, or
+            '12', // Maps and/or other cartographic content, or
+            '46', // Decorative images or graphics, or
+            '50', // Video content without audio, or
+            '24', // Animated / interactive illustrations
+        ];
+
+        if ($this->getProductContentTypes()->whereIn('ContentType', $visualProductContentTypes)->count() > 0) {
+            $schemaAccessibilityFeatures->push('visual');
+        }
+
+        return $schemaAccessibilityFeatures->unique();
+    }
 }
