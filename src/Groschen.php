@@ -4698,43 +4698,7 @@ class Groschen implements ProductInterface
         }
 
         // unlocked not implemented because watermarking
-
-        // auditory is parsed from ProductContentTypes
-        $auditoryProductContentTypes = [
-            '01', // Audiobook
-            '22', // Additional audio content not part of main content
-            '13', // Other speech content
-            '03', // Music recording
-            '04', // Other audio
-            '21', // Partial performance – spoken word
-            '23', // Promotional audio for other book product
-        ];
-
-        if ($this->getProductContentTypes()->whereIn('ContentType', $auditoryProductContentTypes)->count() > 0) {
-            $schemaAccessibilityFeatures->push('auditory');
-        }
-
-        // textual
-        if ($this->getProductContentTypes()->contains('ContentType', '10')) {
-            $schemaAccessibilityFeatures->push('textual');
-        }
-
-        // visual is parsed from ProductContentTypes
-        $visualProductContentTypes = [
-            '07', // Still images / graphics, or
-            '18', // Photographs, or
-            '19', // Figures, diagrams, charts, graphs, or
-            '20', // Additional images / graphics not part of main work, or
-            '12', // Maps and/or other cartographic content, or
-            '46', // Decorative images or graphics, or
-            '50', // Video content without audio, or
-            '24', // Animated / interactive illustrations
-        ];
-
-        if ($this->getProductContentTypes()->whereIn('ContentType', $visualProductContentTypes)->count() > 0) {
-            $schemaAccessibilityFeatures->push('visual');
-        }
-
+        
         return $schemaAccessibilityFeatures->unique();
     }
 }
