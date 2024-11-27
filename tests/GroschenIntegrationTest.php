@@ -4542,7 +4542,6 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510498248');
         $schemaAccessibilityFeatures = $groschen->getSchemaAccessibilityFeatures();
 
-        $this->assertContains('textual', $schemaAccessibilityFeatures);
         $this->assertContains('displayTransformability', $schemaAccessibilityFeatures);
         $this->assertContains('ttsMarkup', $schemaAccessibilityFeatures);
         $this->assertContains('structuralNavigation', $schemaAccessibilityFeatures);
@@ -4551,8 +4550,11 @@ class GroschenIntegrationTest extends TestCase
         // Book with images
         $groschen = new Groschen('9789528500308');
         $schemaAccessibilityFeatures = $groschen->getSchemaAccessibilityFeatures();
-        $this->assertContains('textual', $schemaAccessibilityFeatures);
-        $this->assertContains('visual', $schemaAccessibilityFeatures);
+        
+        $this->assertContains('displayTransformability', $schemaAccessibilityFeatures);
+        $this->assertContains('ttsMarkup', $schemaAccessibilityFeatures);
+        $this->assertContains('structuralNavigation', $schemaAccessibilityFeatures);
+        $this->assertContains('tableOfContents', $schemaAccessibilityFeatures);
         $this->assertContains('alternativeText', $schemaAccessibilityFeatures);
 
         // Single logical reading order Ei mappausta
