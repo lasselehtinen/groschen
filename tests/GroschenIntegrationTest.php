@@ -4550,7 +4550,7 @@ class GroschenIntegrationTest extends TestCase
         // Book with images
         $groschen = new Groschen('9789528500308');
         $schemaAccessibilityFeatures = $groschen->getSchemaAccessibilityFeatures();
-        
+
         $this->assertContains('displayTransformability', $schemaAccessibilityFeatures);
         $this->assertContains('ttsMarkup', $schemaAccessibilityFeatures);
         $this->assertContains('structuralNavigation', $schemaAccessibilityFeatures);

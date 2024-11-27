@@ -4698,7 +4698,7 @@ class Groschen implements ProductInterface
         }
 
         // unlocked not implemented because watermarking
-        
+
         return $schemaAccessibilityFeatures->unique();
     }
 }
