@@ -4537,7 +4537,7 @@ class GroschenIntegrationTest extends TestCase
         $schemaAccessibilityFeatures = $groschen->getSchemaAccessibilityFeatures();
 
         $this->assertContains('displayTransformability', $schemaAccessibilityFeatures);
-        $this->assertContains('ttsMarkup', $schemaAccessibilityFeatures);
+        $this->assertNotContains('ttsMarkup', $schemaAccessibilityFeatures);
         $this->assertContains('structuralNavigation', $schemaAccessibilityFeatures);
         $this->assertContains('tableOfContents', $schemaAccessibilityFeatures);
 
@@ -4546,7 +4546,7 @@ class GroschenIntegrationTest extends TestCase
         $schemaAccessibilityFeatures = $groschen->getSchemaAccessibilityFeatures();
 
         $this->assertContains('displayTransformability', $schemaAccessibilityFeatures);
-        $this->assertContains('ttsMarkup', $schemaAccessibilityFeatures);
+        $this->assertNotContains('ttsMarkup', $schemaAccessibilityFeatures);
         $this->assertContains('structuralNavigation', $schemaAccessibilityFeatures);
         $this->assertContains('tableOfContents', $schemaAccessibilityFeatures);
         $this->assertContains('alternativeText', $schemaAccessibilityFeatures);

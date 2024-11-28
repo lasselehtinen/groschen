@@ -4688,7 +4688,7 @@ class Groschen implements ProductInterface
         }
 
         // ttsMarkup
-        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '21')->count() === 1 || $this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '22')->count() === 1) {
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '21')->count() === 1 && $this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '22')->count() === 1) {
             $schemaAccessibilityFeatures->push('ttsMarkup');
         }
 
