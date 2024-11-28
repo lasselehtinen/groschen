@@ -4588,7 +4588,7 @@ class Groschen implements ProductInterface
         }
 
         // describedMath
-        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '14')->count() === 1 || $this->getProductContentTypes()->contains('ContentType', '48')) {
+        if ($this->getProductFormFeatures()->where('ProductFormFeatureType', '09')->where('ProductFormFeatureValue', '14')->count() === 1 && $this->getProductContentTypes()->contains('ContentType', '48')) {
             $schemaAccessibilityFeatures->push('describedMath');
         }
 

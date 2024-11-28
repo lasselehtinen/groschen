@@ -4556,6 +4556,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('structuralNavigation', $schemaAccessibilityFeatures);
         $this->assertContains('tableOfContents', $schemaAccessibilityFeatures);
         $this->assertContains('alternativeText', $schemaAccessibilityFeatures);
+        $this->assertNotContains('describedMath', $schemaAccessibilityFeatures);
 
         // Single logical reading order Ei mappausta
 
