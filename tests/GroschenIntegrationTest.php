@@ -512,14 +512,8 @@ class GroschenIntegrationTest extends TestCase
         // ePub 3 with accessibility properties
         $groschen = new Groschen('9789528500308');
 
-        // No flashing hazard warning necessary
-        $this->assertContains(['ProductFormFeatureType' => '12', 'ProductFormFeatureValue' => '14'], $groschen->getProductFormFeatures());
-
-        // No sound hazard warning necessary
-        $this->assertContains(['ProductFormFeatureType' => '12', 'ProductFormFeatureValue' => '16'], $groschen->getProductFormFeatures());
-
-        // No sound hazard warning necessary
-        $this->assertContains(['ProductFormFeatureType' => '12', 'ProductFormFeatureValue' => '18'], $groschen->getProductFormFeatures());
+        // No known hazards or warnings
+        $this->assertContains(['ProductFormFeatureType' => '12', 'ProductFormFeatureValue' => '00'], $groschen->getProductFormFeatures());
 
         // All textual content can be modified
         $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '36'], $groschen->getProductFormFeatures());
@@ -1366,7 +1360,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;kiitos kirjasta -mitali;2011;niksit;kodinhoito;metsänhoito;kalastus;kunnossapito;rakennukset;autot;huolto;ironia;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;niksit;kodinhoito;metsänhoito;kalastus;kunnossapito;rakennukset;autot;huolto;ironia;novellit;kirjallisuuspalkinnot;2011;kiitos kirjasta -mitali;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
