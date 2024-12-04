@@ -1966,6 +1966,9 @@ class Groschen implements ProductInterface
             $hits = array_merge($hits, $searchResults->hits);
         }
 
+        // Logout
+        $client->request('POST', 'logout');
+
         // Add hits to collection
         foreach ($hits as $hit) {
             // Check that we have all the required metadata fields
