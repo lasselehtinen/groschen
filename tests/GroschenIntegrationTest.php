@@ -24,7 +24,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testNonExistingProductThrowsException()
+    public function test_non_existing_product_throws_exception()
     {
         $this->expectException(Exception::class);
 
@@ -36,7 +36,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testDeactivatedProductWorksFine()
+    public function test_deactivated_product_works_fine()
     {
         $groschen = new Groschen('9789510439555');
         $this->assertSame('00', $this->groschen->getProductComposition());
@@ -47,7 +47,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingWorkAndEditionId()
+    public function test_getting_work_and_edition_id()
     {
         $ids = $this->groschen->getEditionAndWorkId();
         $this->assertCount(2, $ids);
@@ -60,7 +60,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductIdentifiers()
+    public function test_getting_product_identifiers()
     {
         // Product with valid GTIN/EAN/ISBN13
         $this->assertContains(['ProductIDType' => '01', 'id_type_name' => 'Werner Söderström Ltd - Internal product number', 'id_value' => 9789510366264], $this->groschen->getProductIdentifiers());
@@ -79,7 +79,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductComposition()
+    public function test_getting_product_composition()
     {
         // Normal trade item
         $this->assertSame('00', $this->groschen->getProductComposition());
@@ -90,7 +90,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductType()
+    public function test_getting_product_type()
     {
         // Hardback
         $this->assertSame('Hardback', $this->groschen->getProductType());
@@ -109,7 +109,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductFormAndProductFormDetails()
+    public function test_getting_product_form_and_product_form_details()
     {
         // Hardback / glued binding
         $groschen = new Groschen('9789510405314');
@@ -246,7 +246,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductFormDetails()
+    public function test_getting_product_form_details()
     {
         $groschen = new Groschen('9789522797995');
         $this->assertContains('B114', $groschen->getProductFormDetails());
@@ -480,7 +480,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingTechnicalBindingType()
+    public function test_getting_technical_binding_type()
     {
         // ePub 2
         $groschen = new Groschen('9789510439838');
@@ -496,7 +496,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductFormFeatures()
+    public function test_getting_product_form_features()
     {
         // Hardback should not have any product form features
         $this->assertCount(0, $this->groschen->getProductFormFeatures());
@@ -549,7 +549,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingCollections()
+    public function test_getting_collections()
     {
         // Product with bibliographical series
         $collection = [
@@ -631,7 +631,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingNumberInSeriesInCollection()
+    public function test_getting_number_in_series_in_collection()
     {
         // Product with number in series
         $groschen = new Groschen('9789521618772');
@@ -660,7 +660,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingTitleDetails()
+    public function test_getting_title_details()
     {
         $this->assertContains(['TitleType' => '01', 'TitleElement' => ['TitleElementLevel' => '01', 'TitleText' => 'Mielensäpahoittaja']], $this->groschen->getTitleDetails());
 
@@ -687,7 +687,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingBookIsTranslatedOrNot()
+    public function test_getting_book_is_translated_or_not()
     {
         $this->assertFalse($this->groschen->isTranslated());
 
@@ -713,7 +713,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testOriginalTitleIsReturnedCorrectly()
+    public function test_original_title_is_returned_correctly()
     {
         // Translated book that has same title and original title should return the original title
         $groschen = new Groschen('9789510403266');
@@ -729,7 +729,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingContributorsForEditionWithUnmappedRoles()
+    public function test_getting_contributors_for_edition_with_unmapped_roles()
     {
         // Author
         $author = [
@@ -762,7 +762,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingContributors()
+    public function test_getting_contributors()
     {
         // Author
         $author = [
@@ -821,7 +821,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testThatContributorsMappedToSameOnixRoleAreFiltered()
+    public function test_that_contributors_mapped_to_same_onix_role_are_filtered()
     {
         $groschen = new Groschen('9789510471586');
 
@@ -834,7 +834,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testContributorWithOnlyOneNameOrPseudonymIsHandledCorrectly()
+    public function test_contributor_with_only_one_name_or_pseudonym_is_handled_correctly()
     {
         $groschen = new Groschen('9789521619021');
 
@@ -860,7 +860,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testContributorAreSortedByLastname()
+    public function test_contributor_are_sorted_by_lastname()
     {
         $groschen = new Groschen('9789513131524');
 
@@ -904,7 +904,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testContributorPriorityIsHandledCorrectly()
+    public function test_contributor_priority_is_handled_correctly()
     {
         $groschen = new Groschen('9789510421987');
 
@@ -954,7 +954,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testContributorsWithoutPriorityLevelAreHandledCorrectly()
+    public function test_contributors_without_priority_level_are_handled_correctly()
     {
         $groschen = new Groschen('9789510434123');
 
@@ -980,7 +980,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testPrivateContributorsAreHidden()
+    public function test_private_contributors_are_hidden()
     {
         $groschen = new Groschen('9789510415344');
 
@@ -1006,7 +1006,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingAllContributors()
+    public function test_getting_all_contributors()
     {
         // Author
         $author = [
@@ -1047,7 +1047,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettintContributorWhichIsCompany()
+    public function test_gettint_contributor_which_is_company()
     {
         $groschen = new Groschen('9789510483725');
 
@@ -1070,7 +1070,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingLanguages()
+    public function test_getting_languages()
     {
         // Book that is not translated, should only have finnish
         $this->assertContains(['LanguageRole' => '01', 'LanguageCode' => 'fin'], $this->groschen->getLanguages());
@@ -1101,7 +1101,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingExtents()
+    public function test_getting_extents()
     {
         $this->assertContains(['ExtentType' => '00', 'ExtentValue' => '128', 'ExtentUnit' => '03'], $this->groschen->getExtents());
     }
@@ -1111,7 +1111,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingEstimatedNumberOfPages()
+    public function test_getting_estimated_number_of_pages()
     {
         $groschen = new Groschen('9789510438183');
         $this->assertNull($groschen->getEstimatedNumberOfPages());
@@ -1125,7 +1125,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingExtentsFromBookWithoutAny()
+    public function test_getting_extents_from_book_without_any()
     {
         // Book without any extents
         $groschen = new Groschen('9789510303108');
@@ -1137,7 +1137,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingExtentsForAudioBook()
+    public function test_getting_extents_for_audio_book()
     {
         $groschen = new Groschen('9789510448267');
         $extents = $groschen->getExtents();
@@ -1157,7 +1157,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingExtentsForAudioBookWithoutDuration()
+    public function test_getting_extents_for_audio_book_without_duration()
     {
         // Audio book with duration 0 should not return anything
         $groschen = new Groschen('9789510447871');
@@ -1169,7 +1169,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingExtentsForAnEbook()
+    public function test_getting_extents_for_an_ebook()
     {
         // E-book character count should be converted to number of words and pages by approximation from the number of characters
         $groschen = new Groschen('9789510411858');
@@ -1186,7 +1186,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingExtentsForAnEbookWithOnlyOnePage()
+    public function test_getting_extents_for_an_ebook_with_only_one_page()
     {
         // E-book character count should be converted to number of words and pages by approximation from the number of characters
         $groschen = new Groschen('9789520409722');
@@ -1204,7 +1204,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingAudioBookDuration()
+    public function test_getting_audio_book_duration()
     {
         $groschen = new Groschen('9789510442128');
         $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '01447', 'ExtentUnit' => '15'], $groschen->getExtents());
@@ -1216,7 +1216,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testThatAudioBookDurationIsNotShared()
+    public function test_that_audio_book_duration_is_not_shared()
     {
         // Audio book which is main edition
         $groschen = new Groschen('9789510449677');
@@ -1234,7 +1234,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingTextContents()
+    public function test_getting_text_contents()
     {
         // Check that we can find text
         $this->assertCount(1, $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00'));
@@ -1261,7 +1261,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testAuthorDescriptionIsTakenFromTheContactIfAuthorPresentationParagraphIsMissing()
+    public function test_author_description_is_taken_from_the_contact_if_author_presentation_paragraph_is_missing()
     {
         $this->markTestSkipped('The logic has been changed.');
 
@@ -1279,7 +1279,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testAuthorDescriptionIsTakenOnlyOnceIfHasMultipleRoles()
+    public function test_author_description_is_taken_only_once_if_has_multiple_roles()
     {
         $this->markTestSkipped('Will be implemented later after texts have been fixed.');
 
@@ -1296,7 +1296,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingText()
+    public function test_getting_text()
     {
         // Check that text contains description
         $this->assertStringContainsString('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getText('Copy 1'));
@@ -1311,7 +1311,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingPrice()
+    public function test_getting_price()
     {
         $this->assertSame(17.88, $this->groschen->getPrice());
     }
@@ -1321,7 +1321,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingMeasures()
+    public function test_getting_measures()
     {
         $this->assertContains(['MeasureType' => '01', 'Measurement' => 202, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
         $this->assertContains(['MeasureType' => '02', 'Measurement' => 136, 'MeasureUnitCode' => 'mm'], $this->groschen->getMeasures());
@@ -1348,7 +1348,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSubjects()
+    public function test_getting_subjects()
     {
         $subjects = $this->groschen->getSubjects();
 
@@ -1403,7 +1403,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingStoriaProductGroups()
+    public function test_getting_storia_product_groups()
     {
         // 00 Kotimainen Kaunokirjallisuus
         $groschen = new Groschen('9789520429034');
@@ -1481,7 +1481,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingCorrectSuomalainenKirjastoalanLuokitus()
+    public function test_getting_correct_suomalainen_kirjastoalan_luokitus()
     {
         // Pocket book
         $groschen = new Groschen('9789513151027');
@@ -1505,7 +1505,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testProductWithoutSubgroupIsNotThrowingException()
+    public function test_product_without_subgroup_is_not_throwing_exception()
     {
         $groschen = new Groschen('9789510430347');
         $subjects = $groschen->getSubjects();
@@ -1517,7 +1517,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingAudiences()
+    public function test_getting_audiences()
     {
         // General/trade
         $this->assertContains(['AudienceCodeType' => '01', 'AudienceCodeValue' => '01'], $this->groschen->getAudiences());
@@ -1539,7 +1539,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingAudienceRanges()
+    public function test_getting_audience_ranges()
     {
         // General/trade should not contain any audience ranges
         $this->assertCount(0, $this->groschen->getAudienceRanges());
@@ -1603,7 +1603,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingAudienceRangesWithProductWithMultipleInterestQualifiers()
+    public function test_getting_audience_ranges_with_product_with_multiple_interest_qualifiers()
     {
         $groschen = new Groschen(9789520448608);
 
@@ -1640,7 +1640,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingTheProductsPublisher()
+    public function test_getting_the_products_publisher()
     {
         // Normal WSOY product
         $this->assertSame('WSOY', $this->groschen->getPublisher());
@@ -1663,7 +1663,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingPublishers()
+    public function test_getting_publishers()
     {
         // Normal WSOY product
         $this->assertContains([
@@ -1766,7 +1766,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingImprints()
+    public function test_getting_imprints()
     {
         // Normal WSOY product
         $this->assertCount(0, $this->groschen->getImprints());
@@ -1781,7 +1781,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingBrands()
+    public function test_getting_brands()
     {
         // Normal WSOY product
         $this->assertSame('WSOY', $this->groschen->getBrand());
@@ -1796,7 +1796,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingPublishingStatus()
+    public function test_getting_publishing_status()
     {
         // Published
         $groschen = new Groschen('9789510397923');
@@ -1836,7 +1836,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingPublishingDates()
+    public function test_getting_publishing_dates()
     {
         // Publishing date
         $this->assertContains(['PublishingDateRole' => '01', 'Date' => '20100601'], $this->groschen->getPublishingDates());
@@ -1880,7 +1880,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingLatestStockArrivalDate()
+    public function test_getting_latest_stock_arrival_date()
     {
         // Product with only one print
         $groschen = new Groschen('9789510401514');
@@ -1903,7 +1903,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingLatestPrintNumber()
+    public function test_getting_latest_print_number()
     {
         $groschen = new Groschen('9789510374665');
         $this->assertSame(5, $groschen->getLatestPrintNumber());
@@ -1917,7 +1917,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingPrices()
+    public function test_getting_prices()
     {
         // Suppliers net price excluding tax
         $suppliersNetPriceExcludingTax = [
@@ -1955,7 +1955,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingPricesForPocketBook()
+    public function test_getting_prices_for_pocket_book()
     {
         // Publisher retail price including tax with PriceAmount
         $publisherRetailPriceIncludingTaxWithPriceAmount = [
@@ -2004,7 +2004,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testNetPriceIncludingTaxesIsRecalculated()
+    public function test_net_price_including_taxes_is_recalculated()
     {
         $groschen = new Groschen('9789513191801');
 
@@ -2033,7 +2033,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testMissingPricesDoNotProduceException()
+    public function test_missing_prices_do_not_produce_exception()
     {
         $groschen = new Groschen('9789510442012');
 
@@ -2045,7 +2045,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingPublishersRetailPrices()
+    public function test_getting_publishers_retail_prices()
     {
         $groschen = new Groschen('9789510348956');
 
@@ -2076,7 +2076,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingCoverImageInSupportingResources()
+    public function test_getting_cover_image_in_supporting_resources()
     {
         $supportingResource = [
             'ResourceContentType' => '01',
@@ -2124,7 +2124,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingCoverImageForDisney()
+    public function test_getting_cover_image_for_disney()
     {
         $groschen = new Groschen('9789520449155');
         $this->assertTrue($groschen->getSupportingResources()->contains('ResourceContentType', '01'));
@@ -2137,7 +2137,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingAuthorImageInSupportingResources()
+    public function test_getting_author_image_in_supporting_resources()
     {
         $supportingResource = [
             'ResourceContentType' => '04',
@@ -2198,7 +2198,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSupportingResourcesWithMultipleImages()
+    public function test_getting_supporting_resources_with_multiple_images()
     {
         $groschen = new Groschen('9789510485132');
         $this->assertGreaterThan(0, $groschen->getSupportingResources()->count());
@@ -2209,7 +2209,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSupportingResourcesForSangatsuManga()
+    public function test_getting_supporting_resources_for_sangatsu_manga()
     {
         $groschen = new Groschen('9789521621338');
         $this->assertGreaterThan(0, $groschen->getSupportingResources()->count());
@@ -2222,7 +2222,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingBazar3dCoverImage()
+    public function test_getting_bazar3d_cover_image()
     {
         $coverImageNormal = [
             'ResourceContentType' => '01',
@@ -2309,7 +2309,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingExternalLinksInSupportingResources()
+    public function test_getting_external_links_in_supporting_resources()
     {
         // Product with links to multiple external sources
         $groschen = new Groschen('9789510409749');
@@ -2345,7 +2345,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingRelatedProducts()
+    public function test_getting_related_products()
     {
         // List of related products that should be returned
         $relatedProducts = [
@@ -2374,7 +2374,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(0, $groschen->getRelatedProducts()->where('ProductRelationCode', '06'));
     }
 
-    public function testGettingRelatedProductSoThatPrivateProductsAreNotIncluded()
+    public function test_getting_related_product_so_that_private_products_are_not_included()
     {
         $groschen = new Groschen('9789510282373');
 
@@ -2396,7 +2396,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingRelatedProductsWithoutGtin()
+    public function test_getting_related_products_without_gtin()
     {
         $groschen = new Groschen('9789510433669');
 
@@ -2418,7 +2418,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testCheckingIfProductIsConfidential()
+    public function test_checking_if_product_is_confidential()
     {
         $this->assertFalse($this->groschen->isConfidential());
 
@@ -2436,7 +2436,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testCheckingIfProductIsLuxuryBook()
+    public function test_checking_if_product_is_luxury_book()
     {
         $this->assertFalse($this->groschen->isLuxuryBook());
 
@@ -2454,7 +2454,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingCostCenter()
+    public function test_getting_cost_center()
     {
         $this->assertSame(301, $this->groschen->getCostCenter());
 
@@ -2468,7 +2468,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingCostCenterName()
+    public function test_getting_cost_center_name()
     {
         $this->assertSame('WSOY - Kotimainen kauno', $this->groschen->getCostCenterName());
 
@@ -2482,7 +2482,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingMediaType()
+    public function test_getting_media_type()
     {
         $this->assertSame('BB', $this->groschen->getMediaType());
 
@@ -2496,7 +2496,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingBindingCode()
+    public function test_getting_binding_code()
     {
         $this->assertNull($this->groschen->getBindingCode());
 
@@ -2510,7 +2510,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingDiscountGroup()
+    public function test_getting_discount_group()
     {
         $this->assertNull($this->groschen->getDiscountGroup());
     }
@@ -2520,7 +2520,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductsStatus()
+    public function test_getting_products_status()
     {
         // Published book
         $groschen = new Groschen('9789510397923');
@@ -2536,7 +2536,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductsInSeries()
+    public function test_getting_products_in_series()
     {
         //$this->assertNull($this->groschen->getProductsInSeries());
 
@@ -2550,7 +2550,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testCheckingIfProductIsImmaterial()
+    public function test_checking_if_product_is_immaterial()
     {
         $this->assertFalse($this->groschen->isImmaterial());
 
@@ -2564,7 +2564,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testCheckingIfProductIsPrintOnDemand()
+    public function test_checking_if_product_is_print_on_demand()
     {
         $this->assertFalse($this->groschen->isPrintOnDemand());
 
@@ -2578,7 +2578,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingInternalProdNo()
+    public function test_getting_internal_prod_no()
     {
         // Should be same as GTIN
         $this->assertSame('9789510366264', $this->groschen->getInternalProdNo());
@@ -2589,7 +2589,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingCustomsNumber()
+    public function test_getting_customs_number()
     {
         $this->assertSame(49019900, $this->groschen->getCustomsNumber());
 
@@ -2607,7 +2607,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingLibraryClass()
+    public function test_getting_library_class()
     {
         $this->assertSame('84.2', $this->groschen->getLibraryClass());
 
@@ -2625,7 +2625,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingFinnishBookTradeCategorisation()
+    public function test_getting_finnish_book_trade_categorisation()
     {
         $this->assertNull($this->groschen->getFinnishBookTradeCategorisation());
 
@@ -2647,7 +2647,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingMarketingCategory()
+    public function test_getting_marketing_category()
     {
         // Default test product does not have marketing category
         $this->assertNull($this->groschen->getMarketingCategory());
@@ -2670,7 +2670,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSalesSeason()
+    public function test_getting_sales_season()
     {
         // 2010 autumn
         $this->assertSame('2010/1', $this->groschen->getSalesSeason());
@@ -2701,7 +2701,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingBacklistSalesSeason()
+    public function test_getting_backlist_sales_season()
     {
         $this->assertNull($this->groschen->getBacklistSalesSeason());
 
@@ -2715,7 +2715,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSalesRestrictionsSubscriptionAndLibraryExcludedProducts()
+    public function test_getting_sales_restrictions_subscription_and_library_excluded_products()
     {
         // Physical products should not have any restrictions as they are not supported yet
         $this->assertCount(0, $this->groschen->getSalesRestrictions());
@@ -2738,7 +2738,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSalesRestrictionsForProductThatDoesNotHaveAny()
+    public function test_getting_sales_restrictions_for_product_that_does_not_have_any()
     {
         $groschen = new Groschen('9789525912531');
         $salesRestrictions = $groschen->getSalesRestrictions();
@@ -2769,7 +2769,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSalesRestrictionsForSalesOutlet()
+    public function test_getting_sales_restrictions_for_sales_outlet()
     {
         // ePub with unit and subscription rights but no library
         $groschen = new Groschen('9789510369654');
@@ -2797,7 +2797,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSalesRestrictionsForEKirjasto()
+    public function test_getting_sales_restrictions_for_e_kirjasto()
     {
         $groschen = new Groschen('9789510352212');
         $salesRestrictions = $groschen->getSalesRestrictions();
@@ -2823,7 +2823,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSalesRestrictionsForSubscriptionOnlyProduct()
+    public function test_getting_sales_restrictions_for_subscription_only_product()
     {
         $groschen = new Groschen('9789510443613');
         $salesRestrictions = $groschen->getSalesRestrictions();
@@ -2840,7 +2840,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingTaxRate()
+    public function test_getting_tax_rate()
     {
         // Hardback
         $this->assertSame(10.00, $this->groschen->getTaxRate());
@@ -2859,7 +2859,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingDistributionChannels()
+    public function test_getting_distribution_channels()
     {
         // ePub 2 unit sales only product
         $groschen = new Groschen('9789510417188');
@@ -2897,7 +2897,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testIfProductIsConnectedToErp()
+    public function test_if_product_is_connected_to_erp()
     {
         $this->assertFalse($this->groschen->isConnectedToErp());
     }
@@ -2907,7 +2907,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingPrintOrders()
+    public function test_getting_print_orders()
     {
         $groschen = new Groschen('9789510383124');
         $printOrder = $groschen->getPrintOrders()->where('printNumber', 24)->first();
@@ -2930,7 +2930,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingPrintOrdersForDigitalProduct()
+    public function test_getting_print_orders_for_digital_product()
     {
         $groschen = new Groschen('9789510433805');
         $this->assertCount(0, $groschen->getPrintOrders());
@@ -2941,7 +2941,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testIfProductIsMainEdition()
+    public function test_if_product_is_main_edition()
     {
         // Main edition
         $groschen = new Groschen('9789510389997');
@@ -2957,7 +2957,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testIfProductIsInternetEdition()
+    public function test_if_product_is_internet_edition()
     {
         // Internet edition
         $groschen = new Groschen('9789510390795');
@@ -2973,7 +2973,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testIfProductIsInternetEditionIsExplicitlySet()
+    public function test_if_product_is_internet_edition_is_explicitly_set()
     {
         // Product where spesific edition is selected as web edition
         $groschen = new Groschen('9789523738423');
@@ -2985,7 +2985,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductionPlan()
+    public function test_getting_production_plan()
     {
         $groschen = new Groschen('9789510423417');
         $productionPlan = $groschen->getProductionPlan();
@@ -3001,7 +3001,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductionPlanWhereDateIsInDifferentFormat()
+    public function test_getting_production_plan_where_date_is_in_different_format()
     {
         $groschen = new Groschen('9789510471425');
         $productionPlan = $groschen->getProductionPlan();
@@ -3016,7 +3016,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingQuantityOnProductionPlanForWarehouseDelivery()
+    public function test_getting_quantity_on_production_plan_for_warehouse_delivery()
     {
         $this->assertSame(3000, $this->groschen->getProductionPlan()->where('print', 16)->where('name', 'Delivery to warehouse')->pluck('quantity')->first());
     }
@@ -3026,7 +3026,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingTechnicalDescriptionComment()
+    public function test_getting_technical_description_comment()
     {
         $groschen = new Groschen('9789520405786');
         $this->assertSame('PMS on cover PMS 322 C.', $groschen->getTechnicalDescriptionComment());
@@ -3037,7 +3037,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingTechnicalData()
+    public function test_getting_technical_data()
     {
         $groschen = new Groschen('9789520405786');
 
@@ -3164,7 +3164,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingAttachmentTechnicalData()
+    public function test_getting_attachment_technical_data()
     {
         $groschen = new Groschen('9789510439203');
 
@@ -3187,7 +3187,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingTechnicalDataForProductWithoutAnyDoesNotThrowException()
+    public function test_getting_technical_data_for_product_without_any_does_not_throw_exception()
     {
         $groschen = new Groschen('9789510429938');
         $this->assertCount(8, $groschen->getTechnicalData());
@@ -3198,7 +3198,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingPrizes()
+    public function test_getting_prizes()
     {
         // Product without awards
         $this->assertCount(0, $this->groschen->getPrizes());
@@ -3229,7 +3229,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductAvailability()
+    public function test_getting_product_availability()
     {
         // Sold-out
         $groschen = new Groschen('9789510381380');
@@ -3320,7 +3320,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testIfPublicationDateIsPassed()
+    public function test_if_publication_date_is_passed()
     {
         $groschen = new Groschen('9789513178888');
         $this->assertFalse($groschen->isPublicationDatePassed());
@@ -3334,7 +3334,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSupplierForWsoyProduct()
+    public function test_getting_supplier_for_wsoy_product()
     {
         $supplier = [
             'SupplierRole' => '03',
@@ -3371,7 +3371,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSupplierForDigitalProduct()
+    public function test_getting_supplier_for_digital_product()
     {
         $supplier = [
             'SupplierRole' => '03',
@@ -3409,7 +3409,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSupplierForBazarProduct()
+    public function test_getting_supplier_for_bazar_product()
     {
         $supplier = [
             'SupplierRole' => '03',
@@ -3447,7 +3447,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSupplierForBazarProductThatDoesNotExistInStoria()
+    public function test_getting_supplier_for_bazar_product_that_does_not_exist_in_storia()
     {
         $supplier = [
             'SupplierRole' => '03',
@@ -3485,7 +3485,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSupplyDates()
+    public function test_getting_supply_dates()
     {
         // Product with stock
         $supplyDate = [
@@ -3506,7 +3506,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingContacts()
+    public function test_getting_contacts()
     {
         $contact = [
             'id' => 57428,
@@ -3523,7 +3523,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingEditions()
+    public function test_getting_editions()
     {
         $edition = [
             'isbn' => 9789520458195,
@@ -3539,7 +3539,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingWebPublishingDates()
+    public function test_getting_web_publishing_dates()
     {
         // Product with start date but with no end date
         $expectedWebPublishingStartDate = new DateTime('2014-08-15');
@@ -3559,7 +3559,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingComments()
+    public function test_getting_comments()
     {
         $groschen = new Groschen('9789520404338');
         $comments = $groschen->getComments();
@@ -3575,7 +3575,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSalesStatus()
+    public function test_getting_sales_status()
     {
         $this->assertSame('Passive', $this->groschen->getSalesStatus());
 
@@ -3588,7 +3588,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingMainEditionIsbn()
+    public function test_getting_main_edition_isbn()
     {
         $this->assertSame(9789510366264, $this->groschen->getMainEditionIsbn());
 
@@ -3602,7 +3602,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingMainEditionCostCenter()
+    public function test_getting_main_edition_cost_center()
     {
         // ePub version
         $groschen = new Groschen('9789510369654');
@@ -3614,7 +3614,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingWorkId()
+    public function test_getting_work_id()
     {
         $this->assertSame(243763, $this->groschen->getWorkId());
     }
@@ -3624,7 +3624,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingEditionId()
+    public function test_getting_edition_id()
     {
         $this->assertSame(243764, $this->groschen->getEditionId());
     }
@@ -3634,7 +3634,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingCorrectEditionAndWorkIdForDuplicateIsbn()
+    public function test_getting_correct_edition_and_work_id_for_duplicate_isbn()
     {
         $groschen = new Groschen('9789523820999');
         $this->assertSame(291890, $groschen->getWorkId());
@@ -3646,7 +3646,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingEditionTypes()
+    public function test_getting_edition_types()
     {
         // Work that has both physical and digital formats
         $groschen = new Groschen('9789510410738');
@@ -3668,7 +3668,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingEvents()
+    public function test_getting_events()
     {
         $this->markTestSkipped('We need new public share level, see https://ws.mockingbird.nu/book/262047/launch-plan/activity/82167 for example.');
 
@@ -3691,7 +3691,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingRetailerPriceMultiplier()
+    public function test_getting_retailer_price_multiplier()
     {
         // Manga
         $groschen = new Groschen('9789521616068');
@@ -3720,7 +3720,7 @@ class GroschenIntegrationTest extends TestCase
     /**
      * Test getting trade category
      */
-    public function testGettingTradeCategory()
+    public function test_getting_trade_category()
     {
         // Normal hardback from catalogue
         $this->assertNull($this->groschen->getTradeCategory());
@@ -3735,7 +3735,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingProductContentTypes()
+    public function test_getting_product_content_types()
     {
         $textBasedBindingCodes = [
             9789510436134, // Hardback
@@ -3845,7 +3845,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingContributorBiographyAndLinks()
+    public function test_getting_contributor_biography_and_links()
     {
         // Author
         $author = [
@@ -3892,7 +3892,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingLinksForPseudonym()
+    public function test_getting_links_for_pseudonym()
     {
         // Author
         $author = [
@@ -3921,7 +3921,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingContributorDates()
+    public function test_getting_contributor_dates()
     {
         // Author
         $author = [
@@ -3953,7 +3953,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingRelatedWorks()
+    public function test_getting_related_works()
     {
         $workRelation = [
             'WorkRelationCode' => '01',
@@ -3974,7 +3974,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingNotificationType()
+    public function test_getting_notification_type()
     {
         // Already published product
         $this->assertSame('03', $this->groschen->getNotificationType());
@@ -3997,7 +3997,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testDuplicateFinnaKeywordsWithPeriodsAreFilteredOut()
+    public function test_duplicate_finna_keywords_with_periods_are_filtered_out()
     {
         $groschen = new Groschen('9789520408657');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
@@ -4011,7 +4011,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testDifferentCasesAreFilteredOut()
+    public function test_different_cases_are_filtered_out()
     {
         $groschen = new Groschen('9789510356197');
 
@@ -4026,7 +4026,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testNonFictionalCharactersAreListedInKeywords()
+    public function test_non_fictional_characters_are_listed_in_keywords()
     {
         $groschen = new Groschen('9789510452097');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
@@ -4046,7 +4046,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingCountryOfManufacture()
+    public function test_getting_country_of_manufacture()
     {
         $this->assertSame('FI', $this->groschen->getCountryOfManufacture());
 
@@ -4075,7 +4075,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingContributorsIsniNumber()
+    public function test_getting_contributors_isni_number()
     {
         // Author
         $author = [
@@ -4101,7 +4101,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSalesRightsTerritory()
+    public function test_getting_sales_rights_territory()
     {
         // Digital product that does not have territory limitations, we return just world
         $groschen = new Groschen('9789510397923');
@@ -4121,7 +4121,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testSearchingForEditions()
+    public function test_searching_for_editions()
     {
         // Basic search just with term
         /*
@@ -4148,7 +4148,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingJohnnyKnigaAsPublishingHouse()
+    public function test_getting_johnny_kniga_as_publishing_house()
     {
         $groschen = new Groschen('9789510475027');
         $this->assertSame('Johnny Kniga', $groschen->getPublisher());
@@ -4160,7 +4160,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testFinnishLibraryCodePrefixIsNotSharedFromMainEdition()
+    public function test_finnish_library_code_prefix_is_not_shared_from_main_edition()
     {
         $groschen = new Groschen('9789526637747');
 
@@ -4172,7 +4172,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingNamesAsSubjects()
+    public function test_getting_names_as_subjects()
     {
         // Biography
         $biography = [
@@ -4192,7 +4192,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingNamesAsSubjectsForPseudonym()
+    public function test_getting_names_as_subjects_for_pseudonym()
     {
         // Biography
         $biography = [
@@ -4211,7 +4211,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testPrizesAreListedInKeywords()
+    public function test_prizes_are_listed_in_keywords()
     {
         $groschen = new Groschen('9789510382745');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
@@ -4227,7 +4227,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testBookTypeIsListedInKeywords()
+    public function test_book_type_is_listed_in_keywords()
     {
         $groschen = new Groschen('9789510487532');
         $keywords = explode(';', $groschen->getSubjects()->where('SubjectSchemeIdentifier', '20')->pluck('SubjectHeadingText')->first());
@@ -4243,7 +4243,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingInternalTitle()
+    public function test_getting_internal_title()
     {
         $testTitles = [
             9789524030434 => 'ZOV kirja',
@@ -4280,7 +4280,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testPrintOnDemandIsCheckedCorrectly()
+    public function test_print_on_demand_is_checked_correctly()
     {
         $groschen = new Groschen('9789520444884');
         $this->assertFalse($groschen->isPrintOnDemandChecked());
@@ -4294,7 +4294,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testPocketBookPriceGroupIsFetchedCorrectly()
+    public function test_pocket_book_price_group_is_fetched_correctly()
     {
         // Not a pocket book
         $groschen = new Groschen('9789520444884');
@@ -4312,7 +4312,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testContributorPriorityWithTwoNumberIsSortedCorrectly()
+    public function test_contributor_priority_with_two_number_is_sorted_correctly()
     {
         $groschen = new Groschen('9789520455637');
 
@@ -4338,7 +4338,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testOnlyPriorityContributorDescriptionIsShownInMarketingText()
+    public function test_only_priority_contributor_description_is_shown_in_marketing_text()
     {
         $this->markTestSkipped('Will be implemented later after texts have been fixed.');
 
@@ -4362,7 +4362,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingContributorsWithoutPriolevel()
+    public function test_getting_contributors_without_priolevel()
     {
         $groschen = new Groschen('9789510452493');
 
@@ -4382,7 +4382,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingLatestPublicationDateOnProductWithoutPublicationDate()
+    public function test_getting_latest_publication_date_on_product_without_publication_date()
     {
         $groschen = new Groschen('9789510461259');
         $this->assertNull($groschen->getLatestPublicationDate());
@@ -4393,7 +4393,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingTargetPersonas()
+    public function test_getting_target_personas()
     {
         // Product without target groups
         $this->assertEmpty($this->groschen->getTargetPersonas());
@@ -4409,7 +4409,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingCalculatedPublisherRetailPrice()
+    public function test_getting_calculated_publisher_retail_price()
     {
         // Hardback
         $this->assertSame(21.9, $this->groschen->getCalculatedPublisherRetailPrice());
@@ -4432,7 +4432,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingDispositionCode()
+    public function test_getting_disposition_code()
     {
         // Hardback
         $this->assertSame('d', $this->groschen->getPlanningCode());
@@ -4447,7 +4447,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingRibbon()
+    public function test_getting_ribbon()
     {
         $groschen = new Groschen('9789513192402');
         $this->assertNotContains('B506', $groschen->getProductFormDetails());
@@ -4461,7 +4461,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSchemaHazards()
+    public function test_getting_schema_hazards()
     {
         // Product with no hazards
         $groschen = new Groschen('9789528500308');
@@ -4485,7 +4485,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSchemaAccessModes()
+    public function test_getting_schema_access_modes()
     {
         // Product with only text
         $groschen = new Groschen('9789510498248');
@@ -4508,7 +4508,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSchemaAccessModeSufficient()
+    public function test_getting_schema_access_mode_sufficient()
     {
         // Product with only text
         $groschen = new Groschen('9789510498248');
@@ -4531,7 +4531,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function testGettingSchemaAccessibilityFeatures()
+    public function test_getting_schema_accessibility_features()
     {
         $groschen = new Groschen('9789510498248');
         $schemaAccessibilityFeatures = $groschen->getSchemaAccessibilityFeatures();
