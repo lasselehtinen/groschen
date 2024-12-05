@@ -861,7 +861,7 @@ class Groschen implements ProductInterface
                     return [
                         'WebsiteRole' => $linkTypeMapping[(string) $link->linkType->name],
                         'WebsiteDescription' => $description,
-                        'Website' => (string) $link->value, /** @phpstan-ignore-line */
+                        'Website' => (string) $link->value,
                     ];
                 }
             })->toArray();
@@ -2430,7 +2430,7 @@ class Groschen implements ProductInterface
         }
 
         // Sometimes pocket book is the main edition and the prefix is shared to editions where it does not belong
-        if ($this->product->libraryCodePrefix->id === 'T' && $isPocketBook === false) {
+        if ($this->product->libraryCodePrefix->id === 'T' && $isPocketBook === false) { // @phpstan-ignore-line
             return null;
         }
 
@@ -4174,6 +4174,8 @@ class Groschen implements ProductInterface
                 }
             }
         }
+
+        return null;
     }
 
     /**
