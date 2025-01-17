@@ -3220,8 +3220,8 @@ class Groschen implements ProductInterface
             'bulkValue' => $this->product->activePrint->insideBulkOther ?? null,
             'colors' => (isset($this->product->activePrint->insidePrinting->name)) ? str_replace('+', '/', $this->product->activePrint->insidePrinting->name) : null,
             'colorNames' => $this->product->activePrint->insideColors ?? null,
-            //'hasPhotoSection' => false,
-            //'photoSectionExtent' => null,
+            // 'hasPhotoSection' => false,
+            // 'photoSectionExtent' => null,
             'numberOfPages' => $this->product->pages ?? null,
         ]);
 

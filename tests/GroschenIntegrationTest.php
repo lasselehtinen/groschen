@@ -126,7 +126,7 @@ class GroschenIntegrationTest extends TestCase
         // Saddle-stitched
         $groschen = new Groschen('9789524101301');
         $this->assertSame('BF', $groschen->getProductForm());
-        //$this->assertContains('B310', $groschen->getProductFormDetails());
+        // $this->assertContains('B310', $groschen->getProductFormDetails());
 
         // Pocket book
         $groschen = new Groschen('9789510362938');
@@ -266,22 +266,22 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('B305', $groschen->getProductFormDetails());
 
         // TODO - Missing production planning
-        //$groschen = new Groschen('9789522793041');
-        //$this->assertContains('B504', $groschen->getProductFormDetails());
+        // $groschen = new Groschen('9789522793041');
+        // $this->assertContains('B504', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789523766273');
         $this->assertContains('B305', $groschen->getProductFormDetails());
 
         // TODO - Is not really sewn?
         $groschen = new Groschen('9789522796677');
-        //$this->assertContains('B304', $groschen->getProductFormDetails());
+        // $this->assertContains('B304', $groschen->getProductFormDetails());
         // $this->assertContains('B501', $groschen->getProductFormDetails());
 
         // TODO - No stationary information
         $groschen = new Groschen('6430060033092');
         $this->assertContains('B506', $groschen->getProductFormDetails());
-        //$this->assertContains('P101', $groschen->getProductFormDetails());
-        //$this->assertContains('P201', $groschen->getProductFormDetails());
+        // $this->assertContains('P101', $groschen->getProductFormDetails());
+        // $this->assertContains('P201', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789522796257');
         $this->assertContains('B114', $groschen->getProductFormDetails());
@@ -295,17 +295,17 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('B504', $groschen->getProductFormDetails());
 
         // TODO - Production planning is missing
-        //$groschen = new Groschen('9789522792785');
-        //$this->assertContains('B304', $groschen->getProductFormDetails());
+        // $groschen = new Groschen('9789522792785');
+        // $this->assertContains('B304', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('6430060033108');
         $this->assertContains('P201', $groschen->getProductFormDetails());
 
         // TODO - Incorrect B116?
         $groschen = new Groschen('6430060033061');
-        //$this->assertContains('B116', $groschen->getProductFormDetails());
-        //$this->assertContains('B504', $groschen->getProductFormDetails());
-        //$this->assertContains('B506', $groschen->getProductFormDetails());
+        // $this->assertContains('B116', $groschen->getProductFormDetails());
+        // $this->assertContains('B504', $groschen->getProductFormDetails());
+        // $this->assertContains('B506', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('6430060032729');
         $this->assertContains('P202', $groschen->getProductFormDetails());
@@ -319,8 +319,8 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('B304', $groschen->getProductFormDetails());
 
         // TODO - KV has incorrect ProductFormDetail?
-        //$groschen = new Groschen('9789510468043');
-        //$this->assertContains('B310', $groschen->getProductFormDetails());
+        // $groschen = new Groschen('9789510468043');
+        // $this->assertContains('B310', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789523522336');
         $this->assertContains('B506', $groschen->getProductFormDetails());
@@ -348,8 +348,8 @@ class GroschenIntegrationTest extends TestCase
 
         // TODO - Production planning does not structured data
         $groschen = new Groschen('9789524101301');
-        //$this->assertContains('B201', $groschen->getProductFormDetails());
-        //$this->assertContains('B310', $groschen->getProductFormDetails());
+        // $this->assertContains('B201', $groschen->getProductFormDetails());
+        // $this->assertContains('B310', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789523753129');
         $this->assertContains('B304', $groschen->getProductFormDetails());
@@ -357,19 +357,19 @@ class GroschenIntegrationTest extends TestCase
 
         $groschen = new Groschen('9789520435189');
         $this->assertContains('B114', $groschen->getProductFormDetails());
-        //$this->assertContains('B310', $groschen->getProductFormDetails());
+        // $this->assertContains('B310', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
         $groschen = new Groschen('9789513169947');
-        //$this->assertContains('B221', $groschen->getProductFormDetails());
+        // $this->assertContains('B221', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789520433864');
-        //$this->assertContains('B310', $groschen->getProductFormDetails());
+        // $this->assertContains('B310', $groschen->getProductFormDetails());
         $this->assertContains('B504', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
         $groschen = new Groschen('9789520461720');
-        //$this->assertContains('B208', $groschen->getProductFormDetails());
+        // $this->assertContains('B208', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
         $groschen = new Groschen('9789520413705');
@@ -385,8 +385,8 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('B506', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
-        //$groschen = new Groschen('6430061220408');
-        //$this->assertContains('P108', $groschen->getProductFormDetails());
+        // $groschen = new Groschen('6430061220408');
+        // $this->assertContains('P108', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789520459956');
         $this->assertContains('B116', $groschen->getProductFormDetails());
@@ -399,27 +399,27 @@ class GroschenIntegrationTest extends TestCase
 
         // TODO - Not enough data
         $groschen = new Groschen('9789520449926');
-        //$this->assertContains('B202', $groschen->getProductFormDetails());
+        // $this->assertContains('B202', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
         $groschen = new Groschen('9789513171193');
-        //$this->assertContains('B208', $groschen->getProductFormDetails());
-        //$this->assertContains('B221', $groschen->getProductFormDetails());
+        // $this->assertContains('B208', $groschen->getProductFormDetails());
+        // $this->assertContains('B221', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
         $groschen = new Groschen('9789520451752');
-        //$this->assertContains('B212', $groschen->getProductFormDetails());
+        // $this->assertContains('B212', $groschen->getProductFormDetails());
 
         // TODO - Question to Tarja
         $groschen = new Groschen('9789513168735');
-        //$this->assertContains('B115', $groschen->getProductFormDetails());
-        //$this->assertContains('B221', $groschen->getProductFormDetails());
+        // $this->assertContains('B115', $groschen->getProductFormDetails());
+        // $this->assertContains('B221', $groschen->getProductFormDetails());
         $this->assertContains('B305', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
         $groschen = new Groschen('9789520415174');
-        //$this->assertContains('B202', $groschen->getProductFormDetails());
-        //$this->assertContains('B221', $groschen->getProductFormDetails());
+        // $this->assertContains('B202', $groschen->getProductFormDetails());
+        // $this->assertContains('B221', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789520453374');
         $this->assertContains('B407', $groschen->getProductFormDetails());
@@ -428,14 +428,14 @@ class GroschenIntegrationTest extends TestCase
 
         // TODO - Not enough data
         $groschen = new Groschen('9789510405666');
-        //$this->assertContains('B415', $groschen->getProductFormDetails());
+        // $this->assertContains('B415', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789510418529');
         $this->assertContains('B402', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
         $groschen = new Groschen('9789510400098');
-        //$this->assertContains('B312', $groschen->getProductFormDetails());
+        // $this->assertContains('B312', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789510486542');
         $this->assertContains('B304', $groschen->getProductFormDetails());
@@ -443,15 +443,15 @@ class GroschenIntegrationTest extends TestCase
 
         // TODO - Incorrect data in KV?
         $groschen = new Groschen('9789510414835');
-        //$this->assertContains('B309', $groschen->getProductFormDetails());
+        // $this->assertContains('B309', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
         $groschen = new Groschen('9789510418185');
-        //$this->assertContains('P101', $groschen->getProductFormDetails());
+        // $this->assertContains('P101', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789510462454');
         $this->assertContains('B114', $groschen->getProductFormDetails());
-        //$this->assertContains('B310', $groschen->getProductFormDetails());
+        // $this->assertContains('B310', $groschen->getProductFormDetails());
         $this->assertContains('B504', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789510427859');
@@ -460,7 +460,7 @@ class GroschenIntegrationTest extends TestCase
 
         // TODO - Not enough data
         $groschen = new Groschen('9789510453759');
-        //$this->assertContains('P122', $groschen->getProductFormDetails());
+        // $this->assertContains('P122', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
         $groschen = new Groschen('9789510485729');
@@ -470,7 +470,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains('A103', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789510439111');
-        //$this->assertContains('B116', $groschen->getProductFormDetails());
+        // $this->assertContains('B116', $groschen->getProductFormDetails());
         $this->assertContains('B304', $groschen->getProductFormDetails());
         $this->assertContains('B506', $groschen->getProductFormDetails());
     }
@@ -1853,8 +1853,8 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['PublishingDateRole' => '12', 'Date' => '20171003'], $this->groschen->getPublishingDates());
 
         // Reprint in the future with multiple prints
-        //$groschen = new Groschen('9789510386033');
-        //$this->assertContains(['PublishingDateRole' => '26', 'Date' => '20211011'], $groschen->getPublishingDates());
+        // $groschen = new Groschen('9789510386033');
+        // $this->assertContains(['PublishingDateRole' => '26', 'Date' => '20211011'], $groschen->getPublishingDates());
 
         // Products with sales embargo
         $groschen = new Groschen('9789520407230');
@@ -2538,7 +2538,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function test_getting_products_in_series()
     {
-        //$this->assertNull($this->groschen->getProductsInSeries());
+        // $this->assertNull($this->groschen->getProductsInSeries());
 
         // Product with four products in the serie
         $groschen = new Groschen('9789521610165');
@@ -3280,9 +3280,9 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('21', $groschen->getProductAvailability());
 
         // Published product with 0 stock and no planned reprint in the future
-        //$groschen = new Groschen('9789523123366');
-        //>$this->assertSame('06', $groschen->getPublishingStatus());
-        //$this->assertSame('31', $groschen->getProductAvailability());
+        // $groschen = new Groschen('9789523123366');
+        // >$this->assertSame('06', $groschen->getPublishingStatus());
+        // $this->assertSame('31', $groschen->getProductAvailability());
 
         // Published product with 0 stock and planned reprint date in the future
         /*
