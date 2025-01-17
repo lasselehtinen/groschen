@@ -1960,13 +1960,13 @@ class GroschenIntegrationTest extends TestCase
         // Publisher retail price including tax with PriceAmount
         $publisherRetailPriceIncludingTaxWithPriceAmount = [
             'PriceType' => '42',
-            'PriceAmount' => 10.1,
+            'PriceAmount' => 10.4,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 10.0,
-                'TaxableAmount' => 9.18,
-                'TaxAmount' => 0.92,
+                'TaxRatePercent' => 14.0,
+                'TaxableAmount' => 9.12,
+                'TaxAmount' => 1.28,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -1984,9 +1984,9 @@ class GroschenIntegrationTest extends TestCase
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 10.0,
-                'TaxableAmount' => 9.18,
-                'TaxAmount' => 0.92,
+                'TaxRatePercent' => 14.0,
+                'TaxableAmount' => 9.12,
+                'TaxAmount' => 1.28,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -2843,7 +2843,7 @@ class GroschenIntegrationTest extends TestCase
     public function test_getting_tax_rate()
     {
         // Hardback
-        $this->assertSame(10.00, $this->groschen->getTaxRate());
+        $this->assertSame(14.00, $this->groschen->getTaxRate());
 
         // Digital product
         $groschen = new Groschen('9789510435199');
@@ -2873,14 +2873,22 @@ class GroschenIntegrationTest extends TestCase
             ->where('salesOutletId', 'ELS');
 
         $elisaKirjaKuukausitilaus = $groschen->getDistributionChannels()
-            ->where('channel', 'Elisa Kirja Kuukausitilau')
+            ->where('channel', 'Elisa Kirja Kuukausitilaus')
             ->where('channelType', 'Subscription')
             ->where('hasRights', false)
             ->where('distributionAllowed', false)
             ->where('salesOutletId', 'ELS');
 
+        $almaTalent = $groschen->getDistributionChannels()
+            ->where('channel', 'Alma Talent')
+            ->where('channelType', 'Subscription')
+            ->where('hasRights', false)
+            ->where('distributionAllowed', false)
+            ->where('salesOutletId', 'ALT');
+
         $this->assertCount(0, $elisa->toArray());
         $this->assertCount(0, $elisaKirjaKuukausitilaus->toArray());
+        $this->assertCount(0, $almaTalent->toArray());
 
         $bookbeat = $groschen->getDistributionChannels()
             ->where('channel', 'BookBeat')
