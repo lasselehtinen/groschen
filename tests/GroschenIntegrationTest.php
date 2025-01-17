@@ -1313,7 +1313,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function test_getting_price()
     {
-        $this->assertSame(17.88, $this->groschen->getPrice());
+        $this->assertSame(18.53, $this->groschen->getPrice());
     }
 
     /**
@@ -1360,7 +1360,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;niksit;kodinhoito;metsänhoito;kalastus;kunnossapito;rakennukset;autot;huolto;ironia;novellit;kirjallisuuspalkinnot;2011;kiitos kirjasta -mitali;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;äänikirjat;niksit;kodinhoito;metsänhoito;kalastus;kunnossapito;rakennukset;autot;huolto;ironia;kirjallisuuspalkinnot;2011;kiitos kirjasta -mitali;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet;cd-rom-levyt'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
@@ -1368,7 +1368,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertNotContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'tieto-finlandia-palkinto;1939-1945;sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;lapin sota;sotahistoria;suomi;äänikirjat;2013;kirjallisuuspalkinnot;sodankäynti;sotarintama'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'tieto-finlandia-palkinto;sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;lapin sota;sotahistoria;sodankäynti;suomi;1939-1945;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
@@ -1932,13 +1932,13 @@ class GroschenIntegrationTest extends TestCase
         // Suppliers net price including tax
         $suppliersNetPriceIncludingTax = [
             'PriceType' => '07',
-            'PriceAmount' => 17.88,
+            'PriceAmount' => 18.53,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 10.0,
+                'TaxRatePercent' => 14.0,
                 'TaxableAmount' => 16.25,
-                'TaxAmount' => 1.63,
+                'TaxAmount' => 2.28,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -2011,13 +2011,13 @@ class GroschenIntegrationTest extends TestCase
         // Suppliers net price including tax
         $suppliersNetPriceIncludingTax = [
             'PriceType' => '07',
-            'PriceAmount' => 6.12,
+            'PriceAmount' => 6.34,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 10.0,
+                'TaxRatePercent' => 14.0,
                 'TaxableAmount' => 5.56,
-                'TaxAmount' => 0.56,
+                'TaxAmount' => 0.78,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -2052,13 +2052,13 @@ class GroschenIntegrationTest extends TestCase
         // Publishers recommended retail price including tax
         $publishersRecommendedRetailPriceIncludingTax = [
             'PriceType' => '42',
-            'PriceAmount' => 20.9,
+            'PriceAmount' => 21.9,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 10.0,
-                'TaxableAmount' => 19.0,
-                'TaxAmount' => 1.9,
+                'TaxRatePercent' => 14.0,
+                'TaxableAmount' => 19.21,
+                'TaxAmount' => 2.69,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -2847,7 +2847,7 @@ class GroschenIntegrationTest extends TestCase
 
         // Digital product
         $groschen = new Groschen('9789510435199');
-        $this->assertSame(10.00, $groschen->getTaxRate());
+        $this->assertSame(14.00, $groschen->getTaxRate());
 
         // Product with 25.5% VAT
         $groschen = new Groschen('9789510338728');
@@ -3517,10 +3517,10 @@ class GroschenIntegrationTest extends TestCase
     public function test_getting_contacts()
     {
         $contact = [
-            'id' => 57428,
-            'firstName' => 'Aleksi',
-            'lastName' => 'Neuvonen',
-            'supplierId' => 20004783,
+            'id' => 67435,
+            'firstName' => 'Jari',
+            'lastName' => 'Louhelainen',
+            'supplierId' => 20009931,
         ];
 
         $this->assertContains($contact, $this->groschen->getContacts());
@@ -4420,15 +4420,15 @@ class GroschenIntegrationTest extends TestCase
     public function test_getting_calculated_publisher_retail_price()
     {
         // Hardback
-        $this->assertSame(21.9, $this->groschen->getCalculatedPublisherRetailPrice());
+        $this->assertSame(22.9, $this->groschen->getCalculatedPublisherRetailPrice());
 
         // Pocket book
         $groschen = new Groschen('9789510407554');
-        $this->assertSame(10.1, $groschen->getCalculatedPublisherRetailPrice());
+        $this->assertSame(10.4, $groschen->getCalculatedPublisherRetailPrice());
 
         // E-book
         $groschen = new Groschen('9789510369654');
-        $this->assertSame(7.4, $groschen->getCalculatedPublisherRetailPrice());
+        $this->assertSame(7.6, $groschen->getCalculatedPublisherRetailPrice());
 
         // Product without any price
         $groschen = new Groschen('9789510429259');
