@@ -4565,4 +4565,18 @@ class GroschenIntegrationTest extends TestCase
         // Esimerkki sellaisesta jossa on audiota
 
     }
+
+    /**
+     * Test that we get either E200 or E201 for reflowable / fixed layout ePub3s
+     *
+     * @return void
+     */
+    public function test_getting_reflowable_or_fixed_format_in_product_form_details()
+    {
+        $groschen = new Groschen('9789528501008');
+        $this->assertContains('E200', $groschen->getProductFormDetails());
+
+        $groschen = new Groschen('9789510508374');
+        $this->assertContains('E201', $groschen->getProductFormDetails());
+    }
 }

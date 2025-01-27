@@ -376,6 +376,15 @@ class Groschen implements ProductInterface
             $productFormDetails->push('A305');
         }
 
+        // Reflowable / Fixed layout ePub 3's
+        if ($this->getTechnicalBindingType() === 'ePub3 – Reflowable') {
+            $productFormDetails->push('E200');
+        }
+
+        if ($this->getTechnicalBindingType() === 'ePub3 – Fixed Format') {
+            $productFormDetails->push('E201');
+        }
+
         // Add technical detail if product is not immaterial
         if ($this->isImmaterial() === false) {
             // Headband
