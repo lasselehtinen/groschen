@@ -3922,7 +3922,7 @@ class Groschen implements ProductInterface
         }
 
         // ePub 3 with extra audio
-        if ($this->getTechnicalBindingType() === 'EPUB3' && (bool) $this->product->activePrint->ebookHasAudioFile === true) {
+        if ($this->getProductType() === 'ePub3' && (bool) $this->product->activePrint->ebookHasAudioFile === true) {
             $editionTypes->push(['EditionType' => 'ENH']);
         }
 
@@ -4038,7 +4038,7 @@ class Groschen implements ProductInterface
         // eBook 3s with or without audio
         if ($this->getProductType() === 'ePub3') {
             // Add audio book as a secondary content type if ePub 3 contains audio
-            if ($this->getTechnicalBindingType() === 'EPUB3' && (bool) $this->product->activePrint->ebookHasAudioFile === true) {
+            if ((bool) $this->product->activePrint->ebookHasAudioFile === true) {
                 $contentTypes->push([
                     'ContentType' => '01',
                     'Primary' => false,
