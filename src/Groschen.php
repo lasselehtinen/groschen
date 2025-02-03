@@ -3921,6 +3921,15 @@ class Groschen implements ProductInterface
             $editionTypes->push(['EditionType' => 'MDT']);
         }
 
+        // Selkokirja or Easy-to-read is determined from Thema interest age codes
+        $hasEasyToReadAgeGroups = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->contains(function ($subject, $key) {
+            return in_array($subject['SubjectCode'], ['5AR', '5AX', '5AZ']);
+        });
+
+        if ($hasEasyToReadAgeGroups) {
+            $editionTypes->push(['EditionType' => 'SMP']);
+        }
+
         // ePub 3 with extra audio
         if ($this->getProductType() === 'ePub3' && (bool) $this->product->activePrint->ebookHasAudioFile === true) {
             $editionTypes->push(['EditionType' => 'ENH']);

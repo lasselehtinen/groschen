@@ -3669,6 +3669,11 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789520405724');
         $this->assertCount(1, $groschen->getEditionTypes());
         $this->assertContains(['EditionType' => 'ENH'], $groschen->getEditionTypes());
+
+        // Selkokirja
+        $groschen = new Groschen('9789520475925');
+        $this->assertCount(1, $groschen->getEditionTypes());
+        $this->assertContains(['EditionType' => 'SMP'], $groschen->getEditionTypes());
     }
 
     /**
