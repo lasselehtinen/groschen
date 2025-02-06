@@ -875,24 +875,6 @@ class Groschen implements ProductInterface
                 }
             })->toArray();
 
-            // Add contributor dates
-            $contributorData['ContributorDates'] = [];
-
-            if (property_exists($contact, 'birthDay')) {
-                $birthDay = DateTime::createFromFormat('!Y-m-d', substr($contact->birthDay, 0, 10));
-
-                array_push($contributorData['ContributorDates'], [
-                    'ContributorDateRole' => '50',
-                    'Date' => $birthDay->format('Y'),
-                    'DateFormat' => '05',
-                ]);
-            }
-
-            // Add ISNI if exists
-            if (property_exists($contact, 'isni')) {
-                $contributorData['ISNI'] = $contact->isni;
-            }
-
             // Add to collection
             $contributors->push($contributorData);
 
