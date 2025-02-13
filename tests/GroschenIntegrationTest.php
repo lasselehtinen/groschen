@@ -3323,11 +3323,6 @@ class GroschenIntegrationTest extends TestCase
             'SupplierRole' => '03',
             'SupplierIdentifiers' => [
                 [
-                    'SupplierIDType' => '01',
-                    'IDTypeName' => 'BR-ID',
-                    'IDValue' => 10012,
-                ],
-                [
                     'SupplierIDType' => '06',
                     'IDTypeName' => 'GLN',
                     'IDValue' => 6418616999993,
@@ -3359,11 +3354,6 @@ class GroschenIntegrationTest extends TestCase
         $supplier = [
             'SupplierRole' => '03',
             'SupplierIdentifiers' => [
-                [
-                    'SupplierIDType' => '01',
-                    'IDTypeName' => 'BR-ID',
-                    'IDValue' => 10012,
-                ],
                 [
                     'SupplierIDType' => '06',
                     'IDTypeName' => 'GLN',
@@ -3398,11 +3388,6 @@ class GroschenIntegrationTest extends TestCase
             'SupplierRole' => '03',
             'SupplierIdentifiers' => [
                 [
-                    'SupplierIDType' => '01',
-                    'IDTypeName' => 'BR-ID',
-                    'IDValue' => 10012,
-                ],
-                [
                     'SupplierIDType' => '06',
                     'IDTypeName' => 'GLN',
                     'IDValue' => 6418616999993,
@@ -3435,11 +3420,6 @@ class GroschenIntegrationTest extends TestCase
         $supplier = [
             'SupplierRole' => '03',
             'SupplierIdentifiers' => [
-                [
-                    'SupplierIDType' => '01',
-                    'IDTypeName' => 'BR-ID',
-                    'IDValue' => 10012,
-                ],
                 [
                     'SupplierIDType' => '06',
                     'IDTypeName' => 'GLN',

@@ -3435,11 +3435,6 @@ class Groschen implements ProductInterface
                 'SupplierRole' => '03',
                 'SupplierIdentifiers' => [
                     [
-                        'SupplierIDType' => '01',
-                        'IDTypeName' => 'BR-ID',
-                        'IDValue' => 10012,
-                    ],
-                    [
                         'SupplierIDType' => '06',
                         'IDTypeName' => 'GLN',
                         'IDValue' => 6418616999993,
@@ -3484,11 +3479,6 @@ class Groschen implements ProductInterface
                 // Storia identifiers
                 $supplierIdentifiers = [
                     [
-                        'SupplierIDType' => '01',
-                        'IDTypeName' => 'BR-ID',
-                        'IDValue' => 10012,
-                    ],
-                    [
                         'SupplierIDType' => '06',
                         'IDTypeName' => 'GLN',
                         'IDValue' => 6418616999993,
@@ -3527,15 +3517,6 @@ class Groschen implements ProductInterface
         $supplierIdentifiers = [];
 
         if (is_object($json->data->stock_location)) {
-            // Bokinfo ID
-            if (! empty($json->data->stock_location->bokinfo_id)) {
-                $supplierIdentifiers[] = [
-                    'SupplierIDType' => '01',
-                    'IDTypeName' => 'BR-ID',
-                    'IDValue' => $json->data->stock_location->bokinfo_id,
-                ];
-            }
-
             // GLN number
             if (! empty($json->data->stock_location->gln)) {
                 $supplierIdentifiers[] = [
