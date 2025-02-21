@@ -335,7 +335,7 @@ class GroschenIntegrationTest extends TestCase
 
         $groschen = new Groschen('9789523521834');
         $this->assertContains('B305', $groschen->getProductFormDetails());
-        $this->assertContains('B504', $groschen->getProductFormDetails());
+        $this->assertNotContains('B504', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('6430060036048');
         $this->assertContains('B506', $groschen->getProductFormDetails());
