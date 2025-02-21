@@ -1931,6 +1931,7 @@ class Groschen implements ProductInterface
             'cf_mockingbirdContactId',
             'copyright',
             'creatorName',
+            'versionNumber',
         ];
 
         // Elvis uses mime types, so we need mapping table for ResourceVersionFeatureValue codelist
@@ -1963,7 +1964,7 @@ class Groschen implements ProductInterface
         // Add hits to collection
         foreach ($hits as $hit) {
             // Check that we have all the required metadata fields
-            foreach (array_diff($metadataFields, ['cf_mockingbirdContactId', 'copyright', 'creatorName']) as $requiredMetadataField) {
+            foreach (array_diff($metadataFields, ['cf_mockingbirdContactId', 'copyright', 'creatorName', 'versionNumber']) as $requiredMetadataField) {
                 if (property_exists($hit->metadata, $requiredMetadataField) === false) {
                     throw new Exception('The required metadata field '.$requiredMetadataField.' does not exist in Elvis.');
                 }
@@ -2023,7 +2024,7 @@ class Groschen implements ProductInterface
                             'FeatureValue' => $hit->metadata->fileSize->value,
                         ],
                     ],
-                    'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl),
+                    'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl, $hit->metadata->versionNumber),
                 ],
             ];
 
@@ -2089,13 +2090,19 @@ class Groschen implements ProductInterface
      * Get the authCred URL for the Elvis links
      *
      * @param  string  $url
+     * @param  int  $versionNumber
      * @return string
      */
-    public function getAuthCredUrl($url)
+    public function getAuthCredUrl($url, $versionNumber)
     {
         // Add authCred to query parameters
         $uri = Uri::createFromString($url);
         $newUri = UriModifier::mergeQuery($uri, 'authcred='.base64_encode(config('groschen.elvis.username').':'.config('groschen.elvis.password')));
+
+        // Add version number if larger than 1
+        if ($versionNumber > 1) {
+            $newUri = UriModifier::mergeQuery($newUri, 'version='.$versionNumber);
+        }
 
         // Remove the underscore version parameter
         $newUri = UriModifier::removeParams($newUri, '_');

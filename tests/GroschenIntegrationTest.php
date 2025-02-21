@@ -2093,6 +2093,55 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test version is added to cover image link in supporting resources
+     *
+     * @group SupportingResources
+     *
+     * @return void
+     */
+    public function test_version_is_added_to_cover_image_link_in_supporting_resources()
+    {
+        $supportingResource = [
+            'ResourceContentType' => '01',
+            'ContentAudience' => '00',
+            'ResourceMode' => '03',
+            'ResourceVersion' => [
+                'ResourceForm' => '02',
+                'ResourceVersionFeatures' => [
+                    [
+                        'ResourceVersionFeatureType' => '01',
+                        'FeatureValue' => 'D502',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '02',
+                        'FeatureValue' => 1400,
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '03',
+                        'FeatureValue' => 1400,
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '04',
+                        'FeatureValue' => '9789510415665_frontcover_final.jpg',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '05',
+                        'FeatureValue' => '0.4',
+                    ],
+                    [
+                        'ResourceVersionFeatureType' => '07',
+                        'FeatureValue' => 373279,
+                    ],
+                ],
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/2WF93gVGadOBi68p9stOE8/*/9789510415665_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D&version=2',
+            ],
+        ];
+
+        $groschen = new Groschen('9789510415665');
+        $this->assertContains($supportingResource, $groschen->getSupportingResources());
+    }
+
+    /**
      * Test getting cover image for Disney which is not brand based
      *
      * @group SupportingResources
