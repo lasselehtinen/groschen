@@ -4607,4 +4607,37 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510508374');
         $this->assertContains('E201', $groschen->getProductFormDetails());
     }
+
+    /**
+     * Test getting AI contributor
+     *
+     * @return void
+     */
+    public function test_ai_contributor_is_handled_correctly()
+    {
+        $groschen = new Groschen('9789520476434');
+
+        // Translator
+        $translator = [
+            'Identifier' => 76348,
+            'SequenceNumber' => 3,
+            'ContributorRole' => 'B06',
+            'UnnamedPersons' => '09',
+            'BiographicalNote' => null,
+            'WebSites' => [],
+        ];
+
+        // Cover design or artwork by
+        $coverDesigner = [
+            'Identifier' => 76348,
+            'SequenceNumber' => 4,
+            'ContributorRole' => 'A36',
+            'UnnamedPersons' => '09',
+            'BiographicalNote' => null,
+            'WebSites' => [],
+        ];
+
+        $this->assertContains($translator, $groschen->getContributors());
+        $this->assertContains($coverDesigner, $groschen->getContributors());
+    }
 }

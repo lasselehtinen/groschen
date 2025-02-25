@@ -799,9 +799,11 @@ class Groschen implements ProductInterface
                 }
             } else {
                 // Handle PersonNameInverted and KeyNames differently depending if they have the lastname or not
-                if (empty($contributor->contact->lastName) && ! empty($contributor->contact->firstName)) {
+                if (empty($contributor->contact->lastName) && ! empty($contributor->contact->firstName) && $contributor->contact->firstName !== 'Tekoäly') {
                     $contributorData['PersonName'] = trim($contributor->contact->firstName);
                     $contributorData['KeyNames'] = trim($contributor->contact->firstName);
+                } elseif ($contributor->contact->firstName === 'Tekoäly' && empty($contributor->contact->lastName)) {
+                    $contributorData['UnnamedPersons'] = '09';
                 } else {
                     $contributorData['PersonName'] = trim($contributor->contact->firstName).' '.trim($contributor->contact->lastName);
                     $contributorData['PersonNameInverted'] = trim($contributor->contact->lastName).', '.trim($contributor->contact->firstName);
