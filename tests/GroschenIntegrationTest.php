@@ -2082,10 +2082,14 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 1738016,
+                        'FeatureValue' => 1738358,
                     ],
                 ],
-                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
+                'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D&version=2',
+                'ContentDate' => [
+                    'ContentDateRole' => '01',
+                    'Date' => '20250225',
+                ],
             ],
         ];
 
@@ -2134,6 +2138,10 @@ class GroschenIntegrationTest extends TestCase
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/2WF93gVGadOBi68p9stOE8/*/9789510415665_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D&version=2',
+                'ContentDate' => [
+                    'ContentDateRole' => '01',
+                    'Date' => '20250213',
+                ],
             ],
         ];
 
@@ -2200,6 +2208,10 @@ class GroschenIntegrationTest extends TestCase
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/D6hl5y3JKlR9FqRtBpClWq/*/Max_Manner_c_Nauska_6170.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
+                'ContentDate' => [
+                    'ContentDateRole' => '01',
+                    'Date' => '20241001',
+                ],
             ],
             'ResourceFeatures' => [
                 [
@@ -2281,6 +2293,10 @@ class GroschenIntegrationTest extends TestCase
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/EnfeCLahawWASi-G08b4bh/*/9789522796714_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
+                'ContentDate' => [
+                    'ContentDateRole' => '01',
+                    'Date' => '20200512',
+                ],
             ],
         ];
 
@@ -2317,6 +2333,10 @@ class GroschenIntegrationTest extends TestCase
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/8V4HW-00aJUASGSHpJCNB1/*/9789522796714_frontcover_final_3d.png?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
+                'ContentDate' => [
+                    'ContentDateRole' => '01',
+                    'Date' => '20200512',
+                ],
             ],
         ];
 

@@ -1932,6 +1932,7 @@ class Groschen implements ProductInterface
             'copyright',
             'creatorName',
             'versionNumber',
+            'fileModified',
         ];
 
         // Elvis uses mime types, so we need mapping table for ResourceVersionFeatureValue codelist
@@ -1964,7 +1965,7 @@ class Groschen implements ProductInterface
         // Add hits to collection
         foreach ($hits as $hit) {
             // Check that we have all the required metadata fields
-            foreach (array_diff($metadataFields, ['cf_mockingbirdContactId', 'copyright', 'creatorName', 'versionNumber']) as $requiredMetadataField) {
+            foreach (array_diff($metadataFields, ['cf_mockingbirdContactId', 'copyright', 'creatorName', 'versionNumber', 'assetModified']) as $requiredMetadataField) {
                 if (property_exists($hit->metadata, $requiredMetadataField) === false) {
                     throw new Exception('The required metadata field '.$requiredMetadataField.' does not exist in Elvis.');
                 }
@@ -2025,6 +2026,10 @@ class Groschen implements ProductInterface
                         ],
                     ],
                     'ResourceLink' => $this->getAuthCredUrl($hit->originalUrl, $hit->metadata->versionNumber),
+                    'ContentDate' => [
+                        'ContentDateRole' => '01',
+                        'Date' => DateTime::createFromFormat('!Y-m-d', substr($hit->metadata->fileModified->formatted, 0, 10))->format('Ymd'),
+                    ],
                 ],
             ];
 
