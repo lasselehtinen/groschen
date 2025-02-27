@@ -4294,18 +4294,17 @@ class Groschen implements ProductInterface
             $bibliographicCharacters = explode(';', $this->product->bibliographicCharacters);
 
             foreach ($bibliographicCharacters as $bibliographicCharacter) {
-                $parts = explode(' ', $bibliographicCharacter);
-                $lastname = array_pop($parts);
-                $firstname = implode(' ', $parts);
+                $lastname = Str::afterLast($bibliographicCharacter, ' ');
+                $firstnames = Str::beforeLast($bibliographicCharacter, ' ');
 
                 // Add to collection
-                if (! empty($firstname)) {
+                if ($lastname !== $bibliographicCharacter && $firstnames !== $bibliographicCharacter) {
                     $namesAsSubjects->push([
                         'NameType' => '00',
                         'PersonName' => $bibliographicCharacter,
-                        'PersonNameInverted' => $lastname.', '.$firstname,
+                        'PersonNameInverted' => $lastname.', '.$firstnames,
                         'KeyNames' => $lastname,
-                        'NamesBeforeKey' => $firstname,
+                        'NamesBeforeKey' => $firstnames,
                     ]);
                 } else {
                     $namesAsSubjects->push([

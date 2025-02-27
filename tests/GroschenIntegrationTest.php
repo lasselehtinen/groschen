@@ -4244,6 +4244,26 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting names as subjects for name with multiple parts
+     *
+     * @return void
+     */
+    public function test_getting_names_as_subjects_for_name_with_multiple_parts()
+    {
+        // Biography
+        $biography = [
+            'NameType' => '00',
+            'PersonName' => 'Adolf Fredrik Munck',
+            'PersonNameInverted' => 'Munck, Adolf Fredrik',
+            'KeyNames' => 'Munck',
+            'NamesBeforeKey' => 'Adolf Fredrik',
+        ];
+
+        $groschen = new Groschen('9789528500797');
+        $this->assertContains($biography, $groschen->getNamesAsSubjects());
+    }
+
+    /**
      * Test that prizes are listed in keywords
      *
      * @return void
