@@ -4629,11 +4629,11 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting AI contributor
+     * Test getting AI contributors
      *
      * @return void
      */
-    public function test_ai_contributor_is_handled_correctly()
+    public function test_ai_contributors_are_handled_correctly()
     {
         $groschen = new Groschen('9789520476434');
 
@@ -4659,5 +4659,115 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($translator, $groschen->getContributors());
         $this->assertContains($coverDesigner, $groschen->getContributors());
+    }
+
+    /**
+     * Test that AI audiobook reader roles are handled correctly
+     *
+     * @return void
+     */
+    public function test_ai_audiobook_readers_are_handled_correctly()
+    {
+        $groschen = new Groschen('9789510441497');
+
+        // AI Reader – male
+        $readerMale = [
+            'Identifier' => 76353,
+            'SequenceNumber' => 1,
+            'ContributorRole' => 'E07',
+            'UnnamedPersons' => '05',
+            'BiographicalNote' => null,
+            'WebSites' => [],
+        ];
+
+        $this->assertContains($readerMale, $groschen->getContributors());
+
+        // AI Reader – female
+        $readerFemale = [
+            'Identifier' => 76352,
+            'SequenceNumber' => 2,
+            'ContributorRole' => 'E07',
+            'UnnamedPersons' => '06',
+            'BiographicalNote' => null,
+            'WebSites' => [],
+        ];
+
+        $this->assertContains($readerFemale, $groschen->getContributors());
+
+        // AI Reader – unspecified
+        $readerUnspecified = [
+            'Identifier' => 76354,
+            'SequenceNumber' => 3,
+            'ContributorRole' => 'E07',
+            'UnnamedPersons' => '07',
+            'BiographicalNote' => null,
+            'WebSites' => [],
+        ];
+
+        $this->assertContains($readerUnspecified, $groschen->getContributors());
+
+        // AI Reader - voice replica
+        $readerVoiceReplica = [
+            'Identifier' => 76363,
+            'SequenceNumber' => 4,
+            'ContributorRole' => 'E07',
+            'UnnamedPersons' => '08',
+            'AlternativeName' => [
+                'NameType' => '04',
+                'PersonName' => 'Teuvo Testi',
+            ],
+            'BiographicalNote' => null,
+            'WebSites' => [],
+        ];
+
+        $this->assertContains($readerVoiceReplica, $groschen->getContributors());
+
+        // AI Reader - named male voice
+        $readerMaleNamed = [
+            'Identifier' => 76364,
+            'SequenceNumber' => 5,
+            'ContributorRole' => 'E07',
+            'UnnamedPersons' => '05',
+            'AlternativeName' => [
+                'NameType' => '07',
+                'PersonName' => 'Arto',
+            ],
+            'BiographicalNote' => null,
+            'WebSites' => [],
+        ];
+
+        $this->assertContains($readerMaleNamed, $groschen->getContributors());
+
+        // AI Reader - named female voice
+        $readerFemaleNamed = [
+            'Identifier' => 76365,
+            'SequenceNumber' => 6,
+            'ContributorRole' => 'E07',
+            'UnnamedPersons' => '06',
+            'AlternativeName' => [
+                'NameType' => '07',
+                'PersonName' => 'Armi',
+            ],
+            'BiographicalNote' => null,
+            'WebSites' => [],
+        ];
+
+        $this->assertContains($readerFemaleNamed, $groschen->getContributors());
+
+        // AI Reader - Unspecified named
+        $readerUnspecifiedNamed = [
+            'Identifier' => 76366,
+            'SequenceNumber' => 7,
+            'ContributorRole' => 'E07',
+            'UnnamedPersons' => '07',
+            'AlternativeName' => [
+                'NameType' => '07',
+                'PersonName' => 'Alex',
+            ],
+            'BiographicalNote' => null,
+            'WebSites' => [],
+        ];
+
+        $this->assertContains($readerUnspecifiedNamed, $groschen->getContributors());
     }
 }
