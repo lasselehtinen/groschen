@@ -799,11 +799,55 @@ class Groschen implements ProductInterface
                 }
             } else {
                 // Handle PersonNameInverted and KeyNames differently depending if they have the lastname or not
-                if (empty($contributor->contact->lastName) && ! empty($contributor->contact->firstName) && $contributor->contact->firstName !== 'Tekoäly') {
+                if (empty($contributor->contact->lastName) && ! empty($contributor->contact->firstName) && Str::contains($contributor->contact->firstName, 'Tekoäly') === false) {
                     $contributorData['PersonName'] = trim($contributor->contact->firstName);
                     $contributorData['KeyNames'] = trim($contributor->contact->firstName);
+                    // AI with non-audiobook reader role
                 } elseif ($contributor->contact->firstName === 'Tekoäly' && empty($contributor->contact->lastName)) {
                     $contributorData['UnnamedPersons'] = '09';
+                    // AI with general male voice
+                } elseif ($contributor->contact->firstName === 'Tekoäly, miesääni') {
+                    $contributorData['UnnamedPersons'] = '05';
+                    // AI with general female voice
+                } elseif ($contributor->contact->firstName === 'Tekoäly, naisääni') {
+                    $contributorData['UnnamedPersons'] = '06';
+                    // AI with unspecisified voice
+                } elseif ($contributor->contact->firstName === 'Tekoäly, määrittelemätön ääni') {
+                    $contributorData['UnnamedPersons'] = '07';
+                    // AI Reader - voice replica
+                } elseif ($contributor->role->name === 'AI Reader – voice replica') {
+                    $contributorData['UnnamedPersons'] = '08';
+
+                    // Add AlternativeName
+                    $contributorData['AlternativeName'] = [
+                        'NameType' => '04',
+                        'PersonName' => Str::after($contributor->contact->firstName, 'Tekoäly '),
+                    ];
+                    // AI Reader - Named male
+                } elseif ($contributor->role->name === 'AI Reader – male' && $contributor->contact->firstName != 'Tekoäly, miesääni') {
+                    $contributorData['UnnamedPersons'] = '05';
+
+                    // Add AlternativeName
+                    $contributorData['AlternativeName'] = [
+                        'NameType' => '07',
+                        'PersonName' => Str::after($contributor->contact->firstName, 'Tekoäly '),
+                    ];
+                } elseif ($contributor->role->name === 'AI Reader – female' && $contributor->contact->firstName != 'Tekoäly, naisääni') {
+                    $contributorData['UnnamedPersons'] = '06';
+
+                    // Add AlternativeName
+                    $contributorData['AlternativeName'] = [
+                        'NameType' => '07',
+                        'PersonName' => Str::after($contributor->contact->firstName, 'Tekoäly '),
+                    ];
+                } elseif ($contributor->role->name === 'AI Reader – unspecified' && $contributor->contact->firstName != 'Tekoäly, määrittelemätön ääni') {
+                    $contributorData['UnnamedPersons'] = '07';
+
+                    // Add AlternativeName
+                    $contributorData['AlternativeName'] = [
+                        'NameType' => '07',
+                        'PersonName' => Str::after($contributor->contact->firstName, 'Tekoäly '),
+                    ];
                 } else {
                     $contributorData['PersonName'] = trim($contributor->contact->firstName).' '.trim($contributor->contact->lastName);
                     $contributorData['PersonNameInverted'] = trim($contributor->contact->lastName).', '.trim($contributor->contact->firstName);
