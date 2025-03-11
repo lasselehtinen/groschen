@@ -1312,7 +1312,7 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Get the products subjects, like library class, Thema, BIC, BISAC etc.
+     * Get the products subjects, like library class, Thema, BIC etc.
      *
      * @return Collection
      */
@@ -1350,9 +1350,6 @@ class Groschen implements ProductInterface
                 'SubjectCode' => $this->product->subGroup->id,
                 'SubjectHeadingText' => trim($this->product->subGroup->name),
             ]);
-
-            // BISAC Subject Heading
-            $subjects->push(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => $this->getBisacCode()]);
 
             // BIC subject category
             $subjects->push(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => $this->getBicCode()]);
@@ -2243,70 +2240,6 @@ class Groschen implements ProductInterface
         $purifier = new HTMLPurifier($config);
 
         return $purifier->purify($text);
-    }
-
-    /**
-     * Returns the BISAC code equivalent for Mockingbird sub-group
-     *
-     * @return string|null
-     */
-    public function getBisacCode()
-    {
-        // Mapping table
-        $subGroupToBisacMapping = [
-            '1' => 'LCO010000',
-            '2' => 'FIC009000',
-            '3' => 'BIO000000',
-            '4' => 'HIS000000',
-            '5' => 'HUM000000',
-            '6' => 'HEA000000',
-            '7' => 'HIS037080',
-            '8' => 'FIC030000',
-            '9' => 'CRA000000',
-            '10' => 'PSY000000',
-            '11' => 'FIC004000',
-            '12' => 'HOM000000',
-            '14' => 'JUV000000',
-            '15' => 'JUV000000',
-            '16' => 'JNF000000',
-            '17' => 'NAT000000',
-            '19' => 'TRV000000',
-            '20' => 'MUS000000',
-            '21' => 'PER016000',
-            '22' => 'FIC029000',
-            '23' => 'JUV000000',
-            '24' => 'FIC000000',
-            '26' => 'GAR000000',
-            '27' => 'POE000000',
-            '28' => 'CKB000000',
-            '29' => 'FIC010000',
-            '30' => 'CGN000000',
-            '31' => 'FIC028000',
-            '32' => 'ART000000',
-            '33' => 'BUS000000',
-            '34' => 'REL000000',
-            '35' => 'FIC027000',
-            '36' => 'SOC000000',
-            '38' => 'SCI000000',
-            '39' => 'HOM004000',
-            '40' => 'JNF001000',
-            '41' => 'JUV000000',
-            '43' => 'SPO000000',
-            '44' => 'FIC010000',
-            '45' => 'MUS037000',
-            '46' => 'SEL000000',
-            '47' => 'FIC015000',
-            '48' => 'SPO000000',
-            '49' => 'HIS027000',
-            '50' => 'PHI000000',
-            '51' => 'CGN004050',
-        ];
-
-        if (! array_key_exists($this->product->subGroup->id, $subGroupToBisacMapping)) {
-            return null;
-        }
-
-        return $subGroupToBisacMapping[$this->product->subGroup->id];
     }
 
     /**
