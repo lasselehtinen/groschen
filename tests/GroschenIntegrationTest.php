@@ -4770,4 +4770,19 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($readerUnspecifiedNamed, $groschen->getContributors());
     }
+
+    public function test_thema_is_mapped_to_bic_correctly()
+    {
+        $testCases = [
+            9789510504055 => 'ATB',
+            9789510504055 => 'DN',
+            9789510504048 => 'FF',
+            9789510506516 => 'JFFH1',
+        ];
+
+        foreach ($testCases as $gtin => $expectedBicCode) {
+            $groschen = new Groschen($gtin);
+            $this->assertContains($expectedBicCode, $groschen->getBicCodes());
+        }
+    }
 }
