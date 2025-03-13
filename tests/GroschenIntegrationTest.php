@@ -4241,7 +4241,27 @@ class GroschenIntegrationTest extends TestCase
 
         $groschen = new Groschen('9789510452097');
         $this->assertContains($biography, $groschen->getNamesAsSubjects());
+
+        // Biography with two names
+        $biographyOne = [
+            'NameType' => '00',
+            'PersonName' => 'Viki',
+            'PersonNameInverted' => 'Viki',
+            'KeyNames' => 'Viki',
+        ];
+
+        $biographyTwo = [
+            'NameType' => '00',
+            'PersonName' => 'Seksikäs-Suklaa',
+            'PersonNameInverted' => 'Seksikäs-Suklaa',
+            'KeyNames' => 'Seksikäs-Suklaa',
+        ];
+
+        $groschen = new Groschen('9789510472972');
+        $this->assertContains($biographyOne, $groschen->getNamesAsSubjects());
+        $this->assertContains($biographyTwo, $groschen->getNamesAsSubjects());
     }
+    
 
     /**
      * Test getting names as subjects for name with multiple parts
