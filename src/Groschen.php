@@ -7650,7 +7650,7 @@ class Groschen implements ProductInterface
         if (isset($this->product->bibliographicCharacters) && ! empty($this->product->bibliographicCharacters)) {
             $bibliographicCharacters = explode(';', $this->product->bibliographicCharacters);
             $bibliographicCharacters = array_map('trim', $bibliographicCharacters);
-            
+
             foreach ($bibliographicCharacters as $bibliographicCharacter) {
                 $lastname = Str::afterLast($bibliographicCharacter, ' ');
                 $firstnames = Str::beforeLast($bibliographicCharacter, ' ');

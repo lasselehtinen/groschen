@@ -4261,7 +4261,6 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains($biographyOne, $groschen->getNamesAsSubjects());
         $this->assertContains($biographyTwo, $groschen->getNamesAsSubjects());
     }
-    
 
     /**
      * Test getting names as subjects for name with multiple parts
