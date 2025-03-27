@@ -3598,7 +3598,7 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertTrue($comments->contains('type', 'general'), $comments);
         $this->assertFalse($comments->contains('type', 'insert/cover material'), $comments);
-        $this->assertContains(['type' => 'print order', 'comment' => 'On cover Dispersion varnish matt. Your offer: Offer – 22-533-1'], $comments);
+        $this->assertContains(['type' => 'print order', 'comment' => 'On cover and inside dispersion varnish matt. Boardbook binding, with two round corners'], $comments);
         $this->assertFalse($comments->contains('type', 'rights'), $comments);
     }
 
