@@ -1778,7 +1778,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Exclusive sales
-        $groschen = new Groschen('9789510491317');
+        $groschen = new Groschen('9789518467253');
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Sold out
@@ -3871,7 +3871,7 @@ class GroschenIntegrationTest extends TestCase
         // Text
         $this->assertContains([
             'ContentType' => '10',
-            'Primary' => false,
+            'Primary' => true,
         ], $groschen->getProductContentTypes());
 
         // Still images / graphics

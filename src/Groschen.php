@@ -7388,6 +7388,22 @@ class Groschen implements ProductInterface
                 ]);
             }
 
+            // Add Primary content type
+            if (property_exists($this->product->productionDetails, 'primaryContentTypeId') && ! empty($this->product->productionDetails->primaryContentTypeId)) {
+                $primaryContentTypesMapping = $this->getProductionDetailsOptions('primaryContentTypes');
+
+                $onixCode = $primaryContentTypesMapping->where('id', $this->product->productionDetails->primaryContentTypeId)->pluck('onixCode')->first();
+
+                if (is_null($onixCode)) {
+                    throw new Exception('Could not find mapping for content type with id '.$this->product->productionDetails->primaryContentTypeId);
+                }
+
+                $contentTypes->push([
+                    'ContentType' => $onixCode,
+                    'Primary' => true,
+                ]);
+            }
+
             // Check if we have spesific content types
             if (property_exists($this->product->productionDetails, 'contentTypeIds') && is_array($this->product->productionDetails->contentTypeIds) && ! empty($this->product->productionDetails->contentTypeIds)) {
                 // Get content types for mapping
