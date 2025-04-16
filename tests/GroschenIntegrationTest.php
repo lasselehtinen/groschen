@@ -748,6 +748,9 @@ class GroschenIntegrationTest extends TestCase
                     'Website' => 'http://leahmercer.com/',
                 ],
             ],
+            'SelectionLists' => [
+                'WS Bazarkustannus.fi julkiset tekijät',
+            ],
         ];
 
         $groschen = new Groschen('9789523762091');
@@ -780,6 +783,10 @@ class GroschenIntegrationTest extends TestCase
                     'Website' => 'https://twitter.com/TuomasKyr',
                 ],
             ],
+            'SelectionLists' => [
+                'WS Bazarkustannus.fi julkiset tekijät',
+                'wsoy.fi julkiset tekijät',
+            ],
         ];
 
         $this->assertContains($author, $this->groschen->getContributors());
@@ -795,6 +802,7 @@ class GroschenIntegrationTest extends TestCase
             'NamesBeforeKey' => 'Mika',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($graphicDesigner, $this->groschen->getContributors());
@@ -838,6 +846,7 @@ class GroschenIntegrationTest extends TestCase
             'KeyNames' => 'Sunaakugan',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($author, $groschen->getContributors());
@@ -865,6 +874,7 @@ class GroschenIntegrationTest extends TestCase
             'NamesBeforeKey' => 'Azmina',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -880,6 +890,7 @@ class GroschenIntegrationTest extends TestCase
             'NamesBeforeKey' => 'Anthony',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -907,6 +918,7 @@ class GroschenIntegrationTest extends TestCase
             'NamesBeforeKey' => 'Jari',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -922,6 +934,9 @@ class GroschenIntegrationTest extends TestCase
             'NamesBeforeKey' => 'Vepe',
             'BiographicalNote' => '<p><strong>Vepe Hännisen </strong>kynästä on syntynyt jo kolme romaania ja useita käsikirjoituksia kotimaisiin draamatuotantoihin. Hän kirjoittaa myös dokumentoivaa kaunokirjallisuutta. Hänninen on käsikirjoittanut TV-sarjoja <em>Kylmäverisesti sinun</em>, <em>Suojelijat</em>, <em>Kotikatu</em> ja <em>Helppo elämä</em>. Hänen kirjoittamansa TV-elokuva <em>Pieni pyhiinvaellus</em> voitti lukuisia kotimaisia ja kansainvälisiä palkintoja ja se on saanut jo lähes vakiintuneen aseman Ylen pääsiäisohjelmistossa. Samankaltaista juhlapyhäkertomuksen asemaa on lähestynyt myös elokuva <em>Joulukuusivarkaat</em>.</p> <p>Hännisen töitä on nähty oopperalavalla ja valkokankaallakin. Loppuvuodesta 2011 ensi-iltansa sai Arto Salmisen <em>Varasto</em>-romaaniin perustuva, Hännisen käsikirjoittama menestyselokuva.</p>',
             'WebSites' => [],
+            'SelectionLists' => [
+                'wsoy.fi julkiset tekijät',
+            ],
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -947,6 +962,7 @@ class GroschenIntegrationTest extends TestCase
             'NamesBeforeKey' => 'Virve',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($author, $groschen->getContributors(false));
@@ -971,6 +987,7 @@ class GroschenIntegrationTest extends TestCase
             'NamesBeforeKey' => 'Mikko',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertNotContains($editor, $groschen->getContributors(false));
@@ -1023,7 +1040,7 @@ class GroschenIntegrationTest extends TestCase
      *
      * @return void
      */
-    public function test_gettint_contributor_which_is_company()
+    public function test_getting_contributor_which_is_company()
     {
         $groschen = new Groschen('9789510483725');
 
@@ -1035,6 +1052,7 @@ class GroschenIntegrationTest extends TestCase
             'CorporateName' => 'L.O.L. Surprise!',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($corporateAuthor, $groschen->getContributors());
@@ -3920,6 +3938,9 @@ class GroschenIntegrationTest extends TestCase
                     'Website' => 'https://www.instagram.com/elinakilkku/',
                 ],
             ],
+            'SelectionLists' => [
+                'WS Bazarkustannus.fi julkiset tekijät',
+            ],
         ];
 
         $groschen = new Groschen('9789522796783');
@@ -3947,6 +3968,9 @@ class GroschenIntegrationTest extends TestCase
                     'WebsiteDescription' => 'Jenniemilia Facebookissa',
                     'Website' => 'https://www.facebook.com/jenniemiliaofficial',
                 ],
+            ],
+            'SelectionLists' => [
+                'wsoy.fi julkiset tekijät',
             ],
         ];
 
@@ -4403,6 +4427,9 @@ class GroschenIntegrationTest extends TestCase
             'NamesBeforeKey' => 'Lotta-Sofia',
             'BiographicalNote' => '<p><strong>Lotta-Sofia Saahko</strong> (FM) on monipuolinen taitaja, jolla on pitkä kokemus sekä musiikkiteatterilavoilta että YouTubesta, ja joka on kirjoittanut runoja pienestä pitäen. Hän on opiskellut ja työskennellyt koko elämänsä ulkomailla, ja siksi suomalaiset ja karjalaiset juurensa ovat hänelle tärkeitä. Kotimaan tukipisteenä on aina ollut Valkeakosken pappala, ja papasta ja Lotasta on tullut toimiva tiimi.</p>',
             'WebSites' => [],
+            'SelectionLists' => [
+                'tammi.fi julkiset tekijät',
+            ],
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -4664,6 +4691,7 @@ class GroschenIntegrationTest extends TestCase
             'UnnamedPersons' => '09',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         // Cover design or artwork by
@@ -4674,6 +4702,7 @@ class GroschenIntegrationTest extends TestCase
             'UnnamedPersons' => '09',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($translator, $groschen->getContributors());
@@ -4697,6 +4726,7 @@ class GroschenIntegrationTest extends TestCase
             'UnnamedPersons' => '05',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($readerMale, $groschen->getContributors());
@@ -4709,6 +4739,7 @@ class GroschenIntegrationTest extends TestCase
             'UnnamedPersons' => '06',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($readerFemale, $groschen->getContributors());
@@ -4721,6 +4752,7 @@ class GroschenIntegrationTest extends TestCase
             'UnnamedPersons' => '07',
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($readerUnspecified, $groschen->getContributors());
@@ -4737,6 +4769,7 @@ class GroschenIntegrationTest extends TestCase
             ],
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($readerVoiceReplica, $groschen->getContributors());
@@ -4753,6 +4786,7 @@ class GroschenIntegrationTest extends TestCase
             ],
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($readerMaleNamed, $groschen->getContributors());
@@ -4769,6 +4803,7 @@ class GroschenIntegrationTest extends TestCase
             ],
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($readerFemaleNamed, $groschen->getContributors());
@@ -4785,11 +4820,17 @@ class GroschenIntegrationTest extends TestCase
             ],
             'BiographicalNote' => null,
             'WebSites' => [],
+            'SelectionLists' => [],
         ];
 
         $this->assertContains($readerUnspecifiedNamed, $groschen->getContributors());
     }
 
+    /**
+     * Test that Thema is mapped to BIC correctly
+     *
+     * @return void
+     */
     public function test_thema_is_mapped_to_bic_correctly()
     {
         $testCases = [
@@ -4803,5 +4844,42 @@ class GroschenIntegrationTest extends TestCase
             $groschen = new Groschen($gtin);
             $this->assertContains($expectedBicCode, $groschen->getBicCodes());
         }
+    }
+
+    /**
+     * Test that description for collection/series is handled correctly
+     *
+     * @return void
+     */
+    public function test_description_for_collection_or_series_is_handled_correct()
+    {
+        $groschen = new Groschen('9789510479209');
+        $textContents = $groschen->getTextContents();
+
+        $this->assertTrue($textContents->contains('TextType', '17'), 'TextContents does not contain TextType 17');
+        $descriptionForCollection = $textContents->where('TextType', '17')->pluck('Text')->first();
+        $this->assertStringContainsString('Satu Rämön Hildur-sarja on Islannin syrjäisille vuonoille sijoittuva dekkarisarja', $descriptionForCollection);
+    }
+
+    /**
+     * Test getting contributor selection lists
+     *
+     * @return void
+     */
+    public function test_getting_contributor_selection_lists()
+    {
+        $groschen = new Groschen('9789523621237');
+
+        // Check that contact Jo Nesbo with contact ID 55545 exists
+        $this->assertTrue($groschen->getContributors()->contains('Identifier', 55545));
+
+        // Get contact
+        $contact = $groschen->getContributors()->where('Identifier', 55545)->first();
+
+        $this->assertArrayHasKey('SelectionLists', $contact);
+        $this->assertSame(2, count($contact['SelectionLists']));
+
+        $this->assertContains('wsoy.fi julkiset tekijät', $contact['SelectionLists']);
+        $this->assertContains('johnnykniga.fi julkiset tekijät', $contact['SelectionLists']);
     }
 }

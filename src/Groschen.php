@@ -921,6 +921,14 @@ class Groschen implements ProductInterface
                 }
             })->toArray();
 
+            // Add selection lists
+            $response = $this->searchClient->get('v2/contacts/'.$contributor->contact->id.'/lists');
+            $selectionLists = json_decode($response->getBody()->getContents());
+
+            $contributorData['SelectionLists'] = collect($selectionLists->lists)->map(function ($list, $key) {
+                return $list->name;
+            })->toArray();
+
             // Add to collection
             $contributors->push($contributorData);
 
@@ -1579,6 +1587,20 @@ class Groschen implements ProductInterface
                     'ContentAudience' => '00',
                     'Text' => $this->purifyHtml($reviewQuote->quote),
                     'SourceTitle' => $this->purifyHtml($reviewQuote->source),
+                ]);
+            }
+        }
+
+        // Description for collection
+        if (property_exists($this->product, 'series') && property_exists($this->product->series, 'id')) {
+            $response = $this->client->get('v1/series/'.$this->product->series->id);
+            $json = json_decode($response->getBody()->getContents());
+
+            if (property_exists($json, 'description') && ! empty($json->description)) {
+                $textContents->push([
+                    'TextType' => '17',
+                    'ContentAudience' => '00',
+                    'Text' => $this->purifyHtml($json->description),
                 ]);
             }
         }
