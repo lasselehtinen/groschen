@@ -929,6 +929,9 @@ class Groschen implements ProductInterface
                 return $list->name;
             })->toArray();
 
+            // Add contributorHasAuthorImage
+            $contributorData['HasAuthorImage'] = $contact->hasAuthorPhotographStandard;
+
             // Add to collection
             $contributors->push($contributorData);
 

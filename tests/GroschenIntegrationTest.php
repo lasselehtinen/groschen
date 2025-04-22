@@ -751,6 +751,7 @@ class GroschenIntegrationTest extends TestCase
             'SelectionLists' => [
                 'WS Bazarkustannus.fi julkiset tekijät',
             ],
+            'HasAuthorImage' => true,
         ];
 
         $groschen = new Groschen('9789523762091');
@@ -787,6 +788,7 @@ class GroschenIntegrationTest extends TestCase
                 'WS Bazarkustannus.fi julkiset tekijät',
                 'wsoy.fi julkiset tekijät',
             ],
+            'HasAuthorImage' => true,
         ];
 
         $this->assertContains($author, $this->groschen->getContributors());
@@ -803,6 +805,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($graphicDesigner, $this->groschen->getContributors());
@@ -847,6 +850,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($author, $groschen->getContributors());
@@ -875,6 +879,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -891,6 +896,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -919,6 +925,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -937,6 +944,7 @@ class GroschenIntegrationTest extends TestCase
             'SelectionLists' => [
                 'wsoy.fi julkiset tekijät',
             ],
+            'HasAuthorImage' => true,
         ];
 
         $this->assertContains($secondAuthor, $groschen->getContributors());
@@ -963,6 +971,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($author, $groschen->getContributors(false));
@@ -988,6 +997,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertNotContains($editor, $groschen->getContributors(false));
@@ -1053,6 +1063,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($corporateAuthor, $groschen->getContributors());
@@ -3941,6 +3952,7 @@ class GroschenIntegrationTest extends TestCase
             'SelectionLists' => [
                 'WS Bazarkustannus.fi julkiset tekijät',
             ],
+            'HasAuthorImage' => true,
         ];
 
         $groschen = new Groschen('9789522796783');
@@ -3972,6 +3984,7 @@ class GroschenIntegrationTest extends TestCase
             'SelectionLists' => [
                 'wsoy.fi julkiset tekijät',
             ],
+            'HasAuthorImage' => true,
         ];
 
         $groschen = new Groschen('9789510404355');
@@ -4430,6 +4443,7 @@ class GroschenIntegrationTest extends TestCase
             'SelectionLists' => [
                 'tammi.fi julkiset tekijät',
             ],
+            'HasAuthorImage' => true,
         ];
 
         $this->assertContains($firstAuthor, $groschen->getContributors());
@@ -4692,6 +4706,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         // Cover design or artwork by
@@ -4703,6 +4718,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($translator, $groschen->getContributors());
@@ -4727,6 +4743,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($readerMale, $groschen->getContributors());
@@ -4740,6 +4757,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($readerFemale, $groschen->getContributors());
@@ -4753,6 +4771,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($readerUnspecified, $groschen->getContributors());
@@ -4770,6 +4789,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($readerVoiceReplica, $groschen->getContributors());
@@ -4787,6 +4807,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($readerMaleNamed, $groschen->getContributors());
@@ -4804,6 +4825,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($readerFemaleNamed, $groschen->getContributors());
@@ -4821,6 +4843,7 @@ class GroschenIntegrationTest extends TestCase
             'BiographicalNote' => null,
             'WebSites' => [],
             'SelectionLists' => [],
+            'HasAuthorImage' => false,
         ];
 
         $this->assertContains($readerUnspecifiedNamed, $groschen->getContributors());
@@ -4881,5 +4904,23 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains('wsoy.fi julkiset tekijät', $contact['SelectionLists']);
         $this->assertContains('johnnykniga.fi julkiset tekijät', $contact['SelectionLists']);
+    }
+
+    /**
+     * Test getting contributor author photograph exists boolean
+     *
+     * @return void
+     */
+    public function test_getting_author_photograph_exists()
+    {
+        $groschen = new Groschen('9789520447267');
+
+        // Contributor that has image
+        $this->assertTrue($groschen->getContributors()->contains('Identifier', 69495));
+        $this->assertTrue($groschen->getContributors()->where('Identifier', 69495)->pluck('HasAuthorImage')->first());
+
+        // Contributor that does not have image
+        $this->assertTrue($groschen->getContributors()->contains('Identifier', 58194));
+        $this->assertFalse($groschen->getContributors()->where('Identifier', 58194)->pluck('HasAuthorImage')->first());
     }
 }
