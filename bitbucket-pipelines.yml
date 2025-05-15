@@ -24,6 +24,7 @@ definitions:
             - apt-get -qq update && apt-get -y install git
             - curl -L https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64 --output /usr/local/bin/local-php-security-checker
             - chmod 755 /usr/local/bin/local-php-security-checker
+            - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
             - vendor/bin/grumphp run --testsuite=security
 
       - step: &syntax-check
