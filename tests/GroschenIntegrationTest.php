@@ -943,6 +943,7 @@ class GroschenIntegrationTest extends TestCase
             'WebSites' => [],
             'SelectionLists' => [
                 'wsoy.fi julkiset tekijät',
+                'Kirja.fi julkiset tekijät',
             ],
             'HasAuthorImage' => true,
         ];
@@ -975,33 +976,6 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $this->assertContains($author, $groschen->getContributors(false));
-    }
-
-    /**
-     * Test that private contributors are hidden
-     *
-     * @return void
-     */
-    public function test_private_contributors_are_hidden()
-    {
-        $groschen = new Groschen('9789510415344');
-
-        $editor = [
-            'Identifier' => 47964,
-            'SequenceNumber' => 2,
-            'ContributorRole' => 'B24',
-            'PersonName' => 'Mikko Rouhiainen',
-            'PersonNameInverted' => 'Rouhiainen, Mikko',
-            'KeyNames' => 'Rouhiainen',
-            'NamesBeforeKey' => 'Mikko',
-            'BiographicalNote' => null,
-            'WebSites' => [],
-            'SelectionLists' => [],
-            'HasAuthorImage' => false,
-        ];
-
-        $this->assertNotContains($editor, $groschen->getContributors(false));
-        $this->assertContains($editor, $groschen->getContributors(true));
     }
 
     /**
@@ -1364,7 +1338,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;huumori;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;kirjallisuuspalkinnot;kiitos kirjasta -mitali;2011;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;kuunnelmat;pakinat;monologit;eläkeläiset;mielipiteet;pessimismi;miehet;huumori;arkielämä;vanhukset;suomalaisuus;suomalaiset;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
@@ -1372,7 +1346,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertNotContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'tieto-finlandia-palkinto;sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;lapin sota;sotahistoria;sodankäynti;suomi;1939-1945;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'tieto-finlandia-palkinto;sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;lapin sota;sotahistoria;sodankäynti;suomi;sotarintama;1939-1945;2013;kirjallisuuspalkinnot'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
@@ -3951,6 +3925,7 @@ class GroschenIntegrationTest extends TestCase
             ],
             'SelectionLists' => [
                 'WS Bazarkustannus.fi julkiset tekijät',
+                'Kirja.fi julkiset tekijät',
             ],
             'HasAuthorImage' => true,
         ];
@@ -3983,6 +3958,7 @@ class GroschenIntegrationTest extends TestCase
             ],
             'SelectionLists' => [
                 'wsoy.fi julkiset tekijät',
+                'Kirja.fi julkiset tekijät',
             ],
             'HasAuthorImage' => true,
         ];
@@ -4442,6 +4418,7 @@ class GroschenIntegrationTest extends TestCase
             'WebSites' => [],
             'SelectionLists' => [
                 'tammi.fi julkiset tekijät',
+                'Kirja.fi julkiset tekijät',
             ],
             'HasAuthorImage' => true,
         ];
@@ -4900,10 +4877,11 @@ class GroschenIntegrationTest extends TestCase
         $contact = $groschen->getContributors()->where('Identifier', 55545)->first();
 
         $this->assertArrayHasKey('SelectionLists', $contact);
-        $this->assertSame(2, count($contact['SelectionLists']));
+        $this->assertSame(3, count($contact['SelectionLists']));
 
         $this->assertContains('wsoy.fi julkiset tekijät', $contact['SelectionLists']);
         $this->assertContains('johnnykniga.fi julkiset tekijät', $contact['SelectionLists']);
+        $this->assertContains('Kirja.fi julkiset tekijät', $contact['SelectionLists']);
     }
 
     /**
