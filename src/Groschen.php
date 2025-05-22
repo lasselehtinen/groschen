@@ -377,12 +377,8 @@ class Groschen implements ProductInterface
         }
 
         // Reflowable / Fixed layout ePub 3's
-        if ($this->getTechnicalBindingType() === 'ePub3 – Reflowable') {
-            $productFormDetails->push('E200');
-        }
-
-        if ($this->getTechnicalBindingType() === 'ePub3 – Fixed Format') {
-            $productFormDetails->push('E201');
+        if (property_exists($this->product, 'technicalProductionType') && property_exists($this->product->technicalProductionType, 'customProperties') && property_exists($this->product->technicalProductionType->customProperties, 'onixProductFormFeatureValueEpub')) {
+            $productFormDetails->push($this->product->technicalProductionType->customProperties->onixProductFormFeatureValueEpub);
         }
 
         // Add technical detail if product is not immaterial
