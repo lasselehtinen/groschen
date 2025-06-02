@@ -4901,4 +4901,96 @@ class GroschenIntegrationTest extends TestCase
         $this->assertTrue($groschen->getContributors()->contains('Identifier', 58194));
         $this->assertFalse($groschen->getContributors()->where('Identifier', 58194)->pluck('HasAuthorImage')->first());
     }
+
+    /**
+     * Test getting accessibility related product form features for EPUB2
+     *
+     * @return void
+     */
+    public function test_getting_accessibility_related_product_form_features_for_epub2()
+    {
+        $groschen = new Groschen('9789510397923');
+        $this->assertContains('E200', $groschen->getProductFormDetails());
+
+        // Expected ProductFormFeatures
+        $expectedProductFormFeatures = [
+            '12' => '00', // No known hazards or warnings
+            '09' => '09', // Inaccessible or known limited accessibility
+            '09' => '76', // EAA exception 2 – Disproportionate burden
+        ];
+
+        $productFormFeatures = $groschen->getProductFormFeatures();
+
+        foreach ($expectedProductFormFeatures as $expectedProductFormFeatureType => $expectedProductFormFeature) {
+            $this->assertContains(['ProductFormFeatureType' => $expectedProductFormFeatureType, 'ProductFormFeatureValue' => $expectedProductFormFeature], $productFormFeatures);
+        }
+
+        // Compliance certification by – name
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '90', 'ProductFormFeatureDescription' => 'Werner Söderström Ltd'], $productFormFeatures);
+    }
+
+    /**
+     * Test getting accessibility related product form features for Fixed layout ePub3
+     *
+     * @return void
+     */
+    public function test_getting_accessibility_related_product_form_features_for_epub3_fixed_layout()
+    {
+        $groschen = new Groschen('9789520472955');
+        $this->assertContains('E201', $groschen->getProductFormDetails());
+
+        // Expected ProductFormFeatures
+        $expectedProductFormFeatures = [
+            '12' => '00', // No known hazards or warnings
+            '09' => '09', // Inaccessible or known limited accessibility
+            '09' => '77', // EAA exception 3 - Fundamental alteration
+        ];
+
+        $productFormFeatures = $groschen->getProductFormFeatures();
+
+        foreach ($expectedProductFormFeatures as $expectedProductFormFeatureType => $expectedProductFormFeature) {
+            $this->assertContains(['ProductFormFeatureType' => $expectedProductFormFeatureType, 'ProductFormFeatureValue' => $expectedProductFormFeature], $productFormFeatures);
+        }
+
+        // Compliance certification by – name
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '90', 'ProductFormFeatureDescription' => 'Werner Söderström Ltd'], $productFormFeatures);
+    }
+
+    /**
+     * Test getting accessibility related product form features for reflowable ePub3
+     *
+     * @return void
+     */
+    public function test_getting_accessibility_related_product_form_features_for_epub3_reflowable()
+    {
+        $groschen = new Groschen('9789528500308');
+        $this->assertContains('E200', $groschen->getProductFormDetails());
+
+        // Expected ProductFormFeatures
+        $expectedProductFormFeatures = [
+            '12' => '00', // No known hazards or warnings
+            '09' => '04', // Epub accessibility specification 1.1
+            '09' => '85', // WCAG level AA
+            '09' => '81', // WCAG v2.1
+        ];
+
+        $productFormFeatures = $groschen->getProductFormFeatures();
+
+        foreach ($expectedProductFormFeatures as $expectedProductFormFeatureType => $expectedProductFormFeature) {
+            $this->assertContains(['ProductFormFeatureType' => $expectedProductFormFeatureType, 'ProductFormFeatureValue' => $expectedProductFormFeature], $productFormFeatures);
+        }
+
+        // Compliance certification by – name
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '90', 'ProductFormFeatureDescription' => 'Werner Söderström Ltd'], $productFormFeatures);
+    }
+
+    /**
+     * Test getting product contact for ePubs
+     *
+     * @return void
+     */
+    public function test_getting_product_contact_for_epubs()
+    {
+
+    }
 }

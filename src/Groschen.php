@@ -381,6 +381,11 @@ class Groschen implements ProductInterface
             $productFormDetails->push($this->product->technicalProductionType->customProperties->onixProductFormFeatureValueEpub);
         }
 
+        // Workaround for old ePub2 without technicalProductionType
+        if ($this->getProductType() === 'ePub2') {
+            $productFormDetails->push('E200');
+        }
+
         // Add technical detail if product is not immaterial
         if ($this->isImmaterial() === false) {
             // Headband
@@ -492,6 +497,7 @@ class Groschen implements ProductInterface
             ]);
         }
 
+        /*
         // Check if we have spesific product form features for hazards
         if (property_exists($this->product->productionDetails, 'hazardIds') && is_array($this->product->productionDetails->hazardIds)) {
             // Get hazard types for mapping
@@ -544,6 +550,74 @@ class Groschen implements ProductInterface
             $productFormFeatures->push([
                 'ProductFormFeatureType' => '09',
                 'ProductFormFeatureValue' => $onixCode,
+            ]);
+        }*/
+
+        // Check if we have spesific technical binding code for ePub accessiblity settings
+        $allowedGtins = [
+            9789510397923, // Epub2
+            9789520472955, // Epub 3 - Fixed layout
+            9789528500308, // Epub 3 - Reflowable
+        ];
+
+        if (in_array($this->product->isbn, $allowedGtins)) {
+            // ePub2's
+            if ($this->getProductType() === 'ePub2') {
+                $productFormFeaturesToAdd = [
+                    '09' => [
+                        '09', // Inaccessible or known limited accessibility
+                        '76', // EAA exception 2 – Disproportionate burden
+                    ],
+                    '12' => [
+                        '00', // No known hazards or warnings
+                    ],
+                ];
+            }
+
+            // ePub3 - Fixed format
+            if (property_exists($this->product, 'technicalProductionType') && $this->product->technicalProductionType->name === 'ePub3 – Fixed Format') {
+                $productFormFeaturesToAdd = [
+                    '09' => [
+                        '09', // Inaccessible or known limited accessibility
+                        '77',  // EAA exception 3 - Fundamental alteration
+                    ],
+                    '12' => [
+                        '00', // No known hazards or warnings
+                    ],
+                ];
+            }
+
+            // ePub3 - Reflowable
+            if (property_exists($this->product, 'technicalProductionType') && $this->product->technicalProductionType->name === 'ePub3 – Reflowable') {
+                $productFormFeaturesToAdd = [
+                    '09' => [
+                        '04', // Epub accessibility specification 1.1
+                        '85', // WCAG level AA
+                        '81', // WCAG v2.1
+                    ],
+                    '12' => [
+                        '00', // No known hazards or warnings
+                    ],
+                ];
+            }
+
+            // Add ProductFormFeatures
+            if (isset($productFormFeaturesToAdd)) {
+                foreach ($productFormFeaturesToAdd as $productFormFeatureType => $productFormFeaturesToAdd) {
+                    foreach ($productFormFeaturesToAdd as $productFormFeatureToAdd) {
+                        $productFormFeatures->push([
+                            'ProductFormFeatureType' => $productFormFeatureType,
+                            'ProductFormFeatureValue' => $productFormFeatureToAdd,
+                        ]);
+                    }
+                }
+            }
+
+            // Compliance certification by – name is common for all
+            $productFormFeatures->push([
+                'ProductFormFeatureType' => '09',
+                'ProductFormFeatureValue' => '90',
+                'ProductFormFeatureDescription' => 'Werner Söderström Ltd',
             ]);
         }
 
