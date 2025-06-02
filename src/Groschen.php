@@ -7678,7 +7678,7 @@ class Groschen implements ProductInterface
     /**
      * Get the accessibility email
      *
-     * @return void
+     * @return string
      */
     public function getAccessibilityEmail()
     {
