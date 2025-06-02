@@ -4991,6 +4991,13 @@ class GroschenIntegrationTest extends TestCase
      */
     public function test_getting_product_contact_for_epubs()
     {
+        $groschen = new Groschen('9789528500308');
 
+        // Docendo ePub
+        $this->assertContains([
+            'ProductContactRole' => '01',
+            'ProductContactName' => 'Werner Söderström Ltd',
+            'ProductContactEmail' => 'saavutettavuus@docendo.fi',
+        ], $groschen->getProductContacts());
     }
 }

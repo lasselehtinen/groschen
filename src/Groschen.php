@@ -7642,6 +7642,50 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get list of product contacts
+     *
+     * @return Collection
+     */
+    public function getProductContacts()
+    {
+        $productContacts = new Collection;
+
+        // ePubs should have "Accessiblity request contact"
+        $allowedGtins = [
+            9789510397923, // Epub2
+            9789520472955, // Epub 3 - Fixed layout
+            9789528500308, // Epub 3 - Reflowable
+        ];
+
+        if (in_array($this->product->isbn, $allowedGtins) && in_array($this->getProductType(), ['ePub2', 'ePub3'])) {
+            // Email is per publisher
+            $publisherAccessibilityEmail = [
+                'Bazar' => 'saavutettavuus@bazar.fi',
+                'CrimeTime' => 'saavutettavuus@crime.fi',
+                'Docendo' => 'saavutettavuus@docendo.fi',
+                'Johnny Kniga' => 'saavutettavuus@johnnykniga.fi',
+                'Kosmos' => 'saavutettavuus@kosmoskirjat.fi',
+                'Minerva' => 'saavutettavuus@docendo.fi',
+                'Readme.fi' => 'saavutettavuus@readme.fi',
+                'Tammi' => 'saavutettavuus@tammi.fi',
+                'WSOY' => 'saavutettavuus@wsoy.fi',
+            ];
+
+            if (in_array($this->getPublisher(), array_keys($publisherAccessibilityEmail)) === false) {
+                throw new Exception('Publisher '.$this->getPublisher().' does not have accessibility email mapping defined.');
+            }
+
+            $productContacts->push([
+                'ProductContactRole' => '01',
+                'ProductContactName' => 'Werner Söderström Ltd',
+                'ProductContactEmail' => $publisherAccessibilityEmail[$this->getPublisher()],
+            ]);
+        }
+
+        return $productContacts;
+    }
+
+    /**
      * Get the sales rights territories
      *
      * @return Collection
