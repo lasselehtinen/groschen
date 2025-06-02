@@ -619,6 +619,13 @@ class Groschen implements ProductInterface
                 'ProductFormFeatureValue' => '90',
                 'ProductFormFeatureDescription' => 'Werner Söderström Ltd',
             ]);
+
+            // Publisher contact for further accessibility information is common for all
+            $productFormFeatures->push([
+                'ProductFormFeatureType' => '09',
+                'ProductFormFeatureValue' => '99',
+                'ProductFormFeatureDescription' => $this->getAccessibilityEmail(),
+            ]);
         }
 
         return $productFormFeatures;
@@ -7658,31 +7665,41 @@ class Groschen implements ProductInterface
         ];
 
         if (in_array($this->product->isbn, $allowedGtins) && in_array($this->getProductType(), ['ePub2', 'ePub3'])) {
-            // Email is per publisher
-            $publisherAccessibilityEmail = [
-                'Bazar' => 'saavutettavuus@bazar.fi',
-                'CrimeTime' => 'saavutettavuus@crime.fi',
-                'Docendo' => 'saavutettavuus@docendo.fi',
-                'Johnny Kniga' => 'saavutettavuus@johnnykniga.fi',
-                'Kosmos' => 'saavutettavuus@kosmoskirjat.fi',
-                'Minerva' => 'saavutettavuus@docendo.fi',
-                'Readme.fi' => 'saavutettavuus@readme.fi',
-                'Tammi' => 'saavutettavuus@tammi.fi',
-                'WSOY' => 'saavutettavuus@wsoy.fi',
-            ];
-
-            if (in_array($this->getPublisher(), array_keys($publisherAccessibilityEmail)) === false) {
-                throw new Exception('Publisher '.$this->getPublisher().' does not have accessibility email mapping defined.');
-            }
-
             $productContacts->push([
                 'ProductContactRole' => '01',
                 'ProductContactName' => 'Werner Söderström Ltd',
-                'ProductContactEmail' => $publisherAccessibilityEmail[$this->getPublisher()],
+                'ProductContactEmail' => $this->getAccessibilityEmail(),
             ]);
         }
 
         return $productContacts;
+    }
+
+    /**
+     * Get the accessibility email
+     *
+     * @return void
+     */
+    public function getAccessibilityEmail()
+    {
+        // Email is per publisher
+        $publisherAccessibilityEmail = [
+            'Bazar' => 'saavutettavuus@bazar.fi',
+            'CrimeTime' => 'saavutettavuus@crime.fi',
+            'Docendo' => 'saavutettavuus@docendo.fi',
+            'Johnny Kniga' => 'saavutettavuus@johnnykniga.fi',
+            'Kosmos' => 'saavutettavuus@kosmoskirjat.fi',
+            'Minerva' => 'saavutettavuus@docendo.fi',
+            'Readme.fi' => 'saavutettavuus@readme.fi',
+            'Tammi' => 'saavutettavuus@tammi.fi',
+            'WSOY' => 'saavutettavuus@wsoy.fi',
+        ];
+
+        if (in_array($this->getPublisher(), array_keys($publisherAccessibilityEmail)) === false) {
+            throw new Exception('Publisher '.$this->getPublisher().' does not have accessibility email mapping defined.');
+        }
+
+        return $publisherAccessibilityEmail[$this->getPublisher()];
     }
 
     /**

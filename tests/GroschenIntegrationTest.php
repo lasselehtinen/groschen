@@ -4930,6 +4930,9 @@ class GroschenIntegrationTest extends TestCase
 
         // Compliance certification by – name
         $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '90', 'ProductFormFeatureDescription' => 'Werner Söderström Ltd'], $productFormFeatures);
+
+        // Publisher contact for further accessibility information
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '99', 'ProductFormFeatureDescription' => 'saavutettavuus@wsoy.fi'], $productFormFeatures);
     }
 
     /**
@@ -4957,6 +4960,9 @@ class GroschenIntegrationTest extends TestCase
 
         // Compliance certification by – name
         $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '90', 'ProductFormFeatureDescription' => 'Werner Söderström Ltd'], $productFormFeatures);
+
+        // Publisher contact for further accessibility information
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '99', 'ProductFormFeatureDescription' => 'saavutettavuus@tammi.fi'], $productFormFeatures);
     }
 
     /**
@@ -4985,6 +4991,9 @@ class GroschenIntegrationTest extends TestCase
 
         // Compliance certification by – name
         $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '90', 'ProductFormFeatureDescription' => 'Werner Söderström Ltd'], $productFormFeatures);
+
+        // Publisher contact for further accessibility information
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '99', 'ProductFormFeatureDescription' => 'saavutettavuus@docendo.fi'], $productFormFeatures);
     }
 
     /**
