@@ -572,6 +572,13 @@ class Groschen implements ProductInterface
                         '00', // No known hazards or warnings
                     ],
                 ];
+
+                // Accessibility summary for ePub2
+                $productFormFeatures->push([
+                    'ProductFormFeatureType' => '09',
+                    'ProductFormFeatureValue' => '00',
+                    'ProductFormFeatureDescription' => 'Mukautuva sisältö, Ei saavutettava tai vain osittain saavutettava, EU:n esteettömyysdirektiivin poikkeus: kohtuuton rasite, Ei tunnistettuja vaaroja tai varoituksia.',
+                ]);
             }
 
             // ePub3 - Fixed format
@@ -585,6 +592,13 @@ class Groschen implements ProductInterface
                         '00', // No known hazards or warnings
                     ],
                 ];
+
+                // Accessibility summary for ePub3 - Fixed layout
+                $productFormFeatures->push([
+                    'ProductFormFeatureType' => '09',
+                    'ProductFormFeatureValue' => '00',
+                    'ProductFormFeatureDescription' => 'Lukittu sisältö, Ei saavutettava tai vain osittain saavutettava, EU:n esteettömyysdirektiivin poikkeus: palvelun perustavanlaatuinen muutos, Ei tunnistettuja vaaroja tai varoituksia.',
+                ]);
             }
 
             // ePub3 - Reflowable
@@ -599,6 +613,13 @@ class Groschen implements ProductInterface
                         '00', // No known hazards or warnings
                     ],
                 ];
+
+                // Accessibility summary for ePub3 - Reflowable
+                $productFormFeatures->push([
+                    'ProductFormFeatureType' => '09',
+                    'ProductFormFeatureValue' => '00',
+                    'ProductFormFeatureDescription' => 'Mukautuva sisältö, EPUB-saavutettavuusmäärittely 1.1, WCAG taso AA, WCAG v2.1, Ei tunnistettuja vaaroja tai varoituksia.',
+                ]);
             }
 
             // Add ProductFormFeatures

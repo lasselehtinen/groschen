@@ -4933,6 +4933,9 @@ class GroschenIntegrationTest extends TestCase
 
         // Publisher contact for further accessibility information
         $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '99', 'ProductFormFeatureDescription' => 'saavutettavuus@wsoy.fi'], $productFormFeatures);
+
+        // Accessibility summary
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '00', 'ProductFormFeatureDescription' => 'Mukautuva sisältö, Ei saavutettava tai vain osittain saavutettava, EU:n esteettömyysdirektiivin poikkeus: kohtuuton rasite, Ei tunnistettuja vaaroja tai varoituksia.'], $productFormFeatures);
     }
 
     /**
@@ -4963,6 +4966,9 @@ class GroschenIntegrationTest extends TestCase
 
         // Publisher contact for further accessibility information
         $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '99', 'ProductFormFeatureDescription' => 'saavutettavuus@tammi.fi'], $productFormFeatures);
+
+        // Accessibility summary
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '00', 'ProductFormFeatureDescription' => 'Lukittu sisältö, Ei saavutettava tai vain osittain saavutettava, EU:n esteettömyysdirektiivin poikkeus: palvelun perustavanlaatuinen muutos, Ei tunnistettuja vaaroja tai varoituksia.'], $productFormFeatures);
     }
 
     /**
@@ -4994,6 +5000,9 @@ class GroschenIntegrationTest extends TestCase
 
         // Publisher contact for further accessibility information
         $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '99', 'ProductFormFeatureDescription' => 'saavutettavuus@docendo.fi'], $productFormFeatures);
+
+        // Accessibility summary
+        $this->assertContains(['ProductFormFeatureType' => '09', 'ProductFormFeatureValue' => '00', 'ProductFormFeatureDescription' => 'Mukautuva sisältö, EPUB-saavutettavuusmäärittely 1.1, WCAG taso AA, WCAG v2.1, Ei tunnistettuja vaaroja tai varoituksia.'], $productFormFeatures);
     }
 
     /**
