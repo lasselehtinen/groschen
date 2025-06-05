@@ -7700,7 +7700,7 @@ class Groschen implements ProductInterface
     {
         // Email is per publisher
         $publisherAccessibilityEmail = [
-            'Bazar' => 'saavutettavuus@bazar.fi',
+            'Bazar' => 'saavutettavuus@bazarkustannus.fi',
             'CrimeTime' => 'saavutettavuus@crime.fi',
             'Docendo' => 'saavutettavuus@docendo.fi',
             'Johnny Kniga' => 'saavutettavuus@johnnykniga.fi',
