@@ -3959,7 +3959,6 @@ class GroschenIntegrationTest extends TestCase
             ],
             'SelectionLists' => [
                 'wsoy.fi julkiset tekijät',
-                'Kirja.fi julkiset tekijät',
             ],
             'HasAuthorImage' => true,
         ];
