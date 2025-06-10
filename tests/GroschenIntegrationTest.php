@@ -485,7 +485,7 @@ class GroschenIntegrationTest extends TestCase
     {
         // ePub 2
         $groschen = new Groschen('9789510439838');
-        $this->assertNull($groschen->getTechnicalBindingType());
+        $this->assertSame('EPUB2', $groschen->getTechnicalBindingType());
 
         // Hardback
         $groschen = new Groschen('9789510423417');
@@ -789,6 +789,7 @@ class GroschenIntegrationTest extends TestCase
             'SelectionLists' => [
                 'WS Bazarkustannus.fi julkiset tekijät',
                 'wsoy.fi julkiset tekijät',
+                'Kirja.fi julkiset tekijät',
             ],
             'HasAuthorImage' => true,
         ];
