@@ -577,7 +577,7 @@ class Groschen implements ProductInterface
                 $productFormFeatures->push([
                     'ProductFormFeatureType' => '09',
                     'ProductFormFeatureValue' => '00',
-                    'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
+                    // 'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
                 ]);
             }
 
@@ -597,7 +597,7 @@ class Groschen implements ProductInterface
                 $productFormFeatures->push([
                     'ProductFormFeatureType' => '09',
                     'ProductFormFeatureValue' => '00',
-                    'ProductFormFeatureDescription' => 'Ulkoasua ei voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
+                    // 'ProductFormFeatureDescription' => 'Ulkoasua ei voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
                 ]);
             }
 
@@ -620,7 +620,7 @@ class Groschen implements ProductInterface
                 $productFormFeatures->push([
                     'ProductFormFeatureType' => '09',
                     'ProductFormFeatureValue' => '00',
-                    'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, EPUB Accessibility 1.1, Luettavissa ruudunlukuohjelmalla tai pistenäytöllä, Tämä julkaisu noudattaa saavutettavuusstandardien yleisesti hyväksyttyä tasoa, Ei vaaratekijöitä.',
+                    // 'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, EPUB Accessibility 1.1, Luettavissa ruudunlukuohjelmalla tai pistenäytöllä, Tämä julkaisu noudattaa saavutettavuusstandardien yleisesti hyväksyttyä tasoa, Ei vaaratekijöitä.',
                 ]);
             }
 
