@@ -1186,6 +1186,11 @@ class Groschen implements ProductInterface
             ]);
         }
 
+        // Filter out zero values
+        $extents = $extents->filter(function ($extent) {
+            return intval($extent['ExtentValue']) > 0;
+        });
+
         return $extents->sortBy('ExtentType');
     }
 

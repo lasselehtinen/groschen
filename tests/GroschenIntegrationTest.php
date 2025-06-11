@@ -1088,6 +1088,17 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting products extents where ExtentValue is 0
+     *
+     * @return void
+     */
+    public function test_getting_extent_with_incorrect_values()
+    {
+        $groschen = new Groschen('9789524924399');
+        $this->assertNotContains(['ExtentType' => '10', 'ExtentValue' => '0', 'ExtentUnit' => '02'], $groschen->getExtents());
+    }
+
+    /**
      * Test getting products estimated number of pages
      *
      * @return void
