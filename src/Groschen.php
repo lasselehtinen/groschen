@@ -566,11 +566,13 @@ class Groschen implements ProductInterface
             ];
 
             // Accessibility summary for ePub2
+            /*
             $productFormFeatures->push([
                 'ProductFormFeatureType' => '09',
                 'ProductFormFeatureValue' => '00',
-                // 'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
+                'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
             ]);
+            */
         }
 
         // ePub3 - Fixed format
@@ -586,11 +588,13 @@ class Groschen implements ProductInterface
             ];
 
             // Accessibility summary for ePub3 - Fixed layout
+            /*
             $productFormFeatures->push([
                 'ProductFormFeatureType' => '09',
                 'ProductFormFeatureValue' => '00',
-                // 'ProductFormFeatureDescription' => 'Ulkoasua ei voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
+                'ProductFormFeatureDescription' => 'Ulkoasua ei voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
             ]);
+            */
         }
 
         // ePub3 - Reflowable
@@ -609,11 +613,13 @@ class Groschen implements ProductInterface
             ];
 
             // Accessibility summary for ePub3 - Reflowable
+            /*
             $productFormFeatures->push([
                 'ProductFormFeatureType' => '09',
                 'ProductFormFeatureValue' => '00',
-                // 'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, EPUB Accessibility 1.1, Luettavissa ruudunlukuohjelmalla tai pistenäytöllä, Tämä julkaisu noudattaa saavutettavuusstandardien yleisesti hyväksyttyä tasoa, Ei vaaratekijöitä.',
+                'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, EPUB Accessibility 1.1, Luettavissa ruudunlukuohjelmalla tai pistenäytöllä, Tämä julkaisu noudattaa saavutettavuusstandardien yleisesti hyväksyttyä tasoa, Ei vaaratekijöitä.',
             ]);
+            */
         }
 
         // Add ProductFormFeatures
