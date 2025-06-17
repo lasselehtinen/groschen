@@ -485,7 +485,7 @@ class GroschenIntegrationTest extends TestCase
     {
         // ePub 2
         $groschen = new Groschen('9789510439838');
-        $this->assertSame('EPUB2', $groschen->getTechnicalBindingType());
+        $this->assertSame('ePub2', $groschen->getTechnicalBindingType());
 
         // Hardback
         $groschen = new Groschen('9789510423417');
