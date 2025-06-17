@@ -553,86 +553,77 @@ class Groschen implements ProductInterface
             ]);
         }*/
 
-        // Check if we have spesific technical binding code for ePub accessiblity settings
-        $allowedGtins = [
-            9789510397923, // Epub2
-            9789520472955, // Epub 3 - Fixed layout
-            9789528500308, // Epub 3 - Reflowable
-        ];
+        // ePub2's
+        if ($this->getProductType() === 'ePub2') {
+            $productFormFeaturesToAdd = [
+                '09' => [
+                    '09', // Inaccessible or known limited accessibility
+                    '76', // EAA exception 2 – Disproportionate burden
+                ],
+                '12' => [
+                    '00', // No known hazards or warnings
+                ],
+            ];
 
-        if (in_array($this->product->isbn, $allowedGtins)) {
-            // ePub2's
-            if ($this->getProductType() === 'ePub2') {
-                $productFormFeaturesToAdd = [
-                    '09' => [
-                        '09', // Inaccessible or known limited accessibility
-                        '76', // EAA exception 2 – Disproportionate burden
-                    ],
-                    '12' => [
-                        '00', // No known hazards or warnings
-                    ],
-                ];
+            // Accessibility summary for ePub2
+            $productFormFeatures->push([
+                'ProductFormFeatureType' => '09',
+                'ProductFormFeatureValue' => '00',
+                // 'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
+            ]);
+        }
 
-                // Accessibility summary for ePub2
-                $productFormFeatures->push([
-                    'ProductFormFeatureType' => '09',
-                    'ProductFormFeatureValue' => '00',
-                    // 'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
-                ]);
-            }
+        // ePub3 - Fixed format
+        if (property_exists($this->product, 'technicalProductionType') && $this->product->technicalProductionType->name === 'ePub3 – Fixed Format') {
+            $productFormFeaturesToAdd = [
+                '09' => [
+                    '09', // Inaccessible or known limited accessibility
+                    '77',  // EAA exception 3 - Fundamental alteration
+                ],
+                '12' => [
+                    '00', // No known hazards or warnings
+                ],
+            ];
 
-            // ePub3 - Fixed format
-            if (property_exists($this->product, 'technicalProductionType') && $this->product->technicalProductionType->name === 'ePub3 – Fixed Format') {
-                $productFormFeaturesToAdd = [
-                    '09' => [
-                        '09', // Inaccessible or known limited accessibility
-                        '77',  // EAA exception 3 - Fundamental alteration
-                    ],
-                    '12' => [
-                        '00', // No known hazards or warnings
-                    ],
-                ];
+            // Accessibility summary for ePub3 - Fixed layout
+            $productFormFeatures->push([
+                'ProductFormFeatureType' => '09',
+                'ProductFormFeatureValue' => '00',
+                // 'ProductFormFeatureDescription' => 'Ulkoasua ei voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
+            ]);
+        }
 
-                // Accessibility summary for ePub3 - Fixed layout
-                $productFormFeatures->push([
-                    'ProductFormFeatureType' => '09',
-                    'ProductFormFeatureValue' => '00',
-                    // 'ProductFormFeatureDescription' => 'Ulkoasua ei voi mukauttaa, Ei saavutettava tai vain osittain saavutettava, Vedotaan poikkeukseen saavutettavuusvaatimuksissa, Ei vaaratekijöitä.',
-                ]);
-            }
+        // ePub3 - Reflowable
+        if (property_exists($this->product, 'technicalProductionType') && $this->product->technicalProductionType->name === 'ePub3 – Reflowable') {
+            $productFormFeaturesToAdd = [
+                '09' => [
+                    '04', // Epub accessibility specification 1.1
+                    '36', // Appearance of all textual content can be modified
+                    '52', // All non-decorative content supports reading without sight
+                    '85', // WCAG level AA
+                    '81', // WCAG v2.1
+                ],
+                '12' => [
+                    '00', // No known hazards or warnings
+                ],
+            ];
 
-            // ePub3 - Reflowable
-            if (property_exists($this->product, 'technicalProductionType') && $this->product->technicalProductionType->name === 'ePub3 – Reflowable') {
-                $productFormFeaturesToAdd = [
-                    '09' => [
-                        '04', // Epub accessibility specification 1.1
-                        '36', // Appearance of all textual content can be modified
-                        '52', // All non-decorative content supports reading without sight
-                        '85', // WCAG level AA
-                        '81', // WCAG v2.1
-                    ],
-                    '12' => [
-                        '00', // No known hazards or warnings
-                    ],
-                ];
+            // Accessibility summary for ePub3 - Reflowable
+            $productFormFeatures->push([
+                'ProductFormFeatureType' => '09',
+                'ProductFormFeatureValue' => '00',
+                // 'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, EPUB Accessibility 1.1, Luettavissa ruudunlukuohjelmalla tai pistenäytöllä, Tämä julkaisu noudattaa saavutettavuusstandardien yleisesti hyväksyttyä tasoa, Ei vaaratekijöitä.',
+            ]);
+        }
 
-                // Accessibility summary for ePub3 - Reflowable
-                $productFormFeatures->push([
-                    'ProductFormFeatureType' => '09',
-                    'ProductFormFeatureValue' => '00',
-                    // 'ProductFormFeatureDescription' => 'Ulkoasua voi mukauttaa, EPUB Accessibility 1.1, Luettavissa ruudunlukuohjelmalla tai pistenäytöllä, Tämä julkaisu noudattaa saavutettavuusstandardien yleisesti hyväksyttyä tasoa, Ei vaaratekijöitä.',
-                ]);
-            }
-
-            // Add ProductFormFeatures
-            if (isset($productFormFeaturesToAdd)) {
-                foreach ($productFormFeaturesToAdd as $productFormFeatureType => $productFormFeaturesToAdd) {
-                    foreach ($productFormFeaturesToAdd as $productFormFeatureToAdd) {
-                        $productFormFeatures->push([
-                            'ProductFormFeatureType' => $productFormFeatureType,
-                            'ProductFormFeatureValue' => $productFormFeatureToAdd,
-                        ]);
-                    }
+        // Add ProductFormFeatures
+        if (isset($productFormFeaturesToAdd)) {
+            foreach ($productFormFeaturesToAdd as $productFormFeatureType => $productFormFeaturesToAdd) {
+                foreach ($productFormFeaturesToAdd as $productFormFeatureToAdd) {
+                    $productFormFeatures->push([
+                        'ProductFormFeatureType' => $productFormFeatureType,
+                        'ProductFormFeatureValue' => $productFormFeatureToAdd,
+                    ]);
                 }
             }
 
@@ -7678,14 +7669,7 @@ class Groschen implements ProductInterface
     {
         $productContacts = new Collection;
 
-        // ePubs should have "Accessiblity request contact"
-        $allowedGtins = [
-            9789510397923, // Epub2
-            9789520472955, // Epub 3 - Fixed layout
-            9789528500308, // Epub 3 - Reflowable
-        ];
-
-        if (in_array($this->product->isbn, $allowedGtins) && in_array($this->getProductType(), ['ePub2', 'ePub3'])) {
+        if (in_array($this->getProductType(), ['ePub2', 'ePub3'])) {
             $productContacts->push([
                 'ProductContactRole' => '01',
                 'ProductContactName' => 'Werner Söderström Ltd',
