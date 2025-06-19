@@ -2,30 +2,30 @@
 
 namespace lasselehtinen\Groschen;
 
+use Biblys\Isbn\Isbn;
 use Cache;
 use DateTime;
-use stdClass;
 use Exception;
-use HTMLPurifier;
-use League\Uri\Uri;
-use Biblys\Isbn\Isbn;
 use GuzzleHttp\Client;
-use HTMLPurifier_Config;
-use Real\Validator\Gtin;
-use Illuminate\Support\Str;
-use League\ISO3166\ISO3166;
-use League\Uri\UriModifier;
-use GuzzleHttp\HandlerStack;
-use Illuminate\Support\Collection;
-use kamermans\OAuth2\OAuth2Middleware;
-use WhiteCube\Lingua\Service as Lingua;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
-use WhiteCube\Lingua\LanguagesRepository;
-use Laravel\Nightwatch\Facades\Nightwatch;
+use GuzzleHttp\HandlerStack;
+use HTMLPurifier;
+use HTMLPurifier_Config;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use kamermans\OAuth2\GrantType\NullGrantType;
-use League\OAuth2\Client\Provider\GenericProvider;
+use kamermans\OAuth2\OAuth2Middleware;
+use Laravel\Nightwatch\Facades\Nightwatch;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
+use League\ISO3166\ISO3166;
+use League\OAuth2\Client\Provider\GenericProvider;
+use League\Uri\Uri;
+use League\Uri\UriModifier;
+use Real\Validator\Gtin;
+use stdClass;
+use WhiteCube\Lingua\LanguagesRepository;
+use WhiteCube\Lingua\Service as Lingua;
 
 class Groschen implements ProductInterface
 {
