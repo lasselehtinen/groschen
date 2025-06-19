@@ -120,7 +120,9 @@ class Groschen implements ProductInterface
         $stack->push($oauth);
 
         // Push Nightwatch's middleware
-        $stack->push(Nightwatch::guzzleMiddleware());
+        if (app()->runningUnitTests() === false) {
+            $stack->push(Nightwatch::guzzleMiddleware());
+        }
 
         // Create Guzzle and push the OAuth middleware to the handler stack
         $this->client = new Client([
