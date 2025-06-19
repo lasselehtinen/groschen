@@ -118,6 +118,9 @@ class Groschen implements ProductInterface
         $stack = HandlerStack::create();
         $stack->push($oauth);
 
+        // Push Nightwatch's middleware
+        $stack->push(Nightwatch::guzzleMiddleware());
+
         // Create Guzzle and push the OAuth middleware to the handler stack
         $this->client = new Client([
             'base_uri' => config('groschen.mockingbird.work_api_hostname'),
