@@ -295,13 +295,6 @@ interface ProductInterface
     public function getBindingCode();
 
     /**
-     * Get the products discount group
-     *
-     * @return int|null
-     */
-    public function getDiscountGroup();
-
-    /**
      * Get the products status
      *
      * @return string

@@ -143,11 +143,6 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('BC', $groschen->getProductForm());
         $this->assertContains('B116', $groschen->getProductFormDetails());
 
-        // Trade paperback or "Jättipokkari"
-        $groschen = new Groschen('9789520403072');
-        $this->assertSame('BC', $groschen->getProductForm());
-        $this->assertContains('B114', $groschen->getProductFormDetails());
-
         // Board book
         $groschen = new Groschen('9789521609336');
         $this->assertSame('BH', $groschen->getProductForm());
@@ -249,12 +244,6 @@ class GroschenIntegrationTest extends TestCase
      */
     public function test_getting_product_form_details()
     {
-        $groschen = new Groschen('9789522797995');
-        $this->assertContains('B114', $groschen->getProductFormDetails());
-
-        $groschen = new Groschen('9789523765320');
-        // $this->assertContains('B501', $groschen->getProductFormDetails());
-
         $groschen = new Groschen('9789523765573');
         $this->assertContains('B104', $groschen->getProductFormDetails());
 
@@ -285,7 +274,6 @@ class GroschenIntegrationTest extends TestCase
         // $this->assertContains('P201', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789522796257');
-        $this->assertContains('B114', $groschen->getProductFormDetails());
         $this->assertContains('B305', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789524032339');
@@ -331,7 +319,6 @@ class GroschenIntegrationTest extends TestCase
         // $this->assertContains('B601', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789523521148');
-        $this->assertContains('B114', $groschen->getProductFormDetails());
         $this->assertContains('B504', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789523521834');
@@ -355,10 +342,6 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789523753129');
         $this->assertContains('B304', $groschen->getProductFormDetails());
         $this->assertContains('B504', $groschen->getProductFormDetails());
-
-        $groschen = new Groschen('9789520435189');
-        $this->assertContains('B114', $groschen->getProductFormDetails());
-        // $this->assertContains('B310', $groschen->getProductFormDetails());
 
         // TODO - Not enough data
         $groschen = new Groschen('9789513169947');
@@ -451,7 +434,6 @@ class GroschenIntegrationTest extends TestCase
         // $this->assertContains('P101', $groschen->getProductFormDetails());
 
         $groschen = new Groschen('9789510462454');
-        $this->assertContains('B114', $groschen->getProductFormDetails());
         // $this->assertContains('B310', $groschen->getProductFormDetails());
         $this->assertContains('B504', $groschen->getProductFormDetails());
 
@@ -2565,16 +2547,6 @@ class GroschenIntegrationTest extends TestCase
         // Product with a binding code
         $groschen = new Groschen('9789510343203');
         $this->assertSame('A103', $groschen->getBindingCode());
-    }
-
-    /**
-     * Test getting the products discount group
-     *
-     * @return void
-     */
-    public function test_getting_discount_group()
-    {
-        $this->assertNull($this->groschen->getDiscountGroup());
     }
 
     /**

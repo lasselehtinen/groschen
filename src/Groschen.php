@@ -6048,16 +6048,6 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Get the products discount group
-     *
-     * @return int|null
-     */
-    public function getDiscountGroup()
-    {
-        return (empty($this->product->discountNumber)) ? null : $this->product->discountNumber;
-    }
-
-    /**
      * Get the products status
      *
      * @return string
