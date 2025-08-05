@@ -1139,8 +1139,9 @@ class GroschenIntegrationTest extends TestCase
         // Number of pages in print counterpart
         $this->assertContains(['ExtentType' => '08', 'ExtentValue' => '447', 'ExtentUnit' => '03'], $extents);
 
-        // Audio book duration in two different formats
+        // Audio book duration in three different formats
         $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '01344', 'ExtentUnit' => '15'], $extents);
+        $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '0134423', 'ExtentUnit' => '16'], $extents);
         $this->assertContains(['ExtentType' => '09', 'ExtentValue' => '49440', 'ExtentUnit' => '06'], $extents);
     }
 

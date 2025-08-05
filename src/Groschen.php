@@ -1157,6 +1157,19 @@ class Groschen implements ProductInterface
                     'ExtentUnit' => '06',
                 ]);
             }
+
+            // Add audio playtime with seconds if exists
+            $audioPlaytimeSeconds = (! isset($this->product->audioPlaytimeSeconds)) ? '00' : str_pad($this->product->audioPlaytimeSeconds, 2, '0', STR_PAD_LEFT);
+
+            if (! empty($audioPlaytimeSeconds) && $audioPlaytimeSeconds !== '00') {
+                $extentValue = $audioPlaytimeHours.$audioPlaytimeMinutes.$audioPlaytimeSeconds;
+
+                $extents->push([
+                    'ExtentType' => '09',
+                    'ExtentValue' => strval($extentValue),
+                    'ExtentUnit' => '16',
+                ]);
+            }
         }
 
         // E-book word and pages count by approximation (Finnish words is 8.5 characters on average and around 1500 characters per page)
