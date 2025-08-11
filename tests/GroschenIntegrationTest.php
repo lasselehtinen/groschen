@@ -745,8 +745,6 @@ class GroschenIntegrationTest extends TestCase
     /**
      * Test getting products contributors
      *
-     * @group contributors
-     *
      * @return void
      */
     public function test_getting_contributors()
@@ -844,8 +842,6 @@ class GroschenIntegrationTest extends TestCase
     /**
      * Test that stakeholders with same priority are sorted by last name
      *
-     * @group contributors
-     *
      * @return void
      */
     public function test_contributor_are_sorted_by_lastname()
@@ -889,8 +885,6 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that priority contributor with same role
-     *
-     * @group contributors
      *
      * @return void
      */
@@ -2047,8 +2041,6 @@ class GroschenIntegrationTest extends TestCase
     /**
      * Test getting supporting resources like cover image / reading sample links etc.
      *
-     * @group SupportingResources
-     *
      * @return void
      */
     public function test_getting_cover_image_in_supporting_resources()
@@ -2098,8 +2090,6 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test version is added to cover image link in supporting resources
-     *
-     * @group SupportingResources
      *
      * @return void
      */
@@ -2152,8 +2142,6 @@ class GroschenIntegrationTest extends TestCase
     /**
      * Test getting cover image for Disney which is not brand based
      *
-     * @group SupportingResources
-     *
      * @return void
      */
     public function test_getting_cover_image_for_disney()
@@ -2164,8 +2152,6 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting author image in supporting resources
-     *
-     * @group SupportingResources
      *
      * @return void
      */
@@ -2253,8 +2239,6 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting Bazar 3D cover image
-     *
-     * @group SupportingResources
      *
      * @return void
      */
@@ -2348,8 +2332,6 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test getting audio sample links to Soundcloud
-     *
-     * @group SupportingResources
      *
      * @return void
      */
@@ -4382,8 +4364,6 @@ class GroschenIntegrationTest extends TestCase
 
     /**
      * Test that contributor with two digit sort order is ordered correctly
-     *
-     * @group contributors
      *
      * @return void
      */
