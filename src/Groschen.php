@@ -486,17 +486,34 @@ class Groschen implements ProductInterface
     {
         $productFormFeatures = new Collection;
 
-        // Add ePub version
-        switch ($this->product->bindingCode->id) {
-            case 'EPUB2':
-                $featureValue = '101A';
-                break;
-            case 'EPUB3':
-                $featureValue = '101B';
-                break;
-        }
+        // Add ePub version if exists
+        if (property_exists($this->product->activePrint, 'ebookVersion')) {
+            switch ($this->product->activePrint->ebookVersion) {
+                case '2.0':
+                case '2.0.1':
+                    $featureValue = '101A';
+                    break;
 
-        if (isset($featureValue)) {
+                case '3.0':
+                    $featureValue = '101B';
+                    break;
+                case '3.0.1':
+                    $featureValue = '101C';
+                    break;
+                case '3.1':
+                    $featureValue = '101D';
+                    break;
+                case '3.2':
+                    $featureValue = '101E';
+                    break;
+                case '3.3':
+                    $featureValue = '101F';
+                    break;
+
+                default:
+                    throw new Exception('Unknown ePub version '.$this->product->activePrint->ebookVersion.'. Cannot map to Onix ProductFormFeatureValue.');
+            }
+
             $productFormFeatures->push([
                 'ProductFormFeatureType' => '15',
                 'ProductFormFeatureValue' => $featureValue,
