@@ -1325,7 +1325,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Main product group', 'SubjectCode' => '1', 'SubjectHeadingText' => 'Kotimainen kauno'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Product sub-group', 'SubjectCode' => '24', 'SubjectHeadingText' => 'Nykyromaanit'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Cost center', 'SubjectCode' => '301', 'SubjectHeadingText' => 'WSOY - Kotimainen kauno'], $subjects);
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC000000'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC016000'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
@@ -1345,7 +1345,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Main product group', 'SubjectCode' => '4', 'SubjectHeadingText' => 'Käännetty L&N'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Product sub-group', 'SubjectCode' => '31', 'SubjectHeadingText' => 'Scifi'], $subjects);
-        $this->assertNotContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC028000'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC028000'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FL'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FYT'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'N'], $subjects);
@@ -1365,6 +1365,11 @@ class GroschenIntegrationTest extends TestCase
         // Check that "Ellibs" is not added as a keyword
         $groschen = new Groschen('9789513170424');
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'Ellibs'], $groschen->getSubjects());
+
+        // BISAC
+        $groschen = new Groschen('9789510513101');
+        $subjects = $groschen->getSubjects();
+        $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'JUV019000'], $subjects);
     }
 
     /**
@@ -4987,5 +4992,31 @@ class GroschenIntegrationTest extends TestCase
             'ProductContactName' => 'Werner Söderström Ltd',
             'ProductContactEmail' => 'saavutettavuus@docendo.fi',
         ], $groschen->getProductContacts());
+    }
+
+    /**
+     * Test that Thema codes are converted to correct BIC codes
+     *
+     * @return void
+     */
+    public function test_converting_thema_codes_to_bisac_codes()
+    {
+        $groschen = new Groschen('9789510504055');
+
+        // Check that Thema codes are converted to BIC codes
+        $this->assertSame('ANT000000', $groschen->getBisacCode(['WC']));
+        $this->assertSame('ANT056000', $groschen->getBisacCode(['WC', 'KJSA']));
+        $this->assertSame('ANT054000', $groschen->getBisacCode(['WC', '1KBC']));
+
+        // Murtuneet mielet
+        $this->assertSame('HIS027000', $groschen->getBisacCode(['NHW', '1DNF', '3MPBLB']));
+
+        // Ronttiäiti ja Ahkera Tiikeri
+        $this->assertSame('JUV019000', $groschen->getBisacCode(['YFN', 'YFQ', '5AF']));
+
+        // Edge cases:
+        // No Thema codes
+        // FQ,5JA
+        // YBC,5AB
     }
 }
