@@ -5009,13 +5009,27 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('ANT054000', $groschen->getBisacCode(['WC', '1KBC']));
 
         // Murtuneet mielet
-        $this->assertSame('HIS027000', $groschen->getBisacCode(['NHW', '1DNF', '3MPBLB']));
+        $this->assertSame('HIS027130', $groschen->getBisacCode(['NHW', '1DNF', '3MPBLB']));
 
         // Ronttiäiti ja Ahkera Tiikeri
         $this->assertSame('JUV019000', $groschen->getBisacCode(['YFN', 'YFQ', '5AF']));
 
+        // 9789523768529
+        $this->assertSame('FIC000000', $groschen->getBisacCode(['FQ', 'FYT', '1DDU']));
+
+        // 9789528500810
+        $this->assertSame('HIS000000', $groschen->getBisacCode(['NHDJ', 'NHTX', '1D', '3KH', '3KL']));
+
+        // 9789520415662
+        $this->assertSame('JUV000000', $groschen->getBisacCode(['YBC', 'YFZT', '5AF']));
+
+        // 9789520415839
+        $this->assertSame('BIO000000', $groschen->getBisacCode(['DN']));
+
+        // 9789510426333
+        $this->assertSame('FIC014050', $groschen->getBisacCode(['FJMS', '1DNF', '3MPBLB-FI-A']));
+
         // Edge cases:
-        // No Thema codes
         // FQ,5JA
         // YBC,5AB
     }
