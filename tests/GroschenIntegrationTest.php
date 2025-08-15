@@ -1320,7 +1320,7 @@ class GroschenIntegrationTest extends TestCase
     public function test_getting_subjects()
     {
         $subjects = $this->groschen->getSubjects();
-dd($subjects);
+
         $this->assertContains(['SubjectSchemeIdentifier' => '66', 'SubjectSchemeName' => 'YKL', 'SubjectCode' => '84.2'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Main product group', 'SubjectCode' => '1', 'SubjectHeadingText' => 'Kotimainen kauno'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Product sub-group', 'SubjectCode' => '24', 'SubjectHeadingText' => 'Nykyromaanit'], $subjects);
@@ -5018,7 +5018,7 @@ dd($subjects);
         $this->assertSame('FIC000000', $groschen->getBisacCode(['FQ', 'FYT', '1DDU']));
 
         // 9789528500810
-        $this->assertSame('HIS000000', $groschen->getBisacCode(['NHDJ', 'NHTX', '1D', '3KH', '3KL']));
+        $this->assertSame('HIS010300', $groschen->getBisacCode(['NHDJ', 'NHTX', '1D', '3KH', '3KL']));
 
         // 9789520415662
         $this->assertSame('JUV000000', $groschen->getBisacCode(['YBC', 'YFZT', '5AF']));
@@ -5029,8 +5029,7 @@ dd($subjects);
         // 9789510426333
         $this->assertSame('FIC014050', $groschen->getBisacCode(['FJMS', '1DNF', '3MPBLB-FI-A']));
 
-        // Edge cases:
-        // FQ,5JA
-        // YBC,5AB
+        // 9789523753204
+        $this->assertSame('MUS001000', $groschen->getBisacCode(['AVP']));
     }
 }
