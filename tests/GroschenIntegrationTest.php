@@ -5031,5 +5031,120 @@ class GroschenIntegrationTest extends TestCase
 
         // 9789523753204
         $this->assertSame('MUS001000', $groschen->getBisacCode(['AVP']));
+
+        // 9789513191818
+        $this->assertSame('FIC000000', $groschen->getBisacCode(['FBA']));
+
+        // 9789524160223
+        $this->assertSame('BIO000000', $groschen->getBisacCode(['DNBH1']));
+
+        // 9789510437162
+        // Problematic
+        // $this->assertSame('', $groschen->getBisacCode(['W']));
+
+        // 9789523520189
+        $this->assertSame('SOC000000', $groschen->getBisacCode(['J']));
+
+        // 9789513160135
+        $this->assertSame('BUS000000', $groschen->getBisacCode(['K']));
+
+        // 9789510439364
+        $this->assertSame('COM000000', $groschen->getBisacCode(['XY']));
+
+        // 9789510443293
+        $this->assertSame('SEL032000', $groschen->getBisacCode(['WZG']));
+
+        // 9789513198671
+        $this->assertSame('HIS000000', $groschen->getBisacCode(['WQH']));
+
+        // 9789523217492
+        $this->assertSame('CGN006000', $groschen->getBisacCode(['AFF']));
+
+        // 9789524926034
+        $this->assertSame('HEA000000', $groschen->getBisacCode(['SZD']));
+
+        // 9789512652693
+        $this->assertSame('SCI000000', $groschen->getBisacCode(['P']));
+
+        // 9789510398029
+        $this->assertSame('BUS068000', $groschen->getBisacCode(['GTP']));
+
+        // 9789510497982
+        $this->assertSame('CGN004110', $groschen->getBisacCode(['XQX']));
+
+        //  6430060033047
+        $this->assertSame('NON000000', $groschen->getBisacCode(['WZ']));
+
+        // 9789510398654
+        $this->assertSame('SPO000000', $groschen->getBisacCode(['S']));
+
+        // 9789513133771
+        $this->assertSame('NAT011000', $groschen->getBisacCode(['RN']));
+
+        // 9789524161459
+        $this->assertSame('BIO000000', $groschen->getBisacCode(['DNBH1']));
+
+        // 9789523821019
+        $this->assertSame('TEC021000', $groschen->getBisacCode(['TDPF']));
+
+        // 9789513191818
+        $this->assertSame('FIC000000', $groschen->getBisacCode(['FBA']));
+
+        // 9789523215207
+        $this->assertSame('CKB130000', $groschen->getBisacCode(['WBXD3']));
+
+        // 9789522916464
+        $this->assertSame('HIS054000', $groschen->getBisacCode(['WQ']));
+
+        // 9789523731011
+        $this->assertSame('SPO000000', $groschen->getBisacCode(['SV']));
+
+        // 9789513198671
+        $this->assertSame('REF013000', $groschen->getBisacCode(['WQP']));
+
+        // 9789523821019
+        $this->assertSame('CRA061000', $groschen->getBisacCode(['AFW']));
+
+        // 9789513144906
+        $this->assertSame('CGN000000', $groschen->getBisacCode(['X']));
+
+        // 9789523218086
+        $this->assertSame('ART022000', $groschen->getBisacCode(['AFCC']));
+
+        // 9789523737204
+        $this->assertSame('DES013000', $groschen->getBisacCode(['SZ']));
+
+        // 9789523215375
+        $this->assertSame('SPO037000', $groschen->getBisacCode(['SVS']));
+
+        // 9789525474251
+        $this->assertSame('FIC060000', $groschen->getBisacCode(['FU']));
+
+        // 9789523215900
+        $this->assertSame('SPO018000', $groschen->getBisacCode(['SMQB']));
+
+        // 9789523730823
+        $this->assertSame('HEA049000', $groschen->getBisacCode(['MFKH3']));
+
+        // 9789520481797
+        $this->assertSame('BUS041000', $groschen->getBisacCode(['KJK']));
+
+        // 9789520481797
+        $this->assertSame('BUS025000', $groschen->getBisacCode(['KJH']));
+
+        // 9789520481797
+        $this->assertSame('BUS111000', $groschen->getBisacCode(['KJD']));
+
+        // 9789520473266
+        $this->assertSame('FIC027430', $groschen->getBisacCode(['FRD']));
+
+        // 9789523215375
+        $this->assertSame('HIS027080', $groschen->getBisacCode(['JWM']));
+
+        // 9789520473266
+        $this->assertSame('FIC027100', $groschen->getBisacCode(['FRJ']));
+
+        // 9789520473266
+        $this->assertSame('FIC027000', $groschen->getBisacCode(['FXD']));
     }
 }
