@@ -2942,6 +2942,7 @@ class GroschenIntegrationTest extends TestCase
         $printOrder = $groschen->getPrintOrders()->where('printNumber', 24)->first();
 
         $this->assertSame(5000, $printOrder['orderedQuantity']);
+        $this->assertSame(59721, $printOrder['supplierId']); // Livonia Print Ltd
 
         // Delivery without planned delivery date
         $this->assertSame('Livonia Print Ltd', $printOrder['deliveries']->where('recipient', 'Production department')->pluck('supplier')->first());
@@ -2952,6 +2953,14 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('Livonia Print Ltd', $printOrder['deliveries']->where('recipient', 'Warehouse Porvoon Kirjakeskus')->pluck('supplier')->first());
         $this->assertSame(5000, $printOrder['deliveries']->where('recipient', 'Warehouse Porvoon Kirjakeskus')->pluck('orderedQuantity')->first());
         $this->assertSame('2019-09-02T00:00:00', $printOrder['deliveries']->where('recipient', 'Warehouse Porvoon Kirjakeskus')->pluck('plannedDeliveryDate')->first());
+
+        // Product with different printer on different prints
+        $groschen = new Groschen('9789510504260');
+        $printOrder = $groschen->getPrintOrders()->where('printNumber', 1)->first();
+        $this->assertSame(59750, $printOrder['supplierId']); // Scandbook
+
+        $printOrder = $groschen->getPrintOrders()->where('printNumber', 2)->first();
+        $this->assertSame(59740, $printOrder['supplierId']); // Otavan kirjapaino Oy
     }
 
     /**

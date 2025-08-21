@@ -6621,11 +6621,21 @@ class Groschen implements ProductInterface
                 ];
             }
 
-            $printOrders->push([
+            $printOrder = [
                 'printNumber' => $print->print,
                 'orderedQuantity' => isset($print->quantityOrdered) ? $print->quantityOrdered : null,
+                // 'supplierId' => $mockingbirdDeliviries->deliverySpecifications->printerContact->id,
                 'deliveries' => collect($deliveries),
-            ]);
+            ];
+
+            // Add supplier ID if available
+            if (property_exists($mockingbirdDeliviries, 'deliverySpecifications') && is_array($mockingbirdDeliviries->deliverySpecifications) && ! empty($mockingbirdDeliviries->deliverySpecifications)) {
+                $printOrder['supplierId'] = $mockingbirdDeliviries->deliverySpecifications[0]->printerContact->id;
+            } else {
+                $printOrder['supplierId'] = null;
+            }
+
+            $printOrders->push($printOrder);
         }
 
         return $printOrders;
