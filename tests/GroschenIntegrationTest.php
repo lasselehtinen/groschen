@@ -1893,6 +1893,16 @@ class GroschenIntegrationTest extends TestCase
      */
     public function test_getting_prices()
     {
+        // RRP excluding tax
+        $recommendedRetailPriceExcludingTax = [
+            'PriceType' => '01',
+            'PriceAmount' => 32.50,
+            'CurrencyCode' => 'EUR',
+            'Territory' => [
+                'RegionsIncluded' => 'WORLD',
+            ],
+        ];
+
         // Suppliers net price excluding tax
         $suppliersNetPriceExcludingTax = [
             'PriceType' => '05',
@@ -1920,6 +1930,7 @@ class GroschenIntegrationTest extends TestCase
             ],
         ];
 
+        $this->assertContains($recommendedRetailPriceExcludingTax, $this->groschen->getPrices());
         $this->assertContains($suppliersNetPriceExcludingTax, $this->groschen->getPrices());
         $this->assertContains($suppliersNetPriceIncludingTax, $this->groschen->getPrices());
     }

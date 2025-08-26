@@ -1969,6 +1969,16 @@ class Groschen implements ProductInterface
         // Price types to collect
         $priceTypes = new Collection;
 
+        // Recommended Retail Price excluding tax is calculated as double the reseller price excluding tax
+        if (! is_null($this->getPriceExcludingVat())) {
+            $priceTypes->push([
+                'PriceTypeCode' => '01',
+                'TaxIncluded' => false,
+                'TaxRateCode' => 'Z',
+                'PriceAmount' => $this->getPriceExcludingVat() * 2,
+            ]);
+        }
+
         // Supplier’s net price excluding tax
         if (! is_null($this->getPriceExcludingVat())) {
             $priceTypes->push([
