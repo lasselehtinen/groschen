@@ -7432,13 +7432,22 @@ class Groschen implements ProductInterface
             $editionTypes->push(['EditionType' => 'MDT']);
         }
 
-        // Selkokirja or Easy-to-read is determined from Thema interest age codes
+        // Selkokirja is determined from Thema interest age codes
+        $hasSelkoKirjaAgeGroups = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->contains(function ($subject, $key) {
+            return in_array($subject['SubjectCode'], ['5AZ']);
+        });
+
+        if ($hasSelkoKirjaAgeGroups) {
+            $editionTypes->push(['EditionType' => 'SMP']);
+        }
+
+        // Easy-to-read is determined from Thema interest age codes
         $hasEasyToReadAgeGroups = $this->getSubjects()->where('SubjectSchemeIdentifier', '98')->contains(function ($subject, $key) {
-            return in_array($subject['SubjectCode'], ['5AR', '5AX', '5AZ']);
+            return in_array($subject['SubjectCode'], ['5AR', '5AX']);
         });
 
         if ($hasEasyToReadAgeGroups) {
-            $editionTypes->push(['EditionType' => 'SMP']);
+            $editionTypes->push(['EditionType' => 'ETR']);
         }
 
         // ePub 3 with extra audio
