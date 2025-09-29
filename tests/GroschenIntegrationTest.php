@@ -5173,4 +5173,26 @@ class GroschenIntegrationTest extends TestCase
         // 9789520473266
         $this->assertSame('FIC027000', $groschen->getBisacCode(['FXD']));
     }
+
+    /**
+     * Undocumented functionTes
+     *
+     * @return void
+     */
+    public function test_getting_battery_information()
+    {
+        // Product without batteries
+        $this->assertCount(0, $this->groschen->getProductFormFeatures()->where('ProductFormFeatureType', '19')->toArray());
+
+        // Product with batteries
+        $groschen = new Groschen('9789520483913');
+
+        // Battery type and safety
+        $this->assertCount(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '19')->where('ProductFormFeatureValue', '03')->toArray());
+        $batteryType = $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '19')->where('ProductFormFeatureValue', '03')->first();
+        $this->assertSame('3 batteries included (AG10 x 3 button cell batteries (1.5V x 3 = 4.5V)', $batteryType['ProductFormFeatureDescription']);
+
+        // Battery chemistry
+        $this->assertCount(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '19')->where('ProductFormFeatureValue', '26')->toArray());
+    }
 }

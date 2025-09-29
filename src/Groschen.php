@@ -664,6 +664,30 @@ class Groschen implements ProductInterface
             ]);
         }
 
+        // Battery information
+        if (property_exists($this->product, 'batteryInfo') && property_exists($this->product->batteryInfo, 'onixCode')) {
+            // Define battery info
+            $battery = [
+                'ProductFormFeatureType' => '19',
+                'ProductFormFeatureValue' => $this->product->batteryInfo->onixCode,
+            ];
+
+            // Add description if available
+            if (property_exists($this->product, 'batteryDescription')) {
+                $battery['ProductFormFeatureDescription'] = $this->product->batteryDescription;
+            }
+
+            $productFormFeatures->push($battery);
+        }
+
+        // Battery chemistry
+        if (property_exists($this->product, 'batteryType') && property_exists($this->product->batteryType, 'onixCode')) {
+            $productFormFeatures->push([
+                'ProductFormFeatureType' => '19',
+                'ProductFormFeatureValue' => $this->product->batteryType->onixCode,
+            ]);
+        }
+
         return $productFormFeatures;
     }
 
