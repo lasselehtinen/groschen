@@ -968,7 +968,7 @@ class GroschenIntegrationTest extends TestCase
         $author = [
             'Id' => 55133,
             'PriorityLevel' => 'Primary',
-            'Role' => 'Author WS',
+            'Role' => 'Author',
             'FirstName' => 'Tuomas',
             'LastName' => 'Kyrö',
         ];
@@ -979,7 +979,7 @@ class GroschenIntegrationTest extends TestCase
         $layout = [
             'Id' => 58360,
             'PriorityLevel' => 'Internal',
-            'Role' => 'Layout WS',
+            'Role' => 'Layout',
             'FirstName' => 'Keski-Suomen Sivu Oy',
             'LastName' => null,
         ];
@@ -990,7 +990,7 @@ class GroschenIntegrationTest extends TestCase
         $printer = [
             'Id' => 59694,
             'PriorityLevel' => 'Internal',
-            'Role' => 'Printer WS',
+            'Role' => 'Printer',
             'FirstName' => 'Bookwell Oy',
             'LastName' => null,
         ];
@@ -1329,7 +1329,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'novellit;kuunnelmat;pakinat;monologit;eläkeläiset;mielipiteet;pessimismi;miehet;huumori;arkielämä;vanhukset;suomalaisuus;suomalaiset;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet;novellit;huumori;pakinat;monologit'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
