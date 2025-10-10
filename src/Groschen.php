@@ -6549,9 +6549,6 @@ class Groschen implements ProductInterface
      */
     public function getRolePriority($role)
     {
-        // Remove WS suffix from role name
-        $role = str_replace(' WS', '', $role);
-
         $rolePriorities = [
             'Author' => 1,
             'Editor in Chief' => 2,
@@ -7728,12 +7725,13 @@ class Groschen implements ProductInterface
     public function getCountryOfManufacture()
     {
         // Check if the product contains Printer role or is digital
-        if ($this->isImmaterial() || $this->getAllContributors()->contains('Role', 'Printer WS') === false) {
+        if ($this->isImmaterial() || $this->getAllContributors()->contains('Role', 'Printer') === false) {
             return null;
         }
 
         // Get the printer contact
-        $printer = $this->getAllContributors()->where('Role', 'Printer WS')->reject(function (array $contributor, int $key) {
+
+        $printer = $this->getAllContributors()->where('Role', 'Printer')->reject(function (array $contributor, int $key) {
             return Str::contains($contributor['FirstName'], 'Yhteispainatus') || Str::contains($contributor['LastName'], 'Yhteispainatus');
         })->first();
 
