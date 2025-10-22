@@ -12259,4 +12259,21 @@ class Groschen implements ProductInterface
 
         return null;
     }
+
+    /**
+     * Get ePub usage constraints
+     *
+     * @return Collection
+     */
+    public function getEpubUsageConstraints()
+    {
+        $epubUsageConstraints = new Collection;
+
+        // Add TDM restriction when "Prohibit Text And Data Mining" is checked
+        if (property_exists($this->product, 'prohibitTextAndDataMining') && $this->product->prohibitTextAndDataMining === true) {
+            $epubUsageConstraints->push(['EpubUsageType' => '11', 'EpubUsageStatus' => '03']);
+        }
+
+        return $epubUsageConstraints;
+    }
 }

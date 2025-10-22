@@ -5198,4 +5198,27 @@ class GroschenIntegrationTest extends TestCase
         // Battery chemistry
         $this->assertCount(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '19')->where('ProductFormFeatureValue', '26')->toArray());
     }
+
+    /**
+     * Test getting ePub usage constraints
+     *
+     * @return void
+     */
+    public function test_getting_epub_usage_constraints()
+    {
+        // TDM not allowed is not marked / no constraints
+        $groschen = new Groschen('9789510441275');
+
+        $this->assertEmpty($groschen->getEpubUsageConstraints());
+
+        // TDM not allowed
+        $groschen = new Groschen('9789523523456');
+
+        $this->assertContains([
+            'EpubUsageType' => '11',
+            'EpubUsageStatus' => '03',
+        ], $groschen->getEpubUsageConstraints());
+
+        $this->assertCount(1, $groschen->getEpubUsageConstraints());
+    }
 }
