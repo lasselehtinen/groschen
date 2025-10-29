@@ -5032,7 +5032,6 @@ class GroschenIntegrationTest extends TestCase
     {
         $groschen = new Groschen('9789510504055');
 
-        // Check that Thema codes are converted to BIC codes
         $this->assertSame('ANT000000', $groschen->getBisacCode(['WC']));
         $this->assertSame('ANT056000', $groschen->getBisacCode(['WC', 'KJSA']));
         $this->assertSame('ANT054000', $groschen->getBisacCode(['WC', '1KBC']));
@@ -5062,7 +5061,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('MUS001000', $groschen->getBisacCode(['AVP']));
 
         // 9789513191818
-        $this->assertSame('FIC000000', $groschen->getBisacCode(['FBA']));
+        $this->assertSame('FIC082000', $groschen->getBisacCode(['FBA']));
 
         // 9789524160223
         $this->assertSame('BIO000000', $groschen->getBisacCode(['DNBH1']));
@@ -5117,7 +5116,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('TEC021000', $groschen->getBisacCode(['TDPF']));
 
         // 9789513191818
-        $this->assertSame('FIC000000', $groschen->getBisacCode(['FBA']));
+        $this->assertSame('FIC082000', $groschen->getBisacCode(['FBA']));
 
         // 9789523215207
         $this->assertSame('CKB130000', $groschen->getBisacCode(['WBXD3']));
@@ -5175,6 +5174,21 @@ class GroschenIntegrationTest extends TestCase
 
         // 9789520473266
         $this->assertSame('FIC027000', $groschen->getBisacCode(['FXD']));
+
+        // Tests added on 29.10.2025
+        $this->assertSame('JUV000000', $groschen->getBisacCode(['YFB', 'YFC', '5AL']));
+        $this->assertSame('JUV001000', $groschen->getBisacCode(['YFC', 'YFE', '5AN']));
+        $this->assertSame('YAF000000', $groschen->getBisacCode(['YFB', '5AN']));
+        $this->assertSame('FIC000000', $groschen->getBisacCode(['FB']));
+        $this->assertSame('FIC082000', $groschen->getBisacCode(['FBA']));
+        $this->assertSame('FIC052000', $groschen->getBisacCode(['FB', 'FUP']));
+        $this->assertSame('FIC016000', $groschen->getBisacCode(['FB', 'FU']));
+
+        // DNBZ GBCB 1DNF-FI-CBA - No BISAC mapping, only for DNB - BIO000000 Biography: general
+        $this->assertSame('BIO000000', $groschen->getBisacCode(['DNBZ', 'GBCB', '1DNF-FI-CBA']));
+
+        // YFHK XA 5AH - No BISAC mapping, only for YFH - JUV037000 Children’s / Teenage fiction: Fantasy
+        $this->assertSame('JUV037000', $groschen->getBisacCode(['YHFK', 'XA', '5AH']));
     }
 
     /**
@@ -5208,7 +5222,10 @@ class GroschenIntegrationTest extends TestCase
     {
         // TDM not allowed is not marked / no constraints
         $groschen = new Groschen('9789510441275');
+        $this->assertEmpty($groschen->getEpubUsageConstraints());
 
+        // Hardback - no ePub usage constraints
+        $groschen = new Groschen('9789520448158');
         $this->assertEmpty($groschen->getEpubUsageConstraints());
 
         // TDM not allowed

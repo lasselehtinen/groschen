@@ -9163,7 +9163,7 @@ class Groschen implements ProductInterface
             'VFJN' => 'FAM035000',
             'VFV,VFXC' => 'FAM037000',
             'VFV,GBC' => 'FAM038000',
-            'FB' => 'FIC128000',
+            'FB' => 'FIC000000',
             'FJ' => 'FIC002000',
             'FYV,FYH' => 'FIC075000',
             'FB,5PB-US-C' => 'FIC049020',
@@ -9345,7 +9345,7 @@ class Groschen implements ProductInterface
             'FDV' => 'FIC039000',
             'FJM' => 'FIC032000',
             'FJW' => 'FIC033000',
-            'FBA' => 'FIC000000',
+            'FBA' => 'FIC082000',
             'CJ' => 'LAN020000',
             'CJ,2H' => 'FOR001000',
             'CJ,1QBA' => 'FOR033000',
@@ -9688,8 +9688,8 @@ class Groschen implements ProductInterface
             'WH,JN' => 'HUM025000',
             'WH,SC' => 'HUM013000',
             'WH,WT' => 'HUM026000',
-            'YFB' => 'JUV027000',
-            'YFC' => 'JUV001010',
+            'YFB' => 'JUV000000',
+            'YFC' => 'JUV001000',
             'YFC,YNHA1' => 'JUV001020',
             'YBG' => 'JNF001000',
             'YBGC' => 'JNF001010',
@@ -11705,8 +11705,8 @@ class Groschen implements ProductInterface
             'DNXC,JKVM' => 'TRU003000',
             'DNXC,JBFK2' => 'TRU009000',
             'DNXC,JKVK' => 'TRU005000',
-            'YFB,5AN' => 'YAF064010',
-            'YFC,5AN' => 'YAF001020',
+            'YFB,5AN' => 'YAF000000',
+            'YFC,5AN' => 'YAF001000',
             'YFC,YNHA1,5AN' => 'YAF001010',
             'YFE,5AN' => 'YAF003000',
             'YFP,5AN' => 'YAF002000',
@@ -12157,7 +12157,7 @@ class Groschen implements ProductInterface
             'WTLC' => 'TRV014000',
             'AVN' => 'MUS023050',
             'SFB' => 'SPO013000',
-            'DNBZ' => 'BIO008000',
+            'DNBZ' => 'BIO000000',
             'VXHT' => 'ART020000',
             'JBCT2' => 'JUV014000',
             'JWCM' => 'JUV010000',
@@ -12230,6 +12230,9 @@ class Groschen implements ProductInterface
             'JWM' => 'HIS027080',
             // 'FRJ' => 'FIC027100',
             // 'FXD' => 'FIC045000',
+            'FB,FU' => 'FIC016000',
+            'FB,FUP' => 'FIC052000',
+            'YHFK,XA,5AH' => 'JUV037000',
         ];
 
         $codes = implode(',', $themaCodes);
@@ -12270,6 +12273,7 @@ class Groschen implements ProductInterface
         $epubUsageConstraints = new Collection;
 
         // Add TDM restriction when "Prohibit Text And Data Mining" is checked
+        dump($this->product->prohibitTextAndDataMining);
         if (property_exists($this->product, 'prohibitTextAndDataMining') && $this->product->prohibitTextAndDataMining === true) {
             $epubUsageConstraints->push(['EpubUsageType' => '11', 'EpubUsageStatus' => '03']);
         }
