@@ -12193,7 +12193,7 @@ class Groschen implements ProductInterface
             'QDXB' => 'REF009000',
             'VSA' => 'SEL031000',
             'VSPP' => 'SEL031000',
-            'XA' => 'REF009000',
+            // 'XA' => 'REF009000',
             'WNJ' => 'TRV012000',
             'LBK' => 'REF002000',
             'SCBG' => 'SOC012000',
@@ -12232,7 +12232,7 @@ class Groschen implements ProductInterface
             // 'FXD' => 'FIC045000',
             'FB,FU' => 'FIC016000',
             'FB,FUP' => 'FIC052000',
-            'YHFK,XA,5AH' => 'JUV037000',
+            'YHFK' => 'JUV037000',
         ];
 
         $codes = implode(',', $themaCodes);
