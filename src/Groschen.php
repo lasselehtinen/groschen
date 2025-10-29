@@ -12272,8 +12272,12 @@ class Groschen implements ProductInterface
     {
         $epubUsageConstraints = new Collection;
 
+        // Skip when product is not digital
+        if ($this->getPlanningCode() !== 'y') {
+            return $epubUsageConstraints;
+        }
+
         // Add TDM restriction when "Prohibit Text And Data Mining" is checked
-        dump($this->product->prohibitTextAndDataMining);
         if (property_exists($this->product, 'prohibitTextAndDataMining') && $this->product->prohibitTextAndDataMining === true) {
             $epubUsageConstraints->push(['EpubUsageType' => '11', 'EpubUsageStatus' => '03']);
         }

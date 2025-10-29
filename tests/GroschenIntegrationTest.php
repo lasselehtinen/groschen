@@ -5228,6 +5228,10 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789520448158');
         $this->assertEmpty($groschen->getEpubUsageConstraints());
 
+        // Pocket book which falsely has "TDM not allowed"
+        $groschen = new Groschen('9789510527405');
+        $this->assertEmpty($groschen->getEpubUsageConstraints());
+
         // TDM not allowed
         $groschen = new Groschen('9789523523456');
 
