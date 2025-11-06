@@ -5252,4 +5252,45 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertCount(1, $groschen->getEpubUsageConstraints());
     }
+
+    /**
+     * Test getting EUDR related exemptions
+     *
+     * @return void
+     */
+    public function test_getting_eudr_exemptions()
+    {
+        // Product with no exemptions or exceptions
+        $groschen = new Groschen('9789523765634');
+        $this->assertSame(0, $groschen->getProductFormFeatures()->whereIn('ProductFormFeatureType', ['53', '54', '56'])->count());
+
+        // Product with exemption "Deforestration free" aka 100% recycled paper / TARIC Y133
+        $groschen = new Groschen('9789523765627');
+        $this->assertSame(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '53')->count());
+
+        // Product with exception "Stock present" / TARIC Y132
+        $groschen = new Groschen('9789510503959');
+        $this->assertSame(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '54')->count());
+
+        // Product with exception "Beyond scope" aka product does not contain EUDR-relevant commodities - TARIC 129
+        $groschen = new Groschen('9789524035125');
+        $this->assertSame(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '56')->count());
+    }
+
+    /**
+     * Test getting DDS numbers on reprint
+     *
+     * @return void
+     */
+    public function test_getting_eudr_dds_numbers_on_reprints()
+    {
+        // Product where first print has exemption "Stock present", second print has DDS number and third one does not
+        $groschen = new Groschen('9789523737761');
+
+        // There should not be any exemptions
+        $this->assertSame(0, $groschen->getProductFormFeatures()->whereIn('ProductFormFeatureType', ['53', '54', '56'])->count());
+
+        $this->assertCount(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '50')->where('ProductFormFeatureValue', '25SEZE6M153044+KF4BSTHS')->toArray());
+        $this->assertCount(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '50')->where('ProductFormFeatureValue', '25SE7HKF153060+DT7CKEF3')->toArray());
+    }
 }

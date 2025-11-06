@@ -688,6 +688,44 @@ class Groschen implements ProductInterface
             ]);
         }
 
+        // EUDR related information
+        $response = $this->client->get('/v1/editions/'.$this->productionId.'/deforestationregulation');
+        $deforestationregulationResponse = collect(json_decode($response->getBody()->getContents(), true))->filter(function (array $print, int $key) {
+            // Must have status or statements
+            return array_key_exists('status', $print) || count($print['statements']) > 0;
+        })->sortByDesc('printNumber');
+
+        // Since Onix does not support per print level information, use the latest one
+        $latestPrint = $deforestationregulationResponse->first();
+
+        // Check if we have an exemption
+        $exemptionMapping = [
+            '53' => 'Deforestation free',
+            '54' => 'Stock present',
+            '56' => 'Beyond scope',
+        ];
+
+        if (! empty($latestPrint) && array_key_exists('status', $latestPrint) && in_array($latestPrint['status']['name'], $exemptionMapping)) {
+            $productFormFeatures->push([
+                'ProductFormFeatureType' => array_search($latestPrint['status']['name'], $exemptionMapping),
+            ]);
+        }
+
+        // Add DDS numbers from statements
+        foreach ($deforestationregulationResponse as $print) {
+            if (array_key_exists('statements', $print) === true && count($print['statements']) > 0) {
+                foreach ($print['statements'] as $statement) {
+                    if (array_key_exists('referenceNumber', $statement) && ! empty($statement['referenceNumber']) && array_key_exists('verificationCode', $statement) && ! empty($statement['verificationCode'])) {
+                        $productFormFeatures->push([
+                            'ProductFormFeatureType' => '50',
+                            'ProductFormFeatureValue' => $statement['referenceNumber'].'+'.$statement['verificationCode'],
+                        ]);
+                    }
+                }
+            }
+
+        }
+
         return $productFormFeatures;
     }
 
