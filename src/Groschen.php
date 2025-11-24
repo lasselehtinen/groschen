@@ -2386,7 +2386,7 @@ class Groschen implements ProductInterface
     public function getAuthCredUrl($url, $versionNumber)
     {
         // Add authCred to query parameters
-        $uri = Uri::createFromString($url);
+        $uri = Uri::new($url);
         $newUri = UriModifier::mergeQuery($uri, 'authcred='.base64_encode(config('groschen.elvis.username').':'.config('groschen.elvis.password')));
 
         // Add version number if larger than 1
