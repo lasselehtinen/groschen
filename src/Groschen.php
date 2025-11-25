@@ -946,6 +946,11 @@ class Groschen implements ProductInterface
             });
         }
 
+        // Remove team members which don't have an attached contact
+        $teamMembers = $teamMembers->filter(function ($teamMember) {
+            return property_exists($teamMember->contact, 'firstName') || property_exists($teamMember->contact, 'lastName');
+        });
+
         // Remove duplicate roles for the same person
         $teamMembers = $teamMembers->unique(function ($teamMember) {
             return $teamMember->contact->id.$teamMember->role->customProperties->onixCode;
@@ -978,16 +983,16 @@ class Groschen implements ProductInterface
                     $contributorData['PersonName'] = trim($contributor->contact->firstName);
                     $contributorData['KeyNames'] = trim($contributor->contact->firstName);
                     // AI with non-audiobook reader role
-                } elseif ($contributor->contact->firstName === 'Tekoäly' && empty($contributor->contact->lastName)) {
+                } elseif (property_exists($contributor->contact, 'firstName') && $contributor->contact->firstName === 'Tekoäly' && empty($contributor->contact->lastName)) {
                     $contributorData['UnnamedPersons'] = '09';
                     // AI with general male voice
-                } elseif ($contributor->contact->firstName === 'Tekoäly, miesääni') {
+                } elseif (property_exists($contributor->contact, 'firstName') && $contributor->contact->firstName === 'Tekoäly, miesääni') {
                     $contributorData['UnnamedPersons'] = '05';
                     // AI with general female voice
-                } elseif ($contributor->contact->firstName === 'Tekoäly, naisääni') {
+                } elseif (property_exists($contributor->contact, 'firstName') && $contributor->contact->firstName === 'Tekoäly, naisääni') {
                     $contributorData['UnnamedPersons'] = '06';
                     // AI with unspecisified voice
-                } elseif ($contributor->contact->firstName === 'Tekoäly, määrittelemätön ääni') {
+                } elseif (property_exists($contributor->contact, 'firstName') && $contributor->contact->firstName === 'Tekoäly, määrittelemätön ääni') {
                     $contributorData['UnnamedPersons'] = '07';
                     // AI Reader - voice replica
                 } elseif ($contributor->role->name === 'AI Reader – voice replica') {
@@ -1024,10 +1029,12 @@ class Groschen implements ProductInterface
                         'PersonName' => Str::after($contributor->contact->firstName, 'Tekoäly '),
                     ];
                 } else {
-                    $contributorData['PersonName'] = trim($contributor->contact->firstName).' '.trim($contributor->contact->lastName);
-                    $contributorData['PersonNameInverted'] = trim($contributor->contact->lastName).', '.trim($contributor->contact->firstName);
-                    $contributorData['KeyNames'] = trim($contributor->contact->lastName);
-                    $contributorData['NamesBeforeKey'] = trim($contributor->contact->firstName);
+                    if (property_exists($contributor, 'contact') && property_exists($contributor->contact, 'firstName') && property_exists($contributor->contact, 'lastName')) {
+                        $contributorData['PersonName'] = trim($contributor->contact->firstName).' '.trim($contributor->contact->lastName);
+                        $contributorData['PersonNameInverted'] = trim($contributor->contact->lastName).', '.trim($contributor->contact->firstName);
+                        $contributorData['KeyNames'] = trim($contributor->contact->lastName);
+                        $contributorData['NamesBeforeKey'] = trim($contributor->contact->firstName);
+                    }
                 }
             }
 

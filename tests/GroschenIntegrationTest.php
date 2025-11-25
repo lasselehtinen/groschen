@@ -5289,4 +5289,15 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '50')->where('ProductFormFeatureValue', '25SEZE6M153044+KF4BSTHS')->toArray());
         $this->assertCount(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '50')->where('ProductFormFeatureValue', '25SE7HKF153060+DT7CKEF3')->toArray());
     }
+
+    /**
+     * Test getting contributors when name is missing
+     *
+     * @return void
+     */
+    public function test_getting_contributors_when_name_is_missing()
+    {
+        $groschen = new Groschen('9789528702641');
+        $this->assertSame(2, $groschen->getContributors()->count());
+    }
 }
