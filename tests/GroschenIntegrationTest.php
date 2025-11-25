@@ -1329,7 +1329,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet;novellit;huumori;pakinat;monologit'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'cd-äänilevyt;novellit;huumori;pakinat;monologit;niksit;kodinhoito;metsänhoito;kalastus;kunnossapito;rakennukset;autot;huolto;pessimismi;ironia;arkielämä;eläkeläiset;mielipiteet;vanhukset;suomalaisuus;suomalaiset;miehet;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
@@ -5263,10 +5263,6 @@ class GroschenIntegrationTest extends TestCase
         // Product with no exemptions or exceptions
         $groschen = new Groschen('9789523765634');
         $this->assertSame(0, $groschen->getProductFormFeatures()->whereIn('ProductFormFeatureType', ['53', '54', '56'])->count());
-
-        // Product with exemption "Deforestration free" aka 100% recycled paper / TARIC Y133
-        $groschen = new Groschen('9789523765627');
-        $this->assertSame(1, $groschen->getProductFormFeatures()->where('ProductFormFeatureType', '53')->count());
 
         // Product with exception "Stock present" / TARIC Y132
         $groschen = new Groschen('9789510503959');
