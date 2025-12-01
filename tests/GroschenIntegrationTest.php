@@ -2857,7 +2857,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function test_getting_sales_restrictions_for_subscription_only_product()
     {
-        $groschen = new Groschen('9789510443613');
+        $groschen = new Groschen('9789510452127');
         $salesRestrictions = $groschen->getSalesRestrictions();
 
         // Should have "Not for sale to libraries"
