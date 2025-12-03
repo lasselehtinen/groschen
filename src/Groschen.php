@@ -12331,4 +12331,32 @@ class Groschen implements ProductInterface
 
         return $epubUsageConstraints;
     }
+
+    /**
+     * Get contract start date
+     *
+     * @return DateTime|null
+     */
+    public function getContractStartDate()
+    {
+        if (property_exists($this->product, 'rightsStartDate') === false || empty($this->product->rightsStartDate)) {
+            return null;
+        }
+
+        return DateTime::createFromFormat('Y-m-d', substr($this->product->rightsStartDate, 0, 10));
+    }
+
+    /**
+     * Get contract end date
+     *
+     * @return DateTime|null
+     */
+    public function getContractEndDate()
+    {
+        if (property_exists($this->product, 'rightsEndDate') === false || empty($this->product->rightsEndDate)) {
+            return null;
+        }
+
+        return DateTime::createFromFormat('Y-m-d', substr($this->product->rightsEndDate, 0, 10));
+    }
 }

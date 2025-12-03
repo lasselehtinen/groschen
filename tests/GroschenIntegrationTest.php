@@ -5300,4 +5300,20 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789528702641');
         $this->assertSame(2, $groschen->getContributors()->count());
     }
+
+    /**
+     * Test getting contract start and end date
+     *
+     * @return DateTime|null
+     */
+    public function test_contract_start_and_end_date()
+    {
+        $this->assertEquals('2010-04-19', $this->groschen->getContractStartDate()->format('Y-m-d'));
+        $this->assertNull($this->groschen->getContractEndDate());
+
+        $groschen = new Groschen('9789523826816');
+
+        $this->assertEquals('2022-12-14', $groschen->getContractStartDate()->format('Y-m-d'));
+        $this->assertEquals('2029-12-14', $groschen->getContractEndDate()->format('Y-m-d'));
+    }
 }
