@@ -12279,6 +12279,7 @@ class Groschen implements ProductInterface
             'YHFK' => 'JUV037000',
             'FBA,FXS' => 'FIC000000',
             'FBA,FT' => 'FIC000000',
+            'JWA' => 'TEC025000',
         ];
 
         $codes = implode(',', $themaCodes);
