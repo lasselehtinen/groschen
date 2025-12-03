@@ -12230,7 +12230,6 @@ class Groschen implements ProductInterface
             'JBS' => 'JUV014000',
             'JWXN' => 'JUV015000',
             'JWXF' => 'JUV009000',
-            'JWA' => 'JUV013000',
             'NHDJ' => 'HIS010300',
             'JBFN2' => 'JUV009000',
             'SKL' => 'SOC009000',
