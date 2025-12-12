@@ -5199,6 +5199,11 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('FIC000000', $groschen->getBisacCode(['FYC', 'FBA', 'FXD', 'FSX']));
         $this->assertSame('JUV037000', $groschen->getBisacCode(['YFH', 'YFZT', '5AK']));
         $this->assertSame('HIS037100', $groschen->getBisacCode(['NHTW', '1DTA']));
+
+        // Tests added on 31.10.2025
+        $this->assertSame('TEC025000', $groschen->getBisacCode(['JWD']));
+        $this->assertSame('PHI000000', $groschen->getBisacCode(['QDX']));
+
     }
 
     /**
