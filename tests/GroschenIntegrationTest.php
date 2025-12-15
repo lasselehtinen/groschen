@@ -1329,7 +1329,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'cd-äänilevyt;novellit;huumori;pakinat;monologit;niksit;kodinhoito;metsänhoito;kalastus;kunnossapito;rakennukset;autot;huolto;pessimismi;ironia;arkielämä;eläkeläiset;mielipiteet;vanhukset;suomalaisuus;suomalaiset;miehet;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'niksit;huumori;kodinhoito;metsänhoito;kalastus;kunnossapito;rakennukset;autot;huolto;pessimismi;ironia;novellit;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;suomalaisuus;suomalaiset;miehet;cd-äänilevyt;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
