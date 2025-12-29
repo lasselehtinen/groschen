@@ -770,6 +770,7 @@ class GroschenIntegrationTest extends TestCase
                 'WS Bazarkustannus.fi julkiset tekijät',
                 'wsoy.fi julkiset tekijät',
                 'Kirja.fi julkiset tekijät',
+                'Spotify-tekijäsivut',
             ],
             'HasAuthorImage' => true,
         ];
@@ -4419,6 +4420,7 @@ class GroschenIntegrationTest extends TestCase
             'SelectionLists' => [
                 'tammi.fi julkiset tekijät',
                 'Kirja.fi julkiset tekijät',
+                'Spotify-tekijäsivut',
             ],
             'HasAuthorImage' => true,
         ];
