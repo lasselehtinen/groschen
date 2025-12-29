@@ -1392,7 +1392,14 @@ class Groschen implements ProductInterface
      */
     public function getPrice()
     {
-        return (isset($this->product->resellerPriceIncludingVat)) ? floatval($this->product->resellerPriceIncludingVat) : null;
+        if (! isset($this->product->resellerPrice)) {
+            return null;
+        }
+
+        // Calculate reseller price including VAT
+        $price = round(floatval($this->product->resellerPrice) * (1 + ($this->getTaxRate() / 100)), 2);
+
+        return $price;
     }
 
     /**
@@ -2471,7 +2478,17 @@ class Groschen implements ProductInterface
      */
     public function getTaxRate()
     {
-        return floatval($this->product->taxCode->customProperties->taxRatePercent);
+        $taxRate = floatval($this->product->taxCode->customProperties->taxRatePercent);
+
+        // Prepare for 1.1.2026 tax rate change
+        $taxChangeDate = DateTime::createFromFormat('!Y-m-d', '2026-01-01');
+        $currentDate = new DateTime;
+
+        if ($currentDate < $taxChangeDate && $taxRate === 13.5) {
+            return 14.0;
+        }
+
+        return $taxRate;
     }
 
     /**
