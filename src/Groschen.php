@@ -2478,17 +2478,7 @@ class Groschen implements ProductInterface
      */
     public function getTaxRate()
     {
-        $taxRate = floatval($this->product->taxCode->customProperties->taxRatePercent);
-
-        // Prepare for 1.1.2026 tax rate change
-        $taxChangeDate = DateTime::createFromFormat('!Y-m-d', '2026-01-01');
-        $currentDate = new DateTime;
-
-        if ($currentDate < $taxChangeDate && $taxRate === 13.5) {
-            return 14.0;
-        }
-
-        return $taxRate;
+        return floatval($this->product->taxCode->customProperties->taxRatePercent);
     }
 
     /**
@@ -7605,6 +7595,19 @@ class Groschen implements ProductInterface
         // Immaterial
         if ($this->isImmaterial()) {
             return 1.43;
+        }
+
+        switch ($this->getProductType()) {
+            case 'Application':
+            case 'CD':
+            case 'Downloadable audio file':
+            case 'MP3-CD':
+            case 'PDF':
+            case 'Picture-and-audio book':
+            case 'Podcast':
+            case 'ePub2':
+            case 'ePub3':
+                return 1.43;
         }
 
         return 1.2;

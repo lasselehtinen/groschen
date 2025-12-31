@@ -2876,11 +2876,11 @@ class GroschenIntegrationTest extends TestCase
     public function test_getting_tax_rate()
     {
         // Hardback
-        $this->assertSame(14.00, $this->groschen->getTaxRate());
+        $this->assertSame(13.50, $this->groschen->getTaxRate());
 
         // Digital product
         $groschen = new Groschen('9789510435199');
-        $this->assertSame(14.00, $groschen->getTaxRate());
+        $this->assertSame(13.50, $groschen->getTaxRate());
 
         // Product with 25.5% VAT
         $groschen = new Groschen('9789510338728');
@@ -4520,6 +4520,10 @@ class GroschenIntegrationTest extends TestCase
         // Product without any price
         $groschen = new Groschen('9789510429259');
         $this->assertSame(0.0, $groschen->getCalculatedPublisherRetailPrice());
+
+        // CD
+        $groschen = new Groschen('9789510389997');
+        $this->assertSame(23.3, $groschen->getCalculatedPublisherRetailPrice());
     }
 
     /**
