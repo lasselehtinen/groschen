@@ -7589,28 +7589,26 @@ class Groschen implements ProductInterface
     {
         // Manga and pocket books
         if ($this->getCostCenter() === 965 || $this->getProductType() === 'Pocket book') {
-            return 1.64;
+            return 1.645;
         }
 
         // Immaterial
         if ($this->isImmaterial()) {
-            return 1.43;
+            return 1.435;
         }
 
         switch ($this->getProductType()) {
             case 'Application':
-            case 'CD':
             case 'Downloadable audio file':
-            case 'MP3-CD':
+            case 'ePub2':
+            case 'ePub3':
             case 'PDF':
             case 'Picture-and-audio book':
             case 'Podcast':
-            case 'ePub2':
-            case 'ePub3':
-                return 1.43;
+                return 1.435;
         }
 
-        return 1.2;
+        return 1.205;
     }
 
     /**
