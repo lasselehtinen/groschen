@@ -1283,7 +1283,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function test_getting_price()
     {
-        $this->assertSame(18.53, $this->groschen->getPrice());
+        $this->assertSame(18.44, $this->groschen->getPrice());
     }
 
     /**
@@ -1917,13 +1917,13 @@ class GroschenIntegrationTest extends TestCase
         // Suppliers net price including tax
         $suppliersNetPriceIncludingTax = [
             'PriceType' => '07',
-            'PriceAmount' => 18.53,
+            'PriceAmount' => 18.44,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 14.0,
+                'TaxRatePercent' => 13.5,
                 'TaxableAmount' => 16.25,
-                'TaxAmount' => 2.28,
+                'TaxAmount' => 2.19,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -1950,7 +1950,7 @@ class GroschenIntegrationTest extends TestCase
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 14.0,
+                'TaxRatePercent' => 13.5,
                 'TaxableAmount' => 9.12,
                 'TaxAmount' => 1.28,
             ],
@@ -1970,7 +1970,7 @@ class GroschenIntegrationTest extends TestCase
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 14.0,
+                'TaxRatePercent' => 13.5,
                 'TaxableAmount' => 9.12,
                 'TaxAmount' => 1.28,
             ],
@@ -1981,6 +1981,7 @@ class GroschenIntegrationTest extends TestCase
         ];
 
         $groschen = new Groschen(9789510488225);
+
         $this->assertContains($publisherRetailPriceIncludingTaxWithPriceAmount, $groschen->getPrices());
         $this->assertContains($publisherRetailPriceIncludingTaxWithPriceCoded, $groschen->getPrices());
     }
@@ -1997,13 +1998,13 @@ class GroschenIntegrationTest extends TestCase
         // Suppliers net price including tax
         $suppliersNetPriceIncludingTax = [
             'PriceType' => '07',
-            'PriceAmount' => 6.34,
+            'PriceAmount' => 6.31,
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 14.0,
+                'TaxRatePercent' => 13.5,
                 'TaxableAmount' => 5.56,
-                'TaxAmount' => 0.78,
+                'TaxAmount' => 0.75,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -2042,7 +2043,7 @@ class GroschenIntegrationTest extends TestCase
             'Tax' => [
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
-                'TaxRatePercent' => 14.0,
+                'TaxRatePercent' => 13.5,
                 'TaxableAmount' => 19.21,
                 'TaxAmount' => 2.69,
             ],
@@ -4523,7 +4524,7 @@ class GroschenIntegrationTest extends TestCase
 
         // CD
         $groschen = new Groschen('9789510389997');
-        $this->assertSame(23.3, $groschen->getCalculatedPublisherRetailPrice());
+        $this->assertSame(23.9, $groschen->getCalculatedPublisherRetailPrice());
     }
 
     /**
