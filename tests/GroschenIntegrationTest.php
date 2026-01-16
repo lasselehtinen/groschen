@@ -2092,13 +2092,13 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 1738358,
+                        'FeatureValue' => 1738620,
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D&version=2',
                 'ContentDate' => [
                     'ContentDateRole' => '01',
-                    'Date' => '20250225',
+                    'Date' => '20260116',
                 ],
             ],
         ];
@@ -2142,13 +2142,13 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 373279,
+                        'FeatureValue' => 373535,
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/2WF93gVGadOBi68p9stOE8/*/9789510415665_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D&version=2',
                 'ContentDate' => [
                     'ContentDateRole' => '01',
-                    'Date' => '20250213',
+                    'Date' => '20260116',
                 ],
             ],
         ];
