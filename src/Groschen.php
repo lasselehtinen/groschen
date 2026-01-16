@@ -936,7 +936,7 @@ class Groschen implements ProductInterface
             $priorityLevel = (isset($teamMember->prioLevel)) ? $teamMember->prioLevel->id : 0;
             $sortOrderPriority = $teamMember->sortOrder;
             $rolePriority = $this->getRolePriority($teamMember->role->name);
-            $lastNamePriority = (! empty($teamMember->contact->lastName)) ? ord($teamMember->contact->lastName) : 0;
+            $lastNamePriority = (! empty($teamMember->contact->lastName)) ? ord($teamMember->contact->lastName[0]) : 0;
             $sortOrder = str_pad(strval($priorityLevel), 3, '0', STR_PAD_LEFT).'-'.str_pad(strval($sortOrderPriority), 3, '0', STR_PAD_LEFT).'-'.str_pad(strval($rolePriority), 3, '0', STR_PAD_LEFT).'-'.str_pad(strval($lastNamePriority), 3, '0', STR_PAD_LEFT);
 
             return $sortOrder;
