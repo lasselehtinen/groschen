@@ -2291,13 +2291,13 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 1632039,
+                        'FeatureValue' => 1632555,
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/EnfeCLahawWASi-G08b4bh/*/9789522796714_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
                 'ContentDate' => [
                     'ContentDateRole' => '01',
-                    'Date' => '20200512',
+                    'Date' => '20260116',
                 ],
             ],
         ];
@@ -2331,19 +2331,18 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 3836788,
+                        'FeatureValue' => 3837356,
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/8V4HW-00aJUASGSHpJCNB1/*/9789522796714_frontcover_final_3d.png?authcred=Z3Vlc3Q6Z3Vlc3Q%3D',
                 'ContentDate' => [
                     'ContentDateRole' => '01',
-                    'Date' => '20200512',
+                    'Date' => '20260116',
                 ],
             ],
         ];
 
         $groschen = new Groschen('9789522796714');
-
         $this->assertContains($coverImageNormal, $groschen->getSupportingResources());
         $this->assertContains($coverImage3D, $groschen->getSupportingResources());
     }
