@@ -3590,8 +3590,8 @@ class GroschenIntegrationTest extends TestCase
     public function test_getting_editions()
     {
         $edition = [
-            'isbn' => 9789520458195,
-            'title' => 'Missä milloinkin',
+            'isbn' => 9789520478766,
+            'title' => 'Disney. Frozen. Anna & Elsa. Jännittävä jääkeksintö',
             'publisher' => 'Tammi',
         ];
 
