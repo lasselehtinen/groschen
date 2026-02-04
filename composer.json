@@ -22,7 +22,8 @@
         "league/iso3166": "^4.3",
         "whitecube/lingua": "^1.1",
         "laravel/nightwatch": "^1.13",
-        "intervention/validation": "^4.6"
+        "intervention/validation": "^4.6",
+        "patrickschur/language-detection": "^5.3"
     },
     "autoload": {
         "psr-4": {

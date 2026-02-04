@@ -18,6 +18,7 @@ use Intervention\Validation\Rules\Gtin;
 use Intervention\Validation\Rules\Isbn;
 use kamermans\OAuth2\GrantType\NullGrantType;
 use kamermans\OAuth2\OAuth2Middleware;
+use LanguageDetection\Language;
 use Laravel\Nightwatch\Facades\Nightwatch;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
 use League\ISO3166\ISO3166;
@@ -1832,6 +1833,27 @@ class Groschen implements ProductInterface
         // Remove empty texts
         $textContents = $textContents->filter(function ($textContent) {
             return ! empty($textContent['Text']);
+        });
+
+        // Determine text language from the long merged text content if books language is not finnish
+        $textLanguageCodes = $this->getLanguages()->pluck('LanguageCode')->toArray();
+
+        if (count($textLanguageCodes) !== 1 || $textLanguageCodes[0] !== 'fin') {
+            $languageDetection = new Language;
+            $match = $languageDetection->detect(strip_tags($mergedTexts->implode('text')))->bestResults()->close();
+
+            // Convert ISO 639-1 to ISO 639-2B
+            $languageCode = Lingua::createFromISO_639_1(array_key_first($match))->toISO_639_2b();
+        } else {
+            // Use Finnish as default
+            $languageCode = 'fin';
+        }
+
+        // Add language code to all TextContents
+        $textContents = $textContents->map(function (array $text, int $key) use ($languageCode) {
+            $text['LanguageCode'] = $languageCode;
+
+            return $text; // @phpstan-ignore-line
         });
 
         return $textContents;

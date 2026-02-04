@@ -1212,6 +1212,9 @@ class GroschenIntegrationTest extends TestCase
         // Check that text contains description
         $this->assertStringContainsString('Kyllä minä niin mieleni pahoitin, kun aurinko paistoi.', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('Text')->first());
 
+        // Check that language is correct
+        $this->assertSame('fin', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('LanguageCode')->first());
+
         // Check that text contains review quotes and sources
         $this->assertTrue($this->groschen->getTextContents()->contains('TextType', '06'));
         $this->assertStringContainsString('Herrajumala, en ole mistään nauttinut näin aikapäiviin! Aivan mahtavia - ja täyttä asiaa!', $this->groschen->getTextContents()->where('TextType', '06')->where('ContentAudience', '00')->pluck('Text')->first());
@@ -1224,6 +1227,37 @@ class GroschenIntegrationTest extends TestCase
         // Product without text
         $groschen = new Groschen('9789510343135');
         $this->assertFalse($groschen->getTextContents()->contains('TextType', '03'));
+    }
+
+    /**
+     * Test that TextContents language is detected correctly
+     *
+     * @return void
+     */
+    public function test_getting_text_contents_language_is_correct()
+    {
+        // Product with finnish marketing text
+        $this->assertSame('fin', $this->groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('LanguageCode')->first());
+
+        // Product with swedish marketing text
+        $groschen = new Groschen('9789528702245');
+        $this->assertSame('swe', $groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('LanguageCode')->first());
+
+        // Product with english marketing text
+        $groschen = new Groschen('9789528702405');
+        $this->assertSame('eng', $groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('LanguageCode')->first());
+
+        // Product with german marketing text
+        $groschen = new Groschen('9789528702252');
+        $this->assertSame('ger', $groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('LanguageCode')->first());
+
+        // Product with multiple languages but with finnish marketing text
+        $groschen = new Groschen('9789510401699');
+        $this->assertSame('fin', $groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('LanguageCode')->first());
+
+        // Product without language code should default to finnish
+        $groschen = new Groschen('9789520468507');
+        $this->assertSame('fin', $groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('LanguageCode')->first());
     }
 
     /**
