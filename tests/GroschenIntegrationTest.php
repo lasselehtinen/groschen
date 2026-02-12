@@ -2595,20 +2595,6 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting the number of products in the series
-     *
-     * @return void
-     */
-    public function test_getting_products_in_series()
-    {
-        // $this->assertNull($this->groschen->getProductsInSeries());
-
-        // Product with four products in the serie
-        $groschen = new Groschen('9789521610165');
-        $this->assertSame(4, $groschen->getProductsInSeries());
-    }
-
-    /**
      * Test checking for if the product is immaterial
      *
      * @return void

@@ -6183,16 +6183,6 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Get the number of products in the series
-     *
-     * @return int|null
-     */
-    public function getProductsInSeries()
-    {
-        return (empty($this->product->numberInSeries)) ? null : intval($this->product->numberInSeries);
-    }
-
-    /**
      * Is the product immaterial?
      *
      * @return bool
