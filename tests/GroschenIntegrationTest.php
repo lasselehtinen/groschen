@@ -1783,6 +1783,16 @@ class GroschenIntegrationTest extends TestCase
         // Bazar product without brand
         $groschen = new Groschen('9789522799531');
         $this->assertCount(0, $groschen->getImprints());
+
+        // Readme product with brand "Kids.fi"
+        $groschen = new Groschen('9789522563828');
+        $this->assertCount(1, $groschen->getImprints());
+        $this->assertContains(['ImprintName' => 'Kids.fi'], $groschen->getImprints());
+
+        // Docendo product with brand "CrimeTime"
+        $groschen = new Groschen('9789528504627');
+        $this->assertCount(1, $groschen->getImprints());
+        $this->assertContains(['ImprintName' => 'CrimeTime'], $groschen->getImprints());
     }
 
     /**
