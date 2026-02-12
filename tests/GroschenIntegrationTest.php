@@ -2579,20 +2579,6 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test getting the products binding code
-     *
-     * @return void
-     */
-    public function test_getting_binding_code()
-    {
-        $this->assertNull($this->groschen->getBindingCode());
-
-        // Product with a binding code
-        $groschen = new Groschen('9789510343203');
-        $this->assertSame('A103', $groschen->getBindingCode());
-    }
-
-    /**
      * Test getting the product status code
      *
      * @return void

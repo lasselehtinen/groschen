@@ -6173,20 +6173,6 @@ class Groschen implements ProductInterface
     }
 
     /**
-     * Get the products binding code
-     *
-     * @return string|null
-     */
-    public function getBindingCode()
-    {
-        if (property_exists($this->product->bindingCode->customProperties, 'productFormDetail') === false) {
-            return null;
-        }
-
-        return $this->product->bindingCode->customProperties->productFormDetail;
-    }
-
-    /**
      * Get the products status
      *
      * @return string

@@ -288,13 +288,6 @@ interface ProductInterface
     public function getMediaType();
 
     /**
-     * Get the products binding code
-     *
-     * @return string
-     */
-    public function getBindingCode();
-
-    /**
      * Get the products status
      *
      * @return string
