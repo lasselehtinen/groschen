@@ -1258,6 +1258,10 @@ class GroschenIntegrationTest extends TestCase
         // Product without language code should default to finnish
         $groschen = new Groschen('9789520468507');
         $this->assertSame('fin', $groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('LanguageCode')->first());
+
+        // Product which has finnish both as language and original language without marketing text
+        $groschen = new Groschen('9789510530566');
+        $this->assertCount(0, $groschen->getTextContents()->where('TextType', '03'));
     }
 
     /**

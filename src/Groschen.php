@@ -1836,11 +1836,12 @@ class Groschen implements ProductInterface
         });
 
         // Determine text language from the long merged text content if books language is not finnish
-        $textLanguageCodes = $this->getLanguages()->pluck('LanguageCode')->toArray();
+        $textLanguageCodes = $this->getLanguages()->pluck('LanguageCode')->unique()->toArray();
+        $content = strip_tags($mergedTexts->implode('text'));
 
-        if (count($textLanguageCodes) !== 1 || $textLanguageCodes[0] !== 'fin') {
+        if ((count($textLanguageCodes) !== 1 || $textLanguageCodes[0] !== 'fin') && ! empty($content)) {
             $languageDetection = new Language;
-            $match = $languageDetection->detect(strip_tags($mergedTexts->implode('text')))->bestResults()->close();
+            $match = $languageDetection->detect($content)->bestResults()->close();
 
             // Convert ISO 639-1 to ISO 639-2B
             $languageCode = Lingua::createFromISO_639_1(array_key_first($match))->toISO_639_2b();
