@@ -295,13 +295,6 @@ interface ProductInterface
     public function getStatus();
 
     /**
-     * Get the number of products in the series
-     *
-     * @return int|null
-     */
-    public function getProductsInSeries();
-
-    /**
      * Is the product immaterial?
      *
      * @return bool
