@@ -1368,7 +1368,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'niksit;huumori;kodinhoito;metsänhoito;kalastus;kunnossapito;rakennukset;autot;huolto;pessimismi;ironia;novellit;pakinat;monologit;arkielämä;eläkeläiset;mielipiteet;vanhukset;suomalaisuus;suomalaiset;miehet;cd-äänilevyt;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet;novellit;huumori;pakinat;monologit'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
@@ -1376,7 +1376,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertNotContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'tieto-finlandia-palkinto;sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;lapin sota;sotahistoria;sodankäynti;suomi;sotarintama;1939-1945;2013;kirjallisuuspalkinnot'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'tieto-finlandia-palkinto;sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;lapin sota;sotahistoria;sodankäynti;suomi;1939-1945;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
