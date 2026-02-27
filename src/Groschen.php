@@ -7083,7 +7083,7 @@ class Groschen implements ProductInterface
 
         // Get stocks from API
         $client = new Client([
-            'base_uri' => 'http://stocks.books.local/api/products/gtin/',
+            'base_uri' => 'https://stocks.books.local/api/products/gtin/',
             'timeout' => 2.0,
         ]);
 
