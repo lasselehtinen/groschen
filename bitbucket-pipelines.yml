@@ -49,6 +49,8 @@ definitions:
           runs-on: self.hosted
           script:
             - apt-get -qq update && apt-get -y install git
+            - echo $BOOKS_CA_CERT | base64 --decode --ignore-garbage > /usr/local/share/ca-certificates/booksca.books.local_BooksCA_2025.crt
+            - update-ca-certificates
             - vendor/bin/phpunit --log-junit ./test-reports/junit.xml
 
 pipelines:
