@@ -1992,7 +1992,7 @@ class Groschen implements ProductInterface
             case 'Development-Confidential':
                 return '00';
             case 'Permanently withdrawn from sale':
-                return '11';
+                return '17';
             default:
                 throw new Exception('Could not map product governing code '.$this->product->listingCode->name.' to publishing status');
         }
