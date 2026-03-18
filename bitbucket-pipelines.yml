@@ -60,3 +60,6 @@ pipelines:
     - step: *syntax-check
     - step: *static-analysis
     - step: *unit-tests
+  custom:
+      security-check:
+        - step: *security-check
