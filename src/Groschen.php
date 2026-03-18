@@ -21,6 +21,7 @@ use kamermans\OAuth2\OAuth2Middleware;
 use LanguageDetection\Language;
 use Laravel\Nightwatch\Facades\Nightwatch;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
+use League\ISO3166\Exception\OutOfBoundsException;
 use League\ISO3166\ISO3166;
 use League\OAuth2\Client\Provider\GenericProvider;
 use League\Uri\Uri;
@@ -76,14 +77,14 @@ class Groschen implements ProductInterface
     /**
      * Guzzle HTTP client
      *
-     * @var \GuzzleHttp\Client
+     * @var Client
      */
     private $client;
 
     /**
      * Guzzle HTTP client
      *
-     * @var \GuzzleHttp\Client
+     * @var Client
      */
     private $searchClient;
 
@@ -7813,7 +7814,7 @@ class Groschen implements ProductInterface
                     $iso3166 = (new ISO3166)->name($address->country);
 
                     return $iso3166['alpha2'];
-                } catch (\League\ISO3166\Exception\OutOfBoundsException $e) {
+                } catch (OutOfBoundsException $e) {
                     throw new Exception('Cannot find ISO-3166 code for country named '.$address->country);
                 }
             }
