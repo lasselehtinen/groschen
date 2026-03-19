@@ -62,4 +62,5 @@ pipelines:
     - step: *unit-tests
   custom:
       security-check:
+        - step: *prequisites
         - step: *security-check
