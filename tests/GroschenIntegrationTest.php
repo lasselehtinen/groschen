@@ -5347,4 +5347,21 @@ class GroschenIntegrationTest extends TestCase
         $this->assertEquals('2022-12-14', $groschen->getContractStartDate()->format('Y-m-d'));
         $this->assertEquals('2029-12-14', $groschen->getContractEndDate()->format('Y-m-d'));
     }
+
+    /**
+     * Test getting asset information
+     *
+     * @return void
+     */
+    public function test_getting_asset_information()
+    {
+        $groschen = new Groschen('9789523826816');
+        $assetInfo = $groschen->getAsset(428861);
+
+        $this->assertEquals(428861, $assetInfo->id);
+        $this->assertEquals('Contract', $assetInfo->assetType->name);
+        $this->assertTrue(property_exists($assetInfo, 'connections'));
+        $this->assertIsArray($assetInfo->connections);
+
+    }
 }

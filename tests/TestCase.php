@@ -27,6 +27,7 @@ class TestCase extends OrchestraTestCase
         $dotenv->required('SOUNDCLOUD_CLIENTSECRET');
         $dotenv->required('MOCKINGBIRD_WORK_API_HOSTNAME');
         $dotenv->required('MOCKINGBIRD_CONTACT_API_HOSTNAME');
+        $dotenv->required('MOCKINGBIRD_ASSET_API_HOSTNAME');
         $dotenv->required('MOCKINGBIRD_CLIENT_ID');
         $dotenv->required('MOCKINGBIRD_CLIENT_SECRET');
         $dotenv->required('MOCKINGBIRD_OAUTH_BASE_URL');
@@ -40,6 +41,7 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('groschen.soundcloud.clientSecret', $_ENV['SOUNDCLOUD_CLIENTSECRET']);
         $app['config']->set('groschen.mockingbird.work_api_hostname', $_ENV['MOCKINGBIRD_WORK_API_HOSTNAME']);
         $app['config']->set('groschen.mockingbird.contact_api_hostname', $_ENV['MOCKINGBIRD_CONTACT_API_HOSTNAME']);
+        $app['config']->set('groschen.mockingbird.asset_api_hostname', $_ENV['MOCKINGBIRD_ASSET_API_HOSTNAME']);
         $app['config']->set('groschen.mockingbird.clientId', $_ENV['MOCKINGBIRD_CLIENT_ID']);
         $app['config']->set('groschen.mockingbird.clientSecret', $_ENV['MOCKINGBIRD_CLIENT_SECRET']);
         $app['config']->set('groschen.mockingbird.urlAuthorize', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'].'/core/connect/authorize');

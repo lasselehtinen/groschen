@@ -9,6 +9,7 @@ return [
     'mockingbird' => [
         'work_api_hostname' => env('MOCKINGBIRD_WORK_API_HOSTNAME'), // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig
         'contact_api_hostname' => env('MOCKINGBIRD_CONTACT_API_HOSTNAME'), // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig
+        'asset_api_hostname' => env('MOCKINGBIRD_ASSET_API_HOSTNAME'), // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig
         'clientId' => env('MOCKINGBIRD_CLIENT_ID'), // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig
         'clientSecret' => env('MOCKINGBIRD_CLIENT_SECRET'), // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig
         'urlAuthorize' => env('MOCKINGBIRD_OAUTH_BASE_URL').'/core/connect/authorize', // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig

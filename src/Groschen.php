@@ -147,6 +147,15 @@ class Groschen implements ProductInterface
             ],
         ]);
 
+        $this->assetClient = new Client([
+            'base_uri' => config('groschen.mockingbird.asset_api_hostname'),
+            'handler' => $stack,
+            'auth' => 'oauth',
+            'headers' => [
+                'User-Agent' => gethostname().' / '.' PHP/'.PHP_VERSION,
+            ],
+        ]);
+
         $this->productNumber = $productNumber;
         [$this->workId, $this->productionId] = $this->getEditionAndWorkId();
         $this->product = $this->getProduct();
@@ -12379,5 +12388,19 @@ class Groschen implements ProductInterface
         }
 
         return DateTime::createFromFormat('Y-m-d', substr($this->product->rightsEndDate, 0, 10));
+    }
+
+    /**
+     * Fetched the assets information
+     *
+     * @param  int  $assetId
+     * @return stdClass
+     */
+    public function getAsset($assetId)
+    {
+        $response = $this->assetClient->get('/v1/assets/'.$assetId);
+        $json = json_decode($response->getBody()->getContents());
+
+        return $json;
     }
 }
