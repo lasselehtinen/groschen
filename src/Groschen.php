@@ -89,6 +89,13 @@ class Groschen implements ProductInterface
     private $searchClient;
 
     /**
+     * Guzzle HTTP client
+     *
+     * @var Client
+     */
+    private $assetClient;
+
+    /**
      * @param  string  $productNumber
      */
     public function __construct($productNumber)
