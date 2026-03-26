@@ -647,7 +647,7 @@ class Groschen implements ProductInterface
                     '36', // Appearance of all textual content can be modified
                     '52', // All non-decorative content supports reading without sight
                     '85', // WCAG level AA
-                    '81', // WCAG v2.1
+                    '82', // WCAG v2.2
                 ],
                 '12' => [
                     '00', // No known hazards or warnings

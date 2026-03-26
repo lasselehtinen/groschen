@@ -5013,7 +5013,7 @@ class GroschenIntegrationTest extends TestCase
             '09' => '36', // Appearance of all textual content can be modified
             '09' => '52', // All non-decorative content supports reading without sight
             '09' => '85', // WCAG level AA
-            '09' => '81', // WCAG v2.1
+            '09' => '82', // WCAG v2.2
         ];
 
         $productFormFeatures = $groschen->getProductFormFeatures();
