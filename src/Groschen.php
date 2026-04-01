@@ -7571,6 +7571,62 @@ class Groschen implements ProductInterface
     }
 
     /**
+     * Get the all marketing activities
+     *
+     * @return Collection
+     */
+    public function getAllActivities()
+    {
+        $activities = new Collection;
+
+        // Get the maximum amount for pagination
+        $response = $this->client->get('v2/search/activities', [
+            'query' => [
+                'limit' => 1,
+                '$select' => 'id',
+            ],
+        ]);
+
+        $json = json_decode($response->getBody()->getContents());
+        $totalCount = $json->pagination->itemsTotalCount;
+
+        // Loop through all pages, maximum is 1000
+        $offset = 0;
+        $limit = 1000;
+
+        while ($offset <= $totalCount) {
+            // Query current page with offset
+            $response = $this->client->get('v2/search/activities', [
+                'query' => [
+                    '$select' => 'id,name,categoryName,statusName,workIds,activityStartDate,activityEndDate,partner',
+                    'limit' => $limit,
+                    'offset' => $offset,
+                ],
+            ]);
+
+            $json = json_decode($response->getBody()->getContents());
+
+            foreach ($json->results as $result) {
+                $activities->push([
+                    'id' => intval($result->document->id),
+                    'name' => optional($result->document)->name,
+                    'partner' => optional($result->document)->partner,
+                    'categoryName' => optional($result->document)->categoryName,
+                    'statusName' => optional($result->document)->statusName,
+                    'activityStartDate' => (isset($result->document->activityStartDate)) ? DateTime::createFromFormat('!Y-m-d', substr($result->document->activityStartDate, 0, 10)) : null,
+                    'activityEndDate' => (isset($result->document->activityEndDate)) ? DateTime::createFromFormat('!Y-m-d', substr($result->document->activityEndDate, 0, 10)) : null,
+                    'workIds' => array_map('intval', $result->document->workIds ?? []),
+                ]);
+            }
+
+            // Increase offset
+            $offset += $limit;
+        }
+
+        return $activities;
+    }
+
+    /**
      * Get all Events
      *
      * @return Collection

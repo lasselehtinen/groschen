@@ -4,6 +4,7 @@ namespace lasselehtinen\Groschen\Test;
 
 use DateTime;
 use Exception;
+use Illuminate\Support\Collection;
 use lasselehtinen\Groschen\Groschen;
 
 class GroschenIntegrationTest extends TestCase
@@ -5362,6 +5363,39 @@ class GroschenIntegrationTest extends TestCase
         $this->assertEquals('Contract', $assetInfo->assetType->name);
         $this->assertTrue(property_exists($assetInfo, 'connections'));
         $this->assertIsArray($assetInfo->connections);
+    }
 
+    /**
+     * Test getting all activities
+     *
+     * @return void
+     */
+    public function test_getting_all_activities()
+    {
+        $groschen = new Groschen('9789523826816');
+        $activities = $groschen->getAllActivities();
+
+        $this->assertInstanceOf(Collection::class, $activities);
+        $this->assertGreaterThan(18000, $activities->count());
+
+        // Sample activity
+        $this->assertTrue($activities->contains('id', 136171));
+        $activity = $activities->where('id', 136171)->first();
+
+        $this->assertSame(136171, $activity['id']);
+        $this->assertSame('Nostokirjana huhtikuun kampanjassa 2.4. alkaen (Meta, Google, Youtube), BookBeat', $activity['name']);
+        $this->assertSame('BookBeat', $activity['partner']);
+        $this->assertSame('Retailers', $activity['categoryName']);
+        $this->assertSame('Booked', $activity['statusName']);
+
+        $expectedActivityStartDate = new DateTime('2026-04-02');
+        $this->assertEquals($expectedActivityStartDate, $activity['activityStartDate']);
+
+        $expectedActivityEndDate = new DateTime('2026-04-19');
+        $this->assertEquals($expectedActivityEndDate, $activity['activityEndDate']);
+
+        $this->assertIsArray($activity['workIds']);
+        $this->assertContains(242208, $activity['workIds']);
+        $this->assertContains(299587, $activity['workIds']);
     }
 }
