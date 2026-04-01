@@ -5394,6 +5394,12 @@ class GroschenIntegrationTest extends TestCase
         $expectedActivityEndDate = new DateTime('2026-04-19');
         $this->assertEquals($expectedActivityEndDate, $activity['activityEndDate']);
 
+        $expectedPublishingDate = new DateTime('2026-03-31');
+        $this->assertEquals($expectedPublishingDate, $activity['publishingDate']);
+
+        $expectedRegistrationDate = new DateTime('2026-03-31');
+        $this->assertEquals($expectedRegistrationDate, $activity['registrationDate']);
+
         $this->assertIsArray($activity['workIds']);
         $this->assertContains(242208, $activity['workIds']);
         $this->assertContains(299587, $activity['workIds']);

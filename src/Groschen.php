@@ -7598,7 +7598,7 @@ class Groschen implements ProductInterface
             // Query current page with offset
             $response = $this->client->get('v2/search/activities', [
                 'query' => [
-                    '$select' => 'id,name,categoryName,statusName,workIds,activityStartDate,activityEndDate,partner',
+                    '$select' => 'id,name,categoryName,statusName,workIds,activityStartDate,activityEndDate,publishingDate,registrationDate,partner',
                     'limit' => $limit,
                     'offset' => $offset,
                 ],
@@ -7615,6 +7615,8 @@ class Groschen implements ProductInterface
                     'statusName' => optional($result->document)->statusName,
                     'activityStartDate' => (isset($result->document->activityStartDate)) ? DateTime::createFromFormat('!Y-m-d', substr($result->document->activityStartDate, 0, 10)) : null,
                     'activityEndDate' => (isset($result->document->activityEndDate)) ? DateTime::createFromFormat('!Y-m-d', substr($result->document->activityEndDate, 0, 10)) : null,
+                    'publishingDate' => (isset($result->document->publishingDate)) ? DateTime::createFromFormat('!Y-m-d', substr($result->document->publishingDate, 0, 10)) : null,
+                    'registrationDate' => (isset($result->document->registrationDate)) ? DateTime::createFromFormat('!Y-m-d', substr($result->document->registrationDate, 0, 10)) : null,
                     'workIds' => array_map('intval', $result->document->workIds ?? []),
                 ]);
             }
