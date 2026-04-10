@@ -19,7 +19,6 @@ use Intervention\Validation\Rules\Isbn;
 use kamermans\OAuth2\GrantType\NullGrantType;
 use kamermans\OAuth2\OAuth2Middleware;
 use LanguageDetection\Language;
-use Laravel\Nightwatch\Facades\Nightwatch;
 use lasselehtinen\Groschen\Contracts\ProductInterface;
 use League\ISO3166\Exception\OutOfBoundsException;
 use League\ISO3166\ISO3166;
@@ -128,11 +127,6 @@ class Groschen implements ProductInterface
         // Create new HandlerStack for Guzzle and push OAuth middleware
         $stack = HandlerStack::create();
         $stack->push($oauth);
-
-        // Push Nightwatch's middleware
-        if (app()->runningUnitTests() === false) {
-            $stack->push(Nightwatch::guzzleMiddleware());
-        }
 
         // Create Guzzle and push the OAuth middleware to the handler stack
         $this->client = new Client([
