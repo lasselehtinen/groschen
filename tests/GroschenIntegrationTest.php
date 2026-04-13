@@ -3577,9 +3577,9 @@ class GroschenIntegrationTest extends TestCase
     public function test_getting_editions()
     {
         $edition = [
-            'isbn' => 9789520478766,
-            'title' => 'Disney. Frozen. Anna & Elsa. Jännittävä jääkeksintö',
-            'publisher' => 'Tammi',
+            'isbn' => 9789524161718,
+            'title' => 'Palstalta parempaa 2026',
+            'publisher' => 'Readme.fi',
         ];
 
         $this->assertContains($edition, $this->groschen->getEditions());
