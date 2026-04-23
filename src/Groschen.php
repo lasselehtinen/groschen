@@ -12462,4 +12462,19 @@ class Groschen implements ProductInterface
 
         return $json;
     }
+
+    /**
+     * Get the asset listing
+     *
+     * @return Collection
+     */
+    public function getAssets()
+    {
+        // Get assets
+        $response = $this->client->get('v1/works/'.$this->workId.'/productions/'.$this->productionId.'/assets');
+        $json = json_decode($response->getBody()->getContents());
+        $assets = collect($json);
+
+        return $assets;
+    }
 }

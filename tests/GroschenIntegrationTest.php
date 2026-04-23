@@ -5404,4 +5404,25 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(242208, $activity['workIds']);
         $this->assertContains(299587, $activity['workIds']);
     }
+
+    /**
+     * Test getting assets for edition
+     *
+     * @return void
+     */
+    public function test_getting_assets()
+    {
+        $groschen = new Groschen(9789520489113);
+        $assets = $groschen->getAssets();
+
+        $this->assertGreaterThan(0, $assets->count());
+
+        $asset = $assets->first();
+
+        $this->assertTrue(property_exists($asset, 'description'));
+        $this->assertTrue(property_exists($asset, 'assetType'));
+        $this->assertTrue(property_exists($asset->assetType, 'name'));
+        $this->assertTrue(property_exists($asset, 'contractType'));
+        $this->assertTrue(property_exists($asset->contractType, 'name'));
+    }
 }
