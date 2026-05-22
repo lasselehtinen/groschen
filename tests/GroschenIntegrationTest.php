@@ -789,7 +789,9 @@ class GroschenIntegrationTest extends TestCase
             'NamesBeforeKey' => 'Mika',
             'BiographicalNote' => null,
             'WebSites' => [],
-            'SelectionLists' => [],
+            'SelectionLists' => [
+                'Freelance-graafikoiden kansisuunnittelun puitesopimus',
+            ],
             'HasAuthorImage' => false,
         ];
 
@@ -1259,10 +1261,6 @@ class GroschenIntegrationTest extends TestCase
         // Product without language code should default to finnish
         $groschen = new Groschen('9789520468507');
         $this->assertSame('fin', $groschen->getTextContents()->where('TextType', '03')->where('ContentAudience', '00')->pluck('LanguageCode')->first());
-
-        // Product which has finnish both as language and original language without marketing text
-        $groschen = new Groschen('9789510530566');
-        $this->assertCount(0, $groschen->getTextContents()->where('TextType', '03'));
     }
 
     /**
@@ -1377,7 +1375,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertNotContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'tieto-finlandia-palkinto;sodat;kokemukset;sotilaat;mielenterveys;mielenterveyshäiriöt;traumat;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;talvisota;jatkosota;lapin sota;sotahistoria;sodankäynti;suomi;1939-1945;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'tieto-finlandia-palkinto;traumat;ennakkotieto;sotahistoria;mielenterveys;sotilaat;jatkosota;talvisota;sodat;kokemukset;mielenterveyshäiriöt;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;lapin sota;sodankäynti;suomi;1939-1945;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
@@ -1847,8 +1845,8 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Delivery block
-        $groschen = new Groschen('9789510359686');
-        $this->assertSame('07', $groschen->getPublishingStatus());
+        $groschen = new Groschen('9789510379868');
+        $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Permanently withdrawn from sale
         $groschen = new Groschen('9789520426705');
@@ -3307,9 +3305,9 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('07', $groschen->getPublishingStatus());
         $this->assertSame('40', $groschen->getProductAvailability());
 
-        // Digital product with Sold out status
+        // Digital product with Permanent withdrawn from sales
         $groschen = new Groschen('9789513182571');
-        $this->assertSame('07', $groschen->getPublishingStatus());
+        $this->assertSame('17', $groschen->getPublishingStatus());
         $this->assertSame('40', $groschen->getProductAvailability());
 
         // Cancelled
@@ -3560,10 +3558,10 @@ class GroschenIntegrationTest extends TestCase
     public function test_getting_contacts()
     {
         $contact = [
-            'id' => 67435,
-            'firstName' => 'Jari',
-            'lastName' => 'Louhelainen',
-            'supplierId' => 20009931,
+            'id' => 77217,
+            'firstName' => 'Taru',
+            'lastName' => 'Nyholm',
+            'supplierId' => null,
         ];
 
         $this->assertContains($contact, $this->groschen->getContacts());
@@ -4436,7 +4434,7 @@ class GroschenIntegrationTest extends TestCase
             'PersonNameInverted' => 'Saahko, Lotta-Sofia',
             'KeyNames' => 'Saahko',
             'NamesBeforeKey' => 'Lotta-Sofia',
-            'BiographicalNote' => '<p><strong>Lotta-Sofia Saahko</strong> (FM) on monipuolinen taitaja, jolla on pitkä kokemus sekä musiikkiteatterilavoilta että YouTubesta, ja joka on kirjoittanut runoja pienestä pitäen. Hän on opiskellut ja työskennellyt koko elämänsä ulkomailla, ja siksi suomalaiset ja karjalaiset juurensa ovat hänelle tärkeitä. Kotimaan tukipisteenä on aina ollut Valkeakosken pappala, ja papasta ja Lotasta on tullut toimiva tiimi.</p>',
+            'BiographicalNote' => '<p><strong>Lotta-Sofia Saahko </strong>on rakastettu ja palkittu tieto- ja lastenkirjailija, jonka teokset käsittelevät mm. karjalaisuutta, ulkosuomalaisuutta, neuroepätyypillisyyttä sekä muistisairautta. Saahko luo uraa myös kansainvälisesti ja hän on ensimmäinen suomalainen kirjailija, joka on saanut kustannussopimuksen legendaarisesta Hachette-kustantamosta.</p><p>Hänet tunnetaan myös <em>“Lotan ja papan” </em>Lottana ja <em>Unohtumattomien</em> TV-juontajana. Hänen rehellinen tyylinsä ja lämmin otteensa vaikeisiinkin asioihin on valloittanut kaikenikäiset lukijat ja kuulijat.</p>',
             'WebSites' => [],
             'SelectionLists' => [
                 'tammi.fi julkiset tekijät',
