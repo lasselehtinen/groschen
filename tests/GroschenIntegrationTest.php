@@ -2888,6 +2888,56 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting sales restrictions for Ellibs
+     *
+     * @return void
+     */
+    public function test_getting_sales_restrictions_for_ellibs()
+    {
+        // Ellibs SalesOutlet code used in all tests
+        $salesOutlet = [
+            'SalesOutlet' => [
+                'SalesOutletIdentifiers' => [
+                    [
+                        'SalesOutletIDType' => '03',
+                        'IDValue' => 'ELL',
+                    ],
+                ],
+            ],
+        ];
+
+        // Product which does not have either unit or library rights for Ellibs
+        // - Should have "Not for sale to libraries"
+        // - Ellibs should be in the list of exceptions and in reserver should not be in the list of exclusive retailers
+        $groschen = new Groschen('9789522795601');
+        $salesRestrictions = $groschen->getSalesRestrictions();
+
+        $this->assertTrue($salesRestrictions->contains('SalesRestrictionType', '09'));
+        $this->assertNotContains($salesOutlet, $salesRestrictions->where('SalesRestrictionType', '04')->pluck('SalesOutlets')->first());
+        $this->assertContains($salesOutlet, $salesRestrictions->where('SalesRestrictionType', '11')->pluck('SalesOutlets')->first());
+
+        // Product which has unit sales rights but no library rights
+        // - Should have "Not for sale to libraries"
+        // - Ellibs should be in the list of exclusive retailers and in reverse should not be in the list of exceptions
+        $groschen = new Groschen('9789510406694');
+        $salesRestrictions = $groschen->getSalesRestrictions();
+
+        $this->assertTrue($salesRestrictions->contains('SalesRestrictionType', '09'));
+        $this->assertContains($salesOutlet, $salesRestrictions->where('SalesRestrictionType', '04')->pluck('SalesOutlets')->first());
+        $this->assertNotContains($salesOutlet, $salesRestrictions->where('SalesRestrictionType', '11')->pluck('SalesOutlets')->first());
+
+        // Product which has both unit sales and library rights
+        // - Should not have "Not for sale to libraries"
+        // - Ellibs should be in the list of exclusive retailers and in reverse should not be in the list of exceptions
+        $groschen = new Groschen('9789522913531');
+        $salesRestrictions = $groschen->getSalesRestrictions();
+
+        $this->assertFalse($salesRestrictions->contains('SalesRestrictionType', '09'));
+        $this->assertContains($salesOutlet, $salesRestrictions->where('SalesRestrictionType', '04')->pluck('SalesOutlets')->first());
+        $this->assertFalse($salesRestrictions->contains('SalesRestrictionType', '11'));
+    }
+
+    /**
      * Test getting the products tax rate
      *
      * @return void

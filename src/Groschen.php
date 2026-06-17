@@ -6603,6 +6603,57 @@ class Groschen implements ProductInterface
             ]);
         }
 
+        // If we have case where we have unit sales rights (04) for Ellibs but no library rights, we need to remove Ellibs from SalesRestrictionType 11 and make sure we have SalesRestrictionType 09 for Ellibs
+        /*
+        $ellibsIsExclusive = $salesRestrictions
+            ->where('SalesRestrictionType', '04')
+            ->pluck('SalesOutlets')
+            ->flatten(1)
+            ->flatMap(function ($item) {
+                return $item['SalesOutlet']['SalesOutletIdentifiers'] ?? [];
+            })
+            ->contains(function ($identifier) {
+                return isset($identifier['IDValue']) && $identifier['IDValue'] === 'ELL';
+            });
+
+        $ellibsHasException = $salesRestrictions
+            ->where('SalesRestrictionType', '11')
+            ->pluck('SalesOutlets')
+            ->flatten(1)
+            ->flatMap(function ($item) {
+                return $item['SalesOutlet']['SalesOutletIdentifiers'] ?? [];
+            })
+            ->contains(function ($identifier) {
+                return isset($identifier['IDValue']) && $identifier['IDValue'] === 'ELL';
+            });
+            */
+
+        $ellibsIsExclusiveAndHasException = collect(['04', '11'])
+            ->every(function ($type) use ($salesRestrictions) {
+                return $salesRestrictions
+                    ->where('SalesRestrictionType', $type)
+                    ->pluck('SalesOutlets')
+                    ->flatten(1)
+                    ->flatMap(fn ($item) => $item['SalesOutlet']['SalesOutletIdentifiers'] ?? [])
+                    ->contains(fn ($identifier) => isset($identifier['IDValue']) && $identifier['IDValue'] === 'ELL'
+                    );
+            });
+
+        // Remove ELL from retailer exception if we have it as exclusive and have library restriction
+        if ($ellibsIsExclusiveAndHasException && $salesRestrictions->contains('SalesRestrictionType', '09')) {
+            $salesRestrictions->transform(function ($salesRestriction) {
+                if ($salesRestriction['SalesRestrictionType'] === '11') {
+                    foreach ($salesRestriction['SalesOutlets'] as $key => $outlet) {
+                        if ($outlet['SalesOutlet']['SalesOutletIdentifiers'][0]['IDValue'] === 'ELL') {
+                            unset($salesRestriction['SalesOutlets'][$key]);
+                        }
+                    }
+                }
+
+                return $salesRestriction;
+            });
+        }
+
         return $salesRestrictions->sortBy('SalesRestrictionType');
     }
 
