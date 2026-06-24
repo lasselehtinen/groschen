@@ -196,7 +196,7 @@ class Groschen implements ProductInterface
             }
 
             if (count($json->results) > 1) {
-                throw new Exception('ISBN has multiple active editions');
+                throw new Exception('ISBN' . $this->productNumber . ' has multiple active editions');
             }
 
             $key = array_key_first($json->results);
