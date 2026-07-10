@@ -2845,6 +2845,33 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test we are not getting sales restrictions for deactivated channel
+     *
+     * @return void
+     */
+    public function test_getting_sales_restrictions_for_deactivated_channel()
+    {
+        // ePub with unit and subscription rights but no library
+        $groschen = new Groschen('9789528508670');
+        $salesRestrictions = $groschen->getSalesRestrictions();
+        $exclusiveRetailers = $salesRestrictions->where('SalesRestrictionType', '04')->pluck('SalesOutlets')->first();
+
+        // Check that deactivated channel does not exist in exclusive retailers
+        $salesOutlet = [
+            'SalesOutlet' => [
+                'SalesOutletIdentifiers' => [
+                    [
+                        'SalesOutletIDType' => '03',
+                        'IDValue' => 'ELU',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertNotContains($salesOutlet, $exclusiveRetailers, 'Deactivated channel should not be in listed in exclusive retailers');
+    }
+
+    /**
      * Test that E-kirjasto is included as exclusive retailer
      *
      * @return void

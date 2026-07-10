@@ -6714,12 +6714,13 @@ class Groschen implements ProductInterface
                 'hasRights' => $exportRule->hasRights,
                 'distributionAllowed' => $exportRule->hasDistribution,
                 'salesOutletId' => $exportRule->salesChannel->customProperties->onixSalesOutletId ?? null,
+                'isActive' => $exportRule->salesChannel->isActive,
             ]);
         }
 
-        // Remove Elisa, Elisa kirja kuukausitilaus and Alma Talent
+        // Remove deactivated sales channels from the list
         $distributionChannels = $distributionChannels->filter(function (array $distributionChannel, int $key) {
-            return in_array($distributionChannel['salesOutletId'], ['ELS', 'ELK', 'ALT']) === false;
+            return $distributionChannel['isActive'] !== false;
         });
 
         return $distributionChannels;
