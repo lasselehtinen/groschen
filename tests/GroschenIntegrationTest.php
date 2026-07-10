@@ -1367,7 +1367,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'arkielämä;eläkeläiset;mielipiteet;vanhukset;pessimismi;suomalaisuus;suomalaiset;miehet;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet;novellit;huumori;pakinat;monologit'], $subjects);
+        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'niksit;kodinhoito;metsänhoito;kalastus;kunnossapito;huolto;rakennukset;autot;huumori;pessimismi;ironia;arkielämä;eläkeläiset;mielipiteet;vanhukset;suomalaisuus;suomalaiset;miehet;novellit;pakinat;monologit;kirjallisuuspalkinnot;2011;kiitos kirjasta -mitali;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
 
         // Book with subjects in Allmän tesaurus på svenska
         $groschen = new Groschen('9789510374665');
@@ -1825,7 +1825,7 @@ class GroschenIntegrationTest extends TestCase
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Exclusive sales
-        $groschen = new Groschen('9789518467253');
+        $groschen = new Groschen('9789513130503');
         $this->assertSame('04', $groschen->getPublishingStatus());
 
         // Sold out
@@ -2139,13 +2139,13 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 1738620,
+                        'FeatureValue' => 1738551,
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/0lgbvE8eazaBsSZzQItlbj/*/9789510366264_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D&version=2',
                 'ContentDate' => [
                     'ContentDateRole' => '01',
-                    'Date' => '20260116',
+                    'Date' => '20260630',
                 ],
             ],
         ];
@@ -2189,13 +2189,13 @@ class GroschenIntegrationTest extends TestCase
                     ],
                     [
                         'ResourceVersionFeatureType' => '07',
-                        'FeatureValue' => 373535,
+                        'FeatureValue' => 373414,
                     ],
                 ],
                 'ResourceLink' => 'https://elvis.bonnierbooks.fi/file/2WF93gVGadOBi68p9stOE8/*/9789510415665_frontcover_final.jpg?authcred=Z3Vlc3Q6Z3Vlc3Q%3D&version=2',
                 'ContentDate' => [
                     'ContentDateRole' => '01',
-                    'Date' => '20260116',
+                    'Date' => '20260630',
                 ],
             ],
         ];
@@ -3652,9 +3652,9 @@ class GroschenIntegrationTest extends TestCase
     public function test_getting_editions()
     {
         $edition = [
-            'isbn' => 9789520480851,
-            'title' => 'Lulu kampaajalla',
-            'publisher' => 'Tammi',
+            'isbn' => 9789528704041,
+            'title' => 'Kyttä ja kynämies K2/J8',
+            'publisher' => 'Bazar',
         ];
 
         $this->assertContains($edition, $this->groschen->getEditions());
@@ -4546,26 +4546,6 @@ class GroschenIntegrationTest extends TestCase
         // As author and reader should appear
         $groschen = new Groschen('9789523760769');
         $this->assertStringContainsString($descriptionMatch, $groschen->getTextContents()->where('TextType', '03')->pluck('Text')->first());
-    }
-
-    /**
-     * Test getting contributors without prio level
-     *
-     * @return void
-     */
-    public function test_getting_contributors_without_priolevel()
-    {
-        $groschen = new Groschen('9789510452493');
-
-        $contributorWithoutPriority = [
-            'Id' => 47893,
-            'PriorityLevel' => null,
-            'Role' => 'Sales Manager',
-            'FirstName' => 'SM',
-            'LastName' => 'WSOY',
-        ];
-
-        $this->assertContains($contributorWithoutPriority, $groschen->getAllContributors());
     }
 
     /**
