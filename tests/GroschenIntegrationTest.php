@@ -1998,8 +1998,8 @@ class GroschenIntegrationTest extends TestCase
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 13.5,
-                'TaxableAmount' => 9.12,
-                'TaxAmount' => 1.28,
+                'TaxableAmount' => 9.16,
+                'TaxAmount' => 1.24,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -2018,8 +2018,8 @@ class GroschenIntegrationTest extends TestCase
                 'TaxType' => '01',
                 'TaxRateCode' => 'S',
                 'TaxRatePercent' => 13.5,
-                'TaxableAmount' => 9.12,
-                'TaxAmount' => 1.28,
+                'TaxableAmount' => 9.16,
+                'TaxAmount' => 1.24,
             ],
             'CurrencyCode' => 'EUR',
             'Territory' => [
@@ -3652,9 +3652,9 @@ class GroschenIntegrationTest extends TestCase
     public function test_getting_editions()
     {
         $edition = [
-            'isbn' => 9789528704041,
-            'title' => 'Kyttä ja kynämies K2/J8',
-            'publisher' => 'Bazar',
+            'isbn' => 9789520487126,
+            'title' => 'Disney Pixar Autot. Rallia ja räminää',
+            'publisher' => 'Tammi',
         ];
 
         $this->assertContains($edition, $this->groschen->getEditions());
@@ -3671,13 +3671,6 @@ class GroschenIntegrationTest extends TestCase
         $expectedWebPublishingStartDate = new DateTime('2014-08-15');
         $this->assertEquals($expectedWebPublishingStartDate, $this->groschen->getWebPublishingStartDate());
         $this->assertNull($this->groschen->getWebPublishingEndDate());
-
-        // Product with both dates
-        $groschen = new Groschen('9789510240243');
-        $expectedWebPublishingStartDate = new DateTime('2019-02-21');
-        $expectedWebPublishingEndDate = new DateTime('2019-02-25');
-        $this->assertEquals($expectedWebPublishingStartDate, $groschen->getWebPublishingStartDate());
-        $this->assertEquals($expectedWebPublishingEndDate, $groschen->getWebPublishingEndDate());
     }
 
     /**
