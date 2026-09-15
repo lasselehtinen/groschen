@@ -1000,7 +1000,6 @@ class Groschen implements ProductInterface
                     // AI with non-audiobook reader role
                 } elseif (property_exists($contributor->contact, 'firstName') && $contributor->contact->firstName === 'Tekoäly' && empty($contributor->contact->lastName)) {
                     $contributorData['UnnamedPersons'] = '09';
-                    // AI with general male voice
                 } elseif (property_exists($contributor->contact, 'firstName') && $contributor->contact->firstName === 'Tekoäly, miesääni') {
                     $contributorData['UnnamedPersons'] = '05';
                     // AI with general female voice
@@ -1043,6 +1042,8 @@ class Groschen implements ProductInterface
                         'NameType' => '07',
                         'PersonName' => Str::after($contributor->contact->firstName, 'Tekoäly '),
                     ];
+                } elseif (property_exists($contributor->contact, 'firstName') && Str::startsWith($contributor->contact->firstName, 'Tekoäly-') && empty($contributor->contact->lastName)) {
+                    $contributorData['UnnamedPersons'] = '09';
                 } else {
                     if (property_exists($contributor, 'contact') && property_exists($contributor->contact, 'firstName') && property_exists($contributor->contact, 'lastName')) {
                         $contributorData['PersonName'] = trim($contributor->contact->firstName).' '.trim($contributor->contact->lastName);

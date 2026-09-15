@@ -4784,6 +4784,22 @@ class GroschenIntegrationTest extends TestCase
 
         $this->assertContains($translator, $groschen->getContributors());
         $this->assertContains($coverDesigner, $groschen->getContributors());
+
+        // Book with AI assisted translator role "Tekoäly-kääntäjä"
+        $groschen = new Groschen('9789520491055');
+
+        $translator = [
+            'Identifier' => 77659,
+            'SequenceNumber' => 3,
+            'ContributorRole' => 'Z01',
+            'UnnamedPersons' => '09',
+            'BiographicalNote' => null,
+            'WebSites' => [],
+            'SelectionLists' => [],
+            'HasAuthorImage' => false,
+        ];
+
+        $this->assertContains($translator, $groschen->getContributors());
     }
 
     /**
