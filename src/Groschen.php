@@ -464,6 +464,11 @@ class Groschen implements ProductInterface
                 $productFormDetails->push('B402');
             }
 
+            // Decorated edges
+            if (Str::contains($technicalBindingType, 'tinted edge')) {
+                $productFormDetails->push('B419');
+            }
+
             // Lamination
             $lamination = $this->getTechnicalData()->where('partName', 'printedCover')->pluck('lamination')->first();
 

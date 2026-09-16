@@ -4625,6 +4625,22 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test getting decorated page edges
+     *
+     * @return void
+     */
+    public function test_getting_decorated_page_edges()
+    {
+        // Edition with tinted page edges
+        $groschen = new Groschen('9789510508626');
+        $this->assertContains('B419', $groschen->getProductFormDetails());
+
+        // Product without tinted page edges
+        $groschen = new Groschen('9789513192402');
+        $this->assertNotContains('B419', $groschen->getProductFormDetails());
+    }
+
+    /**
      * Test getting hazards
      *
      * @return void
