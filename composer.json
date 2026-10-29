@@ -56,7 +56,7 @@
     },
     "config": {
         "allow-plugins": {
-            "phpro/grumphp": true
+            "phpro/grumphp": false
         }
     }
 }
