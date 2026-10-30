@@ -1,37 +1,38 @@
-image: php:8.5.0
+image:
+  name: serversideup/php:8.5.12-cli-v5.0.5
+  run-as-user: 0
+
+clone:
+  depth: 1
 
 definitions:
+  caches:
+    composer-files: /composer/cache
   steps:
-    - step: &prequisites
-        name: Install composer and prequisite packages
+    - step: &install
+        name: Install dependencies
         runs-on: self.hosted
         caches:
-          - composer
+          - composer-files
         artifacts:
           - .env
           - vendor/**
         script:
-          - apt-get -qq update && apt-get -y install git zip libzip-dev
-          - docker-php-ext-install zip
-          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-          - composer install --no-progress
           - echo $ENV | base64 --decode --ignore-garbage > .env
+          - composer install --prefer-dist --no-interaction --no-progress
+
     - step: &security-check
         name: Run security checks
         runs-on: self.hosted
         script:
-          - apt-get -qq update && apt-get -y install git
-          - curl -L https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64 --output /usr/local/bin/local-php-security-checker
-          - chmod 755 /usr/local/bin/local-php-security-checker
-          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          - apt-get -qq update && apt-get -qq -y install --no-install-recommends git
           - vendor/bin/grumphp run --testsuite=security
 
     - step: &syntax-check
         name: Run syntax and style checks
         runs-on: self.hosted
         script:
-          - apt-get -qq update && apt-get -y install git
-          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          - apt-get -qq update && apt-get -qq -y install --no-install-recommends git
           - vendor/bin/grumphp run --testsuite=syntax
           - vendor/bin/pint --test
 
@@ -39,28 +40,27 @@ definitions:
         name: Run static analysis
         runs-on: self.hosted
         script:
-          - apt-get -qq update && apt-get -y install git
-          - echo "memory_limit = 1024M" > $PHP_INI_DIR/conf.d/php-memory-limits.ini
+          - apt-get -qq update && apt-get -qq -y install --no-install-recommends git
+          - export PHP_MEMORY_LIMIT=1024M
           - vendor/bin/grumphp run --testsuite=static
 
     - step: &unit-tests
         name: Run unit tests
         runs-on: self.hosted
         script:
-          - apt-get -qq update && apt-get -y install git
           - echo $BOOKS_CA_CERT | base64 --decode --ignore-garbage > /usr/local/share/ca-certificates/booksca.books.local_BooksCA_2025.crt
           - update-ca-certificates
           - vendor/bin/phpunit --log-junit ./test-reports/junit.xml
 
 pipelines:
   default:
-    - step: *prequisites
+    - step: *install
     - parallel:
         - step: *security-check
         - step: *syntax-check
         - step: *static-analysis
-    - step: *unit-tests
+        - step: *unit-tests
   custom:
       security-check:
-        - step: *prequisites
+        - step: *install
         - step: *security-check
