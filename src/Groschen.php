@@ -7585,7 +7585,7 @@ class Groschen implements ProductInterface
         });
 
         if ($hasSelkoKirjaAgeGroups) {
-            $editionTypes->push(['EditionType' => 'SMP']);
+            $editionTypes->push(['EditionType' => 'ETR']);
         }
 
         // Easy-to-read is determined from Thema interest age codes
@@ -7594,7 +7594,7 @@ class Groschen implements ProductInterface
         });
 
         if ($hasEasyToReadAgeGroups) {
-            $editionTypes->push(['EditionType' => 'ETR']);
+            $editionTypes->push(['EditionType' => 'SMP']);
         }
 
         // ePub 3 with extra audio
