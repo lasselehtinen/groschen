@@ -114,7 +114,7 @@ class Groschen implements ProductInterface
             return $provider->getAccessToken('password', [
                 'username' => config('groschen.mockingbird.username'),
                 'password' => config('groschen.mockingbird.password'),
-                'scope' => 'opus',
+                'scope' => 'opus mockingbird',
             ]);
         });
 
