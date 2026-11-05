@@ -44,9 +44,9 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('groschen.mockingbird.asset_api_hostname', $_ENV['MOCKINGBIRD_ASSET_API_HOSTNAME']);
         $app['config']->set('groschen.mockingbird.clientId', $_ENV['MOCKINGBIRD_CLIENT_ID']);
         $app['config']->set('groschen.mockingbird.clientSecret', $_ENV['MOCKINGBIRD_CLIENT_SECRET']);
-        $app['config']->set('groschen.mockingbird.urlAuthorize', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'].'/core/connect/authorize');
-        $app['config']->set('groschen.mockingbird.urlAccessToken', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'].'/core/connect/token');
-        $app['config']->set('groschen.mockingbird.urlResourceOwnerDetails', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'].'/core/connect/resource');
+        $app['config']->set('groschen.mockingbird.urlAuthorize', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'].'/core/authorization');
+        $app['config']->set('groschen.mockingbird.urlAccessToken', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'].'/core/token');
+        $app['config']->set('groschen.mockingbird.urlResourceOwnerDetails', $_ENV['MOCKINGBIRD_OAUTH_BASE_URL'].'/core/userinfo');
         $app['config']->set('groschen.mockingbird.username', $_ENV['MOCKINGBIRD_USERNAME']);
         $app['config']->set('groschen.mockingbird.password', $_ENV['MOCKINGBIRD_PASSWORD']);
     }
