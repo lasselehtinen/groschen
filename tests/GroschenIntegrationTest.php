@@ -5402,7 +5402,7 @@ class GroschenIntegrationTest extends TestCase
      */
     public function test_getting_assets()
     {
-        $groschen = new Groschen(9789520489113);
+        $groschen = new Groschen('9789510343203');
         $assets = $groschen->getAssets();
 
         $this->assertGreaterThan(0, $assets->count());
