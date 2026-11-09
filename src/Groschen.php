@@ -6696,6 +6696,9 @@ class Groschen implements ProductInterface
             'Assistant' => 20,
         ];
 
+        // In-house variants (e.g. "Author in-house") share the priority of the base role
+        $role = preg_replace('/ in-house$/', '', $role);
+
         if (array_key_exists($role, $rolePriorities)) {
             return $rolePriorities[$role];
         }
