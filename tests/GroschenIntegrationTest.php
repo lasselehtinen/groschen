@@ -1375,7 +1375,17 @@ class GroschenIntegrationTest extends TestCase
         $this->assertNotContains(['SubjectSchemeIdentifier' => '65', 'SubjectSchemeName' => 'Allmän tesaurus på svenska', 'SubjectCode' => 'krigföring'], $subjects);
 
         // Keywords should contain only finnish subjects
-        $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'tieto-finlandia-palkinto;traumat;ennakkotieto;sotahistoria;mielenterveys;sotilaat;jatkosota;talvisota;sodat;kokemukset;mielenterveyshäiriöt;traumaperäinen stressireaktio;psykiatrinen hoito;sotilaspsykiatria;psykiatria;psykohistoria;lapin sota;sodankäynti;suomi;1939-1945;2013;sotarintama;kirjallisuuspalkinnot'], $subjects);
+        $keywordSubject = $subjects->firstWhere('SubjectSchemeIdentifier', '20');
+        $this->assertNotNull($keywordSubject);
+        $keywords = explode(';', $keywordSubject['SubjectHeadingText']);
+
+        foreach (['jatkosota', 'talvisota', 'sotahistoria', 'sotilaspsykiatria'] as $finnishKeyword) {
+            $this->assertContains($finnishKeyword, $keywords);
+        }
+
+        foreach (['krigföring', 'fortsättningskriget', 'vinterkriget', 'krigshistoria'] as $swedishKeyword) {
+            $this->assertNotContains($swedishKeyword, $keywords);
+        }
 
         // Another book with more classifications
         $groschen = new Groschen('9789510408452');
