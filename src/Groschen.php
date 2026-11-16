@@ -7573,7 +7573,7 @@ class Groschen implements ProductInterface
         $title = $this->getTitleDetails()->where('TitleType', '01')->pluck('TitleElement.TitleText')->first();
 
         // Illustrated
-        if (Str::contains($title, 'kuvitettu')) {
+        if (Str::contains($title, 'kuvitettu', ignoreCase: true)) {
             $editionTypes->push(['EditionType' => 'ILL']);
         }
 
