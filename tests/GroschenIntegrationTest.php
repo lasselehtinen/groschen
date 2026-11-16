@@ -3937,15 +3937,19 @@ class GroschenIntegrationTest extends TestCase
                     'Website' => 'https://www.instagram.com/elinakilkku/',
                 ],
             ],
-            'SelectionLists' => [
-                'WS Bazarkustannus.fi julkiset tekijät',
-                'Kirja.fi julkiset tekijät',
-            ],
             'HasAuthorImage' => true,
         ];
 
         $groschen = new Groschen('9789522796783');
-        $this->assertContains($author, $groschen->getContributors());
+        $contributor = $groschen->getContributors()->firstWhere('Identifier', 62420);
+        $this->assertNotNull($contributor);
+
+        // Selection lists change over time, so check only the expected ones are present
+        $selectionLists = $contributor['SelectionLists'];
+        unset($contributor['SelectionLists']);
+        $this->assertSame($author, $contributor);
+        $this->assertContains('WS Bazarkustannus.fi julkiset tekijät', $selectionLists);
+        $this->assertContains('Kirja.fi julkiset tekijät', $selectionLists);
     }
 
     /**
