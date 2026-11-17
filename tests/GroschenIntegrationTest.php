@@ -4899,6 +4899,32 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that description for collection/series is plain text with TextFormat 07
+     *
+     * @return void
+     */
+    public function test_description_for_collection_or_series_is_plain_text()
+    {
+        $groschen = new Groschen('9789510479209');
+        $descriptionForCollection = $groschen->getTextContents()->where('TextType', '17')->first();
+
+        $this->assertSame('07', $descriptionForCollection['TextFormat']);
+        $this->assertSame(strip_tags($descriptionForCollection['Text']), $descriptionForCollection['Text']);
+        $this->assertStringContainsString('Satu Rämön Hildur-sarja on Islannin syrjäisille vuonoille sijoittuva dekkarisarja', $descriptionForCollection['Text']);
+    }
+
+    /**
+     * Test converting HTML to plain text
+     *
+     * @return void
+     */
+    public function test_converting_html_to_plain_text()
+    {
+        $this->assertSame("First paragraph\nSecond & third\nLine two", $this->groschen->convertHtmlToPlainText('<p>First <strong>paragraph</strong></p><p>Second &amp; third<br />Line two</p>'));
+        $this->assertSame('Plain text', $this->groschen->convertHtmlToPlainText('Plain text'));
+    }
+
+    /**
      * Test getting contributor selection lists
      *
      * @return void

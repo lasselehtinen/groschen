@@ -1841,8 +1841,9 @@ class Groschen implements ProductInterface
             if (property_exists($json, 'description') && ! empty($json->description)) {
                 $textContents->push([
                     'TextType' => '17',
+                    'TextFormat' => '07',
                     'ContentAudience' => '00',
-                    'Text' => $this->purifyHtml($json->description),
+                    'Text' => $this->convertHtmlToPlainText($json->description),
                 ]);
             }
         }
@@ -2539,6 +2540,23 @@ class Groschen implements ProductInterface
         $purifier = new HTMLPurifier($config);
 
         return $purifier->purify($text);
+    }
+
+    /**
+     * Converts HTML to plain text, keeping paragraphs and line breaks as newlines
+     *
+     * @param  string  $text
+     * @return string
+     */
+    public function convertHtmlToPlainText($text)
+    {
+        $text = preg_replace('/<br\s*\/?>/i', "\n", $text);
+        $text = preg_replace('/<\/(p|li|dd|dt)>/i', "\n", $text);
+        $text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = preg_replace("/[ \t]+\n/", "\n", $text);
+        $text = preg_replace("/\n{2,}/", "\n", $text);
+
+        return trim($text);
     }
 
     /**
