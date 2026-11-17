@@ -3696,6 +3696,10 @@ class GroschenIntegrationTest extends TestCase
         $this->assertCount(1, $groschen->getEditionTypes());
         $this->assertContains(['EditionType' => 'ILL'], $groschen->getEditionTypes());
 
+        // Illustrated edition with capitalized "Kuvitettu" in the title
+        $groschen = new Groschen('9789510431375');
+        $this->assertContains(['EditionType' => 'ILL'], $groschen->getEditionTypes());
+
         // ePub 3 enhanced with audio
         $groschen = new Groschen('9789520405724');
         $this->assertCount(1, $groschen->getEditionTypes());
@@ -3933,15 +3937,19 @@ class GroschenIntegrationTest extends TestCase
                     'Website' => 'https://www.instagram.com/elinakilkku/',
                 ],
             ],
-            'SelectionLists' => [
-                'WS Bazarkustannus.fi julkiset tekijät',
-                'Kirja.fi julkiset tekijät',
-            ],
             'HasAuthorImage' => true,
         ];
 
         $groschen = new Groschen('9789522796783');
-        $this->assertContains($author, $groschen->getContributors());
+        $contributor = $groschen->getContributors()->firstWhere('Identifier', 62420);
+        $this->assertNotNull($contributor);
+
+        // Selection lists change over time, so check only the expected ones are present
+        $selectionLists = $contributor['SelectionLists'];
+        unset($contributor['SelectionLists']);
+        $this->assertSame($author, $contributor);
+        $this->assertContains('WS Bazarkustannus.fi julkiset tekijät', $selectionLists);
+        $this->assertContains('Kirja.fi julkiset tekijät', $selectionLists);
     }
 
     /**
