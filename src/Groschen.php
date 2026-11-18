@@ -1841,7 +1841,7 @@ class Groschen implements ProductInterface
             if (property_exists($json, 'description') && ! empty($json->description)) {
                 $textContents->push([
                     'TextType' => '17',
-                    'TextFormat' => '07',
+                    'TextFormat' => '06',
                     'ContentAudience' => '00',
                     'Text' => $this->convertHtmlToPlainText($json->description),
                 ]);

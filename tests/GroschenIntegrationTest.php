@@ -4899,7 +4899,7 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test that description for collection/series is plain text with TextFormat 07
+     * Test that description for collection/series is plain text with TextFormat 06
      *
      * @return void
      */
@@ -4908,7 +4908,7 @@ class GroschenIntegrationTest extends TestCase
         $groschen = new Groschen('9789510479209');
         $descriptionForCollection = $groschen->getTextContents()->where('TextType', '17')->first();
 
-        $this->assertSame('07', $descriptionForCollection['TextFormat']);
+        $this->assertSame('06', $descriptionForCollection['TextFormat']);
         $this->assertSame(strip_tags($descriptionForCollection['Text']), $descriptionForCollection['Text']);
         $this->assertStringContainsString('Satu Rämön Hildur-sarja on Islannin syrjäisille vuonoille sijoittuva dekkarisarja', $descriptionForCollection['Text']);
     }
