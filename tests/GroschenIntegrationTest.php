@@ -1379,7 +1379,6 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Product sub-group', 'SubjectCode' => '24', 'SubjectHeadingText' => 'Nykyromaanit'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Cost center', 'SubjectCode' => '301', 'SubjectHeadingText' => 'WSOY - Kotimainen kauno'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC060000'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FA'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FU'], $subjects);
         $this->assertNotContains(['SubjectSchemeIdentifier' => '69', 'SubjectSchemeName' => 'KAUNO - ontology for fiction', 'SubjectCode' => 'novellit'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '20', 'SubjectHeadingText' => 'niksit;kodinhoito;metsänhoito;kalastus;kunnossapito;huolto;rakennukset;autot;huumori;pessimismi;ironia;arkielämä;eläkeläiset;mielipiteet;vanhukset;suomalaisuus;suomalaiset;miehet;novellit;pakinat;monologit;kirjallisuuspalkinnot;2011;kiitos kirjasta -mitali;2000-luku;suomenkielinen kirjallisuus;suomen kieli;romaanit;arki;ikääntyneet'], $subjects);
@@ -1409,7 +1408,6 @@ class GroschenIntegrationTest extends TestCase
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Main product group', 'SubjectCode' => '4', 'SubjectHeadingText' => 'Käännetty L&N'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '23', 'SubjectSchemeName' => 'Werner Söderström Ltd - Product sub-group', 'SubjectCode' => '31', 'SubjectHeadingText' => 'Scifi'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '10', 'SubjectSchemeName' => 'BISAC Subject Heading', 'SubjectCode' => 'FIC028000'], $subjects);
-        $this->assertContains(['SubjectSchemeIdentifier' => '12', 'SubjectSchemeName' => 'BIC subject category', 'SubjectCode' => 'FL'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '93', 'SubjectSchemeName' => 'Thema subject category', 'SubjectCode' => 'FYT'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '73', 'SubjectSchemeName' => 'Suomalainen kirja-alan luokitus', 'SubjectCode' => 'N'], $subjects);
         $this->assertContains(['SubjectSchemeIdentifier' => '98', 'SubjectSchemeName' => 'Thema interest age / special interest qualifier', 'SubjectCode' => '5AN'], $subjects);
@@ -4879,42 +4877,6 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test that Thema is mapped to BIC correctly
-     *
-     * @return void
-     */
-    public function test_thema_is_mapped_to_bic_correctly()
-    {
-        $testCases = [
-            9789510504055 => 'ATB',
-            9789510504055 => 'DN',
-            9789510504048 => 'FF',
-            9789510506516 => 'JFFH1',
-        ];
-
-        foreach ($testCases as $gtin => $expectedBicCode) {
-            $groschen = new Groschen($gtin);
-            $this->assertContains($expectedBicCode, $groschen->getBicCodes());
-        }
-    }
-
-    /**
-     * Test that BIC codes are unique when several Thema codes map to the same BIC code
-     *
-     * @return void
-     */
-    public function test_bic_codes_are_unique_when_thema_codes_map_to_same_bic_code()
-    {
-        // Two of the Thema codes in this product map to BIC code FR
-        $groschen = new Groschen('9789520482725');
-        $bicCodes = $groschen->getBicCodes();
-
-        $this->assertContains('FR', $bicCodes);
-        $this->assertSame(array_values(array_unique($bicCodes)), $bicCodes);
-        $this->assertCount(1, $groschen->getSubjects()->where('SubjectSchemeIdentifier', '12')->where('SubjectCode', 'FR'));
-    }
-
-    /**
      * Test that description for collection/series is handled correctly
      *
      * @return void
@@ -5116,7 +5078,7 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
-     * Test that Thema codes are converted to correct BIC codes
+     * Test that Thema codes are converted to correct BISAC codes
      *
      * @return void
      */

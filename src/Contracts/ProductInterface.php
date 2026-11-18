@@ -183,7 +183,7 @@ interface ProductInterface
     public function getLatestPublicationDate();
 
     /**
-     * Get the products subjects, like library class, Thema, BIC, BISAC etc.
+     * Get the products subjects, like library class, Thema, BISAC etc.
      *
      * @return Collection
      */
