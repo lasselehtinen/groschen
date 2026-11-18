@@ -6002,7 +6002,8 @@ class Groschen implements ProductInterface
             }
         }
 
-        return $bicCodes;
+        // Several Thema codes can map to the same BIC code
+        return array_values(array_unique($bicCodes));
     }
 
     /**

@@ -4884,6 +4884,22 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that BIC codes are unique when several Thema codes map to the same BIC code
+     *
+     * @return void
+     */
+    public function test_bic_codes_are_unique_when_thema_codes_map_to_same_bic_code()
+    {
+        // Two of the Thema codes in this product map to BIC code FR
+        $groschen = new Groschen('9789520482725');
+        $bicCodes = $groschen->getBicCodes();
+
+        $this->assertContains('FR', $bicCodes);
+        $this->assertSame(array_values(array_unique($bicCodes)), $bicCodes);
+        $this->assertCount(1, $groschen->getSubjects()->where('SubjectSchemeIdentifier', '12')->where('SubjectCode', 'FR'));
+    }
+
+    /**
      * Test that description for collection/series is handled correctly
      *
      * @return void
