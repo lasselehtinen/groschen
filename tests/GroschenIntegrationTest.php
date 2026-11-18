@@ -33,6 +33,21 @@ class GroschenIntegrationTest extends TestCase
     }
 
     /**
+     * Test that an instance can be created from the edition id instead of the GTIN
+     *
+     * @return void
+     */
+    public function test_can_create_instance_from_edition_id()
+    {
+        $groschen = Groschen::fromEditionId($this->groschen->getEditionId());
+
+        $this->assertSame($this->groschen->getWorkId(), $groschen->getWorkId());
+        $this->assertSame($this->groschen->getEditionId(), $groschen->getEditionId());
+        $this->assertSame('9789510366264', $groschen->getProduct()->isbn);
+        $this->assertEquals($this->groschen->getTitleDetails(), $groschen->getTitleDetails());
+    }
+
+    /**
      * Test that deactivated product is fetched also
      *
      * @return void

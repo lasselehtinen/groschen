@@ -25,6 +25,7 @@ use League\ISO3166\ISO3166;
 use League\OAuth2\Client\Provider\GenericProvider;
 use League\Uri\Uri;
 use League\Uri\UriModifier;
+use ReflectionClass;
 use stdClass;
 use WhiteCube\Lingua\LanguagesRepository;
 use WhiteCube\Lingua\Service as Lingua;
@@ -99,6 +100,36 @@ class Groschen implements ProductInterface
      */
     public function __construct($productNumber)
     {
+        $this->createClients();
+
+        $this->productNumber = $productNumber;
+        [$this->workId, $this->productionId] = $this->getEditionAndWorkId();
+        $this->product = $this->getProduct();
+        $this->workLevelFetched = false;
+    }
+
+    /**
+     * Create an instance from the edition's Mockingbird id instead of its GTIN, so that editions without a GTIN can be used too
+     */
+    public static function fromEditionId(int $editionId): static
+    {
+        $groschen = (new ReflectionClass(static::class))->newInstanceWithoutConstructor();
+        $groschen->createClients();
+
+        $groschen->productionId = strval($editionId);
+        $groschen->product = $groschen->getProduct();
+        $groschen->workId = strval($groschen->product->workId);
+        $groschen->productNumber = $groschen->product->isbn ?? null;
+        $groschen->workLevelFetched = false;
+
+        return $groschen;
+    }
+
+    /**
+     * Create the authenticated Guzzle clients for the Mockingbird APIs
+     */
+    private function createClients(): void
+    {
         // Get access token for Mockingbird
         $accessToken = Cache::remember('accessToken', 3599, function () {
             $provider = new GenericProvider([
@@ -156,11 +187,6 @@ class Groschen implements ProductInterface
                 'User-Agent' => gethostname().' / '.' PHP/'.PHP_VERSION,
             ],
         ]);
-
-        $this->productNumber = $productNumber;
-        [$this->workId, $this->productionId] = $this->getEditionAndWorkId();
-        $this->product = $this->getProduct();
-        $this->workLevelFetched = false;
     }
 
     /**
